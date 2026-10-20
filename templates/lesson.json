@@ -1,0 +1,9 @@
+{
+  "observation": "本次实际发生什么",
+  "candidate_rule": "候选方法或习惯",
+  "applies_when": "适用条件",
+  "does_not_apply_when": "反例或排除范围",
+  "source_ref": "原始用户反馈或测试依据",
+  "next_validation": "下一次如何检验",
+  "evidence_file": "/absolute/path/to/evidence"
+}

@@ -1,0 +1,28 @@
+{
+  "package": "portable-solo-delivery-kit",
+  "version": "0.1.0",
+  "protocol": "aap/0.1",
+  "language": "python-stdlib-only",
+  "entrypoints": {
+    "core": "core/state_machine.py",
+    "adapter_reference": "adapters/example_adapter.py",
+    "weak_agent_prompt": "SYSTEM_PROMPT.md",
+    "conformance": "tests/"
+  },
+  "supported_host_shape": [
+    "jsonl",
+    "function_call",
+    "http",
+    "message_queue"
+  ],
+  "model_provider": "agnostic",
+  "codex_system_untouched": true,
+  "scheduler": "none",
+  "file_count": 21,
+  "integrations": [
+    "cursor",
+    "deepseek-harness",
+    "kimi-code",
+    "generic"
+  ]
+}

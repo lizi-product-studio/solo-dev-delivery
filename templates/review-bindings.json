@@ -1,0 +1,19 @@
+{
+  "revision": 1,
+  "local_only": true,
+  "checks": {
+    "AC:AC1": {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "-v",
+        "tests/test_actual_behavior.py"
+      ],
+      "adapter": "unittest",
+      "environment": "与计划一致",
+      "rationale": "说明实际测试如何覆盖这条预期",
+      "timeout": 60
+    }
+  }
+}

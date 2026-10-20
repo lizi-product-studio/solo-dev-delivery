@@ -1,0 +1,11 @@
+{
+  "revision": 1,
+  "contract_hash": "从review-plan读取",
+  "risk_reasoning": "本次实际改变什么业务关系，哪些反例需要验证",
+  "scope_reasoning": "组件和依赖依据",
+  "acknowledged_checks": [
+    "从review-plan读取全部ID"
+  ],
+  "unresolved": [],
+  "evidence": "/absolute/path/to/actual-assessment"
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "栗子软件交付"
+  short_description: "从开项简报接手确认范围内的开发与验收，记录证据和协作经验"
+  default_prompt: "使用 $solo-dev-delivery 接收这份开项简报，整理范围与必要的经营决定，确认后连续推进本地交付。"
+
+policy:
+  allow_implicit_invocation: true

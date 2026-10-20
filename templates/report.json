@@ -1,0 +1,27 @@
+{
+  "contract_hash": "从show读取",
+  "commit": "本次冻结的完整Git提交SHA",
+  "environment": "local",
+  "open_p0_p1": [],
+  "checks": [
+    {
+      "id": "AC1",
+      "status": "NOT_RUN",
+      "environment": "与契约一致",
+      "observed": "实际执行后填写",
+      "evidence": "/absolute/path/to/evidence"
+    }
+  ],
+  "ux": {
+    "kind": "browser_interaction",
+    "evidence": "/absolute/path/to/ui-evidence"
+  },
+  "review": {
+    "reviewer": "实际独立会话ID",
+    "result": "NOT_RUN",
+    "evidence": "/absolute/path/to/review-evidence"
+  },
+  "artifacts": [
+    "/absolute/path/to/deliverable"
+  ]
+}

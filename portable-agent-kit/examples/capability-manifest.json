@@ -1,0 +1,23 @@
+{
+  "protocol": "aap/0.1",
+  "adapter_id": "replace-me",
+  "host_id": "replace-me",
+  "capabilities": {
+    "fs.read": "unknown",
+    "fs.write": "unknown",
+    "shell.exec": "unknown",
+    "git.read": "unknown",
+    "git.write": "unknown",
+    "test.run": "unknown",
+    "browser.open": "unknown",
+    "browser.control": "unknown",
+    "visual.capture": "unknown",
+    "network": "unknown",
+    "pause_resume": "unknown",
+    "checkpoint.persist": "unknown",
+    "evidence.hash": "unknown",
+    "independent_review": "unknown",
+    "external.authorized": "unknown"
+  },
+  "limits": {"max_timeout_s": "unknown", "side_effect_classes": ["none"]}
+}

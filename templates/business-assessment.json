@@ -1,0 +1,11 @@
+{
+  "revision": 1,
+  "service_id": "copy",
+  "reasoning": "实际读取客户消息、项目授权和相关产品事实后的解释；不能仅凭关键词判断范围",
+  "risks": [],
+  "facts": {
+    "goal": {"value": "待来源支持的目标", "event_id": "实际客户消息ID", "quote": "逐字客户原文片段"},
+    "target": {"value": "实际页面或功能", "event_id": "实际客户消息ID", "quote": "逐字客户原文片段"},
+    "expected": {"value": "可观察的验收预期", "event_id": "实际客户消息ID", "quote": "逐字客户原文片段"}
+  }
+}

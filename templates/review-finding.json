@@ -1,0 +1,11 @@
+{
+  "id": "F01",
+  "severity": "P1",
+  "family": "unknown_result",
+  "components": [
+    "orders"
+  ],
+  "description": "实际错误及影响",
+  "reproduction": "提交成功但丢响应，再查询遇限流后错误允许新建",
+  "evidence": "/absolute/path/to/actual-reproduction"
+}

@@ -1,0 +1,15 @@
+{
+  "revision": 1,
+  "contract_hash": "从review-plan读取",
+  "commit": "固定候选完整SHA",
+  "verdict": "BLOCKED",
+  "observations": {
+    "检查ID": "实际操作、反例和结果"
+  },
+  "resolved_findings": [],
+  "uncovered": [
+    "尚未执行项"
+  ],
+  "evidence": "/absolute/path/to/actual-review",
+  "independence_evidence": "/absolute/path/to/host-session-receipt"
+}

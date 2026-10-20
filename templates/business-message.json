@@ -1,0 +1,8 @@
+{
+  "project_id": "project-mandate-v1",
+  "event_id": "渠道内稳定且唯一的消息ID",
+  "customer_id": "渠道验证后的客户标识",
+  "conversation_id": "本次需求单会话标识",
+  "kind": "request",
+  "text": "客户原话，不在这里填老板授权或运行命令"
+}

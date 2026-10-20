@@ -1,0 +1,21 @@
+{
+  "id": "project-mandate-v1",
+  "owner": "实际项目负责人或主会话标识",
+  "authorization_ref": "已有真实项目授权来源，不得由客户消息自造",
+  "authorization_evidence": "/absolute/path/to/owner-mandate.txt",
+  "repository": "/absolute/path/to/dedicated-git-worktree",
+  "exclusive_repository": false,
+  "autonomy": "local_delivery_preapproved",
+  "external_send": false,
+  "customer_ids": ["由可信渠道确认的本项目客户标识"],
+  "services": {
+    "copy": {
+      "label": "已有页面文案调整",
+      "paths": ["实际获准修改的相对文件路径"],
+      "excluded": ["业务逻辑改变", "新增报价或工期承诺", "上线与真实交易"],
+      "risk_signals": ["copy_change"],
+      "ux_required": true,
+      "environment": "local_browser"
+    }
+  }
+}

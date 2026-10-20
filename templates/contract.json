@@ -1,0 +1,58 @@
+{
+  "goal": "由agent填写用户已确认的具体目标",
+  "repository": "/absolute/path/to/isolated/project",
+  "owner": "lizi",
+  "approval_ref": "真实用户确认的聊天及轮次，禁止编造",
+  "autonomy": "local_until_delivery",
+  "scope": [
+    "明确本次修改对象"
+  ],
+  "excluded": [
+    "生产发布",
+    "真实交易退款",
+    "新增费用"
+  ],
+  "acceptance": [
+    {
+      "id": "AC1",
+      "expected": "可观察结果，不写泛泛的正常",
+      "environment": "明确实际验证环境，如local_browser或isolated_mysql"
+    }
+  ],
+  "risk_signals": [
+    "backend_frontend"
+  ],
+  "estimated_business_files": 4,
+  "source_resolutions": [],
+  "open_business_decisions": [],
+  "repository_idle_confirmed": false,
+  "ux_required": true,
+  "rollback": "本任务可执行的回退方式",
+  "review_components": [
+    {
+      "id": "orders",
+      "paths": [
+        "apps/api/src/orders",
+        "apps/web/src/orders",
+        "tests/orders"
+      ],
+      "depends_on": [
+        "auth"
+      ],
+      "risk_signals": [
+        "payment"
+      ]
+    },
+    {
+      "id": "auth",
+      "paths": [
+        "apps/api/src/auth",
+        "tests/auth"
+      ],
+      "depends_on": [],
+      "risk_signals": [
+        "permissions"
+      ]
+    }
+  ]
+}

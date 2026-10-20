@@ -1,0 +1,29 @@
+{
+  "app": "project-kickoff",
+  "version": 1,
+  "exportedAt": "2026-10-15T00:00:00Z",
+  "project": {
+    "id": "demo-only",
+    "mode": "project",
+    "data": {
+      "name": "示例 商品配置展示",
+      "types": [
+        "admin",
+        "mini"
+      ],
+      "depth": "demo",
+      "goal": "商家维护商品，用户能看到已上架的商品；仅隔离演示",
+      "stage": "existing",
+      "features": [
+        "crud"
+      ],
+      "flow": "商家新建商品→保存→用户读取",
+      "entities": "商品名称、价格、状态",
+      "acceptance": "保存后刷新可见；失败保留输入；空数据不冒充失败",
+      "scope": "shared",
+      "integration": "mock",
+      "resources": "由用户提供目标代码目录",
+      "excluded": "生产发布、支付退款、真实客户数据"
+    }
+  }
+}

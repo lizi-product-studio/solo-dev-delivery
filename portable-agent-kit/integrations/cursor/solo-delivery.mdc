@@ -1,0 +1,17 @@
+---
+description: "Use the provider-neutral delivery gates for software, Agent, system and App work"
+globs:
+alwaysApply: false
+---
+
+Use the Portable Solo Delivery Kit when this task changes software behavior or requires delivery acceptance.
+
+- Derive user tasks and observable outcomes from the original goal before reading only the implementation checklist.
+- Report supported, unsupported and unknown host capabilities; unknown is not permission.
+- Bind every result and evidence item to the current task revision, contract hash and candidate.
+- Validate action -> business result -> persistence/readback -> displayed state, including applicable cancel/failure/retry/slow/unknown/return/refresh paths.
+- Keep external actions, identity verification, payments, publishing and irreversible changes behind explicit authorization and real host evidence.
+- Keep working at checkpoints; do not stop a normal executor merely because it is quiet or a planned observation time has arrived.
+- Do not announce delivery while a required check, finding, evidence item or human step is unresolved.
+
+Read the repository's `AGENTS.md` and the Portable Kit's `PROTOCOL.md` when the adapter is available.

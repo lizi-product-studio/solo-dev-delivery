@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/solo-delivery/aap-0.1.json",
+  "title": "Agent Adapter Protocol 0.1",
+  "type": "object",
+  "required": ["protocol", "request_id", "op", "task_id", "revision", "contract_hash", "candidate", "idempotency_key"],
+  "properties": {
+    "protocol": {"const": "aap/0.1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "op": {"enum": ["probe", "start", "observe", "tool_result", "evidence", "open_finding", "checkpoint", "pause", "resume", "phase", "finish", "cancel"]},
+    "task_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "contract_hash": {"type": "string", "minLength": 64, "maxLength": 64},
+    "candidate": {"type": "string", "minLength": 1},
+    "idempotency_key": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "status": "CANDIDATE_METHODS_NOT_CROSS_PROJECT_VALIDATED",
+  "methods": [
+    {
+      "id": "M01",
+      "rule": "以实际使用者任务贯穿界面、接口、持久化和读回；关联对象被编辑、删除或重排后，核对角色、归属等应保持关系以及关键日常动作的自助路径。",
+      "applies_when": "业务功能迭代及交给客户独立使用的产品；按本次相关旅程核对，不泛查全系统",
+      "counterexample": "纯文案无需数据库全回归；外部身份平台代管账号时不重复开发改密；尚未批准的需求不能借完整性检查直接扩建。",
+      "sources": [
+        "拼团docs/task-admin-operability-closure.md",
+        "校服docs/前端设计规范-A.md",
+        "runtime/queue.sqlite3 lessons/L-97472cf32f1b",
+        "主Agent turn/01a13dda-6a65-7a93-bab3-ed27844d1407",
+        "knowledge/feedback/uniform-collaboration-20261015.json",
+        "主Agent turn/01a13dfc-6748-7573-8d8b-e2e331eb7321",
+        "校服d372b61 apps/admin-web/src/App.vue setMain",
+        "knowledge/feedback/uniform-collaboration-20261015.json follow_up_20261018"
+      ],
+      "next_validation": "下一真实迭代由审查者先推导受影响任务，再核对关键动作及旧证据覆盖；跟踪是否仍需用户指出同类问题。",
+      "evidence_note": "改密早期确被文档排除；本次不能证明当初排除经过了充分的用户确认。问题定位为范围预期/自助交付检查不足，不直接指责开发漏写。 新增主图角色问题由用户反馈及固定旧代码证实；正在修复的版本未由本复盘验收。",
+      "review_probes": [
+        "对本次相关状态动作，实际执行后刷新/重开确认生效；不能只看按钮或编辑表单。",
+        "涉及离页/子页返回时，先设置非默认选择或输入，再往返一次，核对身份、对象角色、选择和可见结果；仅验相关路径。"
+      ]
+    },
+    {
+      "id": "M02",
+      "rule": "保存已成功但刷新失败要保留成功事实；未知结果先核实原请求。",
+      "applies_when": "带副作用的提交和网络恢复",
+      "counterexample": "只读查询可直接重试；项目已有更严格协议优先",
+      "sources": [
+        "拼团docs/task-admin-operability-closure.md"
+      ],
+      "next_validation": "分别注入提交失败、响应丢失、读回失败并确认副作用次数"
+    },
+    {
+      "id": "M03",
+      "rule": "把用户指出的体验问题转成具体任务与可见预期，在有实际内容的默认视口和稳定画面上操作复验；脚本能找到按钮不等于用户容易发现和使用。",
+      "applies_when": "界面、用户流程变化或用户反复指出的体验返工；选择直接受影响的状态",
+      "counterexample": "纯后端任务不强制视觉测试；业务可完成不代表审美被用户认可；无需每次重做全套原型、全页面矩阵或额外人工确认。",
+      "sources": [
+        "家政design-qa.md",
+        "校服docs/前端设计规范-A.md",
+        "runtime/queue.sqlite3 lessons/L-88e9b25f2f31",
+        "主Agent turn/01a13d41-e413-7841-a4c8-e237e5ac0966",
+        "主Agent turn/01a13d9b-0086-7131-b266-a6473be28537",
+        "knowledge/feedback/uniform-collaboration-20261015.json",
+        "knowledge/feedback/uniform-collaboration-20261015.json follow_up_20261018"
+      ],
+      "next_validation": "实际使用默认视口，并区分稳定态、过渡态和未测路径；盲测和历史回归只作有限证据，以后续真实项目复发情况判断成效。",
+      "review_probes": [
+        "本次涉及异步页面时，在首个响应未返回时观察一次加载态，再检查实际失败及恢复；仅等待networkidle后的截图不覆盖过渡态。",
+        "控件文案/高亮/禁用所承诺的行为，与真实点击结果一致；禁用说明原因和已有替代路径，不取消服务端历史保护。"
+      ]
+    },
+    {
+      "id": "M04",
+      "rule": "使用当前有效业务规则，历史归档只作溯源。",
+      "applies_when": "接手旧系统或跨会话交接",
+      "counterexample": "新代码行为不能自动推翻旧的有效需求，冲突要核实",
+      "sources": [
+        "家政docs/product/current-product-rules.md",
+        "家政docs/product-optimization-rd-plan-2026-08-21.md",
+        "knowledge/feedback/uniform-collaboration-20261015.json"
+      ],
+      "next_validation": "规则冲突保留来源并以客户最新决定或明确有效文档解决",
+      "evidence_note": "校服曾以新要求覆盖旧范围及全角色流程；通用README里的队列为空快照也已过期。运行状态读当前记录，历史决定保留时点与适用范围。"
+    },
+    {
+      "id": "M05",
+      "rule": "技术债写责任人、可测触发条件和下一动作，不长期埋在剩余问题里。",
+      "applies_when": "架构取舍与上线准备",
+      "counterexample": "不复制拼团的具体容量阈值，不用本任务授权修所有旧债",
+      "sources": [
+        "拼团LESSONS-LEARNED.md L01/L08"
+      ],
+      "next_validation": "下一次有意延期项进入任务清单并验证是否按触发条件处理"
+    },
+    {
+      "id": "M06",
+      "status": "CANDIDATE_SYNTHETIC_TRIAL_ONLY",
+      "rule": "从原始目标建立用户任务，检索成熟基线并解释适用条件，对复用/调整/定制提供理由、反例和验证；独立检查完全遗漏的任务及证据，不仅核对开发清单。",
+      "applies_when": "新项目、实质方案变化、反复体验返工；其他领域只复用判断方法",
+      "counterexample": "小改复用有效依据；高度定制可选定制路线；导航形式和电商对象不跨行业强制使用。",
+      "sources": [
+        "knowledge/feedback/decision-foundation-20261016.json",
+        "skill/solo-dev-delivery/references/decision-foundation.md"
+      ],
+      "next_validation": "真实后续任务衡量重复纠正、遗漏、同类复发、实际结果与总成本；三份模拟和结构测试不能证明通用业务能力。"
+    }
+  ]
+}

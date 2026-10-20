@@ -1,0 +1,25 @@
+{
+  "retrieved": "2026-10-15",
+  "sources": [
+    {
+      "name": "开项 model",
+      "repository": "https://github.com/lizi-product-studio/dingxinglizi-ideas",
+      "commit": "a9c6fb3521d620f9fd791d67705ee8edbb05153c",
+      "source_path": "web/model.mjs",
+      "vendored_path": "vendor/kickoff/model.mjs",
+      "sha256": "c58d57bdd830b681db6a4e673ccacc09554cb1770a7715dfcdcdbab913cddcaa",
+      "license": "MIT",
+      "modified": false
+    },
+    {
+      "name": "交付编排任务分级",
+      "repository": "https://github.com/lizi-product-studio/dingxinglizi",
+      "commit": "3d6ea984b265024880c00abfe1c48c1a8bc2274e",
+      "source_path": "scripts/task_mode.py",
+      "vendored_path": "vendor/orchestrator/task_mode.py",
+      "sha256": "7d6d9bf74f64ba424f5a8f106ccaab553f1e63b9df47c0349443b56010445c4c",
+      "license": "MIT",
+      "modified": false
+    }
+  ]
+}

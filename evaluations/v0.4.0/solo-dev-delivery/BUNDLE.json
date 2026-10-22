@@ -1,0 +1,54 @@
+{
+  "version": "0.4.0",
+  "format": "Agent Skills",
+  "python": "3.9+",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "d922afe916fee24472da8c695e1d2a5a36f29c2a5a679922e8e7aade8b9db1e0"
+    },
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "2c603f3982e3ac710511a2dbfb7145161bd402077c3ac1e40683690f868bf1b9"
+    },
+    {
+      "path": "references/decision-foundation.md",
+      "sha256": "2e704610f3d6ae2999253e943555469b1249a46ca6bf91eac650b89a376aa924"
+    },
+    {
+      "path": "references/portable-workflow.md",
+      "sha256": "dd5af8bad731ca5bc5713226bc9f5c153cde0233a74f13b251a2b7e7ca2be37b"
+    },
+    {
+      "path": "references/result-verification.md",
+      "sha256": "a948627d26b45bc0abf8763f79cfc11835140f5b3cf27d82955caf200a19bc8e"
+    },
+    {
+      "path": "references/software-delivery.md",
+      "sha256": "5ec68a6c68738b957e50cf3e25ed60ca434ba6f81096435aedc85b6ff5fe6fd7"
+    },
+    {
+      "path": "scripts/challenge.py",
+      "sha256": "229af6796c384f0c99b329b5a0ad670654d0390be65fbe2f0bd84eb95f34ab76"
+    },
+    {
+      "path": "scripts/core/__init__.py",
+      "sha256": "df8c54d95e16a56aa8b1baa1d99fe7bc8175f5077135c2989e6c4dfbe434ed96"
+    },
+    {
+      "path": "scripts/core/coverage.py",
+      "sha256": "c79173348d86eb7a8842022cf3ccf1db5526278ed0beb8fce9bafb0649b238d7"
+    },
+    {
+      "path": "scripts/core/json_relations.py",
+      "sha256": "5c8412e76aab9e83e231dbe258356fea9c0b1184e63b5c04b930d64bd7894ce1"
+    },
+    {
+      "path": "scripts/core/local_checks.py",
+      "sha256": "cc821923f6e9410d9f7966a914fa773d3b5dad824df010e82736e7718a76b50a"
+    }
+  ],
+  "personal_data_included": false,
+  "scheduler": "none",
+  "platform_status": "format-and-local-runtime-verified; platform loading must be checked by its host"
+}

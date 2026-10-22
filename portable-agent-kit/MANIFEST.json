@@ -1,6 +1,6 @@
 {
   "package": "portable-solo-delivery-kit",
-  "version": "0.3.1",
+  "version": "0.4.2",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -12,7 +12,8 @@
     "example_adapter": "adapters/example_adapter.py (in-memory demo only)",
     "weak_agent_prompt": "SYSTEM_PROMPT.md",
     "conformance": "tests/",
-    "skill_exporter": "../scripts/export_skill.py"
+    "skill_exporter": "../scripts/export_skill.py",
+    "coverage_selection": "core/coverage.py via challenge.py brief/assess"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",

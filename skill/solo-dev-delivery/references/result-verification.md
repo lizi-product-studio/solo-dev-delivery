@@ -1,6 +1,53 @@
-# 反例重放与关系核验
+# 场景选择、反例重放与关系核验
 
 只对本次风险使用必要部分。脚本目录 S：独立Skill是SKILL_DIR/scripts；完整本机系统是ROOT/portable-agent-kit/scripts。Python标准库，不调用模型或创建定时器。原有队列的正式门禁继续使用，不另造一套发布系统。
+
+## 主动选择最有价值的检查
+
+复杂/高影响/反复返工任务在实现前读原始目标和有效政策，用brief把它们的段落与哈希保留下来。只选择业务依据文档，不把整仓库或所有CSV行变成登记表；原始数据依赖随后由freeze绑定。
+
+```sh
+python3 S/challenge.py brief --workspace /work/candidate \
+  --input TASK.md --input POLICY.md --brief /work/review/basis.json
+```
+
+从这些原文独立推导本次关键可观察结果：成功会留下什么事实，什么边界或冲突会推翻它，结果未知/不可行时应怎样交付。没有具体风险的视角不增加；同一个段落可能有多个条件，不能只覆盖其中一句。保留一份轻量plan.json，将原文ID映射到结果与真正执行的unittest方法；非验收上下文给出具体理由，不将关键义务塞进context。示意字段如下，IDs和结果应来自本次brief而非照抄：
+
+```json
+{
+  "test_file": "/work/review/checks.py",
+  "outcomes": [
+    {"id":"O1","sources":["POLICY.md:3"],"expected":"执行后重开状态仍满足原政策的关键约束","priority":3},
+    {"id":"O2","sources":["POLICY.md:3"],"expected":"相反顺序或失败条件下约束仍成立，且有约定的恢复结果","priority":3}
+  ],
+  "context": [{"source":"TASK.md:3","reason":"仅定位原始资料；依赖已纳入候选快照，不另作业务断言"}],
+  "checks": [
+    {"id":"C1","test":"Business.test_roundtrip","covers":["O1"],"cost":1},
+    {"id":"C2","test":"Business.test_conflicting_update","covers":["O2"],"cost":2}
+  ]
+}
+```
+
+priority为1..3，只改变顺序，所有已列结果和默认required的不同场景都要覆盖。一个方法可核多个结果，但不同方法默认不等价；只有明确非必要的补充检查才设required=false并给why_optional，仍由主Agent核实排除理由。cost是本地检查的相对工作量，不是token/额度，也不限制Agent运行时间。用下面既有freeze绑定当前候选后，一次调用选择并运行一小组检查：
+
+```sh
+python3 S/challenge.py assess --brief /work/review/basis.json \
+  --plan /work/review/plan.json --packet /work/review/candidate.json \
+  --budget 3 --run --report /work/review/coverage-1.json
+```
+
+assess按未覆盖结果的重要性/相对成本作贪心选择，一个方法可覆盖多个结果，只执行一次；不同必要场景不因共享结果标签而互相替代。实际回执包含Class.test_method与状态；声明covers但没执行、跳过/空测试、错误候选或失效回执均不能覆盖。未核对的原文段落、无检查的结果和预算不足列为缺口。真实失败优先修复，报告共享原文依据的相关结果供扩查，不机械全量重跑。不会自动新增Agent、换模型或终止工作。
+
+plan和report放在本次隔离控制目录。assess自动读回这两个目录直属的challenge回执，复用有效结果；同候选/脚本的失败不会因漏写--evidence或从plan删掉失败方法而被另一个PASS抹掉。移到其他位置的回执用--evidence显式带入；工具不扫描全仓库或其他聊天。自动回执文件名为report去掉后缀再加-replay.json。每次用新report路径，保留失败。示例：
+
+```sh
+python3 S/challenge.py assess --brief /work/review/basis.json \
+  --plan /work/review/plan.json --packet /work/review/candidate.json \
+  --evidence /work/review/coverage-1-replay.json \
+  --budget 0 --report /work/review/coverage-2.json
+```
+
+DECLARED_SCOPE_COVERED只证明已声明范围有当前可归属的执行证据，下一步仍是主Agent对照原文检查语义充分性：有没有将必需结果排成context、是否遗漏同段另一条件、断言是否真能推翻错误、人用说明是否一致、未测环境是否影响交付。原文段落登记不等于语义解析，逐方法PASS不证明断言有效。平台原生验收覆盖充分时复用；非Python/真实界面按宿主工具观察，不写假测试绕过缺证。必要独立审查仍由原生能力按风险提供，不能用本地元数据认证身份。
 
 ## 从原目标产生能推翻实现的场景
 

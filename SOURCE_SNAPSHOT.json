@@ -1,10 +1,10 @@
 {
   "created": "2026-10-22",
-  "version": "0.3.1",
+  "version": "0.4.2",
   "scope": "Current source and validation summary only; runtime, customer project code, raw conversations, local evaluation candidates/receipts and old export bundles excluded. Manifest excludes itself.",
   "history": {
-    "previous_head": "02162a7f0d263b7b461414ddb1651dffd221e9d4",
-    "intermediate_evaluated_030_checkpoint": "3cb8b656e120eb98cd075f2d6083ffa4a7a6f19e",
+    "previous_head": "8de7f38da8b93fda274264e3e4c9d1404cb4a714",
+    "evaluated_intermediate_packages": "Parent checkpoint holds evaluations/v0.4.0 and evaluations/v0.4.1; absent from current tree.",
     "rewrite_history": false
   },
   "files": [
@@ -15,13 +15,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "9bfda4d1a941bd69bdf0c530dd8a8143cfe64cde2961968018166d6402f0e302",
-      "bytes": 6385
+      "sha256": "d25fee932bba72c43994e547c69c089bd186f6f7302fa70c063ddcdf584bed7f",
+      "bytes": 7073
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "27156d044aa5dafa3873b1066b88a02f0e9686e344d17321692fa8ff93eefa53",
-      "bytes": 12140
+      "sha256": "2efd1723277b2297a3c8bbbd7d63e4996406dd9f292989ca406bcbafe5330751",
+      "bytes": 12688
     },
     {
       "path": "knowledge/methods.json",
@@ -35,8 +35,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "45d31281a1f76ceb577fdefc0679b37c8c19ae3bf9c4ad06e69c31895ee6d5bf",
-      "bytes": 1445
+      "sha256": "4dd994afb116750cdd16ce6e323c0fc2e33129edc050a9dd15819698ac43073a",
+      "bytes": 1521
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -45,8 +45,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "43ef305705da5a7991d0e1d7706e5edae09e784571e61f563406f587de88ca27",
-      "bytes": 3963
+      "sha256": "ea884621c0b3e3266ba66962b9919dec8cdaf956d05ed6cc0039c9127a132215",
+      "bytes": 4228
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -72,6 +72,11 @@
       "path": "portable-agent-kit/core/__init__.py",
       "sha256": "0b2fb64b7a5b021b03fa93b29730fcae6d519b19241b9a735a6561bd1a8e9e87",
       "bytes": 158
+    },
+    {
+      "path": "portable-agent-kit/core/coverage.py",
+      "sha256": "7307002f6151078a18289fcd5deb86a9b2045d48e92855abfb40e7b376014ec4",
+      "bytes": 13784
     },
     {
       "path": "portable-agent-kit/core/json_relations.py",
@@ -155,8 +160,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "44de4a2594eda61061cfb855ff7174738a52bb66e0bf0b526bbe1aab3d27b0fd",
-      "bytes": 14434
+      "sha256": "229af6796c384f0c99b329b5a0ad670654d0390be65fbe2f0bd84eb95f34ab76",
+      "bytes": 20880
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -172,6 +177,11 @@
       "path": "portable-agent-kit/tests/test_challenge.py",
       "sha256": "fad68e470fde755e28a96a334f74a2b50706a3ec0b7728152f70f0f100379f87",
       "bytes": 7806
+    },
+    {
+      "path": "portable-agent-kit/tests/test_coverage.py",
+      "sha256": "ebc9a164f5d6b5f3362ca9b9dbc95855fe614a57806d92467430d3765f130069",
+      "bytes": 18954
     },
     {
       "path": "portable-agent-kit/tests/test_local_runner.py",
@@ -205,8 +215,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "331698192bb3f244b5336700d665c963c97c14c61314e6778433ee4603f841ed",
-      "bytes": 3626
+      "sha256": "100882f0e940bcfe98bf20eb05dc8071b804e821e4f8d8d25b5394e35bb23bff",
+      "bytes": 3641
     },
     {
       "path": "scripts/kickoff-import.mjs",
@@ -230,8 +240,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "be85109a2e163c57e5eacb1ceccfdbdffea46ce3c755a4e2971d44a8b7698151",
-      "bytes": 6024
+      "sha256": "fcdd978da01a49c9429ff683f1f966c3bdbe5fd780d739b3cc810b5f211f62af",
+      "bytes": 5189
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -245,13 +255,13 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
-      "sha256": "1253b3b3e596664e8d57e3c7d0ab89b39d8424012085b2b986ccd372e6148f8b",
-      "bytes": 2942
+      "sha256": "dd5af8bad731ca5bc5713226bc9f5c153cde0233a74f13b251a2b7e7ca2be37b",
+      "bytes": 3077
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "1fc3eb673df52a622fa038ad411d179e2f62f62da1e23186e39cf6934f00653c",
-      "bytes": 6405
+      "sha256": "b61b0b8b44ae10513a2d5aed8f562e80d3811914be8202b9d36ab751ef65ea8d",
+      "bytes": 10516
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

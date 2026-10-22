@@ -73,11 +73,14 @@ def validate_plan(brief, plan):
         tests.add(item['test'])
         require(isinstance(item.get('covers'), list) and item['covers'] and set(item['covers']) <= ids, 'check.covers must name real outcomes')
         require(type(item.get('cost', 1)) is int and 1 <= item.get('cost', 1) <= 100, 'check.cost must be 1..100 relative local effort units')
+        require(type(item.get('required', True)) is bool, 'check.required must be boolean')
+        if not item.get('required', True):
+            require(isinstance(item.get('why_optional'), str) and item['why_optional'].strip(), 'optional check needs a specific reason; distinct required scenarios are not substitutes')
     require(isinstance(plan.get('test_file'), str) and plan['test_file'], 'plan.test_file required')
     return units - mapped
 
 
-def choose_checks(outcomes, checks, covered, budget):
+def choose_checks(outcomes, checks, covered, budget, completed_checks=()):
     """Greedy marginal coverage/effort, reusing a test for multiple outcomes.
 
     This is a bounded heuristic, not a proof of minimum cost or token savings.
@@ -85,16 +88,23 @@ def choose_checks(outcomes, checks, covered, budget):
     """
     weights = {o['id']: (1, 10, 100)[o.get('priority', 2) - 1] for o in outcomes}
     pending = set(weights) - set(covered)
+    pending_checks = {c['id'] for c in checks if c.get('required', True)} - set(completed_checks)
     selected, spent = [], 0
     remaining = list(checks)
-    while pending:
-        choices = [c for c in remaining if set(c['covers']) & pending and spent + c.get('cost', 1) <= budget]
+    while pending or pending_checks:
+        choices = [c for c in remaining if (set(c['covers']) & pending or c['id'] in pending_checks) and spent + c.get('cost', 1) <= budget]
         if not choices:
             break
-        best = min(choices, key=lambda c: (-Fraction(sum(weights[x] for x in set(c['covers']) & pending), c.get('cost', 1)), c.get('cost', 1), c['id']))
+        def gain(c):
+            benefit = sum(weights[x] for x in set(c['covers']) & pending)
+            if c['id'] in pending_checks:
+                benefit += max(weights[x] for x in c['covers'])
+            return Fraction(benefit, c.get('cost', 1))
+        best = min(choices, key=lambda c: (-gain(c), c.get('cost', 1), c['id']))
         selected.append(best)
         spent += best.get('cost', 1)
         pending -= set(best['covers'])
+        pending_checks.discard(best['id'])
         remaining.remove(best)
     return selected, spent
 
@@ -103,7 +113,7 @@ def inspect_evidence(plan, packet_path, evidence_paths, status_fn):
     expected_packet = digest(packet_path)
     expected_test = digest(plan['test_file'])
     by_test = {c['test']: c for c in plan['checks']}
-    passed, failed, unmapped_failures, observations, dependencies = set(), set(), set(), [], []
+    passed, failed, passed_checks, failed_checks, unmapped_failures, observations, dependencies = set(), set(), set(), set(), set(), [], []
     for path in dict.fromkeys(str(Path(p).resolve()) for p in evidence_paths):
         dep = digest(path)
         dependencies.append(dep)
@@ -129,11 +139,13 @@ def inspect_evidence(plan, packet_path, evidence_paths, status_fn):
                     continue
                 if case['status'] == 'FAIL':
                     failed.update(check['covers'])
+                    failed_checks.add(check['id'])
                 elif case['status'] == 'PASS':
                     passed.update(check['covers'])
+                    passed_checks.add(check['id'])
         observations.append({'receipt': path, 'usable': valid, 'reason': reason})
     # A fresh failure cannot be erased by later importing a PASS for the same bytes.
-    return passed - failed, failed, unmapped_failures, observations, dependencies
+    return passed - failed, failed, passed_checks - failed_checks, unmapped_failures, observations, dependencies
 
 
 def discover_evidence(directories):
@@ -170,10 +182,11 @@ def coverage_report(brief_path, plan_path, packet_path, evidence_paths, budget, 
     require(current_fn(packet), 'STALE_CANDIDATE: freeze current candidate')
     uncovered_sources = validate_plan(brief, plan)
     evidence_paths = list(evidence_paths) + discover_evidence([plan_path.parent])
-    passed, failed, unmapped_failures, observations, dependencies = inspect_evidence(plan, packet_path, evidence_paths, status_fn)
+    passed, failed, passed_checks, unmapped_failures, observations, dependencies = inspect_evidence(plan, packet_path, evidence_paths, status_fn)
     all_ids = {o['id'] for o in plan['outcomes']}
     missing = all_ids - passed
-    selected, spent = choose_checks(plan['outcomes'], plan['checks'], passed, budget)
+    missing_checks = {c['id'] for c in plan['checks'] if c.get('required', True)} - passed_checks
+    selected, spent = choose_checks(plan['outcomes'], plan['checks'], passed, budget, passed_checks)
     unknown_checks = missing - {o for c in plan['checks'] for o in c['covers']}
     failure_sources = {u for o in plan['outcomes'] if o['id'] in failed for u in o['sources']}
     related = sorted(o['id'] for o in plan['outcomes'] if set(o['sources']) & failure_sources)
@@ -181,23 +194,24 @@ def coverage_report(brief_path, plan_path, packet_path, evidence_paths, budget, 
         action = 'REPAIR_AND_RECHECK_RELATED_OUTCOMES'
     elif uncovered_sources:
         action = 'REVIEW_UNACCOUNTED_SOURCE'
+    elif (missing or missing_checks) and selected:
+        action = 'RUN_SELECTED_CHECKS'
     elif unknown_checks:
         action = 'ADD_CHECK_FOR_MISSING_OUTCOME'
-    elif missing and selected:
-        action = 'RUN_SELECTED_CHECKS'
-    elif missing:
+    elif missing or missing_checks:
         action = 'BUDGET_OR_ENVIRONMENT_INSUFFICIENT'
     else:
         action = 'CONFIRM_SEMANTIC_SUFFICIENCY'
     if failed or unmapped_failures or uncovered_sources:
         selected, spent = [], 0
-    sufficient = not (missing or uncovered_sources or failed or unmapped_failures)
+    sufficient = not (missing or missing_checks or uncovered_sources or failed or unmapped_failures)
     dependencies += [digest(p) for p in (brief_path, plan_path, packet_path, Path(plan['test_file']))]
     return {'format': 'local-coverage-result/1', 'status': 'DECLARED_SCOPE_COVERED' if sufficient else 'INSUFFICIENT',
             'workspace': brief['workspace'], 'packet': str(packet_path), 'evidence': [o['receipt'] for o in observations],
             'control_directories': [str(plan_path.parent)],
             'dependencies': dependencies, 'covered_outcomes': sorted(passed), 'missing_outcomes': sorted(missing),
             'failed_outcomes': sorted(failed), 'related_outcomes_to_review': related,
+            'completed_checks': sorted(passed_checks), 'missing_required_checks': sorted(missing_checks),
             'unmapped_failed_tests': sorted(unmapped_failures),
             'unaccounted_source_units': sorted(uncovered_sources), 'outcomes_without_checks': sorted(unknown_checks),
             'selected_checks': selected, 'selected_effort_units': spent, 'budget_effort_units': budget,

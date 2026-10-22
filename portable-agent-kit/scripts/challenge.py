@@ -28,8 +28,42 @@ spec = importlib.util.spec_from_file_location("independent_challenge", sys.argv[
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 suite = unittest.defaultTestLoader.loadTestsFromModule(module)
-result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr).run(suite)
+def flatten(suite):
+    for item in suite:
+        if isinstance(item, unittest.TestSuite): yield from flatten(item)
+        else: yield item
+def key(test):
+    name = test.id()
+    prefix = 'independent_challenge.'
+    return name[len(prefix):] if name.startswith(prefix) else name
+selected = json.loads(sys.argv[2])
+if selected:
+    available = {key(test):test for test in flatten(suite)}
+    if not set(selected) <= set(available):
+        print('Requested test IDs not discovered: '+str(sorted(set(selected)-set(available))), file=sys.stderr)
+        suite = unittest.TestSuite()
+    else: suite = unittest.TestSuite(available[name] for name in dict.fromkeys(selected))
+class Observed(unittest.TextTestResult):
+    def startTest(self, test):
+        super().startTest(test)
+        self.cases[key(test)] = 'UNKNOWN'
+    def addSuccess(self, test):
+        super().addSuccess(test)
+        if self.cases[key(test)] != 'FAIL': self.cases[key(test)] = 'PASS'
+    def addFailure(self, test, err):
+        super().addFailure(test, err); self.cases[key(test)] = 'FAIL'
+    def addError(self, test, err):
+        super().addError(test, err); self.cases[key(test)] = 'FAIL'
+    def addUnexpectedSuccess(self, test):
+        super().addUnexpectedSuccess(test); self.cases[key(test)] = 'FAIL'
+    def addSubTest(self, test, subtest, err):
+        super().addSubTest(test, subtest, err)
+        if err is not None: self.cases[key(test)] = 'FAIL'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs); self.cases = {}
+result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr, resultclass=Observed).run(suite)
 summary = {"tests":result.testsRun,"failures":len(result.failures),"errors":len(result.errors),"skipped":len(result.skipped),"expected_failures":len(result.expectedFailures),"unexpected_successes":len(result.unexpectedSuccesses)}
+summary['cases'] = [{'id':name,'status':status} for name,status in result.cases.items()]
 print("SOLO_CHALLENGE_RESULT=" + json.dumps(summary), flush=True)
 sys.exit(0 if result.wasSuccessful() and result.testsRun and not (result.skipped or result.expectedFailures) else 1)
 '''
@@ -86,7 +120,7 @@ def tail(path):
     return {'text': data.decode('utf-8', errors='replace'), 'bytes': size, 'truncated': size > LIMIT}
 
 
-def run(packet_path, test_path, receipt_path, timeout):
+def run(packet_path, test_path, receipt_path, timeout, selected=None):
     packet_path = Path(packet_path).resolve(strict=True)
     packet_raw = packet_path.read_bytes()
     packet = load_json(packet_raw.decode('utf-8'))
@@ -97,6 +131,9 @@ def run(packet_path, test_path, receipt_path, timeout):
         raise ValueError('receipt exists; preserve earlier findings and use a new receipt')
     if not 1 <= timeout <= 300:
         raise ValueError('test subprocess timeout must be between 1 and 300 seconds')
+    selected = selected or []
+    if not isinstance(selected, list) or not all(isinstance(name, str) and name for name in selected):
+        raise ValueError('selected test IDs must be nonempty strings')
     if not current(packet):
         raise ValueError('STALE_CANDIDATE: freeze current candidate before executing')
     test_bytes = test_path.read_bytes()
@@ -120,7 +157,7 @@ def run(packet_path, test_path, receipt_path, timeout):
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
         env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work)}
         with stdout_path.open('wb') as out, stderr_path.open('wb') as err:
-            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test)], cwd=work,
+            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected)], cwd=work,
                                     env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err,
                                     start_new_session=True)
             try:
@@ -133,6 +170,7 @@ def run(packet_path, test_path, receipt_path, timeout):
         stdout, stderr = tail(stdout_path), tail(stderr_path)
     summaries = [line[len(MARKER):] for line in stdout['text'].splitlines() if line.startswith(MARKER)]
     summary = json.loads(summaries[-1]) if summaries else None
+    test_cases = summary.pop('cases', []) if summary else []
     status = 'UNKNOWN'
     if not timed_out and summary and summary['tests'] > 0:
         if summary['failures'] or summary['errors'] or summary['unexpected_successes']:
@@ -150,7 +188,7 @@ def run(packet_path, test_path, receipt_path, timeout):
                'test': str(test_path), 'test_sha256': sha(test_bytes),
                'exit_code': code, 'timed_out': timed_out,
                'elapsed_seconds': round(time.monotonic() - started, 4),
-               'test_summary': summary, 'stdout': stdout, 'stderr': stderr,
+               'test_summary': summary, 'test_cases': test_cases, 'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
     write_new(receipt_path, receipt)
@@ -159,6 +197,11 @@ def run(packet_path, test_path, receipt_path, timeout):
 
 def status(receipt_path):
     receipt = load_json(Path(receipt_path).read_text())
+    if receipt.get('format') == 'local-coverage-result/1':
+        from core.coverage import fresh_report
+        valid = fresh_report(receipt, current, status)
+        return {'status': receipt['status'] if valid else 'STALE',
+                'recorded_status': receipt['status'], 'limits': receipt['limits']}
     if receipt.get('format') == 'local-relations-result/1':
         try:
             spec_path = Path(receipt['spec'])
@@ -233,6 +276,62 @@ def render(workspace, source, rows, columns, block, output):
             'limits': 'Only this generated block reflects the structured rows; free prose still needs review.'}
 
 
+def brief(workspace, inputs, target):
+    from core.coverage import source_brief
+    root = Path(workspace).resolve(strict=True)
+    target = outside(target, root)
+    result = source_brief(root, inputs)
+    write_new(target, result)
+    return {'status': 'SOURCE_BRIEF', 'brief': str(target), **result}
+
+
+def assess(brief_path, plan_path, packet_path, evidence, budget, execute, report_path):
+    from core.coverage import coverage_report, digest, discover_evidence
+    packet = load_json(Path(packet_path).read_text())
+    root = Path(packet['workspace']).resolve(strict=True)
+    report_path = outside(report_path, root)
+    if report_path.exists():
+        raise ValueError('report exists; preserve previous result and use a new report')
+    for path in (brief_path, plan_path, packet_path):
+        outside(path, root)
+    plan = load_json(Path(plan_path).read_text())
+    outside(plan['test_file'], root)
+    evidence = list(evidence) + discover_evidence([report_path.parent])
+    result = coverage_report(brief_path, plan_path, packet_path, evidence, budget, status, current)
+    original_dependencies = result['dependencies']
+    executed = []
+    if execute and result['next_action'] == 'RUN_SELECTED_CHECKS':
+        replay = report_path.with_name(report_path.stem + '-replay.json')
+        executed = result['selected_checks']
+        run(packet_path, plan['test_file'], replay, 60, [c['test'] for c in executed])
+        evidence = list(evidence) + [str(replay)]
+        try:
+            result = coverage_report(brief_path, plan_path, packet_path, evidence, budget, status, current)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            # Actual execution already occurred: retain that receipt even if its
+            # basis disappeared or became invalid during replay.
+            result['status'] = 'STALE'
+            result['next_action'] = 'RECONCILE_CHANGED_BASIS'
+            result['evaluation_error'] = str(exc)
+            result['evidence'] = evidence
+            result['dependencies'].append(digest(replay))
+    result['executed_check_ids'] = [c['id'] for c in executed]
+    result['executed_effort_units'] = sum(c.get('cost', 1) for c in executed)
+    result['control_directories'] = sorted(set(result['control_directories'] + [str(report_path.parent)]))
+    # Keep observations from before execution too; edits during a replay cannot
+    # replace the basis with a newer plan or silently drop an earlier receipt.
+    try:
+        if any(digest(d['path']) != d for d in original_dependencies):
+            result['status'] = 'STALE'
+            result['next_action'] = 'RECONCILE_CHANGED_BASIS'
+    except OSError:
+        result['status'] = 'STALE'
+        result['next_action'] = 'RECONCILE_CHANGED_BASIS'
+    result['dependencies'] += original_dependencies
+    write_new(report_path, result)
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='op', required=True)
@@ -246,6 +345,7 @@ def main():
     p.add_argument('--test', type=Path, required=True)
     p.add_argument('--receipt', type=Path, required=True)
     p.add_argument('--timeout', type=int, default=60, help='disposable local test only; not an Agent time limit')
+    p.add_argument('--select', action='append', help='Class.test_method; omitted means all discovered cases')
     p = commands.add_parser('status')
     p.add_argument('--receipt', type=Path, required=True)
     p = commands.add_parser('check')
@@ -259,16 +359,32 @@ def main():
     p.add_argument('--columns', type=json.loads, required=True, help='array of label/pointer objects')
     p.add_argument('--block', required=True)
     p.add_argument('--output', required=True, help='new workspace-relative markdown file')
+    p = commands.add_parser('brief', help='account for original goal/policy paragraphs before choosing checks')
+    p.add_argument('--workspace', type=Path, required=True)
+    p.add_argument('--input', action='append', required=True)
+    p.add_argument('--brief', type=Path, required=True)
+    p = commands.add_parser('assess', help='find coverage gaps, reuse evidence and optionally run a bounded selected suite')
+    p.add_argument('--brief', type=Path, required=True)
+    p.add_argument('--plan', type=Path, required=True)
+    p.add_argument('--packet', type=Path, required=True)
+    p.add_argument('--evidence', action='append', default=[])
+    p.add_argument('--budget', type=int, default=12800, help='relative local check effort, not model quota or Agent timeout')
+    p.add_argument('--run', action='store_true')
+    p.add_argument('--report', type=Path, required=True)
     args = vars(parser.parse_args())
     op = args.pop('op')
     if op == 'freeze':
         return freeze(args['workspace'], args['input'], args['output'], args['packet'])
     if op == 'run':
-        return run(args['packet'], args['test'], args['receipt'], args['timeout'])
+        return run(args['packet'], args['test'], args['receipt'], args['timeout'], args['select'])
     if op == 'status':
         return status(args['receipt'])
     if op == 'check':
         return check_relations(args['workspace'], args['spec'], args['receipt'])
+    if op == 'brief':
+        return brief(args['workspace'], args['input'], args['brief'])
+    if op == 'assess':
+        return assess(args['brief'], args['plan'], args['packet'], args['evidence'], args['budget'], args['run'], args['report'])
     return render(**args)
 
 
@@ -276,7 +392,7 @@ if __name__ == '__main__':
     try:
         result = main()
         print(json.dumps(result, ensure_ascii=False, indent=2))
-        sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'RELATIONS_PASS', 'RENDERED') else 1)
+        sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'RELATIONS_PASS', 'RENDERED', 'SOURCE_BRIEF', 'DECLARED_SCOPE_COVERED') else 1)
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
         print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=False), file=sys.stderr)
         sys.exit(2)

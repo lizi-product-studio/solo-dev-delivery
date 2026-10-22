@@ -1,6 +1,6 @@
 # Portable Solo Delivery Kit
 
-AAP-0.1是完整系统的兼容请求信封；本包0.3.1保留version 2状态门禁并提供候选反例重放和跨产物关系核验。独立Skill只导出challenge及本地关系检查，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
+AAP-0.1是完整系统的兼容请求信封；本包0.4.2保留version 2状态门禁并提供有来源的场景选择、逐方法执行覆盖、候选反例重放和跨产物关系核验。独立Skill只导出challenge及本地关系检查，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
 
 ## 文件与入口
 
@@ -8,6 +8,7 @@ AAP-0.1是完整系统的兼容请求信封；本包0.3.1保留version 2状态�
 - `scripts/session.py`：仅做受限本地产物检查的 CLI，不调用模型、任意 shell、浏览器或外部服务。用 `init`、`next`、`check --check ID`、`finish` 推进；仅支持契约内的文本、JSON、CSV 检查，其他验收必须交给真实宿主验证。
 - `core/local_checks.py`：上述 CLI 的只读检查器；只证明明确声明的机械属性，不证明语义、体验、授权或平台状态。
 - `scripts/challenge.py`：不新建队列即可冻结候选、在临时副本运行审查者unittest、精确核对汇总及生成表格；改动依赖使旧结果失效。它运行受信Python代码，不是安全沙箱或独立身份认证。`--help`与Skill的`references/result-verification.md`给出范围和调用。
+- `core/coverage.py`：把原文段落、声明结果和真实逐方法回执联系起来，优先补缺口、复用有效证据；未知/预算不足不放行，覆盖齐全后仍需宿主判断语义充分性。
 - `core/json_relations.py`：精确的未知汇总与权威数据表格生成/比对；只证明声明的关系，不证明源数据、自由文本或业务口径正确。
 - `schemas/aap-0.1.json`：AAP-0.1 请求信封 schema；0.2 状态门禁及新增操作见 `PROTOCOL.md`。
 - `adapters/example_adapter.py`：内存 JSONL 演示，不执行工具、不持久化 state，也不是可直接接入的平台适配器。

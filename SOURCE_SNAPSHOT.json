@@ -25,8 +25,8 @@
     },
     {
       "path": "INTEGRATION.md",
-      "sha256": "476eb59df23ce720c5204ba4548319649e6ab6a8fd0676fdf2c9cb5bb30921fd",
-      "bytes": 3822
+      "sha256": "0cc63f460c0a45e9e78232f6e2cffb202a241d95f52a81f8c6904384aebef67b",
+      "bytes": 4174
     },
     {
       "path": "README.md",
@@ -290,8 +290,8 @@
     },
     {
       "path": "scripts/review_engine.py",
-      "sha256": "ce712a0e621b093f571ab13dba8ac69f3d1b1cb9c8bdf99ad07f4a970b31d901",
-      "bytes": 29552
+      "sha256": "87bb2d3349e35095e17b39a20c4eb4ab23338c23142a596d958285ad1b2ca749",
+      "bytes": 29810
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
@@ -410,8 +410,8 @@
     },
     {
       "path": "tests/test_business_loop.py",
-      "sha256": "38ed500d1594275f21631e553166435e44f0c6aa270d373c74f227625a6ad209",
-      "bytes": 20760
+      "sha256": "13a28239972cb7c44e881d5957b799796453be21d75474c8454fefacac448ecb",
+      "bytes": 20943
     },
     {
       "path": "tests/test_codex_worker.py",

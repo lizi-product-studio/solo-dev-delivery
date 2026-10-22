@@ -32,3 +32,5 @@ python -m unittest discover -s tests -v
 整合期间检测到另一个Agent的新提交63a4248，已先同步并保留其sensitivity.py、challenge --probes、引用、导出依赖及VALIDATION.md。本轮版本升为0.7.0，未覆盖0.6.0成果。
 
 本机Windows/Python3.12的整合后便携套件125项通过（原115项含敏感性检查，新增10项）；Skill格式及本地引用检查通过。跨系统结果由本次GitHub Actions运行提供，不把本机原生POSIX不兼容错误记作通过。
+
+首次Linux原生回归定位出两项既有环境依赖：业务撤权竞态测试注入的worker仍要求真实Codex在PATH，现改为与其他替身测试相同的受控可执行路径；unittest空套件实际返回5时，分类从FAIL修正为INCOMPLETE，仍阻断交付，真实失败不改成PASS。未改变CLI权限检查或交付门禁。

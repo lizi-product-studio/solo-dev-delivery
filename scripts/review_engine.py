@@ -334,10 +334,12 @@ class Reviews:
                 except ValueError as exc:
                     state='BLOCKED';out.write(str(exc)+'\n')
                 except OSError as exc:out.write(str(exc)+'\n')
-            if b['adapter']=='unittest' and state=='PASS':
+            if b['adapter']=='unittest' and (state=='PASS' or (state=='FAIL' and code==5)):
                 raw=log.read_text(errors='replace');m=re.search(r'Ran (\d+) tests? in ',raw)
                 count=int(m.group(1)) if m else 0
-                if not count or re.search(r'\b(skipped|expected failures|unexpected successes)=',raw):state='INCOMPLETE'
+                # unittest may return 5 for an empty suite. It is still not PASS;
+                # keep import/execution failures as FAIL unless zero tests are explicit.
+                if (state=='PASS' and (not count or re.search(r'\b(skipped|expected failures|unexpected successes)=',raw))) or (code==5 and m and count==0):state='INCOMPLETE'
             if git(t['contract']['repository'],'status','--porcelain') or git(t['contract']['repository'],'rev-parse','HEAD')!=commit:state='STALE'
             with self.q.transaction():
                 current=self.load(tid)

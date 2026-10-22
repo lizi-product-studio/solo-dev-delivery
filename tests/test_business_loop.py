@@ -278,7 +278,9 @@ class BusinessTests(unittest.TestCase):
             with kwargs['launch_guard']():
                 launched.append(True)
             raise AssertionError('Revoked launch should not reach worker body')
-        result=self.q.resources.run(tid,'impl','work',worker=worker)
+        # The injected worker exercises the guard without launching a real CLI.
+        with patch('resource_engine.shutil.which',return_value='/synthetic/never-executed-codex'):
+            result=self.q.resources.run(tid,'impl','work',worker=worker)
         self.assertFalse(launched);self.assertEqual('BLOCKED',result['runs'][-1]['status'])
 
     def test_direct_task_cancellation_updates_business_case(self):

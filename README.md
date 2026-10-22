@@ -2,6 +2,29 @@
 
 目标是把真实项目做好，减少用户重复提醒、返工和日常操心。当前个人实例目录：`/Users/lizi/Documents/Codex/Systems/solo-delivery`。用户保留方向和经营政策控制权，系统在有效授权范围内逐步承担交付工作；当前能力不等于已实现无人经营。
 
+## 0.7.0：吸收 Lite，面向任意 Agent 宿主
+
+当前Skill吸收Superpowers Lite的工程分流、系统调试与风险审查，作为一个按需引用，沿用现有证据回执和停止判断。跨平台默认仍是一个自包含的solo-dev-delivery包；不需要同时安装四个Lite Skill，不增加第二套DONE判定或默认持久流程。[取舍与验证](INTEGRATION.md)记录具体合并边界与第三方来源。
+
+从源码导出干净包，再安装到目标宿主实际的Skill搜索根目录（Python 3.9+，按本机选择python/python3）：
+
+```sh
+python scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --dry-run
+python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills
+python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --verify
+```
+
+默认generic模式不猜任何平台路径，支持DeepSeek Harness、自建Agent及各种CLI/IDE的兼容Skill目录；具体注册机制由宿主确认。ZCode/Kimi CLI可改用 `--host zcode` 或 `--host kimi`。不支持Skill目录的宿主可显式加载Markdown并提供包路径。安装校验不代表平台真实调用，完整说明见[宿主安装与无状态预检](skill/solo-dev-delivery/references/host-integration.md)。
+
+无状态预检只在任务依赖未知能力时使用，不创建session：
+
+```sh
+python portable-agent-kit/scripts/capability_probe.py --capabilities host.json --require fs.read --format text
+```
+
+READY/BLOCKED/NEEDS_CONTEXT分别表示所声明要求有支持、明确不支持、或仍未知；没有实际工具观察不能声称能力已验证。导出包也包含该工具、安装器和许可，所有引用/脚本可随目录移动；不携带个人偏好、客户数据或runtime。
+
 ## 默认轻量，Codex 原生优先
 
 新软件聊天通过本机 `~/.codex/AGENTS.md` 加载个人偏好和 `solo-dev-delivery` Skill。主会话直接处理小改，按需使用原生子Agent、会话管理和适用工作树，不再强制为普通委派嵌套启动CLI或填写完整任务契约。资源与验证投入由实际影响决定。
@@ -59,7 +82,7 @@ AAP-0.1 信封保持，内核状态改为 version 2。自定义宿主必须提�
 - [主动审核](主动审核执行说明.md)：队列状态、缺陷扩查、版本和证据阻断。
 - [资源与原生回执](资源调度执行说明.md)：原生登记格式和旧CLI兼容操作。
 - [客户业务闭环](业务闭环执行说明.md)：仅相关客户接手任务需要加载。
-- [历史依据](历史依据与取舍.md)：保留来源，不当作新项目授权。
+- [Git提交历史](https://github.com/lizi-product-studio/solo-dev-delivery/commits/main/)：保留来源，不当作新项目授权。
 
 ## 运行边界与验证
 

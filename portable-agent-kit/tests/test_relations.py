@@ -23,7 +23,8 @@ class RelationTests(unittest.TestCase):
         self.scope = ["rows.json", "summary.json", "plan.md"]
 
     def write(self, path, value):
-        (self.workspace / path).write_text(value if isinstance(value, str) else json.dumps(value), encoding="utf-8")
+        # Preserve fixture bytes on every OS, including deliberately supplied CRLF.
+        (self.workspace / path).write_bytes((value if isinstance(value, str) else json.dumps(value)).encode("utf-8"))
 
     def aggregate(self, **overrides):
         probe = {"type": "json.aggregate", "path": "summary.json", "pointer": ["total"],

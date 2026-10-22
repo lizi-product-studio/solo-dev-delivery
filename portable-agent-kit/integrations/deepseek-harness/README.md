@@ -1,24 +1,19 @@
-# DeepSeek Harness 接入
+# DeepSeek Harness 和其他自定义 Harness
 
-DeepSeek Harness 适合接入 Portable Kit：它采用插件化架构，工具、会话、存储、循环、调度、UI 和 MCP 都可以组合。接入时把 AAP-0.1 内核作为一个本地工具或 MCP 服务暴露给 Harness，让模型只能通过结构化事件推进任务状态。
+先区分模型与宿主：使用DeepSeek模型不说明Harness的Skill目录、插件API、浏览器、终端或会话能力。不同Harness版本和自建实现可用同一份Skill，具体注册机制须查当前宿主文档/配置；本仓库没有认证任何特定DeepSeek官方插件接口。
 
-推荐映射：
+默认按[通用安装](../generic/README.md)导出自包含Skill，再指定Harness真实的Skill搜索根目录：
 
-| AAP 能力 | DeepSeek Harness 侧 |
-| --- | --- |
-| `core/state_machine.py` | 本地插件或 MCP 服务 |
-| `fs.*`、`shell.exec`、`test.run` | Harness 工具插件 |
-| `checkpoint.persist`、evidence | Harness session/storage 插件或项目目录中的受控状态文件 |
-| `independent_review` | Agent/Subagent 插件；回执必须绑定不同执行者 |
-| `external.authorized` | 单独的授权插件；未知结果返回 UNKNOWN |
+```sh
+python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills --dry-run
+python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills
+python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills --verify
+```
 
-使用顺序：
+上述路径是占位符，不是DeepSeek统一默认路径。Harness只有规则/提示词入口时，显式加载包内SKILL.md，并把实际包路径提供给模型以读取按需引用；本地脚本只在Harness可用文件与Python工具时运行。单纯聊天也可复用判断方法，但执行保持未验证。
 
-1. 启动 DeepSeek Harness，打开目标项目，加载 `SYSTEM_PROMPT.md`、`PROTOCOL.md` 和项目自己的 `AGENTS.md`。
-2. 用 `capability-manifest.json` 逐项探测 Harness 当前真的拥有的工具，不从模式名称猜测。
-3. 将 `core/state_machine.py` 包成本地插件或 MCP server。模型提出事件，内核返回下一动作和阻断原因。
-4. 先运行包内 conformance tests，再在隔离项目执行一条简单修改→测试→读回→复核流程。
+宿主用实际工具观察文件读写、shell、测试、浏览器、独立复核或外部动作权限，只报告当前任务相关部分；用包内 `capability_probe.py`检查明确要求。unknown不推断为支持，不从DeepSeek模型名猜能力或成本。
 
-当前包没有伪装成 DeepSeek 官方插件，也没有自动安装或连接账号。DeepSeek Harness 处于持续迭代的开发预览阶段，具体插件 API 需要按当前仓库版本实现；如果只把规则文本放进 Harness，能复用方法，但不能获得状态机的程序门禁。
+如确需持久恢复才使用完整系统AAP-0.1：将工具结果映射到真实请求，保存state/checkpoint，并实现可信证据核验回调。模型只能提交事件；原状态机仍核验候选、缺陷、未知副作用和验收绑定。默认Skill安装不需要这一步，也不附会话调度器或MCP服务。
 
-模型档位仍按 `simple / standard / deep` 传给宿主。Codex 的 `gpt-6-luna` 只属于 Codex 模型映射；DeepSeek Harness 要使用它当前配置的模型或别名，协议和质量门禁保持一致。
+实测须分别确认文件安装、客户端加载、自动选择及临时项目的真实修改/检查。当前自动化测试验证本地包和脚本，不代表DeepSeek Harness实机认证。

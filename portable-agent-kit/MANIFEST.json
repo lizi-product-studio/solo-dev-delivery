@@ -1,6 +1,6 @@
 {
   "package": "portable-solo-delivery-kit",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -15,17 +15,20 @@
     "skill_exporter": "../scripts/export_skill.py",
     "coverage_selection": "core/coverage.py via challenge.py brief/assess",
     "local_verification": "scripts/challenge.py verify (one invocation; compact summary; current evidence reuse)",
-    "critical_observation_sensitivity": "core/sensitivity.py via challenge.py verify --probes"
+    "critical_observation_sensitivity": "core/sensitivity.py via challenge.py verify --probes",
+    "capability_preflight": "scripts/capability_probe.py (optional, stateless)",
+    "skill_installer": "../scripts/install_agent.py (exported bundle only)"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",
     "deepseek-harness": "instructions only; host loading unverified",
-    "kimi-code": "instructions only; host loading unverified",
-    "generic": "instructions only; host loading unverified"
+    "kimi-code": "Skill directory install and file verification; host loading unverified",
+    "generic": "explicit Skill-root install and file verification; host loading unverified",
+    "zcode": "Skill directory install and file verification; host loading unverified"
   },
   "local_runtime_status": "Readback and declared relation checks are local-only. Challenge CLI runs trusted reviewer unittest code on temporary candidate files; this is not a security sandbox or identity/production acceptance proof.",
   "model_provider": "agnostic",
   "codex_default_execution": true,
   "scheduler": "none",
-  "export_status": "Lightweight Skill export includes challenge and relation checks only. Persistent session/state-machine/contracts remain native compatibility, not part of standalone export. Target platform loading must be verified by that host."
+  "export_status": "Self-contained Skill includes challenge with sensitivity probes, relation checks, optional stateless capability preflight, generic installer and third-party license. Personal knowledge, runtime, persistent session/state-machine/contracts remain excluded. Host loading and automatic routing require host evidence."
 }

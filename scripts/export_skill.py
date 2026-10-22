@@ -18,7 +18,7 @@ def export(destination):
     if destination.exists():
         raise ValueError("destination exists; preserve it and choose a new parent")
     source = ROOT / "skill/solo-dev-delivery"
-    match = re.search(r'^  version: "([0-9]+\.[0-9]+\.[0-9]+)"$', (source / 'SKILL.md').read_text(), re.M)
+    match = re.search(r'^  version: "([0-9]+\.[0-9]+\.[0-9]+)"$', (source / 'SKILL.md').read_text(encoding='utf-8'), re.M)
     if not match:
         raise ValueError('Skill metadata must contain a semantic version')
     version = match.group(1)
@@ -33,8 +33,12 @@ def export(destination):
     # persistent protocol or old contract examples. Native compatibility stays
     # in the complete system and is tested there.
     mappings += [(kit / "scripts/challenge.py", "scripts/challenge.py")]
+    mappings += [(kit / "scripts/capability_probe.py", "scripts/capability_probe.py"),
+                 (ROOT / "scripts/install_agent.py", "scripts/install_agent.py"),
+                 (ROOT / "THIRD_PARTY.md", "THIRD_PARTY.md"),
+                 (ROOT / "vendor/superpowers-lite/LICENSE", "licenses/superpowers-lite-MIT.txt")]
     mappings += [(kit / "core" / name, "scripts/core/" + name)
-                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py")]
+                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py")]
     destination.mkdir(parents=True)
     for src, rel in mappings:
         target = destination / rel

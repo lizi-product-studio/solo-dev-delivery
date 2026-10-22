@@ -1,6 +1,6 @@
 # Portable Solo Delivery Kit
 
-AAP-0.1是完整系统的兼容请求信封；本包0.6.0保留version 2状态门禁并提供有来源的场景选择、逐方法执行覆盖、候选反例重放和跨产物关系核验。独立Skill只导出challenge及本地关系检查，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
+AAP-0.1是完整系统的兼容请求信封；本包0.7.0保留version 2状态门禁并提供有来源的场景选择、逐方法执行覆盖、候选反例重放和跨产物关系核验。独立Skill导出challenge、本地关系检查、无状态能力预检和通用安装器，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
 
 ## 文件与入口
 
@@ -13,6 +13,8 @@ AAP-0.1是完整系统的兼容请求信封；本包0.6.0保留version 2状态�
 - `schemas/aap-0.1.json`：AAP-0.1 请求信封 schema；0.2 状态门禁及新增操作见 `PROTOCOL.md`。
 - `adapters/example_adapter.py`：内存 JSONL 演示，不执行工具、不持久化 state，也不是可直接接入的平台适配器。
 - `scripts/export_skill.py`（系统源码包入口）：从完整系统目录生成自包含 Skill 文件夹和 ZIP；导出内容不带个人偏好或本机运行时。
+- `scripts/capability_probe.py`：可选无状态预检；只检查本次显式需要的能力，输出READY/BLOCKED/NEEDS_CONTEXT，不创建任务状态、不执行工具。与持久核心共享三态归一化。
+- `../scripts/install_agent.py`：安装已导出的Skill目录；generic模式显式指定任意宿主的真实Skill根目录，ZCode/Kimi CLI支持目录快捷方式。
 
 普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：
 
@@ -29,8 +31,10 @@ python3 scripts/export_skill.py /path/to/new-parent/solo-dev-delivery
 
 ## 宿主接入
 
-DeepSeek Harness、zcode、Kimi Code、Cursor 和其他 Agent 的目录仅提供接入说明，**没有完成这些平台的实机加载或一致性验证**。宿主必须自行实现工具调用、持久化、权限及证据校验；逐项执行当前平台加载验证前，不得声称 Skill 已生效或平台接入已完成。能力清单是待核对的声明，不是工具探测结果或证据；不得仅凭 manifest 将能力标为已支持。参考适配器只是内存演示。
+通用安装入口适用于任何提供兼容Skill目录的宿主，包括DeepSeek Harness、自建Agent及各种CLI/IDE；实际目录和注册机制由宿主文档/配置确认。ZCode/Kimi有已核对目录的快捷方式。安装后脚本和引用自包含，不需要额外安装Lite或带入个人系统。详见[宿主安装](../skill/solo-dev-delivery/references/host-integration.md)。
+
+**没有完成这些平台的实机加载或自动分流验证**。宿主提供真实工具、权限和证据；需要持久恢复时才额外实现存储和AAP验证回调。文件安装通过不代表客户端加载，能力清单只是声明，参考适配器只是内存演示。
 
 Codex 仍是本机默认执行体系；只有用户要求导出时才使用该包。外部写入、身份操作、付款、发布和不可逆操作仍需具体授权及真实宿主能力。非软件业务只复用目标澄清、证据判断、验证与失败恢复方法；不得无端套用软件队列或软件验收清单。
 
-此包不提供 HTTP 服务、消息队列、后台 scheduler 或自动跨平台安装。实际交付范围以当前项目验收和目标宿主的真实证据为准。
+此包提供本地Skill目录安装与校验，不提供HTTP服务、消息队列、后台scheduler或自动授权。实际交付范围以当前项目验收和目标宿主的真实证据为准。

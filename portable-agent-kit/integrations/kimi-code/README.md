@@ -1,21 +1,16 @@
-# Kimi Code 接入
+# Kimi Code CLI 接入
 
-Kimi Code 可以从 CLI、桌面端或 VS Code 使用，也提供 MCP、Agent Skills 和 Agent/Subagent 定制入口。把 Portable Kit 作为项目级技能或规则资料接入，再把宿主工具结果映射到 AAP-0.1。
+默认使用自包含Skill，按[通用安装](../generic/README.md)导出后运行：
 
-建议接入顺序：
+```sh
+python /absolute/package/solo-dev-delivery/scripts/install_agent.py --host kimi
+python /absolute/package/solo-dev-delivery/scripts/install_agent.py --host kimi --verify
+```
 
-1. 将 `SYSTEM_PROMPT.md` 和 `PROTOCOL.md` 作为 Kimi Code 项目的基础规则或技能资料。
-2. 将 `core/state_machine.py` 放在项目可读的工具目录，或由本地 MCP/脚本工具调用它。模型不直接修改 state，只提交结构化事件。
-3. 用 Kimi Code 的文件、终端、测试、浏览器/MCP 工具完成适配器，能力清单写入 `capability-manifest.json`。
-4. 每个阶段保存 state、checkpoint、evidence 和 request idempotency key；Kimi 会话恢复不等于交付状态恢复，持久状态必须由适配器保存。
-5. 先跑包内 conformance tests，再用隔离项目验证真实读回和交付阻断。
+当前CLI的用户目录是 `$KIMI_CODE_HOME/skills`，未设置时为 `~/.kimi-code/skills`。`--destination`可指定项目级或其他真实Skill根目录，安装器不改Kimi配置。启动新会话，用 `/skill:solo-dev-delivery`调用；菜单中实际发现和加载需要本机验证。
 
-Kimi Code 官方文档当前列出 CLI、桌面端、VS Code、MCP、Agent Skills 和 Agent/Subagent，并说明可执行代码阅读、文件编辑和命令操作。实际权限、模型池、上下文和会话恢复以你的版本和账号为准；适配器必须通过 probe 取得结果，不能猜测。
+也可 `kimi --skills-dir /absolute/package-parent` 做本次会话加载：该目录下面应直接包含 `solo-dev-delivery/SKILL.md`。这个参数替换本次自动扫描的用户/项目目录，不是永久追加；旧kimi-cli和其他产品界面可能不同，不能套用路径。
 
-资源调度使用角色档位，而不是跨平台硬编码模型名：
+完整的安装保护、能力预检与实际调用验证见[宿主安装说明](../../../skill/solo-dev-delivery/references/host-integration.md)。普通任务直接使用Kimi工具；只有明确需要持久恢复时才按完整系统PROTOCOL接入AAP-0.1，不为每个任务登记契约。
 
-- `simple`：宿主最低成本模型，单 Agent，定向检查。
-- `standard`：常规实现和测试。
-- `deep`：支付、身份、数据完整性、架构和独立复核。
-
-在 Codex 中，`gpt-6-luna` 可以作为 simple 或部分 standard 的低成本子 Agent；在 Kimi Code 中应映射到 Kimi 自己可用的低成本模型或配置别名。两者都必须保持同样的证据和交付门禁。
+2026-10-22核对：[Agent Skills](https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html)、[CLI参数](https://www.kimi.com/code/docs/en/kimi-code-cli/reference/kimi-command)。当前测试不代表Kimi客户端实机加载已通过。

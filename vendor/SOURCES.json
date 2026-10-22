@@ -20,6 +20,26 @@
       "sha256": "7d6d9bf74f64ba424f5a8f106ccaab553f1e63b9df47c0349443b56010445c4c",
       "license": "MIT",
       "modified": false
+    },
+    {
+      "name": "Superpowers Lite selective integration",
+      "repository": "https://github.com/lizi-product-studio/superpowers-lite",
+      "commit": "e753ab13097b9f987f6f3ec4dadaea2656b887b2",
+      "source_paths": [
+        "skills/",
+        "scripts/install_agent.py",
+        "scripts/capability_probe.py"
+      ],
+      "adapted_paths": [
+        "skill/solo-dev-delivery/references/engineering-practice.md",
+        "scripts/install_agent.py",
+        "portable-agent-kit/core/capabilities.py"
+      ],
+      "license": "MIT",
+      "license_path": "vendor/superpowers-lite/LICENSE",
+      "license_sha256": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400",
+      "modified": true,
+      "notes": "Selective concepts and implementation adaptation; no second delivery protocol or global hooks. See THIRD_PARTY.md."
     }
   ]
 }

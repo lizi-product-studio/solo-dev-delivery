@@ -11,6 +11,7 @@ import json
 import re
 from copy import deepcopy
 from datetime import datetime, timezone
+from .capabilities import normalize
 
 PROTOCOL = "aap/0.1"
 STATE_VERSION = 2
@@ -87,17 +88,10 @@ def validate_contract(contract):
 def probe(capabilities):
     """Return a three-state report; unknown never grants a capability."""
     _require(isinstance(capabilities, dict), "capabilities must be an object")
-    result = {}
-    for name, value in capabilities.items():
-        if isinstance(value, bool):
-            result[name] = "supported" if value else "unsupported"
-        elif value in ("supported", "unsupported", "unknown"):
-            result[name] = value
-        elif isinstance(value, dict):
-            raw = value.get("supported")
-            result[name] = "supported" if raw is True else ("unsupported" if raw is False else "unknown")
-        else:
-            result[name] = "unknown"
+    try:
+        result = normalize(capabilities)
+    except ValueError as error:
+        raise ProtocolError(str(error)) from None
     return {"protocol": PROTOCOL, "capabilities": result, "unknown_is_blocking": True}
 
 

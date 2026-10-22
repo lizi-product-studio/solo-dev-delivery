@@ -8,7 +8,7 @@ import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import shlex
 import sys
 
@@ -104,7 +104,22 @@ def _absolute_literals(text):
     except SyntaxError as exc:
         raise ValueError("adapter syntax error: " + str(exc)) from exc
     return [node.value for node in ast.walk(tree)
-            if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value.startswith("/")]
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+            and (node.value.startswith("/") or PureWindowsPath(node.value).is_absolute())]
+
+
+def _resolved_path(value):
+    if os.name != 'nt' and PureWindowsPath(value).is_absolute() and not Path(value).is_absolute():
+        # A foreign Windows path must not become a relative POSIX workspace path.
+        return PureWindowsPath(value)
+    if os.name == 'nt':
+        # Extended paths name the same files but retain their prefix in resolve().
+        value = str(PureWindowsPath(value))
+        if value[:8].lower() == '\\\\?\\unc\\':
+            value = '\\\\' + value[8:]
+        elif value.startswith('\\\\?\\'):
+            value = value[4:]
+    return Path(value).resolve()
 
 
 def seal(task_path, plan_path, reason=None):
@@ -126,8 +141,9 @@ def seal(task_path, plan_path, reason=None):
     if task['format'] == 'local-delivery-gate/2':
         plan = source_checks(brief, plan)
     if task['format'] == 'local-delivery-gate/2':
-        if any(str(Path(value).resolve()) == task['workspace'] or Path(task['workspace']) in Path(value).resolve().parents
-               for value in _absolute_literals(test.read_text())):
+        workspace = _resolved_path(task['workspace'])
+        if any(path == workspace or workspace in path.parents
+               for path in (_resolved_path(value) for value in _absolute_literals(test.read_text()))):
             raise ValueError('adapter references original workspace; use Path.cwd() or SOLO_CANDIDATE_ROOT to observe the frozen candidate copy')
         if plan.get('decisions'):
             plan, generated, selection = compile_plan(brief, plan, test.read_text())

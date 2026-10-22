@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "67e169725dc6aab7016f520843e6c77ef04e54c2e97f43c3674d8ebac54f10a3",
-      "bytes": 7346
+      "sha256": "c2080e1ab7619800bf41090c9514fe8d35a8ec964bda6c36d54dfca9f8526018",
+      "bytes": 8672
     },
     {
       "path": "knowledge/methods.json",
@@ -210,8 +210,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
-      "sha256": "a3f333f4c6f7cbb373415c2d0e1681d3d1a88f4d7f99aac460730605eb9d8237",
-      "bytes": 16936
+      "sha256": "9776b6b1a993b1b7072544901164ab1922f716603aae8b148aeb895ebeba3812",
+      "bytes": 17632
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -235,8 +235,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_decisions.py",
-      "sha256": "0ba94393d6f66747857d9d0cdaa23538353ab7212c740803b9dbfc50e4e583c8",
-      "bytes": 12478
+      "sha256": "418f35f030237ca989945682d3d00b2e8a71c368a428d8c6286c49b086fa82e7",
+      "bytes": 14565
     },
     {
       "path": "portable-agent-kit/tests/test_gate.py",

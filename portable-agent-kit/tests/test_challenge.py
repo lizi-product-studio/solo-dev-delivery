@@ -29,6 +29,69 @@ class ChallengeTests(unittest.TestCase):
     def run_challenge(self):
         return challenge.run(self.packet, self.test, self.receipt, 5)
 
+    def verify(self, name='verify.json'):
+        return challenge.verify(self.work, ['policy.txt'], ['candidate.py'], self.test,
+                                self.root/'review'/name, 5)
+
+    def test_one_call_verification_reuses_exact_evidence_without_execution(self):
+        first = self.verify()
+        self.assertEqual(('CHALLENGE_PASS', False, 1),
+                         (first['status'], first['reused'], first['executed_tests']))
+        raw = Path(first['receipt']).read_bytes()
+        with patch.object(challenge, 'run', side_effect=AssertionError('must not repeat')):
+            second = self.verify('unnecessary-copy.json')
+        self.assertEqual((True, 0, first['receipt']),
+                         (second['reused'], second['executed_tests'], second['receipt']))
+        self.assertEqual(raw, Path(first['receipt']).read_bytes())
+        self.assertFalse((self.root/'review/unnecessary-copy.json').exists())
+
+    def test_partial_pass_does_not_replace_necessary_full_suite(self):
+        self.test.write_text('import unittest\nfrom candidate import difference\nclass Check(unittest.TestCase):\n def test_normal(self): self.assertEqual(2,difference(5,3))\n def test_reverse(self): self.assertEqual(99,difference(3,5))\n')
+        challenge.run(self.packet, self.test, self.receipt, 5, ['Check.test_normal'])
+        result = self.verify()
+        self.assertEqual(('FAIL', False, 2),
+                         (result['status'], result['reused'], result['executed_tests']))
+        self.assertEqual(['Check.test_reverse'], result['failed_tests'])
+
+    def test_current_failure_dominates_later_pass_even_if_omitted(self):
+        gate = self.root/'environment-flag'
+        self.test.write_text('import unittest\nfrom pathlib import Path\nclass Check(unittest.TestCase):\n def test_gate(self): self.assertTrue(Path('+repr(str(gate))+').exists())\n')
+        self.assertEqual('FAIL', self.run_challenge()['status'])
+        gate.touch()
+        passed = self.root/'review/later-pass.json'
+        self.assertEqual('CHALLENGE_PASS', challenge.run(self.packet, self.test, passed, 5)['status'])
+        with patch.object(challenge, 'run', side_effect=AssertionError('known failure needs diagnosis')):
+            result = self.verify()
+        self.assertEqual(('FAIL', True), (result['status'], result['reused']))
+        self.assertEqual(str(self.receipt.resolve()), result['receipt'])
+
+    def test_changed_candidate_or_script_requires_new_evidence_preserving_old(self):
+        first = self.verify()
+        saved = Path(first['receipt']).read_bytes()
+        (self.work/'candidate.py').write_text('def difference(a,b): return abs(a-b)\n')
+        with self.assertRaisesRegex(ValueError, 'not reusable'):
+            self.verify()
+        self.assertEqual('FAIL', self.verify('changed.json')['status'])
+        self.assertEqual('STALE', challenge.status(first['receipt'])['status'])
+        self.assertEqual(saved, Path(first['receipt']).read_bytes())
+        self.test.write_text('import unittest\nfrom candidate import difference\nclass Check(unittest.TestCase):\n def test_revised(self): self.assertEqual(2,difference(3,5))\n')
+        result = self.verify('changed-script.json')
+        self.assertEqual(('CHALLENGE_PASS', False), (result['status'], result['reused']))
+
+    def test_unknown_is_not_cached_as_completed_acceptance(self):
+        self.test.write_text('import unittest\nclass Check(unittest.TestCase):\n @unittest.skip("missing environment")\n def test_skip(self): pass\n')
+        self.assertEqual('UNKNOWN', self.verify()['status'])
+        repeated = self.verify('second.json')
+        self.assertEqual(('UNKNOWN', False), (repeated['status'], repeated['reused']))
+
+    def test_compact_output_retains_full_execution_log_on_disk(self):
+        self.test.write_text(self.test.read_text()+'\nprint("detail" * 3000)\n')
+        result = self.verify()
+        self.assertLess(len(json.dumps(result)), 1000)
+        receipt = json.loads(Path(result['receipt']).read_text())
+        self.assertGreater(receipt['stdout']['bytes'], 18000)
+        self.assertEqual('CHALLENGE_PASS', challenge.status(result['receipt'])['status'])
+
     def test_observed_pass_is_bound_and_the_original_is_not_executed(self):
         self.assertEqual('CHALLENGE_PASS', self.run_challenge()['status'])
         self.assertEqual('CHALLENGE_PASS', challenge.status(self.receipt)['status'])

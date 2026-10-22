@@ -1,11 +1,11 @@
 {
   "created": "2026-10-22",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "scope": "Current source and validation summary only; runtime, customer project code, raw conversations, local evaluation candidates/receipts and old export bundles excluded. Manifest excludes itself.",
   "history": {
-    "previous_head": "8de7f38da8b93fda274264e3e4c9d1404cb4a714",
-    "evaluated_intermediate_packages": "Parent checkpoint holds evaluations/v0.4.0 and evaluations/v0.4.1; absent from current tree.",
-    "rewrite_history": false
+    "previous_head": "13d866869e5618999e1310b93a2ed7b754a5b5a0",
+    "rewrite_history": false,
+    "previous_version": "0.4.2"
   },
   "files": [
     {
@@ -15,13 +15,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "d25fee932bba72c43994e547c69c089bd186f6f7302fa70c063ddcdf584bed7f",
-      "bytes": 7073
+      "sha256": "b0c76ed000bec81f9a4ee3e762b54706a2d39fab3df9c60edbcca136392e3f63",
+      "bytes": 7006
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "2efd1723277b2297a3c8bbbd7d63e4996406dd9f292989ca406bcbafe5330751",
-      "bytes": 12688
+      "sha256": "6e6f31e4e9db0dcf68d8f4c61b97d72915082208f7524391fd8bf3ea3c9abb02",
+      "bytes": 11829
     },
     {
       "path": "knowledge/methods.json",
@@ -35,8 +35,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "4dd994afb116750cdd16ce6e323c0fc2e33129edc050a9dd15819698ac43073a",
-      "bytes": 1521
+      "sha256": "8149347c6acd18e4374d8b8d49acc293d41a4ba774b8e299c54f42aaf85ba61b",
+      "bytes": 1636
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -45,7 +45,7 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "ea884621c0b3e3266ba66962b9919dec8cdaf956d05ed6cc0039c9127a132215",
+      "sha256": "2d88965fec013355b09f9cf6b0c9ab0af278a9ce44c32843f510f3a7e12a943d",
       "bytes": 4228
     },
     {
@@ -160,8 +160,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "229af6796c384f0c99b329b5a0ad670654d0390be65fbe2f0bd84eb95f34ab76",
-      "bytes": 20880
+      "sha256": "eac3a690f0662d174f177e18cef4c2789224203317a1bcbcb22272821326c6ec",
+      "bytes": 24636
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -175,8 +175,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_challenge.py",
-      "sha256": "fad68e470fde755e28a96a334f74a2b50706a3ec0b7728152f70f0f100379f87",
-      "bytes": 7806
+      "sha256": "44338cec310eb4fcbef3153a8951bea812aeb7dc62f519aeb05ee68339e4b2fe",
+      "bytes": 11970
     },
     {
       "path": "portable-agent-kit/tests/test_coverage.py",
@@ -240,8 +240,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "fcdd978da01a49c9429ff683f1f966c3bdbe5fd780d739b3cc810b5f211f62af",
-      "bytes": 5189
+      "sha256": "a81158436021a35d6f7697d5fb60ba649572869d2368eaa2006cbfd3f8dfdbd5",
+      "bytes": 4057
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -255,13 +255,13 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
-      "sha256": "dd5af8bad731ca5bc5713226bc9f5c153cde0233a74f13b251a2b7e7ca2be37b",
-      "bytes": 3077
+      "sha256": "77cfdcc3d57a675822367a86483b13c0b6d3b82a9cb13ac0b3434fc78e6014cd",
+      "bytes": 3140
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "b61b0b8b44ae10513a2d5aed8f562e80d3811914be8202b9d36ab751ef65ea8d",
-      "bytes": 10516
+      "sha256": "818ae4e52de35c5ca559da69e8bdb0c1579a839b4d49682b4b47574bbf112911",
+      "bytes": 11935
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

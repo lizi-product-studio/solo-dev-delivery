@@ -95,18 +95,22 @@ def current(packet):
         return False
 
 
-def freeze(workspace, inputs, outputs, target):
+def candidate_packet(workspace, inputs, outputs):
     workspace = Path(workspace).resolve(strict=True)
-    target = outside(target, workspace)
     if not inputs or not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
         raise ValueError('need distinct, nonempty input and output file lists')
     if len(inputs) + len(outputs) > 200:
         raise ValueError('declare at most 200 files; use native project review for larger scopes')
-    packet = {'format': 'local-challenge/1', 'workspace': str(workspace),
+    return {'format': 'local-challenge/1', 'workspace': str(workspace),
               'inputs': [artifact(workspace, p) for p in inputs],
               'outputs': [artifact(workspace, p) for p in outputs],
               'review_instruction': 'Derive critical outcomes from original inputs before reading implementation/self-tests. Write unittest scenarios using real actions, persisted readback and contradictory evidence where relevant. Mark untested business semantics honestly.',
               'limits': 'No identity or authorization authentication; no proof of complete coverage or production readiness.'}
+
+
+def freeze(workspace, inputs, outputs, target):
+    packet = candidate_packet(workspace, inputs, outputs)
+    target = outside(target, Path(packet['workspace']))
     write_new(target, packet)
     return {'status': 'FROZEN', 'packet': str(target), 'packet_sha256': sha(target.read_bytes()), **packet}
 
@@ -188,11 +192,64 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None):
                'test': str(test_path), 'test_sha256': sha(test_bytes),
                'exit_code': code, 'timed_out': timed_out,
                'elapsed_seconds': round(time.monotonic() - started, 4),
-               'test_summary': summary, 'test_cases': test_cases, 'stdout': stdout, 'stderr': stderr,
+               'test_summary': summary, 'test_cases': test_cases, 'selected_test_ids': selected,
+               'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
     write_new(receipt_path, receipt)
     return receipt
+
+
+def verify(workspace, inputs, outputs, test_path, receipt_path, timeout=60):
+    """One invocation for ordinary local acceptance; preserve full evidence on disk.
+
+    Reuse is only within this isolated control directory, for identical declared
+    candidate bytes and current test bytes. A partial PASS cannot stand for the
+    full suite; a known current FAIL wins. No claim of semantic sufficiency.
+    """
+    packet = candidate_packet(workspace, inputs, outputs)
+    root = Path(packet['workspace'])
+    test_path = outside(test_path, root).resolve(strict=True)
+    receipt_path = outside(receipt_path, root)
+    if not 1 <= timeout <= 300:
+        raise ValueError('test subprocess timeout must be between 1 and 300 seconds')
+    from core.coverage import discover_evidence
+    reusable = []
+    for path in discover_evidence([receipt_path.parent]):
+        value = load_json(Path(path).read_text())
+        if value.get('test') != str(test_path) or value.get('test_sha256') != sha(test_path.read_bytes()):
+            continue
+        try:
+            same = load_json(Path(value['packet']).read_text()) == packet
+            observed = status(path)['status'] if same else 'STALE'
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if observed == 'FAIL' or (observed == 'CHALLENGE_PASS'
+                                and value.get('selected_test_ids') == []
+                                and value.get('test_cases')):
+            reusable.append((observed != 'FAIL', path, value))
+    if reusable:
+        _, actual_path, receipt = sorted(reusable, key=lambda x: (x[0], x[1]))[0]
+        reused = True
+    else:
+        if receipt_path.exists():
+            raise ValueError('receipt exists but is not reusable; preserve it and choose a new report')
+        packet_path = receipt_path.with_name(receipt_path.stem + '-packet.json')
+        if packet_path.exists():
+            if load_json(packet_path.read_text()) != packet:
+                raise ValueError('packet exists for other bytes; preserve it and choose a new report')
+        else:
+            write_new(packet_path, packet)
+        receipt = run(packet_path, test_path, receipt_path, timeout)
+        actual_path, reused = str(receipt_path), False
+    summary = {'status': receipt['status'], 'receipt': actual_path, 'reused': reused,
+               'executed_tests': 0 if reused else (receipt.get('test_summary') or {}).get('tests', 0),
+               'test_summary': receipt.get('test_summary'),
+               'failed_tests': [c['id'] for c in receipt.get('test_cases', []) if c['status'] == 'FAIL'],
+               'limits': 'Observed suite only; host decides business sufficiency and stop. No independent identity or production proof.'}
+    if receipt['status'] not in ('CHALLENGE_PASS',):
+        summary['diagnostics'] = receipt.get('stderr', {}).get('text', '')[-3000:]
+    return summary
 
 
 def status(receipt_path):
@@ -335,6 +392,13 @@ def assess(brief_path, plan_path, packet_path, evidence, budget, execute, report
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='op', required=True)
+    p = commands.add_parser('verify', help='freeze and run a chosen local suite once; reuse current evidence; compact output')
+    p.add_argument('--workspace', type=Path, required=True)
+    p.add_argument('--input', action='append', required=True)
+    p.add_argument('--output', action='append', required=True)
+    p.add_argument('--test', type=Path, required=True)
+    p.add_argument('--report', type=Path, required=True)
+    p.add_argument('--timeout', type=int, default=60, help='disposable local test only; not an Agent time limit')
     p = commands.add_parser('freeze')
     p.add_argument('--workspace', type=Path, required=True)
     p.add_argument('--input', action='append', required=True)
@@ -373,6 +437,8 @@ def main():
     p.add_argument('--report', type=Path, required=True)
     args = vars(parser.parse_args())
     op = args.pop('op')
+    if op == 'verify':
+        return verify(args['workspace'], args['input'], args['output'], args['test'], args['report'], args['timeout'])
     if op == 'freeze':
         return freeze(args['workspace'], args['input'], args['output'], args['packet'])
     if op == 'run':

@@ -224,13 +224,20 @@ class DecisionGateTests(unittest.TestCase):
     def test_indirect_original_path_cannot_observe_correct_original_instead_of_faulty_copy(self):
         # Split the literal so static checking is insufficient; runtime binding
         # must still reject opening the unfrozen original.
-        self.adapter.write_text('from pathlib import Path\nBASE=Path(' + repr(str(self.work.parent)) + ')\ndef admit(facts):\n text=(BASE/"work"/"candidate.py").read_text()\n return facts["enabled"] and facts["score"] >= 5\n')
-        gate.seal(self.task, self.plan)
-        result = gate.check(self.task, True)
-        self.assertEqual(result['status'], 'BLOCKED')
-        receipt = gate.read(next(Path(result['packet']).parent.glob('*-replay.json')))
-        self.assertGreater(receipt['test_summary']['errors'], 0)
-        self.assertIn('frozen candidate copy', receipt['stderr']['text'])
+        bases = [str(self.work.parent), self.work.parent.as_posix()]
+        if sys.platform == 'win32':
+            bases.append(str(self.work.parent).swapcase())
+        for index, base in enumerate(dict.fromkeys(bases)):
+            with self.subTest(base=base):
+                task = self.control / ('indirect-' + str(index)) / 'task.json'
+                gate.start(self.work, ['request.md'], ['candidate.py'], task)
+                self.adapter.write_text('from pathlib import Path\nBASE=Path(' + repr(base) + ')\ndef admit(facts):\n text=(BASE/"work"/"candidate.py").read_text()\n return facts["enabled"] and facts["score"] >= 5\n')
+                gate.seal(task, self.plan)
+                result = gate.check(task, True)
+                self.assertEqual(result['status'], 'BLOCKED')
+                receipt = gate.read(next(Path(result['packet']).parent.glob('*-replay.json')))
+                self.assertGreater(receipt['test_summary']['errors'], 0)
+                self.assertIn('frozen candidate copy', receipt['stderr']['text'])
 
     def test_json_boolean_is_not_accepted_as_integer_result(self):
         gate.seal(self.task, self.plan)

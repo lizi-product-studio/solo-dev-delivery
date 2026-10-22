@@ -28,13 +28,14 @@ HARNESS = '''import importlib.util, json, os, sys, unittest
 # than the frozen copy. Trusted test code can bypass this; it is not a sandbox.
 source_root = os.environ.get('SOLO_SOURCE_WORKSPACE')
 if source_root:
+    source_root = os.path.normcase(os.path.realpath(source_root))
     def bound_path(value):
         if isinstance(value, (list, tuple)):
             return any(bound_path(x) for x in value)
         if not isinstance(value, (str, bytes, os.PathLike)):
             return False
-        value = os.fsdecode(value)
-        resolved = os.path.realpath(value) if value.startswith("/") else value
+        value = os.path.normcase(os.fsdecode(value))
+        resolved = os.path.normcase(os.path.realpath(value)) if os.path.isabs(value) else value
         return source_root in value or resolved == source_root or resolved.startswith(source_root + os.sep)
     def candidate_binding(event, args):
         values = args[:3] if event == 'subprocess.Popen' else args[:1]

@@ -1,38 +1,64 @@
-# Solo Dev Delivery
+# 栗子的软件交付协作
 
-面向一人软件业务的 Agent 交付协作 Skill。按任务影响安排资源，主动审核，并以实际用户操作和业务结果验收。
+目标是把真实项目做好，减少用户重复提醒、返工和日常操心。当前个人实例目录：`/Users/lizi/Documents/Codex/Systems/solo-delivery`。用户保留方向和经营政策控制权，系统在有效授权范围内逐步承担交付工作；当前能力不等于已实现无人经营。
 
-此仓库是当前个人系统的**私有源文件快照**，包含 Skill 及其运行依赖，不含正在进行的项目和业务数据。当前默认使用 Codex 原生子 Agent；跨平台部分是协议、示例和接入说明，不代表已在所有平台实机验证。
+## 默认轻量，Codex 原生优先
 
-## 内容
+新软件聊天通过本机 `~/.codex/AGENTS.md` 加载个人偏好和 `solo-dev-delivery` Skill。主会话直接处理小改，按需使用原生子Agent、会话管理和适用工作树，不再强制为普通委派嵌套启动CLI或填写完整任务契约。资源与验证投入由实际影响决定。
 
-- [Skill 入口](skill/solo-dev-delivery/SKILL.md)：需求接手、执行、主动审核与交付责任。
-- `knowledge/preferences.json`、`knowledge/methods.json`：个人偏好和候选方法，保留来源和适用范围。
-- `scripts/`、`templates/`、`vendor/`：本地队列、审核证据门禁、业务接手和兼容调度。
-- [主动审核](主动审核执行说明.md)、[资源调度](资源调度执行说明.md)、[业务闭环](业务闭环执行说明.md)：按需使用的流程。
-- [portable-agent-kit](portable-agent-kit/README.md)：AAP-0.1 状态机、参考适配器和 Cursor、Kimi Code、DeepSeek Harness 等接入说明。
-- `tests/`：现有回归测试。
+需要范围确认、持久交接、客户状态或正式验收门禁时才使用本地队列。已在队列中的任务保留原状态、锁、失败记录和质量要求。入口是 `python3 scripts/delivery.py`，任务参数由Agent填写，用户无需学习命令或重复批准已授权步骤。
 
-## 恢复与使用
+## 保留有实际作用的部分
 
-Python 3.9 及以上；开项 JSON 导入另需 Node.js。该快照保留现有代码和个人配置，**Skill 中的 ROOT 仍指向原机器的固定目录**：`/Users/lizi/Documents/Codex/Systems/solo-delivery`。
+- `knowledge/preferences.json`：用户明确偏好、来源、适用范围和被替代决定。
+- `knowledge/methods.json`：从真实项目提炼的方法与反例；候选不冒称通用经验。
+- `review_engine.py`：将候选版本、实际检查、缺陷及证据绑定，阻止缺项、过期或未关闭问题的队列交付。
+- `business_loop.py`及队列：在需要时保存客户范围确认、交付/验收、变更和撤回状态；本地发件箱尚未连接真实客户渠道。
+- 项目自己的代码、决定和验收证据：技术检查、用户任务、体验及生产状态分别核实。
 
-在全新环境恢复时，将完整仓库放到该目录，再将 `skill/solo-dev-delivery` 链接到 Codex 的用户技能目录。其他用户名或目录需要先调整 Skill 和说明中的 ROOT。不要只复制 SKILL.md，也不要把克隆操作覆盖到当前正在运行的系统目录。仓库不包含全局 AGENTS.md；新机器默认自动加载的入口需要单独配置。
+## 原生执行与兼容路径
+
+普通工作及按需独立审查默认由Codex原生能力执行。正式队列的原生审核完成后，可用 `resource-native-review`登记真实宿主派发及完成证据；该命令不调用模型、不创建子进程、不管理第二套会话或超时器。候选、测试和缺陷门禁继续生效，身份由受信主会话核实，证据文件不是身份认证。
+
+旧 `resource-run`、`codex_worker.py`及监督接口保留兼容，已有回执和任务无需迁移；宿主原生不可用或具体项目要求旧入口时可明确使用。`resource-plan`的固定模型档位及内部预算仍用于旧CLI路径，不冒充原生Agent的资源实测。原生用量交由Codex宿主管理，此处记录未知，不填0消耗。
+
+## 0.2：可独立加载的 Skill 与可验证产物
+
+主 Skill 已采用相对路径定位。完整本机系统继续使用原生 Codex 与现有队列，软件细节移至按需读取的 `references/software-delivery.md`。跨业务任务按目标使用专业标准，不进入软件队列。
+
+可以导出不包含个人偏好、客户事实、原始聊天或 runtime 的独立技能包：
+
+```sh
+python3 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+```
+
+输出符合 [Agent Skills 格式](https://agentskills.io/specification) 的目录和 zip，带相对引用、标准库 Python 运行器和软件/数据分析/营销方案的有限示例。格式与本地冷启动可验证；Cursor、Kimi Code、DeepSeek Harness 等的真实加载和工具接入仍需各宿主验证，不能宣称所有平台即装即用。
+
+`portable-agent-kit/scripts/session.py` 提供 init/next/check/finish，逐项读回本地产物、冻结输入摘要、检查真实哈希并在交付前重验。失败历史保留，缺项、未知、语义审查未测或产物变化都会阻断；相同本地 session 可跨进程继续。它不执行外部动作、不调用模型、不创建定时器。
+
+AAP-0.1 信封保持，内核状态改为 version 2。自定义宿主必须提供受信 `verify_evidence` 回调；任意 PASS 标签不再足够。旧 portable state 必须保留原历史并由宿主在当前产物上重新验证/创建新状态，禁止热改现有运行。原 Codex SQLite 队列未改。
+
+本地检查只证明契约中可机械验证的属性，不能认证业务语义、体验、身份、实际发布或“弱模型无敌”。真实项目的首次完成、漏检、返工和成本才用于评估收益。
+
+验证更新后清除旧导出、回滚副本和临时迭代目录，只保留当前有效版本及其验收记录；Git提交履历保留用于追溯。
+
+## 按需查看
+
+- [协作入口](skill/solo-dev-delivery/SKILL.md)：任务选择、产品判断与交付责任。
+- [主动审核](主动审核执行说明.md)：队列状态、缺陷扩查、版本和证据阻断。
+- [资源与原生回执](资源调度执行说明.md)：原生登记格式和旧CLI兼容操作。
+- [客户业务闭环](业务闭环执行说明.md)：仅相关客户接手任务需要加载。
+- [历史依据](历史依据与取舍.md)：保留来源，不当作新项目授权。
+
+## 运行边界与验证
+
+只使用Codex。定时任务继续暂停；不会因加载技能自行启用。上线、真实资金、新增费用与外部承诺依项目授权。`DELIVERED`仅表示约定本地交付，开发版上传与正式发布分别验证。
+
+Python 3.9及以上；开项JSON导入另需Node。无需新增依赖。`runtime/`保留私有数据和历史回执，备份SQLite使用其备份机制，不直接覆盖正在写入的数据库。
 
 ```sh
 python3 scripts/delivery.py --help
 python3 -m unittest discover -s tests -v
-python3 -m unittest discover -s portable-agent-kit/tests -v
 ```
 
-`SOURCE_SNAPSHOT.json` 记录本次直接复制文件的 SHA-256，可用于核对源文件快照。
-
-## 备份范围与边界
-
-本次没有上传 `runtime/`、数据库、运行日志、原始聊天、项目源码、客户业务记录、`knowledge/feedback/` 或历史验收证据。偏好和方法中的历史来源引用仅用于追溯，不表示原始证据也在仓库里。Skill 引用的本地候选实验记录没有随包导出。
-
-定时任务默认不启用。生产发布、真实交易、新增费用和外部承诺遵从项目授权；队列中的 DELIVERED 只代表约定的本地交付。状态机和测试不能保证零缺陷或自动经营公司。
-
-## 许可
-
-当前为个人私有备份，未为仓库整体授予开源许可。`vendor/` 中的组件保留各自 MIT 许可证及 `vendor/SOURCES.json` 来源信息。
+本机配置不会自动同步到其他电脑或云任务；已打开的聊天可能持有旧上下文。本轮简化不向其他聊天发送指令，不修改现有项目的AGENTS或代码。

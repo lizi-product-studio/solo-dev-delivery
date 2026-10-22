@@ -20,7 +20,9 @@ def capabilities(manifest):
 def handle(message, state=None):
     if message.get("op") == "probe":
         return probe(capabilities(message.get("host", {})))
-    if message.get("op") == "start":
+    if message.get("op") == "start" and "contract" in message:
+        if state is not None:
+            raise ProtocolError("existing session cannot be reset by a start message")
         return start(message["contract"], capabilities(message.get("host", {})),
                      adapter_id=message.get("host", {}).get("adapter_id", "generic"),
                      host_id=message.get("host", {}).get("host_id", "unknown"))
@@ -35,7 +37,11 @@ if __name__ == "__main__":
         if not line.strip():
             continue
         try:
-            state = handle(json.loads(line), state)
-            print(json.dumps(state, ensure_ascii=False), flush=True)
+            message = json.loads(line)
+            result = handle(message, state)
+            # Capability queries are not task state and must not destroy it.
+            if message.get("op") != "probe":
+                state = result
+            print(json.dumps(result, ensure_ascii=False), flush=True)
         except Exception as exc:
             print(json.dumps({"protocol": "aap/0.1", "ok": False, "error": str(exc)}, ensure_ascii=False), flush=True)

@@ -1,7 +1,7 @@
 interface:
-  display_name: "栗子软件交付"
-  short_description: "从开项简报接手确认范围内的开发与验收，记录证据和协作经验"
-  default_prompt: "使用 $solo-dev-delivery 接收这份开项简报，整理范围与必要的经营决定，确认后连续推进本地交付。"
+  display_name: "自主交付协作"
+  short_description: "推进软件与业务多步骤任务，按风险调配资源，以实际产物和证据验收"
+  default_prompt: "使用 $solo-dev-delivery 推进这项任务，核对目标和授权，按风险选择执行与检查方式，并交付有证据的结果。"
 
 policy:
   allow_implicit_invocation: true

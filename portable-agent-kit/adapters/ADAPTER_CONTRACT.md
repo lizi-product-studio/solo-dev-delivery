@@ -1,55 +1,23 @@
-# 适配器契约
+# 宿主适配器契约（AAP-0.1 / 状态门禁 0.2）
 
-这个文件是给 DeepSeek Harness、zcode、KimiCode 或其他 Agent 宿主的接入说明。它不假设某个平台的 API 名称；平台只要能完成下面的映射就能使用同一套交付逻辑。
+平台接入说明不等于已实现或实机验证。宿主按本协议映射真实工具、保存状态并提供证据校验；不得把 manifest、模型自报或工具名称当作实际能力证明。
 
-## 宿主提供给内核的能力
+## 能力与执行
 
-启动时发送一份能力清单，每项只能是 `supported`、`unsupported` 或 `unknown`：
+能力值为 `supported`、`unsupported` 或 `unknown`，报告须来自当前宿主可复核的探测或实际调用。`core.state_machine.probe()` 只归一化输入，不探测宿主。适配器应记录来源和观察时间；必要能力不是 `supported` 时阻断。实际工具调用由宿主授权并执行，核心不是权限沙箱。
 
-| 能力 | 用途 |
-| --- | --- |
-| `fs.read` / `fs.write` | 读取和修改工作区 |
-| `shell.exec` / `test.run` | 运行受控命令和测试 |
-| `git.read` / `git.write` | 读取候选版本、保存补丁或提交 |
-| `browser.open` / `browser.control` / `visual.capture` | 实际页面和设备验收 |
-| `checkpoint.persist` / `pause_resume` | 中断恢复和交接 |
-| `evidence.hash` | 证据完整性校验 |
-| `independent_review` | 启动不同执行者的只读复核 |
-| `external.authorized` | 已授权的外部写操作 |
+建议逐项映射 `fs.read`、`fs.write`、`shell.exec`、`test.run`、`git.read`、`git.write`、浏览器/设备控制、checkpoint 持久化、证据校验和独立复核。缺能力时如实限制任务：纯文本只能分析和准备材料；无浏览器/设备时界面验收未验证；无持久化时不得声称可恢复；无外部授权和工具时不得实施外部动作。
 
-宿主没有某项能力时，内核会降级或阻断：
+## 证据校验回调
 
-- 只有聊天文本：可做需求分析、方案和待办材料，不能声称已修改代码、测试或部署。
-- 能读写文件但没有浏览器：可开发和做源码/API检查，界面验收必须保持 `UNVERIFIED`。
-- 没有持久化：不能宣布长任务可恢复；先让宿主保存 state 和 checkpoint。
-- 没有外部授权：可以准备域名、服务器、备案、上架和部署材料，不能购买、提交、发布或发送。
-- 没有调度器：不能声称后台自动监控；在交付记录里写下一次检查点。
+每项验收的 evidence 必须绑定 `check_id`、环境、task、revision、contract hash 和候选版本。接入 `apply(..., verify_evidence=callback)`，由可信宿主读取证据、重算 SHA-256、核对来源与契约预期，只有确实通过才返回 Python 布尔 `True`。缺失回调、异常或任何不匹配均须失败关闭。核心会清除模型提供的 `verified` 等标志，并在记录证据和 `finish` 时调用 verifier；只有当前逐项证据均验证通过才可交付。
 
-## 工具调用映射
+工具结果 `UNKNOWN` 必须记录副作用并先取得后续可验证读回证据，再调用 `reconcile`。Finding 需关联受影响验收项；修复后提交新的当前证据并调用 `resolve_finding`。失败项重新执行检查，不可只重发旧 PASS。幂等键复用不同请求内容必须报冲突。
 
-宿主将自身工具映射为统一名字，并把调用结果封装为：
+## 持久化和现有入口
 
-```json
-{
-  "tool_call_id": "call-001",
-  "tool": "test.run",
-  "status": "SUCCEEDED",
-  "exit_code": 0,
-  "artifacts": [],
-  "observed_state": {}
-}
-```
+生产宿主须原子保存 state、checkpoint、证据及幂等记录，恢复时核对 owner、revision、契约哈希、候选和活动写入者。`adapters/example_adapter.py` 仅为内存 JSONL 演示，不执行工具、没有宿主 verifier，也不持久化；不得用于宣称能力或交付。
 
-`UNKNOWN` 表示副作用是否发生无法确定。适配器不能将超时改写成 `FAILED` 或 `SUCCEEDED`。内核会要求 readback/reconcile，防止弱模型重复下单、重复发布或重复写入。
+`scripts/session.py` 是可选的本地产物 CLI：支持 `init`、`next`、按验收 ID 执行限定的文本/JSON/CSV 检查及 `finish`，通过本机回调复核证据。它不执行任意代码或外部动作；无法机械验证的语义、UX、业务判断和平台结果仍须由真实宿主完成。失败两次后应诊断、拆小或升级复核，不盲目重复。
 
-## 模型和资源降级
-
-模型名称、温度或思考档位只是宿主元数据，不是能力证明。主控循环遵循：
-
-1. 任务简单且边界清楚：单 Agent、短步骤、定向验证。
-2. 任务复杂或有多个独立组件：分成可验收单元；宿主有子 Agent 才并行，没有就串行。
-3. 连续两次确认是推理失败，才允许换更强模型或提高思考强度。
-4. 网络、权限、认证、依赖、额度和业务事实错误先解决条件，不能靠升级模型。
-5. 仍无法证明时返回 `BLOCKED` 或 `NEEDS_INPUT`，保留原始失败和部分产物。
-
-因此，弱模型可以使用同一框架完成简单项目，并在复杂项目里按检查点逐步推进；它不会因为包装层而自动获得产品判断、事实知识或平台权限。
+模型档位与名称仅是宿主元数据。按任务风险选单 Agent 或独立复核；遇到环境、认证、权限、网络或事实问题先修复条件，仍无法证明则保持 `BLOCKED` / `NEEDS_INPUT`。平台规则、能力探测、持久恢复和真实任务链路都须在目标平台另行验证。

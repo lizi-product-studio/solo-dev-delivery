@@ -1,6 +1,6 @@
-# AAP-0.1 最小协议
+# AAP-0.1 信封与 0.2 状态门禁
 
-AAP（Agent Adapter Protocol）让不同 Agent 宿主共享同一套交付语义。请求和结果都使用 JSON，既可以通过标准输入输出、函数调用，也可以放进消息队列或 HTTP；传输方式不属于协议核心。
+请求仍使用 `aap/0.1` JSON 信封。本包 0.2.0 加严本地状态机语义，不代表所有平台均已实现或验证这些操作。传输由实际宿主提供；本包不附 HTTP、消息队列或调度适配器。
 
 ## 请求信封
 
@@ -8,32 +8,30 @@ AAP（Agent Adapter Protocol）让不同 Agent 宿主共享同一套交付语义
 {
   "protocol": "aap/0.1",
   "request_id": "r-001",
-  "op": "tool_result",
+  "op": "evidence",
   "task_id": "T-001",
   "revision": 1,
-  "contract_hash": "sha256...",
+  "contract_hash": "<64-char-sha256>",
   "candidate": "git-sha-or-artifact-hash",
   "idempotency_key": "i-001",
   "payload": {}
 }
 ```
 
-必填回显字段阻止旧任务、旧候选或旧 Agent 的迟到结果写回当前任务。相同 `idempotency_key` 必须返回同一个结果，不能重复副作用。
+状态带 `state_version: 2`。旧状态版本不会自动迁移；操作时返回 `STATE_UPGRADE_REQUIRED`，须按当前契约重新建立状态并保留旧记录供人工处理。重复的幂等键只接受相同请求内容，内容不同时返回 `IDEMPOTENCY_KEY_CONFLICT`。
 
-## 阶段和状态
+操作包括 `probe`、`start`、`observe`、`tool_result`、`evidence`、`reconcile`、`open_finding`、`resolve_finding`、`checkpoint`、`pause`、`resume`、`phase`、`finish`、`cancel`。`probe` 只规范化宿主输入，不代表实际探测。必要能力不明确时须阻断；具体外部权限由宿主强制执行。
 
-阶段是 `assess → work → verify → review → deliver`，状态单独表示运行情况：`READY`、`RUNNING`、`PAUSED`、`BLOCKED`、`UNKNOWN`、`COMPLETED`、`FAILED`、`CANCELLED`、`NEEDS_INPUT`。
+## 状态与逐项证据
 
-计划检查点只返回 `decision_required`，不因为固定时间、安静或预算检查点自动终止正常执行者。暂停需要 checkpoint 和执行者停止证据；恢复需要同一 revision、契约哈希、候选和已核实归属。
+状态为 `READY`、`RUNNING`、`PAUSED`、`BLOCKED`、`UNKNOWN`、`COMPLETED`、`FAILED`、`CANCELLED`、`NEEDS_INPUT`。必须先 `start`，再完成每个契约验收项。每份验收证据须带有效 `check_id`、环境、当前 task/revision/contract/candidate 绑定，并由可信宿主传入 `verify_evidence` 回调重新核验；模型提交的 `PASS`、`verified` 或哈希字符串不构成证明。缺少、失败或不可验证的任一验收项都会阻断 `finish`。新的同项证据取代旧证据，失败重验仍须实际重新执行检查。
 
-## 证据和交付
+未知副作用先用可验证的读回证据执行 `reconcile`，不能盲目重试。Finding 必须关联验收项；`resolve_finding` 要求 finding 打开之后产生、当前且验证通过的相关证据。计划检查点只要求决策，不自动停止执行者；暂停需 checkpoint 和停止证明。
 
-每份证据绑定 task、revision、contract_hash、candidate、producer、时间和 SHA-256，并说明具体 claim。对于用户功能，适用的最小链路是：
+## 验收边界
 
-`用户入口 → 实际动作 → 业务结果 → 持久化/读回 → 显示状态`
+按任务风险核对实际入口、动作、业务结果、持久化/读回及显示状态。文本、接口、构建、mock 或截图只能支持其实际观察到的部分。宿主须自行认证 evidence URI 的内容、SHA-256、来源与验收结果；核心只验证字段绑定并调用宿主回调，不自行读取 URI。缺少设备、浏览器、身份、真实资金或平台审核证据时，保持未验证。
 
-模拟、mock、接口成功、构建成功和截图只能证明各自范围。缺失浏览器/设备/真实资金/平台审核证据时，不能升级为真实平台通过。开放 finding、未覆盖验收、未知副作用、活动执行者、候选变化或证据哈希变化都会阻断交付。
+## 授权
 
-## 人工边界
-
-模型可以分析、编程、测试、准备服务器/域名/备案/上架材料并核对回执。付款、实名、人脸、短信、备案提交、应用发布、客户承诺和不可逆数据动作必须由明确授权与宿主能力共同支持；需要本人身份时返回 `NEEDS_INPUT`，不能伪造完成。
+分析、编码和准备材料不等于授权外部行动。付款、实名、人脸、短信、备案提交、发布、客户承诺及不可逆数据动作，必须同时具备具体授权和真实宿主能力；需要本人身份时返回 `NEEDS_INPUT`。跨业务方案可复用判断、来源核对和验证方法，软件任务队列不自动适用于非软件业务。

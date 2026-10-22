@@ -1,10 +1,10 @@
 {
   "created": "2026-10-22",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "63a42486907b744f445da4e61b804511c23a6dd5",
-    "previous_version": "0.6.0",
+    "previous_head": "7215adc5aaf175cea2cdb677b0b8769577173f2d",
+    "previous_version": "0.7.0",
     "rewrite_history": false
   },
   "integrated_source": {
@@ -25,13 +25,13 @@
     },
     {
       "path": "INTEGRATION.md",
-      "sha256": "0cc63f460c0a45e9e78232f6e2cffb202a241d95f52a81f8c6904384aebef67b",
-      "bytes": 4174
+      "sha256": "0bea8e8254719713e52820e7d94a4c1220043391329e75b924a863f9e6589a6b",
+      "bytes": 4268
     },
     {
       "path": "README.md",
-      "sha256": "35a2c3e3daad5d071eee632722c74c7d14cb4e6e3a4fc1067228d1079603f744",
-      "bytes": 10076
+      "sha256": "b869468f893a85e3c86b3390ce5ebe1bab07a5c08acebf706429b4f8b1defd81",
+      "bytes": 10742
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "d500712d3bffe75014ceac76410d0ca50fbe3bccd5e37706f5b2bf4dd60a31d1",
-      "bytes": 10693
+      "sha256": "e8a33919ff5c3c34a2c90d8c4611396e1452d42bbaba26f2f746354aab93734f",
+      "bytes": 8602
     },
     {
       "path": "knowledge/methods.json",
@@ -55,7 +55,7 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "2977fc474c2c11ade62ded2bcedcb947eccc2c1e1c72a8782cf80b19e06ba52e",
+      "sha256": "f1ab95705e46c0e5f47c6c76f3987f442a79e5d14a400029401ae1522a5f4d4d",
       "bytes": 2122
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "c04b703b943b6d4333dd9b53e68eebc98aa1436fb1918dfef499ef719a6f4e01",
+      "sha256": "86b075c763ab5b782ba79c23f26ee67ed4531000ffdaf9dc330c78ec88251fab",
       "bytes": 4872
     },
     {
@@ -295,8 +295,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "bdd9437f158eb9e25759635d9a8a5c8804f6a2e3b2c8185a2a13cf39e4350b38",
-      "bytes": 5607
+      "sha256": "be1c082f2fd719a96baebb48f713aef3188b2f6806093bdfaf52b05be53dd40b",
+      "bytes": 4513
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -320,13 +320,13 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
-      "sha256": "0253ba35900f36c038e3547cc6b96aead8abafd3e6d79bd429e39b98165b17e4",
-      "bytes": 3221
+      "sha256": "ea7e892298839ebb97d98a417cfb57ef76b037839ac5d14bb6fe9b2afe47998a",
+      "bytes": 3108
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "34f064c5c51159f3fba355e3acfe20d2d15ac4c7956c3c88e1262a36a9138fbc",
-      "bytes": 14474
+      "sha256": "af5b6daf77eb893ca82bebb3525003a80a0975a2de5069f92f27f23903d5f61b",
+      "bytes": 14558
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

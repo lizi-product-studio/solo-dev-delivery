@@ -1,0 +1,59 @@
+{
+  "owner": "host/main",
+  "authorization_ref": "isolated-example-only",
+  "candidate": "example-v1",
+  "excluded": [
+    "external actions",
+    "production"
+  ],
+  "policy": {
+    "workspace_write": false,
+    "ux_required": false,
+    "external_actions": false
+  },
+  "id": "EX-analysis",
+  "domain": "data-analysis",
+  "goal": "Reconcile paid revenue and refunds from the approved raw CSV; do not infer profitability.",
+  "scope": [
+    "summary.json"
+  ],
+  "inputs": [
+    "orders.csv"
+  ],
+  "acceptance": [
+    {
+      "id": "AC1",
+      "expected": "Revenue matches paid rows in raw input.",
+      "environment": "local-artifact",
+      "probe": {
+        "type": "csv.reconcile",
+        "path": "summary.json",
+        "pointer": [
+          "paid"
+        ],
+        "source": "orders.csv",
+        "column": "amount",
+        "where": {
+          "status": "paid"
+        }
+      }
+    },
+    {
+      "id": "AC2",
+      "expected": "Refund amount matches refund rows in raw input.",
+      "environment": "local-artifact",
+      "probe": {
+        "type": "csv.reconcile",
+        "path": "summary.json",
+        "pointer": [
+          "refunds"
+        ],
+        "source": "orders.csv",
+        "column": "amount",
+        "where": {
+          "status": "refunded"
+        }
+      }
+    }
+  ]
+}

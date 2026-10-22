@@ -1,10 +1,10 @@
 {
   "created": "2026-10-22",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "cf1db124673577ef2411150fa840ced08c36f09c",
-    "previous_version": "0.8.0",
+    "previous_head": "c8137005b05e09015cc697e431ebce4fa219cce4",
+    "previous_version": "0.9.0",
     "rewrite_history": false
   },
   "integrated_source": {
@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "7c2a39572713a9815c403ef7ded1bd981c0236dc33ecd1caab1690bfbd59786b",
-      "bytes": 11138
+      "sha256": "72f01ec492245442e58bbf4195dcd046e7af00de331570db606a4e1ad89a30f9",
+      "bytes": 11300
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "8e356843e3ec2bd328b8099464ed433a6e7c4766ee89edafb510766cfa4448c5",
-      "bytes": 5347
+      "sha256": "67e169725dc6aab7016f520843e6c77ef04e54c2e97f43c3674d8ebac54f10a3",
+      "bytes": 7346
     },
     {
       "path": "knowledge/methods.json",
@@ -100,8 +100,13 @@
     },
     {
       "path": "portable-agent-kit/core/coverage.py",
-      "sha256": "2f3d7b98a0444bfbc9faa12e4c82688517167309e123959e2ee6eec7271fd964",
-      "bytes": 14569
+      "sha256": "95400cf9e8f72cc48912ebdf717b6079931d52f89da8f301340d1feaa13f23dd",
+      "bytes": 15736
+    },
+    {
+      "path": "portable-agent-kit/core/decisions.py",
+      "sha256": "0189bbfb8c4927e5e3cbc4dea288c4b757c49e3d9610bccfbb3b573d08ede714",
+      "bytes": 10608
     },
     {
       "path": "portable-agent-kit/core/json_relations.py",
@@ -200,13 +205,13 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "8b361cfc33990677e9233734f04c72518ee0d5af1f41f6109b0e706ea4882a9e",
-      "bytes": 26671
+      "sha256": "7ca5817f027694a0b67d3aba5aa981cf7e14e5a1f55bb84ae86782ad475f631b",
+      "bytes": 27977
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
-      "sha256": "28acb44b41bed624d25bd5de69fa3a4c28fe3953e681b46a51c84ec146e07e7f",
-      "bytes": 13182
+      "sha256": "a3f333f4c6f7cbb373415c2d0e1681d3d1a88f4d7f99aac460730605eb9d8237",
+      "bytes": 16936
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -229,9 +234,14 @@
       "bytes": 18954
     },
     {
+      "path": "portable-agent-kit/tests/test_decisions.py",
+      "sha256": "0ba94393d6f66747857d9d0cdaa23538353ab7212c740803b9dbfc50e4e583c8",
+      "bytes": 12478
+    },
+    {
       "path": "portable-agent-kit/tests/test_gate.py",
-      "sha256": "d92da89d85a22cf374c92bf4311f62f7b3e1d9570531e744cbf95cf8651a036f",
-      "bytes": 9957
+      "sha256": "20f1c8032c4c32cd0ffcbb8909fd1e1ca63ccf8e04122ae71daedfd1ba4a23aa",
+      "bytes": 9978
     },
     {
       "path": "portable-agent-kit/tests/test_local_runner.py",
@@ -275,8 +285,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "03bd2464a135392772b6d6a1d7ef7768887ac9b30d7f1b6ab5b4079043e87bc1",
-      "bytes": 4052
+      "sha256": "8c34b7503de427542dc1bcbdff4319490b52411ac68bfe5822c99ef6d69c85a1",
+      "bytes": 4068
     },
     {
       "path": "scripts/install_agent.py",
@@ -305,8 +315,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "3167996411181e70dd89108fa9cd10146ad5edb18176c64daf828b124f5df0a7",
-      "bytes": 5315
+      "sha256": "38e50be19c2b6fc1cc6aa7456418bbfb97c057cb3d6387a2a44e04737813e424",
+      "bytes": 4166
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -325,8 +335,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",
-      "sha256": "abef7a6af4225b86bbabe9fbbe4109459687f6ac66e45e446ea62e4bcc3a6e98",
-      "bytes": 3797
+      "sha256": "0c9203eabbc8dd424e96e1f097c7a31ff291c97911cd8039959443a5ec7494fa",
+      "bytes": 6280
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",

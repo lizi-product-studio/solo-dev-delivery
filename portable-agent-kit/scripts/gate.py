@@ -15,6 +15,7 @@ import sys
 import challenge
 from core.coverage import coverage_report, digest, discover_evidence, source_brief, validate_plan
 from core.local_checks import canonical, load_json
+from core.decisions import compile_plan
 
 
 def read(path):
@@ -48,14 +49,14 @@ def baseline(root, names):
     return values
 
 
-def start(workspace, inputs, outputs, task_path, session=None, home=None):
+def start(workspace, inputs, outputs, task_path, session=None, home=None, decision_mode=True):
     root = Path(workspace).resolve(strict=True)
     task_path = challenge.outside(task_path, root)
     if task_path.exists() or not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
         raise ValueError('new task and distinct inputs/outputs required')
-    brief = source_brief(root, inputs, split_items=True)
+    brief = source_brief(root, inputs, split_items=True, split_statements=decision_mode)
     challenge.write_new(task_path.parent / 'brief.json', brief)
-    task = {'format': 'local-delivery-gate/1', 'workspace': str(root),
+    task = {'format': 'local-delivery-gate/2' if decision_mode else 'local-delivery-gate/1', 'workspace': str(root),
             'inputs': inputs, 'outputs': outputs, 'baseline': baseline(root, outputs),
             'brief': str(task_path.parent / 'brief.json'), 'state': 'NEEDS_SOURCE_CHECKS',
             'history': [], 'session': session}
@@ -70,7 +71,40 @@ def start(workspace, inputs, outputs, task_path, session=None, home=None):
     if session:
         save(reg, {'task': str(task_path), 'workspace': str(root)})
     return {'status': task['state'], 'task': str(task_path), 'source_units': brief['units'],
-            'next': 'Main agent: derive real business chain and distinguishing boundary scenarios from these sources; write external unittest file and coverage plan, then seal before implementation.'}
+            'next': 'Main agent: write real journey checks from every source statement before implementation; checks entries can directly name sources, without duplicate outcomes/covers. Add a small scalar decision model only where independent conditions, thresholds or priority are not distinguished by those checks; seal generates those missing cases. Do not model every action or duplicate persisted-state tests. Observe Path.cwd()/SOLO_CANDIDATE_ROOT, never the original workspace.'}
+
+
+def source_checks(brief, plan):
+    """Reuse exact raw requirements instead of asking the host to rewrite them."""
+    if not any('sources' in c for c in plan.get('checks', [])):
+        return plan
+    units = {u['id']: u for u in brief['units']}
+    outcomes = list(plan.get('outcomes', []))
+    inferred, checks = set(), []
+    for check in plan['checks']:
+        check = dict(check)
+        if 'sources' in check:
+            sources = check.pop('sources')
+            if (not isinstance(sources, list) or not sources or not set(sources) <= set(units)
+                    or 'covers' in check):
+                raise ValueError('check.sources must name real source units; do not also write covers')
+            check['covers'] = ['source@' + x for x in sources]
+            for source in sources:
+                if source not in inferred:
+                    outcomes.append({'id': 'source@' + source, 'sources': [source], 'expected': units[source]['text']})
+                    inferred.add(source)
+        checks.append(check)
+    return dict(plan, outcomes=outcomes, checks=checks)
+
+
+def _absolute_literals(text):
+    import ast
+    try:
+        tree = ast.parse(text)
+    except SyntaxError as exc:
+        raise ValueError("adapter syntax error: " + str(exc)) from exc
+    return [node.value for node in ast.walk(tree)
+            if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value.startswith("/")]
 
 
 def seal(task_path, plan_path, reason=None):
@@ -81,44 +115,77 @@ def seal(task_path, plan_path, reason=None):
     if not task.get('plan') and baseline(Path(task['workspace']), task['outputs']) != task['baseline']:
         raise ValueError('acceptance must be sealed before implementation changes; start from the original candidate')
     brief = read(task['brief'])
-    if brief != source_brief(task['workspace'], task['inputs'], split_items=True):
+    if brief != source_brief(task['workspace'], task['inputs'], split_items=True, split_statements=brief.get('granularity') == 'statement'):
         raise ValueError('source brief differs from original documents')
     if not challenge.current({'workspace': task['workspace'], 'inputs': brief['inputs'], 'outputs': []}):
         raise ValueError('source changed; create a new source-first task')
+    test = challenge.outside(Path(plan['test_file']).resolve(strict=True), Path(task['workspace']))
+    challenge.outside(plan_path, Path(task['workspace']))
+    generated, selection = None, None
+    original_plan = plan
+    if task['format'] == 'local-delivery-gate/2':
+        plan = source_checks(brief, plan)
+    if task['format'] == 'local-delivery-gate/2':
+        if any(str(Path(value).resolve()) == task['workspace'] or Path(task['workspace']) in Path(value).resolve().parents
+               for value in _absolute_literals(test.read_text())):
+            raise ValueError('adapter references original workspace; use Path.cwd() or SOLO_CANDIDATE_ROOT to observe the frozen candidate copy')
+        if plan.get('decisions'):
+            plan, generated, selection = compile_plan(brief, plan, test.read_text())
     if validate_plan(brief, plan):
         raise ValueError('unaccounted source units: ' + ', '.join(sorted(validate_plan(brief, plan))))
-    # Every selected business outcome must have an actual test; one chain test
-    # can cover many outcomes. No arbitrary scenario count or extra agent.
     covered = {x for c in plan['checks'] for x in c['covers']}
     if covered != {o['id'] for o in plan['outcomes']}:
         raise ValueError('every business outcome needs an executable check')
-    test = challenge.outside(Path(plan['test_file']).resolve(strict=True), Path(task['workspace']))
-    challenge.outside(plan_path, Path(task['workspace']))
-    snapshot = {'plan': digest(plan_path), 'test': digest(test), 'brief': digest(task['brief']), 'reason': reason or 'source-first acceptance'}
-    # Immutable copy prevents an amendment from erasing what was accepted before.
+    # Freeze source, policy, adapter and generated observations as one revision.
+    # Old /1 tasks keep their original path and behavior.
     number = len(task['history'])
     version = task_path.parent / ('scope-' + str(number))
     version.mkdir()
     (version / 'plan.json').write_bytes(plan_path.read_bytes())
     (version / 'checks.py').write_bytes(test.read_bytes())
+    snapshot = {'plan': digest(plan_path), 'test': digest(test), 'brief': digest(task['brief']),
+                'reason': reason or 'source-first acceptance'}
+    active_plan = plan_path
+    if generated is not None:
+        generated_path = version / 'generated-checks.py'
+        generated_path.write_text(generated)
+        selection_path = version / 'selection.json'
+        save(selection_path, selection)
+        plan['test_file'] = str(generated_path)
+        active_plan = version / 'compiled-plan.json'
+        save(active_plan, plan)
+        snapshot.update(adapter=digest(test), test=digest(generated_path),
+                        compiled=digest(active_plan), selection=digest(selection_path))
+    elif plan is not original_plan:
+        active_plan = version / 'compiled-plan.json'
+        save(active_plan, plan)
+        snapshot['compiled'] = digest(active_plan)
     task['history'].append(snapshot)
-    task.update(plan=str(plan_path), sealed=snapshot, state='CHECKS_SEALED')
+    task.update(plan=str(active_plan), sealed=snapshot, state='CHECKS_SEALED')
     save(task_path, task)
-    return {'status': 'CHECKS_SEALED', 'outcomes': len(plan['outcomes']), 'checks': len(plan['checks'])}
+    return {'status': 'CHECKS_SEALED', 'outcomes': len(plan['outcomes']), 'checks': len(plan['checks']),
+            'selection': [{'id': x['id'], 'reachable_inputs': x['product_size'],
+                           'required_distinctions': len(x['obligations']), 'selected_cases': len(x['cases'])}
+                          for x in (selection or [])]}
 
 
 def check(task_path, execute=False):
     task_path = Path(task_path).resolve(strict=True)
     task = read(task_path)
-    if task.get('format') != 'local-delivery-gate/1':
+    if task.get('format') not in ('local-delivery-gate/1', 'local-delivery-gate/2'):
         raise ValueError('not a delivery task')
     if not task.get('plan'):
         return {'status': 'BLOCKED', 'next_action': 'SELECT_SOURCE_BUSINESS_SCENARIOS', 'brief': task['brief']}
     sealed = task['sealed']
-    if any(digest(item['path']) != item for item in [sealed['plan'], sealed['test'], sealed['brief']]):
+    if any(digest(item['path']) != item for item in [sealed[k] for k in ('plan', 'test', 'brief', 'adapter', 'compiled', 'selection') if k in sealed]):
         return {'status': 'BLOCKED', 'next_action': 'RECONCILE_CHANGED_ACCEPTANCE_WITH_SOURCE'}
     packet = challenge.candidate_packet(task['workspace'], task['inputs'], task['outputs'])
-    key = hashlib.sha256(canonical({'packet': packet, 'plan': sealed['plan'], 'test': sealed['test'], 'brief': sealed['brief']}).encode()).hexdigest()[:24]
+    if task['format'] == 'local-delivery-gate/2':
+        packet['execution_scope'] = 'candidate-copy'
+    binding = {'packet': packet, 'plan': sealed['plan'], 'test': sealed['test'], 'brief': sealed['brief']}
+    if 'compiled' in sealed:
+        binding['compiled'] = sealed['compiled']
+    key = hashlib.sha256(canonical(binding).encode()).hexdigest()[:24]
     control = task_path.parent / 'runs' / key
     packet_path = control / 'packet.json'
     if not packet_path.exists():

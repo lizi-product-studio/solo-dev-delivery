@@ -22,7 +22,7 @@ class DeliveryGateTests(unittest.TestCase):
         self.control = self.root / 'review'
         self.task = self.control / 'task.json'
         (self.work / 'request.md').write_text('1. Save a value and read it back.\n2. Reject a negative value without changing it.\n')
-        gate.start(self.work, ['request.md'], ['candidate.py'], self.task, 'session', self.home)
+        gate.start(self.work, ['request.md'], ['candidate.py'], self.task, 'session', self.home, decision_mode=False)
         self.test = self.control / 'checks.py'
         self.test.write_text('import unittest\nimport candidate\nclass Business(unittest.TestCase):\n def test_save(self): self.assertEqual(candidate.save(7), 7)\n def test_reject(self):\n  with self.assertRaises(ValueError): candidate.save(-1)\n')
         self.plan = self.control / 'plan.json'

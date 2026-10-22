@@ -21,7 +21,7 @@ def digest(path):
     return {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
-def source_brief(workspace, inputs, split_items=False):
+def source_brief(workspace, inputs, split_items=False, split_statements=False):
     root = Path(workspace).resolve(strict=True)
     require(inputs and len(inputs) == len(set(inputs)), 'distinct source documents required')
     units = []
@@ -46,9 +46,34 @@ def source_brief(workspace, inputs, split_items=False):
                 if not chunk:
                     first = line_no
                 chunk.append(line)
-    require(0 < len(units) <= 200, 'need 1..200 source paragraphs; select a business slice')
+    if split_statements:
+        refined = []
+        for unit in units:
+            # Preserve command syntax/URLs inside inline code. Split source
+            # statements, never classify policies with domain-keyword rules.
+            chunks, buffer = [], ''
+            for index, part in enumerate(re.split(r'(`[^`]*`)', unit['text'])):
+                if index % 2:
+                    buffer += part
+                    continue
+                pieces = re.split(r'(?<=[。；;])|(?<=[.!?])\s+(?=[A-Z])', part)
+                for n, piece in enumerate(pieces):
+                    buffer += piece
+                    if n < len(pieces) - 1 and buffer.strip():
+                        chunks.append(buffer.strip())
+                        buffer = ''
+            if buffer.strip():
+                chunks.append(buffer.strip())
+            for n, text in enumerate(chunks):
+                item = dict(unit, text=text)
+                if len(chunks) > 1:
+                    item['id'] += '.' + str(n + 1)
+                refined.append(item)
+        units = refined
+    require(0 < len(units) <= 200, 'need 1..200 source units; select a business slice')
     return {'format': 'local-coverage-brief/1', 'workspace': str(root),
             'inputs': [artifact(root, name) for name in inputs], 'units': units,
+            **({'granularity': 'statement'} if split_statements else {}),
             'limits': 'Every paragraph must be accounted for, but paragraphs are not a semantic requirements parser. The host must inspect all material obligations within them.'}
 
 

@@ -38,7 +38,7 @@ def export(destination):
                  (ROOT / "THIRD_PARTY.md", "THIRD_PARTY.md"),
                  (ROOT / "vendor/superpowers-lite/LICENSE", "licenses/superpowers-lite-MIT.txt")]
     mappings += [(kit / "core" / name, "scripts/core/" + name)
-                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py")]
+                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py", "decisions.py")]
     destination.mkdir(parents=True)
     for src, rel in mappings:
         target = destination / rel

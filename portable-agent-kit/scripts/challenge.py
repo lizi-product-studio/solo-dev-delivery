@@ -23,7 +23,24 @@ from core.local_checks import artifact, canonical, file_bytes, load_json, pointe
 
 LIMIT = 65536
 MARKER = 'SOLO_CHALLENGE_RESULT='
-HARNESS = '''import importlib.util, json, sys, unittest
+HARNESS = '''import importlib.util, json, os, sys, unittest
+# Binding protects against accidental tests of the original workspace rather
+# than the frozen copy. Trusted test code can bypass this; it is not a sandbox.
+source_root = os.environ.get('SOLO_SOURCE_WORKSPACE')
+if source_root:
+    def bound_path(value):
+        if isinstance(value, (list, tuple)):
+            return any(bound_path(x) for x in value)
+        if not isinstance(value, (str, bytes, os.PathLike)):
+            return False
+        value = os.fsdecode(value)
+        resolved = os.path.realpath(value) if value.startswith("/") else value
+        return source_root in value or resolved == source_root or resolved.startswith(source_root + os.sep)
+    def candidate_binding(event, args):
+        values = args[:3] if event == 'subprocess.Popen' else args[:1]
+        if event in ('open', 'os.chdir', 'os.listdir', 'os.scandir', 'subprocess.Popen', 'os.system') and bound_path(values):
+            raise PermissionError('Acceptance must observe the frozen candidate copy; use Path.cwd() or SOLO_CANDIDATE_ROOT, not the original workspace')
+    sys.addaudithook(candidate_binding)
 spec = importlib.util.spec_from_file_location("independent_challenge", sys.argv[1])
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
@@ -174,7 +191,11 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
         test = scratch / 'review_checks.py'
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
-        env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work)}
+        env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work),
+               'SOLO_CANDIDATE_ROOT': str(work)}
+        env.pop('SOLO_SOURCE_WORKSPACE', None)
+        if packet.get('execution_scope') == 'candidate-copy':
+            env['SOLO_SOURCE_WORKSPACE'] = str(root)
         with stdout_path.open('wb') as out, stderr_path.open('wb') as err:
             proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected)], cwd=work,
                                     env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err,

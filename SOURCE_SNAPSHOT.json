@@ -1,11 +1,11 @@
 {
   "created": "2026-10-22",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scope": "Current source and validation summary only; runtime, customer project code, raw conversations, local evaluation candidates/receipts and old export bundles excluded. Manifest excludes itself.",
   "history": {
-    "previous_head": "13d866869e5618999e1310b93a2ed7b754a5b5a0",
+    "previous_head": "a59fff9103702c4e46aec6bba3c05bdfacbfa53d",
     "rewrite_history": false,
-    "previous_version": "0.4.2"
+    "previous_version": "0.5.0"
   },
   "files": [
     {
@@ -15,13 +15,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "b0c76ed000bec81f9a4ee3e762b54706a2d39fab3df9c60edbcca136392e3f63",
-      "bytes": 7006
+      "sha256": "e001ac04578ed83a47ed1dd6d5293fbc9596535d99345206885acf222573cdcd",
+      "bytes": 8102
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "6e6f31e4e9db0dcf68d8f4c61b97d72915082208f7524391fd8bf3ea3c9abb02",
-      "bytes": 11829
+      "sha256": "d500712d3bffe75014ceac76410d0ca50fbe3bccd5e37706f5b2bf4dd60a31d1",
+      "bytes": 10693
     },
     {
       "path": "knowledge/methods.json",
@@ -35,8 +35,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "8149347c6acd18e4374d8b8d49acc293d41a4ba774b8e299c54f42aaf85ba61b",
-      "bytes": 1636
+      "sha256": "c0d137a56b7e9fa102165ff744e44f55c8e49745dc4e00a9536262835f779874",
+      "bytes": 1732
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -45,7 +45,7 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "2d88965fec013355b09f9cf6b0c9ab0af278a9ce44c32843f510f3a7e12a943d",
+      "sha256": "ba65aed5c632b97e83890121cab2c982bc3c96417a481ce37285cfdce3e268bb",
       "bytes": 4228
     },
     {
@@ -87,6 +87,11 @@
       "path": "portable-agent-kit/core/local_checks.py",
       "sha256": "cc821923f6e9410d9f7966a914fa773d3b5dad824df010e82736e7718a76b50a",
       "bytes": 13022
+    },
+    {
+      "path": "portable-agent-kit/core/sensitivity.py",
+      "sha256": "0b22df9e2585a59b18794c74768485a953ee1c1bf6293fc1a4730ee47933794f",
+      "bytes": 8082
     },
     {
       "path": "portable-agent-kit/core/state_machine.py",
@@ -160,8 +165,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "eac3a690f0662d174f177e18cef4c2789224203317a1bcbcb22272821326c6ec",
-      "bytes": 24636
+      "sha256": "8b361cfc33990677e9233734f04c72518ee0d5af1f41f6109b0e706ea4882a9e",
+      "bytes": 26671
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -194,6 +199,11 @@
       "bytes": 15454
     },
     {
+      "path": "portable-agent-kit/tests/test_sensitivity.py",
+      "sha256": "b84ba97cb2a32747973c21ed6280f3aaa82ebd69a5b3b32ecf832aef49cadf62",
+      "bytes": 6279
+    },
+    {
       "path": "portable-agent-kit/tests/test_state_machine.py",
       "sha256": "cde8ea309569faa151a2b6fb6a1ca1ac9c219c8ff72f43a6deccd1988f421447",
       "bytes": 25673
@@ -215,8 +225,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "100882f0e940bcfe98bf20eb05dc8071b804e821e4f8d8d25b5394e35bb23bff",
-      "bytes": 3641
+      "sha256": "cf8bf5149831ca9cab1e9d557fcad86804b3ff81bd9239ab51daf10bc0bd3330",
+      "bytes": 3659
     },
     {
       "path": "scripts/kickoff-import.mjs",
@@ -240,8 +250,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "a81158436021a35d6f7697d5fb60ba649572869d2368eaa2006cbfd3f8dfdbd5",
-      "bytes": 4057
+      "sha256": "88472a8df795307524b0bc2647231be1ef83db7cf8d7b395a76ab3b34301e69f",
+      "bytes": 5187
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -255,13 +265,13 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
-      "sha256": "77cfdcc3d57a675822367a86483b13c0b6d3b82a9cb13ac0b3434fc78e6014cd",
-      "bytes": 3140
+      "sha256": "0253ba35900f36c038e3547cc6b96aead8abafd3e6d79bd429e39b98165b17e4",
+      "bytes": 3221
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "818ae4e52de35c5ca559da69e8bdb0c1579a839b4d49682b4b47574bbf112911",
-      "bytes": 11935
+      "sha256": "34f064c5c51159f3fba355e3acfe20d2d15ac4c7956c3c88e1262a36a9138fbc",
+      "bytes": 14474
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

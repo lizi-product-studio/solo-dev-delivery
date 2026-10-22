@@ -1,6 +1,6 @@
 {
   "package": "portable-solo-delivery-kit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -14,7 +14,8 @@
     "conformance": "tests/",
     "skill_exporter": "../scripts/export_skill.py",
     "coverage_selection": "core/coverage.py via challenge.py brief/assess",
-    "local_verification": "scripts/challenge.py verify (one invocation; compact summary; current evidence reuse)"
+    "local_verification": "scripts/challenge.py verify (one invocation; compact summary; current evidence reuse)",
+    "critical_observation_sensitivity": "core/sensitivity.py via challenge.py verify --probes"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",

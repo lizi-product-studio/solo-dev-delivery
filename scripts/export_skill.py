@@ -34,7 +34,7 @@ def export(destination):
     # in the complete system and is tested there.
     mappings += [(kit / "scripts/challenge.py", "scripts/challenge.py")]
     mappings += [(kit / "core" / name, "scripts/core/" + name)
-                 for name in ("local_checks.py", "json_relations.py", "coverage.py")]
+                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py")]
     destination.mkdir(parents=True)
     for src, rel in mappings:
         target = destination / rel

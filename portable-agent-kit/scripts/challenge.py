@@ -124,7 +124,7 @@ def tail(path):
     return {'text': data.decode('utf-8', errors='replace'), 'bytes': size, 'truncated': size > LIMIT}
 
 
-def run(packet_path, test_path, receipt_path, timeout, selected=None):
+def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=None):
     packet_path = Path(packet_path).resolve(strict=True)
     packet_raw = packet_path.read_bytes()
     packet = load_json(packet_raw.decode('utf-8'))
@@ -156,6 +156,21 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None):
             dest = work / entry['path']
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
+        if patches:
+            outputs = {entry['path'] for entry in packet['outputs']}
+            for change in patches:
+                if change['path'] not in outputs:
+                    raise ValueError('counterfactual may replace declared output code only')
+                target = work / change['path']
+                if target.suffix != '.py':
+                    raise ValueError('counterfactual patch must target Python code, not source policies or data')
+                before, after = change['before'], change['after']
+                text = target.read_text()
+                if not before or before == after or text.count(before) != 1:
+                    raise ValueError('counterfactual needs one exact, nontrivial replacement')
+                text = text.replace(before, after, 1)
+                compile(text, str(target), 'exec')
+                target.write_text(text)
         test = scratch / 'review_checks.py'
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
@@ -187,7 +202,7 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None):
         unchanged = False
     if not unchanged:
         status = 'STALE'
-    receipt = {'format': 'local-challenge-result/1', 'status': status,
+    receipt = {'format': 'local-counterfactual-result/1' if patches else 'local-challenge-result/1', 'status': status,
                'packet': str(packet_path), 'packet_sha256': sha(packet_raw),
                'test': str(test_path), 'test_sha256': sha(test_bytes),
                'exit_code': code, 'timed_out': timed_out,
@@ -196,11 +211,22 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None):
                'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
+    if patches:
+        receipt['counterfactual_patches'] = patches
     write_new(receipt_path, receipt)
     return receipt
 
 
-def verify(workspace, inputs, outputs, test_path, receipt_path, timeout=60):
+def verify(workspace, inputs, outputs, test_path, receipt_path, timeout=60, probes=None):
+    from core.sensitivity import selected_probes, verify_sensitive
+    probes = probes or selected_probes(workspace, inputs, outputs, test_path, receipt_path)
+    if probes is not None:
+        return verify_sensitive(workspace, inputs, outputs, test_path, receipt_path,
+                                timeout, probes, _verify_suite, run, status, write_new)
+    return _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout)
+
+
+def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=60):
     """One invocation for ordinary local acceptance; preserve full evidence on disk.
 
     Reuse is only within this isolated control directory, for identical declared
@@ -254,6 +280,11 @@ def verify(workspace, inputs, outputs, test_path, receipt_path, timeout=60):
 
 def status(receipt_path):
     receipt = load_json(Path(receipt_path).read_text())
+    if receipt.get('format') == 'local-sensitivity-result/1':
+        from core.sensitivity import fresh
+        valid = fresh(receipt, status)
+        return {'status': receipt['status'] if valid else 'STALE',
+                'recorded_status': receipt['status'], 'limits': receipt['limits']}
     if receipt.get('format') == 'local-coverage-result/1':
         from core.coverage import fresh_report
         valid = fresh_report(receipt, current, status)
@@ -398,6 +429,7 @@ def main():
     p.add_argument('--output', action='append', required=True)
     p.add_argument('--test', type=Path, required=True)
     p.add_argument('--report', type=Path, required=True)
+    p.add_argument('--probes', type=Path, help='optional critical-risk counterfactuals; surviving wrong behavior blocks sufficiency')
     p.add_argument('--timeout', type=int, default=60, help='disposable local test only; not an Agent time limit')
     p = commands.add_parser('freeze')
     p.add_argument('--workspace', type=Path, required=True)
@@ -438,7 +470,7 @@ def main():
     args = vars(parser.parse_args())
     op = args.pop('op')
     if op == 'verify':
-        return verify(args['workspace'], args['input'], args['output'], args['test'], args['report'], args['timeout'])
+        return verify(args['workspace'], args['input'], args['output'], args['test'], args['report'], args['timeout'], args['probes'])
     if op == 'freeze':
         return freeze(args['workspace'], args['input'], args['output'], args['packet'])
     if op == 'run':
@@ -458,7 +490,7 @@ if __name__ == '__main__':
     try:
         result = main()
         print(json.dumps(result, ensure_ascii=False, indent=2))
-        sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'RELATIONS_PASS', 'RENDERED', 'SOURCE_BRIEF', 'DECLARED_SCOPE_COVERED') else 1)
+        sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'SENSITIVITY_PASS', 'RELATIONS_PASS', 'RENDERED', 'SOURCE_BRIEF', 'DECLARED_SCOPE_COVERED') else 1)
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
         print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=False), file=sys.stderr)
         sys.exit(2)

@@ -30,3 +30,5 @@ python -m unittest discover -s tests -v
 合并前重读远端main；另一个Agent若已推进，则先保留其提交再重做相关检查，不覆盖共享历史。第三方来源与MIT说明见[THIRD_PARTY.md](THIRD_PARTY.md)。
 
 整合期间检测到另一个Agent的新提交63a4248，已先同步并保留其sensitivity.py、challenge --probes、引用、导出依赖及VALIDATION.md。本轮版本升为0.7.0，未覆盖0.6.0成果。
+
+本机Windows/Python3.12的整合后便携套件125项通过（原115项含敏感性检查，新增10项）；Skill格式及本地引用检查通过。跨系统结果由本次GitHub Actions运行提供，不把本机原生POSIX不兼容错误记作通过。

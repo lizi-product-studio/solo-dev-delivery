@@ -1,22 +1,42 @@
 {
   "created": "2026-10-22",
-  "version": "0.6.0",
-  "scope": "Current source and validation summary only; runtime, customer project code, raw conversations, local evaluation candidates/receipts and old export bundles excluded. Manifest excludes itself.",
+  "version": "0.7.0",
+  "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "a59fff9103702c4e46aec6bba3c05bdfacbfa53d",
-    "rewrite_history": false,
-    "previous_version": "0.5.0"
+    "previous_head": "63a42486907b744f445da4e61b804511c23a6dd5",
+    "previous_version": "0.6.0",
+    "rewrite_history": false
+  },
+  "integrated_source": {
+    "repository": "https://github.com/lizi-product-studio/superpowers-lite",
+    "commit": "e753ab13097b9f987f6f3ec4dadaea2656b887b2",
+    "notice": "THIRD_PARTY.md"
   },
   "files": [
+    {
+      "path": ".github/workflows/validate.yml",
+      "sha256": "13e569f16a5388472a3ce60de536c596827f9325a4c437c430f8a0863b63e526",
+      "bytes": 805
+    },
     {
       "path": ".gitignore",
       "sha256": "61c86e86f64a5d1c01a3bc87111b4a7ed207c4d9bbc6ce0af1ff024525563edb",
       "bytes": 38
     },
     {
+      "path": "INTEGRATION.md",
+      "sha256": "476eb59df23ce720c5204ba4548319649e6ab6a8fd0676fdf2c9cb5bb30921fd",
+      "bytes": 3822
+    },
+    {
       "path": "README.md",
-      "sha256": "e001ac04578ed83a47ed1dd6d5293fbc9596535d99345206885acf222573cdcd",
-      "bytes": 8102
+      "sha256": "35a2c3e3daad5d071eee632722c74c7d14cb4e6e3a4fc1067228d1079603f744",
+      "bytes": 10076
+    },
+    {
+      "path": "THIRD_PARTY.md",
+      "sha256": "7731982736cdd1a3274b6f8726aaa001d290b29a8ca0288160a273c346ced536",
+      "bytes": 1205
     },
     {
       "path": "VALIDATION.md",
@@ -35,8 +55,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "c0d137a56b7e9fa102165ff744e44f55c8e49745dc4e00a9536262835f779874",
-      "bytes": 1732
+      "sha256": "2977fc474c2c11ade62ded2bcedcb947eccc2c1e1c72a8782cf80b19e06ba52e",
+      "bytes": 2122
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -45,13 +65,13 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "ba65aed5c632b97e83890121cab2c982bc3c96417a481ce37285cfdce3e268bb",
-      "bytes": 4228
+      "sha256": "c04b703b943b6d4333dd9b53e68eebc98aa1436fb1918dfef499ef719a6f4e01",
+      "bytes": 4872
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
-      "sha256": "eaf7ae97cb9258971fc4bb84893926e140275f0bc7fe6e9763f9b49ce3533c4e",
-      "bytes": 2182
+      "sha256": "47d7189fd183b87af822ae1d9d61e24e65e0297e5c58faec850e304574b9af34",
+      "bytes": 2402
     },
     {
       "path": "portable-agent-kit/adapters/ADAPTER_CONTRACT.md",
@@ -72,6 +92,11 @@
       "path": "portable-agent-kit/core/__init__.py",
       "sha256": "0b2fb64b7a5b021b03fa93b29730fcae6d519b19241b9a735a6561bd1a8e9e87",
       "bytes": 158
+    },
+    {
+      "path": "portable-agent-kit/core/capabilities.py",
+      "sha256": "43977769e5e5e28afef062a215dae634a78bb74c7f199c0deea31e290a9059b9",
+      "bytes": 3413
     },
     {
       "path": "portable-agent-kit/core/coverage.py",
@@ -95,8 +120,8 @@
     },
     {
       "path": "portable-agent-kit/core/state_machine.py",
-      "sha256": "a468b5b734dc220cbbf772be90059f4076998a889b264995847f4f316c81b2f3",
-      "bytes": 22849
+      "sha256": "193ff1a27ac71a750ac5396c065a0c438efbebfd3f5e0e101dd1773190669d7e",
+      "bytes": 22521
     },
     {
       "path": "portable-agent-kit/examples/capability-manifest.json",
@@ -130,38 +155,48 @@
     },
     {
       "path": "portable-agent-kit/integrations/cursor/AGENTS.md",
-      "sha256": "86ad3be3e27119f687704070128b2ebcff594825207710895f460c01c0e26dd7",
-      "bytes": 1647
+      "sha256": "99c7821d2394591e356c774514a021c1e0b9676547fa892f903e0316df9370ed",
+      "bytes": 1078
     },
     {
       "path": "portable-agent-kit/integrations/cursor/README.md",
-      "sha256": "070975c48acc9fc1b26f0f992dc5a93ff8da1026005bf75a0e7686659383383e",
-      "bytes": 795
+      "sha256": "f9c5bbae252c08ee5dcfd4a411d82fb8a521eb031db5c8a2fb13d215bc07fadf",
+      "bytes": 734
     },
     {
       "path": "portable-agent-kit/integrations/cursor/solo-delivery.mdc",
-      "sha256": "f0614d8a1c9d4aaa7388c13b90a51dda94165701df433f0a738f175941f7cd80",
-      "bytes": 1188
+      "sha256": "d34b21ef0e3af36980727bd4135f5077dba9e568c99bdda01a646382a1e9362b",
+      "bytes": 1035
     },
     {
       "path": "portable-agent-kit/integrations/deepseek-harness/README.md",
-      "sha256": "f21f3d839449f54b522aff1d5a153447825919a0da67b3cf17d3645c95670b4e",
-      "bytes": 1800
+      "sha256": "e52ccd3dbfd58d99cd0886516393eb5766067624b4d4c0993b250700f7cefc09",
+      "bytes": 1935
     },
     {
       "path": "portable-agent-kit/integrations/generic/README.md",
-      "sha256": "7dec0b17b2f13036724892d51e61ff14b4fe1fb233f59d85c0510959c1dadb6c",
-      "bytes": 503
+      "sha256": "4a0d7b2fb8f187b092396b1e0e9649a254a552a06576727172fff4e512923765",
+      "bytes": 1500
     },
     {
       "path": "portable-agent-kit/integrations/kimi-code/README.md",
-      "sha256": "8866a1e132c2daae2f85e8d8aab34e4c4e724e94a7bf862e968cc08e030865a0",
-      "bytes": 1727
+      "sha256": "0f2a50803e60ca21ee4138ff7f10931787abb63495b85530f6aa938e9291b1de",
+      "bytes": 1431
+    },
+    {
+      "path": "portable-agent-kit/integrations/zcode/README.md",
+      "sha256": "a6c5f75825776ee6f696d0fed6aa4ed2fc4121424a19a6efbda3d1c0046aef62",
+      "bytes": 1054
     },
     {
       "path": "portable-agent-kit/schemas/aap-0.1.json",
       "sha256": "ddff58c6382adfe4d9fd844130b230807c57ed14c808556ae854671fb75c9b2e",
       "bytes": 1191
+    },
+    {
+      "path": "portable-agent-kit/scripts/capability_probe.py",
+      "sha256": "ba15c4afbe9c078efa238487baaa45030ea7fcdd16bb3b8addfaf58edf9bfa3b",
+      "bytes": 1700
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
@@ -194,9 +229,14 @@
       "bytes": 13193
     },
     {
+      "path": "portable-agent-kit/tests/test_portable_integration.py",
+      "sha256": "fea8160daabf3f5226c503651b6afae50f80134c3c9c7e86e94e647b978ab697",
+      "bytes": 9566
+    },
+    {
       "path": "portable-agent-kit/tests/test_relations.py",
-      "sha256": "263a64ff69854f182bdab039da00f1eda7e93963c523dbc69586ed896a760097",
-      "bytes": 15454
+      "sha256": "0e71042c9317eb1a515df846dc70bce8e49a0edd533984b9965c4e7745dcf69f",
+      "bytes": 15539
     },
     {
       "path": "portable-agent-kit/tests/test_sensitivity.py",
@@ -225,8 +265,13 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "cf8bf5149831ca9cab1e9d557fcad86804b3ff81bd9239ab51daf10bc0bd3330",
-      "bytes": 3659
+      "sha256": "ce8b85a3c4fec837046ed9605714459ad6767f23ee073f41f200f5615723e7e5",
+      "bytes": 4023
+    },
+    {
+      "path": "scripts/install_agent.py",
+      "sha256": "c66b20ce49f528072e75e4bda0a41a3debd0b0215f0ba3e92221c3166dfa6202",
+      "bytes": 5706
     },
     {
       "path": "scripts/kickoff-import.mjs",
@@ -250,8 +295,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "88472a8df795307524b0bc2647231be1ef83db7cf8d7b395a76ab3b34301e69f",
-      "bytes": 5187
+      "sha256": "bdd9437f158eb9e25759635d9a8a5c8804f6a2e3b2c8185a2a13cf39e4350b38",
+      "bytes": 5607
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -262,6 +307,16 @@
       "path": "skill/solo-dev-delivery/references/decision-foundation.md",
       "sha256": "2e704610f3d6ae2999253e943555469b1249a46ca6bf91eac650b89a376aa924",
       "bytes": 5094
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/engineering-practice.md",
+      "sha256": "f2ab03203b412fc1e91346870a3d4c40c135264815a6009aa85742999316ce82",
+      "bytes": 3341
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/host-integration.md",
+      "sha256": "ed12da7289d28e8f14738345dfb80d686e92628453bcbc265ab7fee9296fe5de",
+      "bytes": 4817
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
@@ -390,8 +445,8 @@
     },
     {
       "path": "vendor/SOURCES.json",
-      "sha256": "2a744b0f87f59d3dc33862776d934c40a71dc89d81af972fcf4f1f44805610d0",
-      "bytes": 882
+      "sha256": "433c6e27efa726b73d0c8a3579dd53fe3150a570c6adacde15d175734485e27c",
+      "bytes": 1735
     },
     {
       "path": "vendor/kickoff/LICENSE",
@@ -412,6 +467,11 @@
       "path": "vendor/orchestrator/task_mode.py",
       "sha256": "7d6d9bf74f64ba424f5a8f106ccaab553f1e63b9df47c0349443b56010445c4c",
       "bytes": 7691
+    },
+    {
+      "path": "vendor/superpowers-lite/LICENSE",
+      "sha256": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400",
+      "bytes": 1070
     },
     {
       "path": "业务闭环执行说明.md",

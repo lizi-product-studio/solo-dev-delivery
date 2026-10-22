@@ -9,9 +9,12 @@ import csv
 import hashlib
 import io
 import json
+import re
 from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 from pathlib import Path
+
+from .json_relations import pointer, relation_pointer, render_table, table_block
 
 MAX_BYTES = 5 * 1024 * 1024
 
@@ -54,19 +57,6 @@ def artifact(workspace, path):
     return {"path": path, "sha256": hashlib.sha256(data).hexdigest()}
 
 
-def pointer(value, parts):
-    if not isinstance(parts, list):
-        raise ValueError("JSON pointer must be a list of object keys/list indices")
-    for part in parts:
-        if isinstance(value, list) and type(part) is int:
-            value = value[part]
-        elif isinstance(value, dict) and isinstance(part, str):
-            value = value[part]
-        else:
-            raise ValueError("JSON pointer has an incompatible component")
-    return value
-
-
 def number(value):
     if isinstance(value, bool):
         raise ValueError("boolean is not a business number")
@@ -96,17 +86,85 @@ def equal_json(actual, expected):
     return actual == expected
 
 
+def relation_json(text):
+    """New relations reject ambiguous duplicate keys as well as inexact numbers."""
+    def unique(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError("duplicate JSON object key: " + key)
+            value[key] = item
+        return value
+    return json.loads(text, parse_float=Decimal, parse_int=Decimal,
+                      parse_constant=lambda x: (_ for _ in ()).throw(ValueError("non-finite JSON number")),
+                      object_pairs_hook=unique)
+
+
+def relation_number(value, numeric_strings=False):
+    if isinstance(value, str):
+        if not numeric_strings or not re.fullmatch(r"-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?", value):
+            raise ValueError("numeric strings require numeric_strings=true and JSON decimal syntax")
+    elif type(value) not in (int, Decimal):
+        raise ValueError("relation value must be an exact JSON number")
+    return Fraction(number(value))
+
+
+def aggregate_json(target, source, probe):
+    """Sum exact known values; a single null makes the complete total unknown."""
+    allowed = {"type", "path", "pointer", "source", "rows", "value", "known_sum",
+               "known_count", "unknown_count", "empty", "numeric_strings"}
+    if set(probe) - allowed:
+        raise ValueError("unknown json.aggregate parameters: " + ", ".join(sorted(set(probe) - allowed)))
+    empty = probe.get("empty", "error")
+    if empty not in ("error", "zero"):
+        raise ValueError("empty must be error or zero")
+    numeric_strings = probe.get("numeric_strings", False)
+    if type(numeric_strings) is not bool:
+        raise ValueError("numeric_strings must be boolean")
+    rows = relation_pointer(source, probe["rows"])
+    if not isinstance(rows, list):
+        raise ValueError("aggregate rows pointer must select a JSON array")
+    if not rows and empty == "error":
+        raise ValueError("empty aggregate requires explicit empty=zero")
+    # Validate even for an explicitly permitted empty array.
+    if (not isinstance(probe["value"], list)
+            or any(type(p) not in (str, int) or (type(p) is int and p < 0) for p in probe["value"])):
+        raise ValueError("aggregate value must be a list-form pointer")
+    known_sum, known_count, unknown_count = Fraction(0), 0, 0
+    for row in rows:
+        value = relation_pointer(row, probe["value"])
+        if value is None:
+            unknown_count += 1
+        else:
+            known_sum += relation_number(value, numeric_strings)
+            known_count += 1
+    actual = relation_pointer(target, probe["pointer"])
+    passed = actual is None if unknown_count else relation_number(actual, numeric_strings) == known_sum
+    expected = {"known_sum": known_sum, "known_count": Fraction(known_count),
+                "unknown_count": Fraction(unknown_count)}
+    for key, value in expected.items():
+        if key in probe:
+            matches = relation_number(relation_pointer(target, probe[key]), numeric_strings) == value
+            passed = passed and matches
+    observed = ("Complete total must be " + ("null" if unknown_count else str(known_sum))
+                + "; known_sum=" + str(known_sum) + "; known_count=" + str(known_count)
+                + "; unknown_count=" + str(unknown_count) + ".")
+    return passed, observed
+
+
 def run_check(workspace, check, scope):
     """Execute a contract-defined check; return actual verdict and all hashes."""
     result = {"verdict": "UNKNOWN", "observed": "", "artifacts": []}
     try:
         probe = check.get("probe", {})
         kind, path = probe.get("type"), probe.get("path")
-        if kind not in ("text.equals", "text.contains", "json.equals", "json.value", "csv.reconcile"):
+        if kind not in ("text.equals", "text.contains", "json.equals", "json.value", "csv.reconcile", "json.aggregate", "json.table"):
             result["observed"] = "Host or independent reviewer required for this acceptance; local checker cannot verify it."
             return result
         if path not in scope:
             raise ValueError("check artifact is outside contract scope")
+        if kind in ("json.aggregate", "json.table") and ".." in Path(path).parts:
+            raise ValueError("relation artifact path must not contain parent traversal")
         data = file_bytes(workspace, path)
         result["artifacts"].append({"path": path, "sha256": hashlib.sha256(data).hexdigest()})
         text = data.decode("utf-8-sig")
@@ -126,6 +184,30 @@ def run_check(workspace, check, scope):
                 value = pointer(value, probe["pointer"])
             passed = equal_json(value, probe["expected"])
             result["observed"] = "Actual JSON value (exact numbers displayed as strings): " + json.dumps(value, ensure_ascii=False, sort_keys=True, default=str)[:2000]
+        elif kind in ("json.aggregate", "json.table"):
+            source = probe.get("source", path)
+            if source not in scope:
+                raise ValueError("relation source is outside contract scope")
+            if not isinstance(source, str) or ".." in Path(source).parts:
+                raise ValueError("relation source path must be relative without parent traversal")
+            if source == path:
+                source_text = text
+            else:
+                raw = file_bytes(workspace, source)
+                result["artifacts"].append({"path": source, "sha256": hashlib.sha256(raw).hexdigest()})
+                source_text = raw.decode("utf-8-sig")
+            source_json = relation_json(source_text)
+            if kind == "json.aggregate":
+                target = source_json if source == path else relation_json(text)
+                passed, result["observed"] = aggregate_json(target, source_json, probe)
+            else:
+                allowed = {"type", "path", "source", "rows", "columns", "block"}
+                if set(probe) - allowed:
+                    raise ValueError("unknown json.table parameters: " + ", ".join(sorted(set(probe) - allowed)))
+                expected = render_table(relation_pointer(source_json, probe["rows"]), probe["columns"])
+                passed = table_block(text, probe["block"]) == expected
+                result["observed"] = ("Compared generated table block " + probe["block"]
+                                      + " with canonical JSON cells and row order; surrounding free-text semantics are not verified.")
         else:
             source = probe["source"]
             raw = file_bytes(workspace, source)

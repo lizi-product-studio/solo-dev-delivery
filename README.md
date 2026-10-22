@@ -22,7 +22,7 @@
 
 旧 `resource-run`、`codex_worker.py`及监督接口保留兼容，已有回执和任务无需迁移；宿主原生不可用或具体项目要求旧入口时可明确使用。`resource-plan`的固定模型档位及内部预算仍用于旧CLI路径，不冒充原生Agent的资源实测。原生用量交由Codex宿主管理，此处记录未知，不填0消耗。
 
-## 0.2：可独立加载的 Skill 与可验证产物
+## 0.3.1：轻量独立 Skill 与可执行复核
 
 主 Skill 已采用相对路径定位。完整本机系统继续使用原生 Codex 与现有队列，软件细节移至按需读取的 `references/software-delivery.md`。跨业务任务按目标使用专业标准，不进入软件队列。
 
@@ -32,18 +32,21 @@
 python3 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-输出符合 [Agent Skills 格式](https://agentskills.io/specification) 的目录和 zip，带相对引用、标准库 Python 运行器和软件/数据分析/营销方案的有限示例。格式与本地冷启动可验证；Cursor、Kimi Code、DeepSeek Harness 等的真实加载和工具接入仍需各宿主验证，不能宣称所有平台即装即用。
+输出符合 [Agent Skills 格式](https://agentskills.io/specification) 的目录和 zip，带相对引用和标准库一次性核验工具。独立包不包含旧session、协议状态机或契约资产，避免普通任务进入持久登记。格式与本地冷启动可验证；Cursor、Kimi Code、DeepSeek Harness等的真实加载和工具接入仍需各宿主验证，不能宣称所有平台即装即用。
 
-`portable-agent-kit/scripts/session.py` 提供 init/next/check/finish，逐项读回本地产物、冻结输入摘要、检查真实哈希并在交付前重验。失败历史保留，缺项、未知、语义审查未测或产物变化都会阻断；相同本地 session 可跨进程继续。它不执行外部动作、不调用模型、不创建定时器。
+完整系统的`portable-agent-kit/scripts/session.py`继续保留init/next/check/finish兼容入口，只有任务明确需要持久恢复且宿主记录不足时才使用。它逐项读回本地产物、冻结输入摘要、检查真实哈希并在交付前重验。失败历史保留，缺项、未知或产物变化阻断；它不执行外部动作、不调用模型、不创建定时器。现有任务的状态、门禁和锁不变。
 
 AAP-0.1 信封保持，内核状态改为 version 2。自定义宿主必须提供受信 `verify_evidence` 回调；任意 PASS 标签不再足够。旧 portable state 必须保留原历史并由宿主在当前产物上重新验证/创建新状态，禁止热改现有运行。原 Codex SQLite 队列未改。
 
 本地检查只证明契约中可机械验证的属性，不能认证业务语义、体验、身份、实际发布或“弱模型无敌”。真实项目的首次完成、漏检、返工和成本才用于评估收益。
 
+`portable-agent-kit/scripts/challenge.py`将原始输入、当前候选和审查脚本绑定，实际运行本地反例；无测试/跳过为UNKNOWN，失败保留回执，文件变化为STALE。另提供精确`json.aggregate`及`json.table`，区分未知完整合计和已知小计，从权威数据生成并核对人用表格。无需为此另建队列；原有正式门禁不变。工具只验证实际覆盖内容，不认证独立身份，也不代替专业判断、自由文本与生产验收。细节按需见Skill的`references/result-verification.md`。
+
 验证更新后清除旧导出、回滚副本和临时迭代目录，只保留当前有效版本及其验收记录；Git提交履历保留用于追溯。
 
 ## 按需查看
 
+- [0.3.1迭代与真实对照结果](VALIDATION.md)：新业务首次质量、真实边界缺陷、修复增量及资源限制。
 - [协作入口](skill/solo-dev-delivery/SKILL.md)：任务选择、产品判断与交付责任。
 - [主动审核](主动审核执行说明.md)：队列状态、缺陷扩查、版本和证据阻断。
 - [资源与原生回执](资源调度执行说明.md)：原生登记格式和旧CLI兼容操作。
@@ -61,4 +64,4 @@ python3 scripts/delivery.py --help
 python3 -m unittest discover -s tests -v
 ```
 
-本机配置不会自动同步到其他电脑或云任务；已打开的聊天可能持有旧上下文。本轮简化不向其他聊天发送指令，不修改现有项目的AGENTS或代码。
+本机配置不会自动同步到其他电脑或云任务；已打开的聊天可能持有旧上下文。更新本系统不向其他聊天发送指令，不修改客户项目的AGENTS或代码。

@@ -1,17 +1,19 @@
 # Portable Solo Delivery Kit
 
-AAP-0.1 是跨 Agent 的请求信封；本包 0.2.0 在该信封上实现更严格的状态与证据门禁。它复用任务契约、逐项验收、证据、检查点和失败恢复。较弱模型也必须遵守同一门槛；包装层不会增加模型判断、业务知识、账号权限或真实平台能力。
+AAP-0.1是完整系统的兼容请求信封；本包0.3.1保留version 2状态门禁并提供候选反例重放和跨产物关系核验。独立Skill只导出challenge及本地关系检查，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
 
 ## 文件与入口
 
 - `core/state_machine.py`：无模型、无网络依赖的 0.2 状态机；逐项验收要求宿主 `verify_evidence` 回调确认实际证据。旧 `state_version` 状态会以 `STATE_UPGRADE_REQUIRED` 拒绝，不自动迁移。
 - `scripts/session.py`：仅做受限本地产物检查的 CLI，不调用模型、任意 shell、浏览器或外部服务。用 `init`、`next`、`check --check ID`、`finish` 推进；仅支持契约内的文本、JSON、CSV 检查，其他验收必须交给真实宿主验证。
 - `core/local_checks.py`：上述 CLI 的只读检查器；只证明明确声明的机械属性，不证明语义、体验、授权或平台状态。
+- `scripts/challenge.py`：不新建队列即可冻结候选、在临时副本运行审查者unittest、精确核对汇总及生成表格；改动依赖使旧结果失效。它运行受信Python代码，不是安全沙箱或独立身份认证。`--help`与Skill的`references/result-verification.md`给出范围和调用。
+- `core/json_relations.py`：精确的未知汇总与权威数据表格生成/比对；只证明声明的关系，不证明源数据、自由文本或业务口径正确。
 - `schemas/aap-0.1.json`：AAP-0.1 请求信封 schema；0.2 状态门禁及新增操作见 `PROTOCOL.md`。
 - `adapters/example_adapter.py`：内存 JSONL 演示，不执行工具、不持久化 state，也不是可直接接入的平台适配器。
 - `scripts/export_skill.py`（系统源码包入口）：从完整系统目录生成自包含 Skill 文件夹和 ZIP；导出内容不带个人偏好或本机运行时。
 
-本地运行示例：
+普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：
 
 ```sh
 python3 portable-agent-kit/scripts/session.py init --session /tmp/demo-session --workspace /path/to/project --contract portable-agent-kit/examples/contracts/software.json

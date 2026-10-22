@@ -222,18 +222,22 @@ class ExportColdStartTests(unittest.TestCase):
                     self.assertNotIn(b"/Users/lizi", p.read_bytes(), str(p))
             workspace = root / "workspace"
             workspace.mkdir()
-            cli = skill / "scripts/session.py"
-            session = root / "control"
+            cli = skill / "scripts/challenge.py"
+            self.assertFalse((skill / "scripts/session.py").exists())
+            self.assertFalse((skill / "scripts/core/state_machine.py").exists())
+            self.assertFalse((skill / "assets/contracts").exists())
+            control = root / "control"
+            control.mkdir()
             def invoke(*args):
-                r = subprocess.run([sys.executable, str(cli), *map(str, args), "--session", str(session)], cwd=root, capture_output=True, text=True)
+                r = subprocess.run([sys.executable, '-B', str(cli), *map(str, args)], cwd=root, capture_output=True, text=True)
                 self.assertEqual(0, r.returncode, r.stderr)
                 return json.loads(r.stdout)
-            init = invoke("init", "--workspace", workspace, "--contract", skill / "assets/contracts/software.json")
-            self.assertEqual("AC1", init["check"]["id"])
-            (workspace / "config.json").write_text('{"retry":{"attempts":2,"unknown_result":"reconcile"}}')
-            for check in ("AC1", "AC2"):
-                self.assertEqual("PASS", invoke("check", "--check", check)["verdict"])
-            self.assertEqual("COMPLETED", invoke("finish")["status"])
+            (workspace / 'TASK.txt').write_text('Difference preserves sign.')
+            (workspace / 'business.py').write_text('def difference(a,b): return a-b\n')
+            (control / 'review.py').write_text('import unittest\nfrom business import difference\nclass Check(unittest.TestCase):\n def test_sign(self): self.assertEqual(-2,difference(3,5))\n')
+            self.assertEqual('FROZEN', invoke('freeze','--workspace',workspace,'--input','TASK.txt','--output','business.py','--packet',control/'packet.json')['status'])
+            self.assertEqual('CHALLENGE_PASS', invoke('run','--packet',control/'packet.json','--test',control/'review.py','--receipt',control/'receipt.json')['status'])
+            self.assertEqual('CHALLENGE_PASS', invoke('status','--receipt',control/'receipt.json')['status'])
 
 
 if __name__ == "__main__":

@@ -1,12 +1,4 @@
 runtime/
-evidence/
-knowledge/feedback/
-exports/
 __pycache__/
-*.py[cod]
+*.pyc
 .DS_Store
-.env
-.env.*
-!.env.example
-*.pem
-*.key

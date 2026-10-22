@@ -1,10 +1,10 @@
 {
   "created": "2026-10-22",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "7215adc5aaf175cea2cdb677b0b8769577173f2d",
-    "previous_version": "0.7.0",
+    "previous_head": "cf1db124673577ef2411150fa840ced08c36f09c",
+    "previous_version": "0.8.0",
     "rewrite_history": false
   },
   "integrated_source": {
@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "b869468f893a85e3c86b3390ce5ebe1bab07a5c08acebf706429b4f8b1defd81",
-      "bytes": 10742
+      "sha256": "7c2a39572713a9815c403ef7ded1bd981c0236dc33ecd1caab1690bfbd59786b",
+      "bytes": 11138
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "e8a33919ff5c3c34a2c90d8c4611396e1452d42bbaba26f2f746354aab93734f",
-      "bytes": 8602
+      "sha256": "8e356843e3ec2bd328b8099464ed433a6e7c4766ee89edafb510766cfa4448c5",
+      "bytes": 5347
     },
     {
       "path": "knowledge/methods.json",
@@ -100,8 +100,8 @@
     },
     {
       "path": "portable-agent-kit/core/coverage.py",
-      "sha256": "7307002f6151078a18289fcd5deb86a9b2045d48e92855abfb40e7b376014ec4",
-      "bytes": 13784
+      "sha256": "2f3d7b98a0444bfbc9faa12e4c82688517167309e123959e2ee6eec7271fd964",
+      "bytes": 14569
     },
     {
       "path": "portable-agent-kit/core/json_relations.py",
@@ -204,6 +204,11 @@
       "bytes": 26671
     },
     {
+      "path": "portable-agent-kit/scripts/gate.py",
+      "sha256": "28acb44b41bed624d25bd5de69fa3a4c28fe3953e681b46a51c84ec146e07e7f",
+      "bytes": 13182
+    },
+    {
       "path": "portable-agent-kit/scripts/session.py",
       "sha256": "5707d4ab0f284b1e9700b3145601862fa0928d8ead360b1fb55d1b652b24efc8",
       "bytes": 8476
@@ -222,6 +227,11 @@
       "path": "portable-agent-kit/tests/test_coverage.py",
       "sha256": "ebc9a164f5d6b5f3362ca9b9dbc95855fe614a57806d92467430d3765f130069",
       "bytes": 18954
+    },
+    {
+      "path": "portable-agent-kit/tests/test_gate.py",
+      "sha256": "d92da89d85a22cf374c92bf4311f62f7b3e1d9570531e744cbf95cf8651a036f",
+      "bytes": 9957
     },
     {
       "path": "portable-agent-kit/tests/test_local_runner.py",
@@ -265,8 +275,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "ce8b85a3c4fec837046ed9605714459ad6767f23ee073f41f200f5615723e7e5",
-      "bytes": 4023
+      "sha256": "03bd2464a135392772b6d6a1d7ef7768887ac9b30d7f1b6ab5b4079043e87bc1",
+      "bytes": 4052
     },
     {
       "path": "scripts/install_agent.py",
@@ -295,8 +305,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "be1c082f2fd719a96baebb48f713aef3188b2f6806093bdfaf52b05be53dd40b",
-      "bytes": 4513
+      "sha256": "3167996411181e70dd89108fa9cd10146ad5edb18176c64daf828b124f5df0a7",
+      "bytes": 5315
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -312,6 +322,11 @@
       "path": "skill/solo-dev-delivery/references/engineering-practice.md",
       "sha256": "f2ab03203b412fc1e91346870a3d4c40c135264815a6009aa85742999316ce82",
       "bytes": 3341
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/execution-gate.md",
+      "sha256": "abef7a6af4225b86bbabe9fbbe4109459687f6ac66e45e446ea62e4bcc3a6e98",
+      "bytes": 3797
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",

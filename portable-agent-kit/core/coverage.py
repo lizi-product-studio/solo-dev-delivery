@@ -21,7 +21,7 @@ def digest(path):
     return {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
 
 
-def source_brief(workspace, inputs):
+def source_brief(workspace, inputs, split_items=False):
     root = Path(workspace).resolve(strict=True)
     require(inputs and len(inputs) == len(set(inputs)), 'distinct source documents required')
     units = []
@@ -32,6 +32,11 @@ def source_brief(workspace, inputs):
         # Headings carry context rather than forcing a separate test obligation.
         chunk, first = [], 0
         for line_no, line in enumerate(text.splitlines() + [''], 1):
+            item_boundary = split_items and re.match(r'^\s*(?:\d+[.)]|[-*+])\s+', line)
+            if item_boundary and chunk:
+                units.append({'id': name + ':' + str(first), 'path': name,
+                              'line': first, 'text': '\n'.join(chunk)})
+                chunk = []
             if not line.strip() or re.match(r'^\s*#{1,6}\s', line):
                 if chunk:
                     units.append({'id': name + ':' + str(first), 'path': name,
@@ -127,7 +132,13 @@ def inspect_evidence(plan, packet_path, evidence_paths, status_fn):
             reason = 'different check script'
         else:
             current = status_fn(path)['status']
-            valid = current in ('CHALLENGE_PASS', 'FAIL') and bool(receipt.get('test_cases'))
+            cases = receipt.get('test_cases', [])
+            # A current crashed/unknown execution is counterevidence even when
+            # a prior run passed. Aggregate failure cannot vanish merely because
+            # teardown/import/transport did not identify a failing test method.
+            if current == 'UNKNOWN' or (current == 'FAIL' and not any(c.get('status') == 'FAIL' for c in cases)):
+                unmapped_failures.add('EXECUTION_' + current + ':' + str(path))
+            valid = current in ('CHALLENGE_PASS', 'FAIL') and bool(cases)
             if not valid:
                 reason = current + ': no attributable current case evidence'
         if valid:

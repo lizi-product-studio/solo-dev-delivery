@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "d3238e3b0dddf3989c0fed9fc4285b56a3db9d5898d549b876eb7a2cb08cd823",
-      "bytes": 17954
+      "sha256": "826acfe3de5ac4ec7c655749f6749f889120ef5a7b627349ba6b7c1da586b0b1",
+      "bytes": 19141
     },
     {
       "path": "evaluations/project-operation/README.md",
@@ -64,14 +64,34 @@
       "bytes": 2413
     },
     {
+      "path": "evaluations/repository-pilot/2026-10-23-windows-hooks-costs.json",
+      "sha256": "93208862f6d8b2d2558dfae4cecfe605ee6deece8de9865fa3c54f2bad2821b6",
+      "bytes": 1974
+    },
+    {
+      "path": "evaluations/repository-pilot/2026-10-23-windows-hooks-results.json",
+      "sha256": "754126b330ee541667aefed1ac38c5bc66b3d2c32bc980979b1f03011ac194c0",
+      "bytes": 8980
+    },
+    {
+      "path": "evaluations/repository-pilot/2026-10-23-windows-hooks.md",
+      "sha256": "efcc7e6625154ac9ee4d93c4f33d77618fe02f53822c14103e19fe7fcbd7a55f",
+      "bytes": 8208
+    },
+    {
       "path": "evaluations/repository-pilot/2026-10-23.md",
-      "sha256": "233c057766d1a7ec189a3babe05e9c408c439ee2f12fad20a98a95c8ad390f7d",
-      "bytes": 11325
+      "sha256": "f6a465c8013480ccde4a6f23e301cf34eaa39d2aa1b8090346a67fff117072b7",
+      "bytes": 11573
     },
     {
       "path": "evaluations/repository-pilot/measure_usage.py",
       "sha256": "a4540be9264806184c124675a32c039df2c7d7a926651f41d10384603ef9ab45",
       "bytes": 3195
+    },
+    {
+      "path": "evaluations/repository-pilot/verify_codex_windows_hooks.py",
+      "sha256": "3e4162733e6b7a1a03aa915bb2b7b589857713d4b59e742fe0426303098664a2",
+      "bytes": 12542
     },
     {
       "path": "knowledge/methods.json",
@@ -240,8 +260,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
-      "sha256": "278970ed5868fb82a030bbd542d7973e04036e54c31d90f0672d3555299de05a",
-      "bytes": 21104
+      "sha256": "642a5ea382c39880c0959f77858a5cbe70f4e643c256821ab27383c9de6da0ad",
+      "bytes": 22559
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -282,6 +302,11 @@
       "path": "portable-agent-kit/tests/test_gate_support_files.py",
       "sha256": "b47c9bf0ab3012dde0dbebe175cc9e371a8b2f574ff61cb7eaf6bfdcbb8f61e5",
       "bytes": 12874
+    },
+    {
+      "path": "portable-agent-kit/tests/test_hook_command.py",
+      "sha256": "dcf976c8df0e2fdb8ecca12463308336c9b36db979d8e73ca91ad14e3e95214b",
+      "bytes": 10434
     },
     {
       "path": "portable-agent-kit/tests/test_local_runner.py",
@@ -380,8 +405,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",
-      "sha256": "6b7f3afc5b4ebc6db6b5b2d9b7c26c8602e54498842ecca60e4bdb0d7dcdfd1e",
-      "bytes": 7352
+      "sha256": "108914c7ef86e2ea953c2c22a2800a2620d9c0fa3e102dc49e105cb10db6ac9d",
+      "bytes": 8035
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",

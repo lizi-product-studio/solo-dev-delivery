@@ -316,6 +316,23 @@ def hook(payload, home):
     return {'decision': 'block', 'reason': 'Delivery is not verified. Resolve the smallest source/evidence gap below; do not claim completion. Run gate.py check --task ' + shlex.quote(str(task_path)) + ' --run after implementing/checking. If user input or external access is truly required, state that blocker without claiming delivery. ' + detail}
 
 
+def _windows_hook_command(executable, script):
+    """Expression for Codex's Windows PowerShell -NoProfile -Command host."""
+    def literal(value):
+        return "'" + str(value).replace("'", "''") + "'"
+
+    # Native failures must retain their status, including when the host enables
+    # PSNativeCommandUseErrorActionPreference. A missing executable must not turn
+    # an unset LASTEXITCODE into a successful `exit $null`.
+    return ("$ErrorActionPreference = 'Stop'; "
+            "$PSNativeCommandUseErrorActionPreference = $false; "
+            "$LASTEXITCODE = $null; try { & " + literal(executable) + ' '
+            + literal(script) + " hook; if ($null -eq $LASTEXITCODE) { "
+            "throw 'Delivery hook did not return an exit code.' }; "
+            "exit $LASTEXITCODE } catch { "
+            "[Console]::Error.WriteLine('Delivery hook failed: ' + $_.Exception.Message); exit 2 }")
+
+
 def install_hook(home):
     """Prepare hook definition; host trust remains the user's security decision."""
     target = Path(home) / 'hooks.json'
@@ -323,11 +340,24 @@ def install_hook(home):
     hooks = config.setdefault('hooks', {})
     groups = hooks.setdefault('Stop', [])
     command = 'python3 ' + shlex.quote(str(Path(__file__).resolve())) + ' hook'
-    if not any(h.get('command') == command for g in groups for h in g.get('hooks', [])):
-        groups.append({'hooks': [{'type': 'command', 'command': command, 'timeout': 10}]})
+    windows_command = _windows_hook_command(Path(sys.executable).resolve(), Path(__file__).resolve())
+    existing = [h for g in groups for h in g.get('hooks', [])
+                if h.get('type') == 'command' and h.get('command') == command]
+    changed = False
+    if not existing:
+        groups.append({'hooks': [{'type': 'command', 'command': command,
+                                  'commandWindows': windows_command, 'timeout': 10}]})
+        changed = True
+    else:
+        for handler in existing:
+            if handler.get('commandWindows') != windows_command:
+                handler['commandWindows'] = windows_command
+                changed = True
+    if changed:
         save(target, config)
     return {'status': 'HOOK_PREPARED_REQUIRES_HOST_TRUST', 'path': str(target),
-            'command': command, 'next': 'Review and trust this exact hook definition in Codex /hooks. Installation alone is not activation.'}
+            'command': command, 'commandWindows': windows_command,
+            'next': 'Review and trust this exact hook definition in Codex /hooks. Installation alone is not activation.'}
 
 
 def main():

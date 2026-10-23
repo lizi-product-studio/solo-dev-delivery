@@ -123,3 +123,9 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 主Agent最终便携189项通过（31.435秒，3项实际cp936条件分支在UTF-8启动中跳过）；另在本机默认cp936、PYTHONUTF8=0的干净导出包上实际运行两轮12项回归，无跳过，全通过（8.239秒）。导出24文件、临时安装、BUNDLE验证和Skill格式检查通过，ZIP SHA256 `9f720fadaad5d863e29e42c050f8080a961b43229a36cafe40fe68b436ff9d37`。运行包未带个人会话、用量日志、试点报告或持久runtime，未替换全局安装。跨系统执行另见本分支CI。
 
 后续用户澄清、额外审批、手工修复均0；初始用户授权1次。主Agent协调、子Agent实施/审查、失败候选及计量返工都算成本。原生用量按明确线程与试点时间窗去重，保留截止时间，不能把Token等同订阅额度或货币价格；没有无Skill对照，不能据本次数据宣称更省或更快。[逐轮记录与计量复现](evaluations/repository-pilot/2026-10-23.md)包含结论及当前缺口。
+
+## Windows结束回调接续（2026-10-23）
+
+独立分支`fix/windows-hook-launch`从`4b5312d`继续第三轮。先用已安装Codex 0.163.0-alpha.11.2真实SessionStart与Stop事件、进程父链确认Windows直接使用`pwsh.exe -NoProfile -Command`，再生成无嵌套shell的`commandWindows`；保留精确native退出码和POSIX命令，旧定义原地升级、重复安装幂等。旧包真实待验证及已验证结束登记均失败，固定包六个生命周期场景全部通过；独立审查补足exit1探针的实际Stop观察后，两项退出码契约复跑通过。
+
+全量便携195项退出0（48.220秒，4项条件跳过），默认cp936协议6项另跑通过；新增夹具的venv重定向器问题经独立复现修复，同一venv定向6项退出0（11.587秒，POSIX一项跳过）。手动实际宿主复现器、边界、失败保留及成本见[接续记录](evaluations/repository-pilot/2026-10-23-windows-hooks.md)。实际生命周期测试只在临时空CODEX_HOME使用已审查测试hooks的一次调用信任选项及本地SSE替身；未更改全局安装/持久信任，未验证真实模型业务推理或桌面聊天热加载，不合并main。

@@ -1,0 +1,255 @@
+{
+  "baseline_commit": "4b5312da44bc092b687f18f807e805f7d19eec50",
+  "candidate_branch": "fix/windows-hook-launch",
+  "runtime": {
+    "codex_version": "codex-cli 0.163.0-alpha.11.2",
+    "codex_sha256": "c81ed464e5e7cafd09a5fa26af390c480bed8e9fab2a87a54b285fbd56e7122a",
+    "trust_mode": "Reviewed test hooks, documented invocation-only override in a disposable CODEX_HOME; no persistent trust or global settings modified",
+    "model": "Loopback response stub, zero real model requests"
+  },
+  "final_package": {
+    "files": 24,
+    "zip_sha256": "3f82387a713105cc18f396de7c91ab1e80c3b5c576e90a456c0bc76bb6b027f2",
+    "gate_identical_to_tested_export": true
+  },
+  "baseline": [
+    {
+      "mode": "exit1",
+      "pass": true,
+      "codex_exit": 0,
+      "elapsed_seconds": 2.844,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41552,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": false,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "exit2",
+      "pass": true,
+      "codex_exit": 1,
+      "elapsed_seconds": 2.671,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41552,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        },
+        {
+          "path": "/v1/responses",
+          "body_bytes": 42037,
+          "gate_feedback": false,
+          "exit2_feedback": true
+        }
+      ],
+      "block_feedback_observed": true,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "pending",
+      "pass": false,
+      "codex_exit": 0,
+      "elapsed_seconds": 2.813,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41558,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": false,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "verified",
+      "pass": false,
+      "codex_exit": 0,
+      "elapsed_seconds": 2.921,
+      "session_start_observed": true,
+      "task_state": "VERIFIED",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41561,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": false,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    }
+  ],
+  "candidate": [
+    {
+      "mode": "exit1",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "stop_probe_observed": true,
+      "pass": true,
+      "codex_exit": 0,
+      "elapsed_seconds": 4.625,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41567,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": false,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "exit2",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "stop_probe_observed": true,
+      "pass": true,
+      "codex_exit": 1,
+      "elapsed_seconds": 4.703,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41567,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        },
+        {
+          "path": "/v1/responses",
+          "body_bytes": 42057,
+          "gate_feedback": false,
+          "exit2_feedback": true
+        }
+      ],
+      "block_feedback_observed": true,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "pending",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "pass": true,
+      "codex_exit": 1,
+      "elapsed_seconds": 4.625,
+      "session_start_observed": true,
+      "task_state": "NEEDS_SOURCE_CHECKS",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41549,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        },
+        {
+          "path": "/v1/responses",
+          "body_bytes": 42668,
+          "gate_feedback": true,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": true,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "verified",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "pass": true,
+      "codex_exit": 0,
+      "elapsed_seconds": 5.39,
+      "session_start_observed": true,
+      "task_state": "DELIVERED",
+      "registrations_remaining": 0,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41552,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": false,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "stale",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "pass": true,
+      "codex_exit": 1,
+      "elapsed_seconds": 3.782,
+      "session_start_observed": true,
+      "task_state": "VERIFIED",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41543,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        },
+        {
+          "path": "/v1/responses",
+          "body_bytes": 43222,
+          "gate_feedback": true,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": true,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    },
+    {
+      "mode": "fail",
+      "host_contract_observed": true,
+      "host_executable": "pwsh.exe",
+      "pass": true,
+      "codex_exit": 1,
+      "elapsed_seconds": 4.375,
+      "session_start_observed": true,
+      "task_state": "CHECKING",
+      "registrations_remaining": 1,
+      "requests": [
+        {
+          "path": "/v1/responses",
+          "body_bytes": 41540,
+          "gate_feedback": false,
+          "exit2_feedback": false
+        },
+        {
+          "path": "/v1/responses",
+          "body_bytes": 43277,
+          "gate_feedback": true,
+          "exit2_feedback": false
+        }
+      ],
+      "block_feedback_observed": true,
+      "limits": "Nonzero CLI exit after a block is the deliberately failed second local response, not a successful completed model turn. Real lifecycle and gate are exercised; responses are deterministic, no real model call."
+    }
+  ],
+  "candidate_pass": true,
+  "limits": "Explicit manual integration; local deterministic model responses, actual installed Codex and hooks. No persistent trust, global installation or UI hot reload verified. Raw events and private paths excluded."
+}

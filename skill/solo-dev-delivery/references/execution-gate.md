@@ -72,6 +72,8 @@ check复用已有执行器，只运行缺失且仍需要的检查；所有生成
 
 `install-hook`合并用户级Stop定义，保留其他钩子。按Codex官方要求在`/hooks`审核信任当前定义；安装不是启用。start默认用CODEX_THREAD_ID登记当前会话，子Agent隔离测试可传`--session ''`。无登记不拦聊天；有缺口则返回最小补查项，不因stop_hook_active豁免、不按时限杀Agent。通过且证据新鲜才结束登记。其他宿主需自己的等价结束回调。
 
+安装器保留POSIX的`command`，另生成Windows专用`commandWindows`，直接向Codex的PowerShell命令宿主传递表达式；使用安装时当前Python与脚本的绝对路径，支持中文、空格及单引号，不再依赖Windows的`python3`别名。原生命令的0/1/2退出码原样传递，解释器无法启动返回2。当前路径的旧定义原地补齐，保留其他字段；移动包或更换解释器后重新运行`install-hook`并按宿主要求复核变更后的定义。本机Codex 0.163.0-alpha.11.2实测使用`pwsh.exe -NoProfile -Command`；其他版本的加载、信任与shell策略仍需在其宿主核实，不能用临时安装成功代替。
+
 确实需要用户信息/外部环境时，保留实际失败证据，用`blocked --task ... --reason ... --evidence /absolute/error.txt`如实交接BLOCKED，不标完成。恢复后重跑check。
 
 这是让主Agent的业务推理接受自动区分检查的执行工具。它不能从自然语言保证无限语义完整，也不能防止拥有本机写权限的Agent蓄意伪造适配器；断言仍须对应真实业务入口。验证结论限当前模型、实际环境与已发生观察。

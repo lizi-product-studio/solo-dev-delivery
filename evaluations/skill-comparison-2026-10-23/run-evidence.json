@@ -1,0 +1,1700 @@
+[
+  {
+    "id": "01-page-coverage-r1-baseline",
+    "task": "01-page-coverage",
+    "arm": "baseline",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:01:07.692881+00:00",
+    "ended_utc": "2026-10-23T08:04:46.727458+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 216.68699999999808,
+    "execution_and_checker_seconds": 218.40599999999904,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 216.68699999999808,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:04:46.727458+00:00",
+      "main_usage": {
+        "input_tokens": 260016,
+        "cached_input_tokens": 236672,
+        "output_tokens": 5414,
+        "reasoning_output_tokens": 690,
+        "uncached_input_tokens": 23344,
+        "total_tokens": 265430
+      },
+      "child_usage": {
+        "input_tokens": 93263,
+        "cached_input_tokens": 65280,
+        "output_tokens": 739,
+        "reasoning_output_tokens": 110,
+        "uncached_input_tokens": 27983,
+        "total_tokens": 94002
+      },
+      "observed_total_usage": {
+        "input_tokens": 353279,
+        "cached_input_tokens": 301952,
+        "output_tokens": 6153,
+        "reasoning_output_tokens": 800,
+        "uncached_input_tokens": 51327,
+        "total_tokens": 359432
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "01-page-coverage-r1-solo",
+    "task": "01-page-coverage",
+    "arm": "solo",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:01:07.692881+00:00",
+    "ended_utc": "2026-10-23T08:03:48.824363+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 158.51599999999962,
+    "execution_and_checker_seconds": 160.26599999999962,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 158.51599999999962,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:03:48.824363+00:00",
+      "main_usage": {
+        "input_tokens": 249833,
+        "cached_input_tokens": 189696,
+        "output_tokens": 4846,
+        "reasoning_output_tokens": 995,
+        "uncached_input_tokens": 60137,
+        "total_tokens": 254679
+      },
+      "child_usage": {
+        "input_tokens": 76627,
+        "cached_input_tokens": 61184,
+        "output_tokens": 1118,
+        "reasoning_output_tokens": 505,
+        "uncached_input_tokens": 15443,
+        "total_tokens": 77745
+      },
+      "observed_total_usage": {
+        "input_tokens": 326460,
+        "cached_input_tokens": 250880,
+        "output_tokens": 5964,
+        "reasoning_output_tokens": 1500,
+        "uncached_input_tokens": 75580,
+        "total_tokens": 332424
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "01-page-coverage-r1-superpowers",
+    "task": "01-page-coverage",
+    "arm": "superpowers",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:01:07.692881+00:00",
+    "ended_utc": "2026-10-23T08:05:23.817742+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 252.45300000000134,
+    "execution_and_checker_seconds": 254.20300000000134,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 252.45300000000134,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:05:23.817742+00:00",
+      "main_usage": {
+        "input_tokens": 728923,
+        "cached_input_tokens": 677760,
+        "output_tokens": 7130,
+        "reasoning_output_tokens": 1995,
+        "uncached_input_tokens": 51163,
+        "total_tokens": 736053
+      },
+      "child_usage": {
+        "input_tokens": 151588,
+        "cached_input_tokens": 132864,
+        "output_tokens": 2560,
+        "reasoning_output_tokens": 653,
+        "uncached_input_tokens": 18724,
+        "total_tokens": 154148
+      },
+      "observed_total_usage": {
+        "input_tokens": 880511,
+        "cached_input_tokens": 810624,
+        "output_tokens": 9690,
+        "reasoning_output_tokens": 2648,
+        "uncached_input_tokens": 69887,
+        "total_tokens": 890201
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "01-page-coverage-r2-baseline",
+    "task": "01-page-coverage",
+    "arm": "baseline",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:18:05.840079+00:00",
+    "ended_utc": "2026-10-23T08:21:05.103985+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 177.0,
+    "execution_and_checker_seconds": 178.63999999999942,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 177.0,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:21:05.103985+00:00",
+      "main_usage": {
+        "input_tokens": 184577,
+        "cached_input_tokens": 161792,
+        "output_tokens": 5639,
+        "reasoning_output_tokens": 825,
+        "uncached_input_tokens": 22785,
+        "total_tokens": 190216
+      },
+      "child_usage": {
+        "input_tokens": 36861,
+        "cached_input_tokens": 33664,
+        "output_tokens": 639,
+        "reasoning_output_tokens": 123,
+        "uncached_input_tokens": 3197,
+        "total_tokens": 37500
+      },
+      "observed_total_usage": {
+        "input_tokens": 221438,
+        "cached_input_tokens": 195456,
+        "output_tokens": 6278,
+        "reasoning_output_tokens": 948,
+        "uncached_input_tokens": 25982,
+        "total_tokens": 227716
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "01-page-coverage-r2-solo",
+    "task": "01-page-coverage",
+    "arm": "solo",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:18:05.840079+00:00",
+    "ended_utc": "2026-10-23T08:21:23.449210+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 195.04699999999866,
+    "execution_and_checker_seconds": 196.64099999999962,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 195.04699999999866,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:21:23.449210+00:00",
+      "main_usage": {
+        "input_tokens": 398188,
+        "cached_input_tokens": 356864,
+        "output_tokens": 4729,
+        "reasoning_output_tokens": 1972,
+        "uncached_input_tokens": 41324,
+        "total_tokens": 402917
+      },
+      "child_usage": {
+        "input_tokens": 126887,
+        "cached_input_tokens": 115456,
+        "output_tokens": 4375,
+        "reasoning_output_tokens": 336,
+        "uncached_input_tokens": 11431,
+        "total_tokens": 131262
+      },
+      "observed_total_usage": {
+        "input_tokens": 525075,
+        "cached_input_tokens": 472320,
+        "output_tokens": 9104,
+        "reasoning_output_tokens": 2308,
+        "uncached_input_tokens": 52755,
+        "total_tokens": 534179
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "01-page-coverage-r2-superpowers",
+    "task": "01-page-coverage",
+    "arm": "superpowers",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:18:05.839558+00:00",
+    "ended_utc": "2026-10-23T08:22:51.109923+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 280.65699999999924,
+    "execution_and_checker_seconds": 282.92199999999866,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 280.65699999999924,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:22:51.109923+00:00",
+      "main_usage": {
+        "input_tokens": 771460,
+        "cached_input_tokens": 717184,
+        "output_tokens": 8449,
+        "reasoning_output_tokens": 2076,
+        "uncached_input_tokens": 54276,
+        "total_tokens": 779909
+      },
+      "child_usage": {
+        "input_tokens": 172760,
+        "cached_input_tokens": 148992,
+        "output_tokens": 3052,
+        "reasoning_output_tokens": 1342,
+        "uncached_input_tokens": 23768,
+        "total_tokens": 175812
+      },
+      "observed_total_usage": {
+        "input_tokens": 944220,
+        "cached_input_tokens": 866176,
+        "output_tokens": 11501,
+        "reasoning_output_tokens": 3418,
+        "uncached_input_tokens": 78044,
+        "total_tokens": 955721
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:page_coverage.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r1-baseline",
+    "task": "02-reading-packet",
+    "arm": "baseline",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:26:49.083660+00:00",
+    "ended_utc": "2026-10-23T08:31:47.954034+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 294.64100000000326,
+    "execution_and_checker_seconds": 297.7820000000029,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 294.64100000000326,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:31:47.953036+00:00",
+      "main_usage": {
+        "input_tokens": 673839,
+        "cached_input_tokens": 621312,
+        "output_tokens": 6764,
+        "reasoning_output_tokens": 2816,
+        "uncached_input_tokens": 52527,
+        "total_tokens": 680603
+      },
+      "child_usage": {
+        "input_tokens": 173797,
+        "cached_input_tokens": 143232,
+        "output_tokens": 7022,
+        "reasoning_output_tokens": 1220,
+        "uncached_input_tokens": 30565,
+        "total_tokens": 180819
+      },
+      "observed_total_usage": {
+        "input_tokens": 847636,
+        "cached_input_tokens": 764544,
+        "output_tokens": 13786,
+        "reasoning_output_tokens": 4036,
+        "uncached_input_tokens": 83092,
+        "total_tokens": 861422
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r1-solo",
+    "task": "02-reading-packet",
+    "arm": "solo",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:26:49.084856+00:00",
+    "ended_utc": "2026-10-23T08:32:03.007262+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 308.53099999999904,
+    "execution_and_checker_seconds": 312.3909999999996,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 308.53099999999904,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:32:03.007262+00:00",
+      "main_usage": {
+        "input_tokens": 669369,
+        "cached_input_tokens": 616704,
+        "output_tokens": 5638,
+        "reasoning_output_tokens": 2152,
+        "uncached_input_tokens": 52665,
+        "total_tokens": 675007
+      },
+      "child_usage": {
+        "input_tokens": 243713,
+        "cached_input_tokens": 204672,
+        "output_tokens": 9583,
+        "reasoning_output_tokens": 1757,
+        "uncached_input_tokens": 39041,
+        "total_tokens": 253296
+      },
+      "observed_total_usage": {
+        "input_tokens": 913082,
+        "cached_input_tokens": 821376,
+        "output_tokens": 15221,
+        "reasoning_output_tokens": 3909,
+        "uncached_input_tokens": 91706,
+        "total_tokens": 928303
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r1-superpowers",
+    "task": "02-reading-packet",
+    "arm": "superpowers",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:26:49.085047+00:00",
+    "ended_utc": "2026-10-23T08:35:06.010026+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 491.9380000000019,
+    "execution_and_checker_seconds": 494.21900000000096,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 491.9380000000019,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:35:06.010026+00:00",
+      "main_usage": {
+        "input_tokens": 1270140,
+        "cached_input_tokens": 1209216,
+        "output_tokens": 17415,
+        "reasoning_output_tokens": 5626,
+        "uncached_input_tokens": 60924,
+        "total_tokens": 1287555
+      },
+      "child_usage": {
+        "input_tokens": 241546,
+        "cached_input_tokens": 188160,
+        "output_tokens": 4818,
+        "reasoning_output_tokens": 1331,
+        "uncached_input_tokens": 53386,
+        "total_tokens": 246364
+      },
+      "observed_total_usage": {
+        "input_tokens": 1511686,
+        "cached_input_tokens": 1397376,
+        "output_tokens": 22233,
+        "reasoning_output_tokens": 6957,
+        "uncached_input_tokens": 114310,
+        "total_tokens": 1533919
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r2-baseline",
+    "task": "02-reading-packet",
+    "arm": "baseline",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:05:23.832851+00:00",
+    "ended_utc": "2026-10-23T08:09:12.138268+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 225.45300000000134,
+    "execution_and_checker_seconds": 227.68699999999808,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 225.45300000000134,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:09:12.138268+00:00",
+      "main_usage": {
+        "input_tokens": 457957,
+        "cached_input_tokens": 425472,
+        "output_tokens": 4345,
+        "reasoning_output_tokens": 1374,
+        "uncached_input_tokens": 32485,
+        "total_tokens": 462302
+      },
+      "child_usage": {
+        "input_tokens": 195810,
+        "cached_input_tokens": 171008,
+        "output_tokens": 7085,
+        "reasoning_output_tokens": 1042,
+        "uncached_input_tokens": 24802,
+        "total_tokens": 202895
+      },
+      "observed_total_usage": {
+        "input_tokens": 653767,
+        "cached_input_tokens": 596480,
+        "output_tokens": 11430,
+        "reasoning_output_tokens": 2416,
+        "uncached_input_tokens": 57287,
+        "total_tokens": 665197
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r2-solo",
+    "task": "02-reading-packet",
+    "arm": "solo",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:05:23.832851+00:00",
+    "ended_utc": "2026-10-23T08:10:25.781316+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 298.9370000000017,
+    "execution_and_checker_seconds": 300.92099999999846,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 298.9370000000017,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:10:25.781316+00:00",
+      "main_usage": {
+        "input_tokens": 704367,
+        "cached_input_tokens": 673152,
+        "output_tokens": 5958,
+        "reasoning_output_tokens": 1706,
+        "uncached_input_tokens": 31215,
+        "total_tokens": 710325
+      },
+      "child_usage": {
+        "input_tokens": 228253,
+        "cached_input_tokens": 207104,
+        "output_tokens": 8882,
+        "reasoning_output_tokens": 777,
+        "uncached_input_tokens": 21149,
+        "total_tokens": 237135
+      },
+      "observed_total_usage": {
+        "input_tokens": 932620,
+        "cached_input_tokens": 880256,
+        "output_tokens": 14840,
+        "reasoning_output_tokens": 2483,
+        "uncached_input_tokens": 52364,
+        "total_tokens": 947460
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "02-reading-packet-r2-superpowers",
+    "task": "02-reading-packet",
+    "arm": "superpowers",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:05:23.830861+00:00",
+    "ended_utc": "2026-10-23T08:12:40.418042+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 432.28199999999924,
+    "execution_and_checker_seconds": 434.3279999999977,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 432.28199999999924,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 4,
+          "total": 4
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:12:40.418042+00:00",
+      "main_usage": {
+        "input_tokens": 1195702,
+        "cached_input_tokens": 1137152,
+        "output_tokens": 13041,
+        "reasoning_output_tokens": 3002,
+        "uncached_input_tokens": 58550,
+        "total_tokens": 1208743
+      },
+      "child_usage": {
+        "input_tokens": 375813,
+        "cached_input_tokens": 324608,
+        "output_tokens": 7679,
+        "reasoning_output_tokens": 2709,
+        "uncached_input_tokens": 51205,
+        "total_tokens": 383492
+      },
+      "observed_total_usage": {
+        "input_tokens": 1571515,
+        "cached_input_tokens": 1461760,
+        "output_tokens": 20720,
+        "reasoning_output_tokens": 5711,
+        "uncached_input_tokens": 109755,
+        "total_tokens": 1592235
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:reading_packet.json",
+        "passed": true
+      },
+      {
+        "id": "unseen_cli_business_cases",
+        "passed": true
+      },
+      {
+        "id": "public_api",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r1-baseline",
+    "task": "03-exhibit-release",
+    "arm": "baseline",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:12:40.440215+00:00",
+    "ended_utc": "2026-10-23T08:15:56.590913+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 195.25,
+    "execution_and_checker_seconds": 195.25,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 195.25,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:15:56.590913+00:00",
+      "main_usage": {
+        "input_tokens": 233214,
+        "cached_input_tokens": 201344,
+        "output_tokens": 5544,
+        "reasoning_output_tokens": 2202,
+        "uncached_input_tokens": 31870,
+        "total_tokens": 238758
+      },
+      "child_usage": {
+        "input_tokens": 83794,
+        "cached_input_tokens": 53248,
+        "output_tokens": 2335,
+        "reasoning_output_tokens": 173,
+        "uncached_input_tokens": 30546,
+        "total_tokens": 86129
+      },
+      "observed_total_usage": {
+        "input_tokens": 317008,
+        "cached_input_tokens": 254592,
+        "output_tokens": 7879,
+        "reasoning_output_tokens": 2375,
+        "uncached_input_tokens": 62416,
+        "total_tokens": 324887
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r1-solo",
+    "task": "03-exhibit-release",
+    "arm": "solo",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:12:40.439218+00:00",
+    "ended_utc": "2026-10-23T08:15:28.843658+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 166.9220000000023,
+    "execution_and_checker_seconds": 166.9220000000023,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 166.9220000000023,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:15:28.843658+00:00",
+      "main_usage": {
+        "input_tokens": 475383,
+        "cached_input_tokens": 425216,
+        "output_tokens": 4795,
+        "reasoning_output_tokens": 1618,
+        "uncached_input_tokens": 50167,
+        "total_tokens": 480178
+      },
+      "child_usage": {
+        "input_tokens": 127491,
+        "cached_input_tokens": 113920,
+        "output_tokens": 4470,
+        "reasoning_output_tokens": 737,
+        "uncached_input_tokens": 13571,
+        "total_tokens": 131961
+      },
+      "observed_total_usage": {
+        "input_tokens": 602874,
+        "cached_input_tokens": 539136,
+        "output_tokens": 9265,
+        "reasoning_output_tokens": 2355,
+        "uncached_input_tokens": 63738,
+        "total_tokens": 612139
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r1-superpowers",
+    "task": "03-exhibit-release",
+    "arm": "superpowers",
+    "repeat": 1,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:12:40.437221+00:00",
+    "ended_utc": "2026-10-23T08:18:05.819802+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 322.85899999999674,
+    "execution_and_checker_seconds": 322.875,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 322.85899999999674,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:18:05.819802+00:00",
+      "main_usage": {
+        "input_tokens": 764878,
+        "cached_input_tokens": 721664,
+        "output_tokens": 9695,
+        "reasoning_output_tokens": 2534,
+        "uncached_input_tokens": 43214,
+        "total_tokens": 774573
+      },
+      "child_usage": {
+        "input_tokens": 198188,
+        "cached_input_tokens": 152448,
+        "output_tokens": 5083,
+        "reasoning_output_tokens": 1115,
+        "uncached_input_tokens": 45740,
+        "total_tokens": 203271
+      },
+      "observed_total_usage": {
+        "input_tokens": 963066,
+        "cached_input_tokens": 874112,
+        "output_tokens": 14778,
+        "reasoning_output_tokens": 3649,
+        "uncached_input_tokens": 88954,
+        "total_tokens": 977844
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r2-baseline",
+    "task": "03-exhibit-release",
+    "arm": "baseline",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:22:51.165901+00:00",
+    "ended_utc": "2026-10-23T08:25:25.142705+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 153.03199999999924,
+    "execution_and_checker_seconds": 153.04699999999866,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 153.03199999999924,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:25:25.142705+00:00",
+      "main_usage": {
+        "input_tokens": 292606,
+        "cached_input_tokens": 268800,
+        "output_tokens": 4096,
+        "reasoning_output_tokens": 1451,
+        "uncached_input_tokens": 23806,
+        "total_tokens": 296702
+      },
+      "child_usage": {
+        "input_tokens": 66569,
+        "cached_input_tokens": 49152,
+        "output_tokens": 1350,
+        "reasoning_output_tokens": 156,
+        "uncached_input_tokens": 17417,
+        "total_tokens": 67919
+      },
+      "observed_total_usage": {
+        "input_tokens": 359175,
+        "cached_input_tokens": 317952,
+        "output_tokens": 5446,
+        "reasoning_output_tokens": 1607,
+        "uncached_input_tokens": 41223,
+        "total_tokens": 364621
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r2-solo",
+    "task": "03-exhibit-release",
+    "arm": "solo",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:22:51.205851+00:00",
+    "ended_utc": "2026-10-23T08:25:26.928723+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 154.13999999999942,
+    "execution_and_checker_seconds": 154.13999999999942,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 154.13999999999942,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:25:26.928723+00:00",
+      "main_usage": {
+        "input_tokens": 308812,
+        "cached_input_tokens": 291200,
+        "output_tokens": 4477,
+        "reasoning_output_tokens": 847,
+        "uncached_input_tokens": 17612,
+        "total_tokens": 313289
+      },
+      "child_usage": {
+        "input_tokens": 78234,
+        "cached_input_tokens": 61824,
+        "output_tokens": 1308,
+        "reasoning_output_tokens": 93,
+        "uncached_input_tokens": 16410,
+        "total_tokens": 79542
+      },
+      "observed_total_usage": {
+        "input_tokens": 387046,
+        "cached_input_tokens": 353024,
+        "output_tokens": 5785,
+        "reasoning_output_tokens": 940,
+        "uncached_input_tokens": 34022,
+        "total_tokens": 392831
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 1,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "id": "03-exhibit-release-r2-superpowers",
+    "task": "03-exhibit-release",
+    "arm": "superpowers",
+    "repeat": 2,
+    "status": "business_complete",
+    "started_utc": "2026-10-23T08:22:51.189893+00:00",
+    "ended_utc": "2026-10-23T08:26:49.036596+00:00",
+    "model": "gpt-6.1-sol",
+    "effort": "ultra",
+    "tier": "priority",
+    "execution_seconds": 235.32900000000154,
+    "execution_and_checker_seconds": 235.32900000000154,
+    "synthetic_user_replies": 0,
+    "real_user_interventions": 0,
+    "turns": [
+      {
+        "number": 1,
+        "seconds": 235.32900000000154,
+        "returncode": 0,
+        "turn_completed": true,
+        "business_completed": true,
+        "business_checks": {
+          "passed": 8,
+          "total": 8
+        },
+        "budget_censored": null
+      }
+    ],
+    "metrics": {
+      "captured_utc": "2026-10-23T08:26:49.036591+00:00",
+      "main_usage": {
+        "input_tokens": 587682,
+        "cached_input_tokens": 536576,
+        "output_tokens": 7811,
+        "reasoning_output_tokens": 2628,
+        "uncached_input_tokens": 51106,
+        "total_tokens": 595493
+      },
+      "child_usage": {
+        "input_tokens": 156647,
+        "cached_input_tokens": 138368,
+        "output_tokens": 3118,
+        "reasoning_output_tokens": 284,
+        "uncached_input_tokens": 18279,
+        "total_tokens": 159765
+      },
+      "observed_total_usage": {
+        "input_tokens": 744329,
+        "cached_input_tokens": 674944,
+        "output_tokens": 10929,
+        "reasoning_output_tokens": 2912,
+        "uncached_input_tokens": 69385,
+        "total_tokens": 755258
+      },
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "ultra"
+      ],
+      "warnings": []
+    },
+    "child_observability": {
+      "spawn_observed": true,
+      "observed_threads": 2,
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": true
+    },
+    "checks": [
+      {
+        "id": "public_inputs_and_contract_unchanged",
+        "passed": true
+      },
+      {
+        "id": "artifact:exhibit_bundle.json",
+        "passed": true
+      },
+      {
+        "id": "artifact:accessibility.json",
+        "passed": true
+      },
+      {
+        "id": "exactly_one_remote_preview",
+        "passed": true
+      },
+      {
+        "id": "authentic_saved_receipt",
+        "passed": true
+      },
+      {
+        "id": "unknown_result_reconciled",
+        "passed": true
+      },
+      {
+        "id": "publication_permission_boundary",
+        "passed": true
+      },
+      {
+        "id": "handoff_reference_present",
+        "passed": true
+      }
+    ]
+  }
+]

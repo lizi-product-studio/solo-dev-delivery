@@ -31,7 +31,7 @@
     },
     {
       "file": "make_blind_packets.py",
-      "sha256": "0060aa59d2f6fef39f74d93b395c9bd1f418fe43553ec5a6a69795783c8be006"
+      "sha256": "0e932c08c487c4ce8b3a3c7e1e1068bee5e431f8340f7f5ec6d629d543c149ad"
     },
     {
       "file": "METHODOLOGY.md",
@@ -40,6 +40,26 @@
     {
       "file": "registration.json",
       "sha256": "2ba4a6cec6f8fbaba6ab37e9ccfacd6bf517f622ffb1f55e1aeaf2f08e43fb70"
+    },
+    {
+      "file": "check_trial_integrity.py",
+      "sha256": "e9af7103ef30763b61ee5103331fe92fc591ab67a18576a24e25c185e1a2d97d"
+    },
+    {
+      "file": "finalize.py",
+      "sha256": "b68015ddde9ede72e6d7076236564d284c32929a1db06c2dc2cbb2a27bd4a1bf"
+    },
+    {
+      "file": "presentation-revisions.json",
+      "sha256": "9b7dbb73dab92e582bd33529d3c9a0b1c6dc615da75cbb2e651a46d853a9ac2b"
+    },
+    {
+      "file": "blind-review-a.json",
+      "sha256": "8ca0391fb12d5bf0c65f98d057a42eefefccb1cc61e22f2b361bfbc59c56f162"
+    },
+    {
+      "file": "blind-review-a-r2.json",
+      "sha256": "d4e46c5114608d6d4b994996eb9249c9cbfbc3ff8bcc862932fc45a9fa482852"
     },
     {
       "file": "design/fixture_tools.py",

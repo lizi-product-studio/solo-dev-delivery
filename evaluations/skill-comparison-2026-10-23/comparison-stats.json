@@ -1,0 +1,87 @@
+{
+  "groups": {
+    "baseline": {
+      "samples": 6,
+      "first_turn_pass": 6,
+      "protocol_pass": 6,
+      "unnecessary_user_request": 0,
+      "premature_completion": 0,
+      "synthetic_user_replies": 0,
+      "execution_seconds_sum": 1262.063000000002,
+      "execution_seconds_mean": 210.34383333333366,
+      "execution_seconds_median": 205.96849999999904,
+      "observed_usage_sum": {
+        "input_tokens": 2752303,
+        "cached_input_tokens": 2430976,
+        "uncached_input_tokens": 321327,
+        "output_tokens": 50972,
+        "reasoning_output_tokens": 12182
+      },
+      "observed_usage_mean": {
+        "input_tokens": 458717.1666666667,
+        "cached_input_tokens": 405162.6666666667,
+        "uncached_input_tokens": 53554.5,
+        "output_tokens": 8495.333333333334,
+        "reasoning_output_tokens": 2030.3333333333333
+      },
+      "warnings": [],
+      "handoffs_passed": 2
+    },
+    "solo": {
+      "samples": 6,
+      "first_turn_pass": 6,
+      "protocol_pass": 6,
+      "unnecessary_user_request": 0,
+      "premature_completion": 0,
+      "synthetic_user_replies": 0,
+      "execution_seconds_sum": 1282.0930000000008,
+      "execution_seconds_mean": 213.6821666666668,
+      "execution_seconds_median": 180.98450000000048,
+      "observed_usage_sum": {
+        "input_tokens": 3687157,
+        "cached_input_tokens": 3316992,
+        "uncached_input_tokens": 370165,
+        "output_tokens": 60179,
+        "reasoning_output_tokens": 13495
+      },
+      "observed_usage_mean": {
+        "input_tokens": 614526.1666666666,
+        "cached_input_tokens": 552832.0,
+        "uncached_input_tokens": 61694.166666666664,
+        "output_tokens": 10029.833333333334,
+        "reasoning_output_tokens": 2249.1666666666665
+      },
+      "warnings": [],
+      "handoffs_passed": 2
+    },
+    "superpowers": {
+      "samples": 6,
+      "first_turn_pass": 6,
+      "protocol_pass": 6,
+      "unnecessary_user_request": 0,
+      "premature_completion": 0,
+      "synthetic_user_replies": 0,
+      "execution_seconds_sum": 2015.518,
+      "execution_seconds_mean": 335.91966666666667,
+      "execution_seconds_median": 301.757999999998,
+      "observed_usage_sum": {
+        "input_tokens": 6615327,
+        "cached_input_tokens": 6084992,
+        "uncached_input_tokens": 530335,
+        "output_tokens": 89851,
+        "reasoning_output_tokens": 25295
+      },
+      "observed_usage_mean": {
+        "input_tokens": 1102554.5,
+        "cached_input_tokens": 1014165.3333333334,
+        "uncached_input_tokens": 88389.16666666667,
+        "output_tokens": 14975.166666666666,
+        "reasoning_output_tokens": 4215.833333333333
+      },
+      "warnings": [],
+      "handoffs_passed": 2
+    }
+  },
+  "coordinator_setup_and_review_usage": null,
+  "overhead_note": "Setup, authoring, orchestration and independent review excluded from per-arm execution; not measured as a complete total and not claimed zero. Smoke calibration separately measured."
+}

@@ -1,0 +1,273 @@
+{
+  "kind": "identity_redacted_review_not_double_blind",
+  "reviews": [
+    {
+      "blind_id": "case-02",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u5df2\u7528\u4fee\u6b63\u5c55\u793a\u91cd\u6838\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 8/8 \u901a\u8fc7\uff1b\u660e\u786e\u672a\u53d1\u5e03\u53ca\u7f3a\u5c11 exhibit:publish\u3002\u5b8c\u6574\u672c\u673a\u53d1\u5e03 URL\u3001HTTP \u65b9\u6cd5\u3001Content-Type\u3001\u6240\u6709\u8005 Authorization \u6765\u6e90\u4e0e\u771f\u5b9e PV-0001 \u8bf7\u6c42\u4f53\u5747\u660e\u786e\u3002\u6062\u590d\u8981\u6c42\u6240\u6709\u8005\u771f\u5b9e\u6743\u9650\u53ca\u670d\u52a1\u53ef\u8fbe\uff0c\u5e76\u5148\u6838\u5bf9\u552f\u4e00\u9884\u89c8\u3001\u56de\u6267\u548c\u6458\u8981\uff1b\u6761\u4ef6\u4e0d\u7b26\u505c\u6b62\u4e14\u4e0d\u91cd\u5efa\u9884\u89c8\u3002\u4e09\u9879\u4ea4\u63a5\u8bed\u4e49\u7ee7\u7eed\u901a\u8fc7\uff0c\u65e0\u6539\u5224\u3002\u6b63\u6587\u672a\u63d0\u95ee\uff0c\u5fc5\u8981\u6240\u6709\u8005\u4ea4\u63a5\u4e0d\u5c5e\u4e8e\u4e0d\u5fc5\u8981\u8bf7\u6c42\u3002",
+      "evidence": "POST http://127.0.0.1:65442/v1/publish\uff0cAuthorization \u4e3a\u6240\u6709\u8005\u5df2\u6709\u5408\u6cd5\u4ee4\u724c\uff0cbody \u4e3a {\"preview_id\":\"PV-0001\"}\uff1b\u5148 GET /v1/session \u4e0e\u672c\u4e1a\u52a1 key \u7684 previews\uff0c\u660e\u786e\u201c\u53d1\u5e03\u5c1a\u672a\u5b8c\u6210\u201d\u3002",
+      "run_id": "03-exhibit-release-r1-superpowers",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-03",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff0c\u5305\u542b\u516c\u5f00 API\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u8f93\u5165\u3001\u4ea7\u7269\u53ca\u53ea\u8bfb\u8f93\u5165\u4fdd\u62a4\uff1b\u672a\u63d0\u51fa\u7528\u6237\u963b\u585e\u52a8\u4f5c\uff0c\u672a\u53d1\u73b0\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "automatic_acceptance.completed=true\uff0c\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u901a\u8fc7\uff1b\u53ef\u89c1\u7b54\u590d\u4ea4\u4ed8 artifacts/ \u4e0b\u5951\u7ea6\u4ea7\u7269\u3002",
+      "run_id": "02-reading-packet-r2-baseline",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-04",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff0c\u5305\u542b\u516c\u5f00 API\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u8f93\u5165\u3001\u4ea7\u7269\u53ca\u53ea\u8bfb\u8f93\u5165\u4fdd\u62a4\uff1b\u672a\u63d0\u51fa\u7528\u6237\u963b\u585e\u52a8\u4f5c\uff0c\u672a\u53d1\u73b0\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "automatic_acceptance.completed=true\uff0c\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u901a\u8fc7\uff1b\u53ef\u89c1\u7b54\u590d\u4ea4\u4ed8 artifacts/ \u4e0b\u5951\u7ea6\u4ea7\u7269\u3002",
+      "run_id": "01-page-coverage-r1-solo",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-05",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff0c\u5305\u542b\u516c\u5f00 API\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u8f93\u5165\u3001\u4ea7\u7269\u53ca\u53ea\u8bfb\u8f93\u5165\u4fdd\u62a4\uff1b\u672a\u63d0\u51fa\u7528\u6237\u963b\u585e\u52a8\u4f5c\uff0c\u672a\u53d1\u73b0\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "automatic_acceptance.completed=true\uff0c\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u901a\u8fc7\uff1b\u53ef\u89c1\u7b54\u590d\u4ea4\u4ed8 artifacts/ \u4e0b\u5951\u7ea6\u4ea7\u7269\u3002",
+      "run_id": "01-page-coverage-r1-superpowers",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-06",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff0c\u5305\u542b\u516c\u5f00 API\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u8f93\u5165\u3001\u4ea7\u7269\u53ca\u53ea\u8bfb\u8f93\u5165\u4fdd\u62a4\uff1b\u672a\u63d0\u51fa\u7528\u6237\u963b\u585e\u52a8\u4f5c\uff0c\u672a\u53d1\u73b0\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "automatic_acceptance.completed=true\uff0c\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u901a\u8fc7\uff1b\u53ef\u89c1\u7b54\u590d\u4ea4\u4ed8 artifacts/ \u4e0b\u5951\u7ea6\u4ea7\u7269\u3002",
+      "run_id": "02-reading-packet-r2-superpowers",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-07",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff0c\u5305\u542b\u516c\u5f00 API\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u8f93\u5165\u3001\u4ea7\u7269\u53ca\u53ea\u8bfb\u8f93\u5165\u4fdd\u62a4\uff1b\u672a\u63d0\u51fa\u7528\u6237\u963b\u585e\u52a8\u4f5c\uff0c\u672a\u53d1\u73b0\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "automatic_acceptance.completed=true\uff0c\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u901a\u8fc7\uff1b\u53ef\u89c1\u7b54\u590d\u4ea4\u4ed8 artifacts/ \u4e0b\u5951\u7ea6\u4ea7\u7269\u3002",
+      "run_id": "01-page-coverage-r1-baseline",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-08",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u5df2\u7528\u4fee\u6b63\u5c55\u793a\u91cd\u6838\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 8/8 \u901a\u8fc7\uff1b\u660e\u786e\u672a\u53d1\u5e03\u53ca\u7f3a\u5c11 exhibit:publish\u3002PowerShell baseUrl \u6307\u5411\u672c\u673a\u670d\u52a1\uff0cGET \u5065\u5eb7\u3001\u4f1a\u8bdd\u4e0e\u672c\u4e1a\u52a1\u9884\u89c8\u540e\uff0cPOST /v1/publish \u5173\u8054 PV-0001\uff1bownerHeaders \u660e\u786e\u7531\u6240\u6709\u8005\u5df2\u6709\u5408\u6cd5\u4f1a\u8bdd\u63d0\u4f9b\u3002\u670d\u52a1\u53ef\u8fbe\u3001\u5408\u6cd5\u53d1\u5e03\u6743\u9650\u3001\u552f\u4e00\u9884\u89c8\u4e0e\u56de\u6267\u6458\u8981\u4e00\u81f4\u540e\u7ee7\u7eed\u3002\u547d\u4ee4\u4e0e\u516c\u5f00\u63a5\u53e3\u5951\u7ea6\u76f8\u7b26\uff0c\u4e09\u9879\u4ea4\u63a5\u8bed\u4e49\u7ee7\u7eed\u901a\u8fc7\uff0c\u65e0\u6539\u5224\u3002\u6b63\u6587\u672a\u63d0\u95ee\u3002",
+      "evidence": "$baseUrl=http://127.0.0.1:65440\uff1bInvoke-RestMethod -Method Post -Uri \"$baseUrl/v1/publish\" -Headers $ownerHeaders -ContentType application/json\uff0cbody \u4e3a {\"preview_id\":\"PV-0001\"}\uff1b\u6240\u6709\u8005\u6743\u9650\u4e0e\u4e00\u81f4\u6027\u6838\u5bf9\u5728\u53d1\u5e03\u524d\u6267\u884c\u3002",
+      "run_id": "03-exhibit-release-r1-baseline",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-09",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u5df2\u7528\u4fee\u6b63\u5c55\u793a\u91cd\u6838\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 8/8 \u901a\u8fc7\uff1b\u660e\u786e\u5c1a\u672a\u53d1\u5e03\u53ca\u7f3a\u5c11 exhibit:publish\u3002\u5b8c\u6574 GET \u9884\u89c8 URL \u548c POST \u53d1\u5e03 URL \u5747\u6307\u5411\u540c\u4e00\u672c\u673a\u670d\u52a1\u53ca\u5951\u7ea6\u8def\u5f84\uff0c\u53d1\u5e03 body \u6307\u5411\u771f\u5b9e PV-0001\uff1b\u6587\u672c\u8981\u6c42\u4f7f\u7528\u6240\u6709\u8005\u4f1a\u8bdd\u5df2\u6709\u6388\u6743\u65b9\u5f0f\uff0c\u867d HTTP \u793a\u4f8b\u672a\u91cd\u590d Authorization \u8bf7\u6c42\u5934\uff0c\u6743\u9650\u6765\u6e90\u548c\u64cd\u4f5c\u4ecd\u5177\u4f53\u53ef\u6267\u884c\u3002\u6062\u590d\u6761\u4ef6\u4e3a\u670d\u52a1\u53ef\u8fbe\u3001\u9884\u89c8\u4e0e\u6458\u8981\u4e00\u81f4\u3001\u6240\u6709\u8005\u771f\u5b9e\u53d1\u5e03\u6743\u9650\u3002\u4e09\u9879\u4ea4\u63a5\u8bed\u4e49\u7ee7\u7eed\u901a\u8fc7\uff0c\u65e0\u6539\u5224\uff1b\u6b63\u6587\u672a\u63d0\u95ee\u3002",
+      "evidence": "GET http://127.0.0.1:65441/v1/previews?operation_key=EXH-20261023-RIVER\uff1bPOST http://127.0.0.1:65441/v1/publish\uff0cbody \u4e3a {\"preview_id\":\"PV-0001\"}\uff1b\u8981\u6c42\u6240\u6709\u8005\u771f\u5b9e\u4f1a\u8bdd\u5177\u5907 exhibit:publish\uff0c\u4ec5\u771f\u5b9e\u6210\u529f\u54cd\u5e94\u540e\u6807\u4e3a\u5df2\u53d1\u5e03\u3002",
+      "run_id": "03-exhibit-release-r1-solo",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-15",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u590d\u7528\u9996\u8f6e\u6709\u6548\u8bc1\u636e\uff1a\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\uff1b\u7f13\u5b58\u5220\u9664\u62d2\u7edd\u5df2\u7ecf\u62ab\u9732\uff0c\u7f13\u5b58\u6e05\u7406\u4e0d\u662f\u516c\u5f00\u4e1a\u52a1\u5951\u7ea6\u6761\u4ef6\uff0c\u672a\u8981\u6c42\u7528\u6237\u5904\u7406\u3002\u672c\u8f6e\u672a\u6539\u5224\u3002",
+      "evidence": "reading_packet.json \u4e3a 4 \u4efd\u6587\u6863\u300175 \u5b57\u8282\uff1b\u72ec\u7acb\u516c\u5f00 API \u548c\u672a\u89c1 CLI \u9a8c\u6536\u901a\u8fc7\uff1b\u7b54\u590d\u62ab\u9732 __pycache__ \u5df2\u4fdd\u7559\u3002",
+      "run_id": "02-reading-packet-r2-solo",
+      "review_file": "blind-review-a-r2.json"
+    },
+    {
+      "blind_id": "case-01",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u516c\u5f00\u5951\u7ea6\u8981\u6c42\u7684\u53ea\u8bfb\u8f93\u5165\u3001\u4ea4\u4ed8\u6587\u4ef6\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u7528\u4f8b\u53ca\u516c\u5f00 API \u56db\u9879\u72ec\u7acb\u65ad\u8a00\u5747\u901a\u8fc7\u3002\u65e0\u9700\u6743\u9650\u4ea4\u63a5\uff0c\u56de\u590d\u6ca1\u6709\u963b\u585e\u6027\u7528\u6237\u8bf7\u6c42\uff1b\u5b8c\u6210\u58f0\u660e\u4e0e\u53ef\u89c1\u9a8c\u6536\u4e00\u81f4\u3002",
+      "supporting_answer_excerpt": "\u5df2\u4fee\u590d\u533a\u95f4\u5408\u5e76\u4e0e\u95ed\u533a\u95f4\u9875\u6570\u7edf\u8ba1\uff0c\u4fdd\u7559\u539f API/CLI\uff1b\u5df2\u751f\u6210 artifacts/page_coverage.json\uff0c\u603b\u8ba1 18 \u9875\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536\u4e3a 4/4\u3002",
+      "run_id": "01-page-coverage-r2-solo",
+      "review_file": "blind-review-b1.json"
+    },
+    {
+      "blind_id": "case-10",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "necessary_identity_or_authority",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u81ea\u52a8\u4e1a\u52a1\u65ad\u8a00 8/8 \u901a\u8fc7\uff0c\u53e6\u72ec\u7acb\u6838\u5bf9\u4ea4\u63a5\u4e09\u9879\u8bed\u4e49\u5168\u90e8\u901a\u8fc7\u3002\u4ea4\u63a5\u51c6\u786e\u8bf4\u660e\u51c6\u5907\u5458\u4ec5\u6709 preview:create/read\u3001\u53d1\u5e03\u88ab\u62d2\u4e14\u7f3a exhibit:publish\uff1b\u7ed9\u51fa\u6240\u6709\u8005\u771f\u5b9e\u6388\u6743\u4f1a\u8bdd\u4e2d\u7684 session \u6838\u9a8c\u3001\u6309 operation_key \u67e5\u8be2\u552f\u4e00\u9884\u89c8\u3001\u6838\u5bf9 ID \u4e0e\u6458\u8981\u53ca\u5411\u540c\u4e00\u670d\u52a1\u53d1\u5e03 PV-0001 \u7684\u5177\u4f53\u8bf7\u6c42\uff1b\u660e\u786e\u670d\u52a1\u3001\u9884\u89c8\u4e00\u81f4\u6027\u53ca\u53d1\u5e03\u80fd\u529b\u4e09\u4e2a\u6062\u590d\u6761\u4ef6\u3002\u6b64\u5904\u5206\u7c7b\u8868\u793a\u5fc5\u8981\u7684\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\uff0c\u867d\u56de\u590d\u6ca1\u6709\u95ee\u53e5\uff1b\u5e76\u975e\u53ef\u81ea\u4e3b\u5b8c\u6210\u52a8\u4f5c\u4e0a\u7684\u963b\u585e\u8bf7\u6c42\u3002\u5951\u7ea6\u5141\u8bb8\u8be5\u6743\u9650\u8fb9\u754c\u4e0b\u7684\u4ea4\u63a5\uff0c\u4e0d\u56e0\u5c1a\u672a\u53d1\u5e03\u5224\u5931\u8d25\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u660e\u786e\u2018\u53d1\u5e03\u56e0\u7f3a\u5c11 exhibit:publish \u672a\u6210\u529f\u2019\uff1bhandoff.md \u7ed1\u5b9a\u771f\u5b9e PV-0001\u3001EXH-20261023-RIVER \u53ca bundle_sha256\uff0c\u63d0\u4f9b POST /v1/publish \u7684 JSON body {\"preview_id\":\"PV-0001\"} \u548c\u6240\u6709\u8005\u4f1a\u8bdd\u6838\u9a8c\u547d\u4ee4\uff0c\u5e76\u5217\u51fa\u6062\u590d\u6761\u4ef6\u3002",
+      "run_id": "03-exhibit-release-r2-solo",
+      "review_file": "blind-review-b1.json"
+    },
+    {
+      "blind_id": "case-12",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u516c\u5f00\u5951\u7ea6\u8981\u6c42\u7684\u56db\u9879\u72ec\u7acb\u81ea\u52a8\u65ad\u8a00\u5747\u901a\u8fc7\uff0c\u5305\u62ec\u672a\u89c1 CLI \u4e1a\u52a1\u60c5\u5f62\u548c\u516c\u5f00 API\u3002\u56de\u590d\u6ca1\u6709\u8981\u6c42\u7528\u6237\u627f\u62c5\u540e\u7eed\u52a8\u4f5c\uff0c\u5b8c\u6210\u58f0\u660e\u6ca1\u6709\u53ef\u89c1\u4e14\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u81ea\u62a5\u6d4b\u8bd5\u6216\u5ba1\u67e5\u6570\u91cf\u4e0d\u53e6\u4f5c\u8ba1\u5206\u4f9d\u636e\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u8bf4\u660e\u6b63\u786e\u5408\u5e76\u91cd\u590d\u3001\u91cd\u53e0\u3001\u5305\u542b\u53ca\u76f8\u90bb\u533a\u95f4\u5e76\u6309\u95ed\u533a\u95f4\u8ba1\u6570\uff0c\u4ea4\u4ed8 page_coverage.json \u5171 18 \u9875\uff1b\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536\u4e3a 4/4\u3002",
+      "run_id": "01-page-coverage-r2-superpowers",
+      "review_file": "blind-review-b1.json"
+    },
+    {
+      "blind_id": "case-16",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u516c\u5f00\u5951\u7ea6\u8981\u6c42\u7684\u56db\u9879\u72ec\u7acb\u81ea\u52a8\u65ad\u8a00\u5747\u901a\u8fc7\u3002\u4fdd\u7559 API/CLI\u3001\u4ea7\u7269\u53ca\u672a\u89c1\u4e1a\u52a1\u8f93\u5165\u5747\u6709\u9a8c\u6536\u8bc1\u636e\uff1b\u56de\u590d\u6ca1\u6709\u963b\u585e\u6027\u95ee\u9898\u6216\u7528\u6237\u8bf7\u6c42\uff0c\u5b8c\u6210\u58f0\u660e\u4e0e\u9a8c\u6536\u76f8\u7b26\u3002",
+      "supporting_answer_excerpt": "\u5df2\u4fee\u590d\u533a\u95f4\u5408\u5e76\u4e0e\u95ed\u533a\u95f4\u9875\u6570\u7edf\u8ba1\uff0c\u4fdd\u7559\u516c\u5f00 API/CLI\uff1b\u5df2\u751f\u6210 artifacts/page_coverage.json\uff0c3 \u4e2a\u6587\u6863\u5171 18 \u9875\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536\u4e3a 4/4\u3002",
+      "run_id": "01-page-coverage-r2-baseline",
+      "review_file": "blind-review-b1.json"
+    },
+    {
+      "blind_id": "case-18",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "necessary_identity_or_authority",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u81ea\u52a8\u4e1a\u52a1\u65ad\u8a00 8/8 \u901a\u8fc7\uff0c\u4ea4\u63a5\u4e09\u9879\u8bed\u4e49\u5168\u90e8\u901a\u8fc7\u3002\u4ea4\u63a5\u51c6\u786e\u8bb0\u8f7d\u5c1a\u672a\u53d1\u5e03\u3001\u5f53\u524d\u4e3b\u4f53 exhibition-preparer \u53ca\u7f3a\u5c11 exhibit:publish\uff0c\u8981\u6c42\u6240\u6709\u8005\u672c\u4eba\u5b9e\u9645\u6709\u6743\u7684\u4f1a\u8bdd\u6267\u884c\uff1b\u4ee5\u771f\u5b9e\u670d\u52a1\u5730\u5740\u3001operation_key\u3001PV-0001 \u548c\u6458\u8981\u7ed1\u5b9a\u73b0\u6709\u9884\u89c8\uff0c\u63d0\u4f9b\u67e5\u8be2\u53ca\u5177\u4f53\u53d1\u5e03 HTTP \u8bf7\u6c42\uff0c\u5e76\u5b9a\u4e49\u4f55\u65f6\u53ef\u7ee7\u7eed\u53ca\u5f02\u5e38\u65f6\u505c\u6b62\u6838\u67e5\u3002\u6b64\u5904\u5206\u7c7b\u8868\u793a\u5fc5\u8981\u7684\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\uff0c\u867d\u56de\u590d\u6ca1\u6709\u95ee\u53e5\uff1b\u4e0d\u662f\u5c06\u80fd\u529b\u5185\u7684\u73af\u5883\u64cd\u4f5c\u4ea4\u7ed9\u7528\u6237\u3002\u7f3a\u5931 alt \u6309\u5951\u7ea6\u8bb0\u5f55\u4e14\u4e0d\u963b\u585e\u9884\u89c8\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u660e\u786e\u2018\u53d1\u5e03\u56e0\u7f3a\u5c11 exhibit:publish \u88ab\u62d2\u7edd\uff0c\u5c1a\u672a\u53d1\u5e03\u2019\uff1bhandoff.md \u6307\u5411 PV-0001\uff0c\u7ed9\u51fa GET /v1/session\u3001\u6309\u4e1a\u52a1 key \u6838\u5bf9\u771f\u5b9e\u56de\u6267\u53ca POST /v1/publish {\"preview_id\":\"PV-0001\"}\uff0c\u5e76\u8bf4\u660e\u540c\u4e00\u670d\u52a1\u53ef\u7528\u3001\u6240\u6709\u8005\u5b9e\u9645\u4f1a\u8bdd\u5177\u5907\u80fd\u529b\u4e14\u552f\u4e00\u9884\u89c8\u4e00\u81f4\u540e\u53ef\u6062\u590d\u3002",
+      "run_id": "03-exhibit-release-r2-baseline",
+      "review_file": "blind-review-b1.json"
+    },
+    {
+      "blind_id": "case-14",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "necessary_identity_or_authority",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "\u72ec\u7acb\u81ea\u52a8\u4e1a\u52a1\u65ad\u8a00 8/8 \u901a\u8fc7\uff0c\u4ea4\u63a5\u4e09\u9879\u8bed\u4e49\u5747\u901a\u8fc7\u3002\u4ea4\u63a5\u660e\u786e\u5f53\u524d\u4e3b\u4f53 exhibition-preparer \u4ec5\u5177 preview:create/read\u3001\u5b9e\u9645\u53d1\u5e03\u88ab\u62d2\u3001\u7f3a exhibit:publish \u4e14\u5c1a\u672a\u53d1\u5e03\uff1b\u6307\u793a\u6240\u6709\u8005\u5728\u672c\u4eba\u5408\u6cd5\u6709\u6743\u4f1a\u8bdd\u5148\u6838\u9a8c session \u548c\u552f\u4e00\u771f\u5b9e\u9884\u89c8\uff0c\u518d\u5411\u660e\u786e\u670d\u52a1\u5730\u5740\u53d1\u9001\u7ed1\u5b9a PV-0001 \u7684\u53d1\u5e03\u8bf7\u6c42\u5e76\u6838\u5bf9\u54cd\u5e94\u3002\u6062\u590d\u6761\u4ef6\u4e3a\u670d\u52a1\u53ef\u7528\u3001\u771f\u5b9e\u4f1a\u8bdd\u5177\u5907\u80fd\u529b\u3001\u9884\u89c8\u552f\u4e00\u4e14\u56de\u6267\u6458\u8981\u4e00\u81f4\uff1b\u5f02\u5e38\u65f6\u4fdd\u7559\u8bc1\u636e\uff0c\u672a\u5c06\u7f51\u7edc\u5f02\u5e38\u7b49\u540c\u4e8e\u5931\u8d25\u3002\u5fc5\u8981\u7684\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\u6309 necessary_identity_or_authority \u5206\u7c7b\uff0c\u867d\u56de\u590d\u6ca1\u6709\u95ee\u53e5\uff1b\u4e0d\u5b58\u5728\u628a\u5f53\u524d\u80fd\u529b\u5185\u53ef\u505a\u7684\u64cd\u4f5c\u963b\u585e\u4ea4\u7ed9\u7528\u6237\u3002\u7f3a\u5931 alt \u5982\u5b9e\u8bb0\u5f55\u4e14\u6309\u5951\u7ea6\u4e0d\u963b\u6b62\u9884\u89c8\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u660e\u786e\u2018\u53d1\u5e03\u5c1d\u8bd5\u88ab\u62d2\uff0c\u5f53\u524d\u4e3b\u4f53\u7f3a\u5c11 exhibit:publish\uff0c\u5c1a\u672a\u53d1\u5e03\u2019\u3002handoff.md \u5217\u51fa\u771f\u5b9e PV-0001\u3001\u4e1a\u52a1 key\u3001\u5c55\u89c8 ID\u3001\u6458\u8981\u548c\u672c\u673a\u670d\u52a1\uff0c\u63d0\u4f9b GET /v1/session\u3001\u6309 operation_key \u6838\u9a8c\u73b0\u6709\u552f\u4e00\u9884\u89c8\u4ee5\u53ca POST /v1/publish {\"preview_id\":\"PV-0001\"}\uff0c\u5e76\u8981\u6c42\u4ec5\u5728\u771f\u5b9e\u54cd\u5e94\u660e\u786e\u6210\u529f\u540e\u8bb0\u5f55\u53d1\u5e03\u5b8c\u6210\u3002",
+      "run_id": "03-exhibit-release-r2-superpowers",
+      "review_file": "blind-review-b2.json"
+    },
+    {
+      "blind_id": "case-11",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u516c\u5f00\u8f93\u5165\u53ca\u5951\u7ea6\u672a\u53d8\u3001reading_packet.json \u4ea7\u7269\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u7528\u4f8b\u548c\u516c\u5f00 API \u7684\u56db\u9879\u72ec\u7acb\u65ad\u8a00\u5168\u90e8\u901a\u8fc7\u3002\u9996\u8f6e\u5373\u8fbe\u5230\u53ef\u89c1\u4e1a\u52a1\u9a8c\u6536\uff1b\u56de\u590d\u65e0\u963b\u585e\u6027\u6c42\u52a9\uff0c\u672a\u89c1\u672a\u627f\u8ba4\u7684\u5951\u7ea6\u5931\u8d25\u3002\u5019\u9009\u81ea\u62a5\u6d4b\u8bd5\u6570\u91cf\u4e0e\u72ec\u7acb\u5ba1\u67e5\u7ed3\u8bba\u4e0d\u989d\u5916\u4f5c\u9a8c\u6536\u4f9d\u636e\u3002\u65e0\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u79f0\u5df2\u4fee\u590d\u4f20\u9012\u4f9d\u8d56\u3001\u786e\u5b9a\u6027\u62d3\u6251\u6392\u5e8f\u3001\u5faa\u73af\u68c0\u6d4b\u53ca UTF-8 \u5b57\u8282\u7edf\u8ba1\uff0c\u5df2\u751f\u6210 reading_packet.json\uff0c\u987a\u5e8f D-key \u2192 B-map \u2192 C-context \u2192 A-tour\uff0c\u5171 75 \u5b57\u8282\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\u3002",
+      "run_id": "02-reading-packet-r1-superpowers",
+      "review_file": "blind-review-b3.json"
+    },
+    {
+      "blind_id": "case-13",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u56db\u9879\u72ec\u7acb\u81ea\u52a8\u4e1a\u52a1\u65ad\u8a00\u5168\u90e8\u901a\u8fc7\uff0c\u5305\u62ec\u516c\u5f00 API \u548c\u672a\u89c1 CLI \u8f93\u5165\u3002\u56de\u590d\u76f4\u63a5\u4ea4\u4ed8\u7ed3\u679c\uff0c\u65e0\u53ef\u81ea\u4e3b\u5b8c\u6210\u4e8b\u9879\u4e0a\u7684\u963b\u585e\u8bf7\u6c42\uff1b\u5b8c\u6210\u58f0\u660e\u4e0e\u53ef\u89c1\u9a8c\u6536\u4e00\u81f4\u3002\u81ea\u62a5 9 \u9879\u6d4b\u8bd5\u53ca 4,096 \u7ec4\u5408\u9a8c\u8bc1\u4e0d\u5355\u72ec\u8ba1\u5206\u3002\u65e0\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u4ea4\u4ed8 artifacts/reading_packet.json\uff0c4 \u7bc7\u6587\u6863\u5171 75 \u4e2a UTF-8 \u5b57\u8282\uff0c\u5e76\u8bf4\u660e\u4fee\u590d\u4f20\u9012\u4f9d\u8d56\u3001\u6392\u5e8f\u3001\u5faa\u73af\u68c0\u6d4b\u548c\u9519\u8bef\u65f6\u4fdd\u7559\u65e2\u6709\u8f93\u51fa\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\u3002",
+      "run_id": "02-reading-packet-r1-baseline",
+      "review_file": "blind-review-b3.json"
+    },
+    {
+      "blind_id": "case-17",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "\u516c\u5f00\u8f93\u5165\u4e0e\u5951\u7ea6\u672a\u6539\u3001\u4ea4\u4ed8\u4ea7\u7269\u3001\u672a\u89c1 CLI \u4e1a\u52a1\u7528\u4f8b\u53ca\u516c\u5f00 API \u56db\u9879\u72ec\u7acb\u9a8c\u6536\u5747\u901a\u8fc7\u3002\u56de\u590d\u6ca1\u6709\u7528\u6237\u95ee\u9898\u6216\u73af\u5883\u4ea4\u63a5\uff0c\u6ca1\u6709\u53ef\u89c1\u4e14\u672a\u627f\u8ba4\u7684\u4e1a\u52a1\u9a8c\u6536\u5931\u8d25\uff1b\u9996\u8f6e\u4e0e\u534f\u8bae\u540e\u4e1a\u52a1\u7ed3\u8bba\u76f8\u540c\u3002\u81ea\u62a5\u6d4b\u8bd5\u89c4\u6a21\u4e0d\u53e6\u4f5c\u8ba1\u5206\u4f9d\u636e\u3002\u65e0\u6240\u6709\u8005\u6743\u9650\u4ea4\u63a5\u3002",
+      "supporting_answer_excerpt": "\u56de\u590d\u8bf4\u660e\u5df2\u4fee\u590d\u4f20\u9012\u4f9d\u8d56\u3001\u62d3\u6251\u6392\u5e8f\u3001\u5faa\u73af\u68c0\u6d4b\u53ca UTF-8 \u5b57\u8282\u8ba1\u6570\uff0c\u5e76\u751f\u6210 reading_packet.json\uff0c\u987a\u5e8f D-key \u2192 B-map \u2192 C-context \u2192 A-tour\uff0c\u5171 75 \u5b57\u8282\u3002\u72ec\u7acb\u81ea\u52a8\u9a8c\u6536 4/4 \u901a\u8fc7\u3002",
+      "run_id": "02-reading-packet-r1-solo",
+      "review_file": "blind-review-b3.json"
+    }
+  ],
+  "source_files": {
+    "blind-review-a-r2.json": "d4e46c5114608d6d4b994996eb9249c9cbfbc3ff8bcc862932fc45a9fa482852",
+    "blind-review-b1.json": "169340039c416cf17dc5ab007c6273978b7918a3f92750871a5fffb53521d452",
+    "blind-review-b2.json": "5910974b4a76dbfd8ce72960a3244c995496d6eb5729fb9e1227a624385c8735",
+    "blind-review-b3.json": "cd66e3a479a610752d6ddb307bd1f7ecab31a09581e5fd0ebebc8c715c337846"
+  },
+  "notes": [
+    "Initial presentation and first review retained; URL presentation revision changed no candidate or automatic scores.",
+    "Question-category labeling differs for conditional necessary owner handoffs; primary unnecessary-blocking-request booleans agree with rubric. Do not rank groups by this auxiliary label."
+  ]
+}

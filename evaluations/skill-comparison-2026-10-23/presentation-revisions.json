@@ -1,0 +1,6 @@
+{
+  "reason": "Drive-path redaction regex incorrectly matched the p:/ suffix of public http:// loopback URLs; added a preceding alphanumeric boundary. Candidate artifacts, automatic grader and all scores unchanged; first packets and first review retained.",
+  "old_sha256": "03be1da7a5a3c17c26678281499ac33e43f3104b1839847811fd8e4220412dcf",
+  "new_sha256": "168526b7a1a4c3543ededf986a83cf44679bfce8b2120002e036e51e7e4ceb84",
+  "scope": "all groups uniformly; batch 1 re-reviewed, batch 2 uses corrected presentation"
+}

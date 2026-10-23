@@ -1,0 +1,279 @@
+{
+  "required": false,
+  "runs": [
+    {
+      "id": "01-page-coverage-r1-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "01-page-coverage-r1-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "01-page-coverage-r1-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "01-page-coverage-r2-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "01-page-coverage-r2-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "01-page-coverage-r2-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r1-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r1-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r1-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r2-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r2-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "02-reading-packet-r2-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r1-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r1-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r1-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r2-baseline",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r2-solo",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    },
+    {
+      "id": "03-exhibit-release-r2-superpowers",
+      "ended": true,
+      "rounds": [
+        {
+          "file": "turn-1.evaluation.json",
+          "selected": "root",
+          "selection_unknown": false,
+          "other_worktree_count": null,
+          "business_complete": true
+        }
+      ],
+      "worktree_count_at_final_audit": 1,
+      "selection_requires_adjudication": false
+    }
+  ],
+  "initial_results_preserved": true,
+  "candidate_changes": false,
+  "model_retries": false,
+  "rule": "If every first/final submission is accepted from root and only the root worktree exists, known prefix/sibling selector boundaries did not affect the results. Otherwise preserve originals and independently resolve exact declared owned paths; never select by highest score."
+}

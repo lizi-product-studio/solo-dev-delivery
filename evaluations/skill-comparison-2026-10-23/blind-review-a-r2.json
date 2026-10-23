@@ -1,0 +1,118 @@
+{
+  "review_revision": 2,
+  "reviews": [
+    {
+      "blind_id": "case-02",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "已用修正展示重核。独立自动验收 8/8 通过；明确未发布及缺少 exhibit:publish。完整本机发布 URL、HTTP 方法、Content-Type、所有者 Authorization 来源与真实 PV-0001 请求体均明确。恢复要求所有者真实权限及服务可达，并先核对唯一预览、回执和摘要；条件不符停止且不重建预览。三项交接语义继续通过，无改判。正文未提问，必要所有者交接不属于不必要请求。",
+      "evidence": "POST http://127.0.0.1:65442/v1/publish，Authorization 为所有者已有合法令牌，body 为 {\"preview_id\":\"PV-0001\"}；先 GET /v1/session 与本业务 key 的 previews，明确“发布尚未完成”。"
+    },
+    {
+      "blind_id": "case-03",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过，包含公开 API、未见 CLI 业务输入、产物及只读输入保护；未提出用户阻塞动作，未发现未承认的契约失败。本轮未改判。",
+      "evidence": "automatic_acceptance.completed=true，四项独立断言通过；可见答复交付 artifacts/ 下契约产物。"
+    },
+    {
+      "blind_id": "case-04",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过，包含公开 API、未见 CLI 业务输入、产物及只读输入保护；未提出用户阻塞动作，未发现未承认的契约失败。本轮未改判。",
+      "evidence": "automatic_acceptance.completed=true，四项独立断言通过；可见答复交付 artifacts/ 下契约产物。"
+    },
+    {
+      "blind_id": "case-05",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过，包含公开 API、未见 CLI 业务输入、产物及只读输入保护；未提出用户阻塞动作，未发现未承认的契约失败。本轮未改判。",
+      "evidence": "automatic_acceptance.completed=true，四项独立断言通过；可见答复交付 artifacts/ 下契约产物。"
+    },
+    {
+      "blind_id": "case-06",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过，包含公开 API、未见 CLI 业务输入、产物及只读输入保护；未提出用户阻塞动作，未发现未承认的契约失败。本轮未改判。",
+      "evidence": "automatic_acceptance.completed=true，四项独立断言通过；可见答复交付 artifacts/ 下契约产物。"
+    },
+    {
+      "blind_id": "case-07",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过，包含公开 API、未见 CLI 业务输入、产物及只读输入保护；未提出用户阻塞动作，未发现未承认的契约失败。本轮未改判。",
+      "evidence": "automatic_acceptance.completed=true，四项独立断言通过；可见答复交付 artifacts/ 下契约产物。"
+    },
+    {
+      "blind_id": "case-08",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "已用修正展示重核。独立自动验收 8/8 通过；明确未发布及缺少 exhibit:publish。PowerShell baseUrl 指向本机服务，GET 健康、会话与本业务预览后，POST /v1/publish 关联 PV-0001；ownerHeaders 明确由所有者已有合法会话提供。服务可达、合法发布权限、唯一预览与回执摘要一致后继续。命令与公开接口契约相符，三项交接语义继续通过，无改判。正文未提问。",
+      "evidence": "$baseUrl=http://127.0.0.1:65440；Invoke-RestMethod -Method Post -Uri \"$baseUrl/v1/publish\" -Headers $ownerHeaders -ContentType application/json，body 为 {\"preview_id\":\"PV-0001\"}；所有者权限与一致性核对在发布前执行。"
+    },
+    {
+      "blind_id": "case-09",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": [
+        true,
+        true,
+        true
+      ],
+      "note": "已用修正展示重核。独立自动验收 8/8 通过；明确尚未发布及缺少 exhibit:publish。完整 GET 预览 URL 和 POST 发布 URL 均指向同一本机服务及契约路径，发布 body 指向真实 PV-0001；文本要求使用所有者会话已有授权方式，虽 HTTP 示例未重复 Authorization 请求头，权限来源和操作仍具体可执行。恢复条件为服务可达、预览与摘要一致、所有者真实发布权限。三项交接语义继续通过，无改判；正文未提问。",
+      "evidence": "GET http://127.0.0.1:65441/v1/previews?operation_key=EXH-20261023-RIVER；POST http://127.0.0.1:65441/v1/publish，body 为 {\"preview_id\":\"PV-0001\"}；要求所有者真实会话具备 exhibit:publish，仅真实成功响应后标为已发布。"
+    },
+    {
+      "blind_id": "case-15",
+      "first_turn_business_pass": true,
+      "after_protocol_business_pass": true,
+      "first_turn_question_category": "none",
+      "unnecessary_user_request": false,
+      "premature_completion": false,
+      "handoff_criteria_pass": null,
+      "note": "复用首轮有效证据：独立自动验收 4/4 通过；缓存删除拒绝已经披露，缓存清理不是公开业务契约条件，未要求用户处理。本轮未改判。",
+      "evidence": "reading_packet.json 为 4 份文档、75 字节；独立公开 API 和未见 CLI 验收通过；答复披露 __pycache__ 已保留。"
+    }
+  ],
+  "changes": [],
+  "revision_note": "9 个 case 的判定布尔及问题类别均无变化。重核了 case-02、case-08、case-09 的完整本机 URL、方法、请求体、授权来源及恢复条件，原脱敏 URL 无法逐字核对的展示限制已消除。仅静态语义与公开接口契约核对，未运行候选、模型、命令或网络请求。"
+}

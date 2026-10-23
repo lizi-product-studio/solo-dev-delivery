@@ -1,0 +1,178 @@
+{
+  "source_commit": "31ebbd3b58a15785c2d942ad726b30304ac91fb2",
+  "prompt_catalog": {
+    "status": "pass",
+    "reason": "observed_catalog_matches_arm",
+    "forbidden": []
+  },
+  "catalog_names": [
+    "imagegen",
+    "openai-docs",
+    "skill-creator",
+    "skill-installer",
+    "solo-dev-delivery"
+  ],
+  "skill_payload_unchanged": true,
+  "public_task_unchanged": true,
+  "frontend_reference_read_observed": true,
+  "native_sessions": [
+    {
+      "file": "<isolated-run>\\profile\\.codex\\sessions\\2026\\10\\23\\rollout-2026-10-23T16-50-50-01a167f4-a9ec-7613-9084-19cf932bad4a.jsonl",
+      "thread_id": "01a167f4-a9ec-7613-9084-19cf932bad4a",
+      "session_id": "01a167f4-a9ec-7613-9084-19cf932bad4a",
+      "source": "exec",
+      "row_count": 324,
+      "latest_native_record_at": "2026-10-23T09:12:33.372Z",
+      "catalogs": [
+        {
+          "sha256": "33c57151e4fe2deeb1ba945feae23502dac29a2aa0ce23a27e4e1057332a258a",
+          "entries": [
+            {
+              "name": "imagegen",
+              "path": "r0/imagegen/SKILL.md",
+              "treatment": null
+            },
+            {
+              "name": "openai-docs",
+              "path": "r0/openai-docs/SKILL.md",
+              "treatment": null
+            },
+            {
+              "name": "skill-creator",
+              "path": "r0/skill-creator/SKILL.md",
+              "treatment": null
+            },
+            {
+              "name": "skill-installer",
+              "path": "r0/skill-installer/SKILL.md",
+              "treatment": null
+            },
+            {
+              "name": "solo-dev-delivery",
+              "path": "r1/solo-dev-delivery/SKILL.md",
+              "treatment": "solo"
+            }
+          ],
+          "parse_status": "parsed",
+          "first_line": 3,
+          "occurrences": 1
+        }
+      ],
+      "catalog_check": {
+        "status": "pass",
+        "reason": "observed_catalog_matches_arm",
+        "forbidden": []
+      },
+      "guidance_messages_checked": 5,
+      "guidance_hits": [],
+      "guidance_check": "pass",
+      "invalid_lines": [],
+      "limits": "Catalog/guidance injection audit only; tool-return Skill prose and candidate text are excluded. Missing records remain unknown."
+    }
+  ],
+  "turn_completed": true,
+  "error_events": [],
+  "temporary_auth_removed": true,
+  "metrics": {
+    "schema_version": 1,
+    "captured_utc": "2026-10-23T09:12:37.500350+00:00",
+    "root_thread_ids": [
+      "01a167f4-a9ec-7613-9084-19cf932bad4a"
+    ],
+    "sessions": [
+      {
+        "thread_id": "01a167f4-a9ec-7613-9084-19cf932bad4a",
+        "parent_thread_id": null,
+        "role": "main",
+        "usage": {
+          "input_tokens": 2597683,
+          "cached_input_tokens": 2538880,
+          "output_tokens": 52606,
+          "reasoning_output_tokens": 15373,
+          "uncached_input_tokens": 58803,
+          "total_tokens": 2650289
+        },
+        "usage_source": "native_last_thread_cumulative",
+        "native_files": [
+          "<isolated-run>\\profile\\.codex\\sessions\\2026\\10\\23\\rollout-2026-10-23T16-50-50-01a167f4-a9ec-7613-9084-19cf932bad4a.jsonl"
+        ],
+        "native_terminal_observed": true,
+        "exec_turn_terminal_observed": true,
+        "last_cumulative_usage_at": "2026-10-23T09:12:33.368Z",
+        "observed_models": [
+          "gpt-6.1-sol"
+        ],
+        "observed_efforts": [
+          "ultra"
+        ],
+        "turn_contexts": [
+          {
+            "turn_id": "01a167f4-ad8d-73b1-9181-b0301345ffd0",
+            "model": "gpt-6.1-sol",
+            "effort": "ultra"
+          },
+          {
+            "turn_id": "01a16803-260f-7e11-8f07-00d9c5f489b0",
+            "model": "gpt-6.1-sol",
+            "effort": "ultra"
+          }
+        ],
+        "response_records": 34,
+        "exec_usage_turns": 1
+      }
+    ],
+    "main_usage": {
+      "input_tokens": 2597683,
+      "cached_input_tokens": 2538880,
+      "output_tokens": 52606,
+      "reasoning_output_tokens": 15373,
+      "uncached_input_tokens": 58803,
+      "total_tokens": 2650289
+    },
+    "child_usage": null,
+    "observed_child_usage": null,
+    "observed_total_usage": {
+      "input_tokens": 2597683,
+      "cached_input_tokens": 2538880,
+      "output_tokens": 52606,
+      "reasoning_output_tokens": 15373,
+      "uncached_input_tokens": 58803,
+      "total_tokens": 2650289
+    },
+    "observed_models": [
+      "gpt-6.1-sol"
+    ],
+    "observed_efforts": [
+      "ultra"
+    ],
+    "child_observability": {
+      "spawn_observed": false,
+      "observed_threads": 0,
+      "expected_thread_ids": [],
+      "missing_thread_ids": [],
+      "coverage": "observed_threads_only",
+      "known_threads_have_usage": true,
+      "observed_children_terminal": null,
+      "note": "No observed child is not a measured zero. Fresh dedicated home required; unrelated native threads would also be counted."
+    },
+    "native_session_files": 1,
+    "exec_completed_usage_events": 1,
+    "ended_root_ids": [
+      "01a167f4-a9ec-7613-9084-19cf932bad4a"
+    ],
+    "warnings": [],
+    "limits": [
+      "Cumulative totals are selected once per thread, not added across turns or to exec usage.",
+      "cached_input is included in input; reasoning_output is included in output.",
+      "Observed totals cover discovered records only; missing child observations stay None.",
+      "Runtime model IDs/efforts do not identify immutable backend weights; no currency/quota conversion."
+    ]
+  },
+  "first_attempt_censored_at_seconds": 900,
+  "first_collector_error": "PermissionError(13, 'Permission denied')",
+  "resume_execution_seconds": 359.25,
+  "first_attempt_completed": false,
+  "synthetic_user_replies": 1,
+  "real_user_interventions": 0,
+  "scope": "observable catalog, files and runtime metadata; not a sandbox or proof of aesthetic quality"
+}

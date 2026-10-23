@@ -1,0 +1,45 @@
+{
+  "skill_version": "0.11.1",
+  "skill_source_commit": "31ebbd3b58a15785c2d942ad726b30304ac91fb2",
+  "native_turn_completed_after_continuation": true,
+  "first_attempt_completed": false,
+  "first_attempt_limit_seconds": 900,
+  "resume_seconds": 359.25,
+  "first_collector_error": "PermissionError(13, 'Permission denied')",
+  "synthetic_continuation_messages": 1,
+  "real_user_interventions": 0,
+  "primary_agent_repairs_to_submission": 0,
+  "independent_code_review_open_P1_P2": 0,
+  "source_files": {
+    "index.html": "186878657be4d1bc0c8de6a3129d3a09cf0f7680cafbca1ca6ca3a85b60333f9",
+    "styles.css": "8a5e3ad988f1d0c7c9ca1f39f22cc9aca4dd0168096595b811584bcfa3a77988",
+    "app.js": "9388e0fc09143136c3cb3e3601886707b43821d04c9a2ffd9caabbbbdb931b0b",
+    "TASK.md": "fc4598b8e566bb4636550d4d93dc7b72cf43dba6e538297e16321bda26f27269",
+    "APP_CONTRACT.md": "1b0d490c202d7fe64f840b0064f0ef29d41c81d85d73337d4ae76d0cd459dd33"
+  },
+  "native_usage_observed": {
+    "input_tokens": 2597683,
+    "cached_input_tokens": 2538880,
+    "output_tokens": 52606,
+    "reasoning_output_tokens": 15373,
+    "uncached_input_tokens": 58803,
+    "total_tokens": 2650289
+  },
+  "cost_scope": "one native thread, both turns deduplicated; research, author, primary verification and review total not fully measured; not zero; no currency or quota conversion",
+  "interpretation": "one forward fake UI task, no baseline/competitor arm; cannot attribute improvement or prove top design quality",
+  "self_check_scope": "50 initial browser checks, then 12 targeted checks after final modifications; not 62 independent cases or a final full-suite rerun",
+  "primary_browser_scope": "IAB search/restore, per-ticket draft, save and refresh, failed save preserves input and stored prior note, help Escape/focus, long content and actual screenshots",
+  "primary_browser_gap": "IAB native confirm control timed out; independent normal tab recovered stored data; executor Chrome tested confirm separately; no IAB native-close claim",
+  "package_sha256": "9ee6b3a2e32e9fcbca5945cb60d3d181bb095f2c6fca2aee4731da85d94a1be3",
+  "candidate_ci": {
+    "commit": "0adf51e60ff4b58fa7a75b76420b59fdaab7899a",
+    "conclusion": "success",
+    "url": "https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/39927896363"
+  },
+  "local_package_tests": {
+    "portable_integration": 14,
+    "skill_format": "passed under python -X utf8",
+    "independent_exports_byte_identical": true,
+    "temporary_install_files_verified": 26
+  }
+}

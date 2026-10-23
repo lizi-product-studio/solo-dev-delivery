@@ -6,7 +6,7 @@
 
 ## 已关闭 P2：视觉手段的绝对条件可能误限营销和展示页面
 
-位置：[frontend-quality.md:17](C:/Users/Administrator/Desktop/终极通用Skill/work/solo-dev-delivery-repo/skill/solo-dev-delivery/references/frontend-quality.md:17)。本次首轮实际读取的句子是：“卡片、分栏、编号、徽标和动效只在表达分组、顺序、状态或操作结果时采用。”
+位置：[frontend-quality.md:17](../../skill/solo-dev-delivery/references/frontend-quality.md#L17)。本次首轮实际读取的句子是：“卡片、分栏、编号、徽标和动效只在表达分组、顺序、状态或操作结果时采用。”
 
 该引用也适用于营销页、首次开通和文档站（第 7 行），因此“只在”的允许条件会越过工作台场景：具有明确传播目的的产品演示、品牌叙事、展示动效，并不总属于这些类别，却可能因此被一概删除。结果可能是所有页型都被收敛成纯工具界面；这与本次要避免统一风格的目标不一致。
 

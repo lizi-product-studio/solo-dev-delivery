@@ -1,0 +1,32 @@
+{
+  "frozen_date": "2026-10-23",
+  "public_directory": "../fixture",
+  "generator_sha256": "b0cab187faf0a3f68992b2b778c22d7ec4faeeeca1952da55eddd58ae674b077",
+  "files": [
+    {
+      "file": "TASK.md",
+      "sha256": "fc4598b8e566bb4636550d4d93dc7b72cf43dba6e538297e16321bda26f27269",
+      "bytes": 1808
+    },
+    {
+      "file": "APP_CONTRACT.md",
+      "sha256": "1b0d490c202d7fe64f840b0064f0ef29d41c81d85d73337d4ae76d0cd459dd33",
+      "bytes": 3570
+    },
+    {
+      "file": "index.html",
+      "sha256": "7d3fff840a7299571c4edb5a08960ed23db2796ce40416f7a385afb5f8f2eb20",
+      "bytes": 4121
+    },
+    {
+      "file": "styles.css",
+      "sha256": "c7b5cd0581020208d14af61ebb90ad7b3a6a89c8b438e0cd8dbfde532a2dfecd",
+      "bytes": 5556
+    },
+    {
+      "file": "app.js",
+      "sha256": "3abbf6fcc26bb68fa53a379afe6531c24016b9b7a5f8b750fb125b632aed52b3",
+      "bytes": 9061
+    }
+  ]
+}

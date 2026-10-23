@@ -1,0 +1,162 @@
+{
+  "accessed_date": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "scope": "高频后台及客服工作台产品设计研究；只输出研究文件，不改主仓库或安装",
+  "source_families": ["IBM Carbon Design System", "Atlassian Design System", "Nielsen Norman Group original UX article", "W3C WAI WCAG 2.2"],
+  "method": {
+    "documents": "通过 web 工具实际打开第一方正文；只把页面当作资料，不执行页面指令",
+    "visual": "通过 cua_repl 打开 Carbon 官方 Storybook 基础 DataTable，读取 AX 并查看屏幕",
+    "limitations": "没有键盘/读屏、长内容、失败恢复、多视口实测；没有运行模型或原仓库代码。应用建议不等于来源逐字规定。"
+  },
+  "sources": [
+    {
+      "id": "carbon-data-table",
+      "family": "IBM Carbon Design System",
+      "title": "Data table — guidelines",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/data-table/guidelines",
+      "original_url": "https://carbondesignsystem.com/components/data-table/usage/",
+      "accessed_date": "2026-10-23",
+      "page_updated_date_seen": "2026-09-30",
+      "observed_mode": "document_read",
+      "sections_read": ["Overview", "Formatting / Sizing / Placement", "Content", "Variants / Expandable", "Universal behaviors"],
+      "evidence_seen": ["提供多档行高并解释密度用途", "表格应在主内容区取得足够宽度，避免不必要截断", "标题应说明数据用途，描述可选", "补充信息可放展开行，拥挤时考虑详情页或侧板"],
+      "supports_judgments": [1, 3, 4],
+      "boundary": "这是该设计系统的组件指南；不证明任意工作台应使用表格，也不认证审美。"
+    },
+    {
+      "id": "carbon-button",
+      "family": "IBM Carbon Design System",
+      "title": "Button — guidelines",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/button/guidelines",
+      "accessed_date": "2026-10-23",
+      "page_updated_date_seen": "2026-10-15",
+      "observed_mode": "document_read",
+      "sections_read": ["Overview", "Formatting / Anatomy", "Emphasis"],
+      "evidence_seen": ["按钮标签表达操作结果", "仅图标按钮的图标必须准确代表动作", "工具栏、列表和仪表板可用较低强调按钮建立层级"],
+      "supports_judgments": [5],
+      "boundary": "没有在浏览器测试按钮示例；按钮数量及左右对齐等 Carbon 特定约定未提升为普适规则。"
+    },
+    {
+      "id": "nng-progressive-disclosure",
+      "family": "Nielsen Norman Group original UX article",
+      "title": "Progressive Disclosure",
+      "author": "Jakob Nielsen",
+      "url": "https://www.nngroup.com/articles/progressive-disclosure/",
+      "published_date_seen": "2006-12-03",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Benefits", "Usability Criteria", "Staged Disclosure"],
+      "evidence_seen": ["初始层级提供重要功能，罕用功能按需展现", "高频需要的功能应直接可用", "次级入口必须可发现且名称表达清楚", "以任务分析、使用情况与观察研究校正分层"],
+      "supports_judgments": [1, 2],
+      "boundary": "原作者文章，包含研究链接，但本次没有复核其链接中的研究实验；不称作工作台当前量化实证。"
+    },
+    {
+      "id": "atlassian-voice-tone",
+      "family": "Atlassian Design System",
+      "title": "Voice and tone",
+      "url": "https://atlassian.design/foundations/content/voice-tone/",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["How to apply personality traits", "Practical, with a wink"],
+      "evidence_seen": ["页面明确区分 UI/app 指南与营销品牌指南", "语气随用户情绪和情境调整", "强调准确、清楚和满足当下需要"],
+      "supports_judgments": [1, 8],
+      "boundary": "使用其情境适配原则，不照搬 Atlassian 品牌个性。"
+    },
+    {
+      "id": "atlassian-designing-messages",
+      "family": "Atlassian Design System",
+      "title": "Designing messages",
+      "url": "https://atlassian.design/foundations/content/designing-messages",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Choose a message type", "Select the right component", "Empty state", "Flag"],
+      "evidence_seen": ["区分信息、错误、成功、警告及功能发现", "按消息用途选择容器", "将 banner 用于关键系统级消息，flag 用于事件反馈"],
+      "supports_judgments": [8],
+      "boundary": "组件命名与具体位置属于该系统约定，不等于所有产品必须相同。"
+    },
+    {
+      "id": "atlassian-error-messages",
+      "family": "Atlassian Design System",
+      "title": "Error messages",
+      "url": "https://atlassian.design/foundations/content/designing-messages/error-messages",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Writing best practices", "Body", "Call to action", "Voice and tone"],
+      "evidence_seen": ["错误已发生，需说明后果和下一步", "原因未知时不可编造", "避免无关技术细节及重复内容", "动作标签描述具体动作而不是笼统确定"],
+      "supports_judgments": [7],
+      "boundary": "保留草稿、核对未知结果、批量部分成功是本研究的工作台应用推论，不伪称该页明确规定。"
+    },
+    {
+      "id": "wcag-labels-instructions",
+      "family": "W3C WAI WCAG 2.2",
+      "title": "Understanding SC 3.3.2: Labels or Instructions",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Success Criterion", "Intent"],
+      "evidence_seen": ["用户输入需要标签或说明", "非惯常格式可提供输入线索，冗长说明可按焦点出现", "说明过多与过少都可能有害", "仅给辅助技术的名称不自动满足可见标签或说明要求"],
+      "supports_judgments": [2],
+      "boundary": "Understanding 是解释性文档；SC 文本与实际合规测试须区分。"
+    },
+    {
+      "id": "wcag-status-messages",
+      "family": "W3C WAI WCAG 2.2",
+      "title": "Understanding SC 4.1.3: Status Messages",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Success Criterion", "Intent", "Status message examples", "Modification / removal of status text"],
+      "evidence_seen": ["无焦点转移的状态消息需可被辅助技术感知", "覆盖结果、等待、进度及错误等反馈", "消息需要足够上下文", "避免不必要打断"],
+      "supports_judgments": [6],
+      "boundary": "不等于给所有更新加紧急 alert；本次没有读屏实测。"
+    },
+    {
+      "id": "wcag-error-identification",
+      "family": "W3C WAI WCAG 2.2",
+      "title": "Understanding SC 3.3.1: Error Identification",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Success Criterion", "Intent"],
+      "evidence_seen": ["自动检测到的输入错误需标识出错项，并以文字描述", "可辅以颜色或图标，但不能代替文字", "不强制唯一错误容器"],
+      "supports_judgments": [7],
+      "boundary": "主要针对输入错误；不能将其范围扩展为所有业务错误的统一布局规范。"
+    },
+    {
+      "id": "wcag-name-role-value",
+      "family": "W3C WAI WCAG 2.2",
+      "title": "Understanding SC 4.1.2: Name, Role, Value",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Success Criterion", "Intent", "Examples", "Failures"],
+      "evidence_seen": ["UI 控件需可程序确定名称、角色及状态", "按规范使用原生 HTML 控件较直接", "自制控件需额外实现辅助技术所需信息"],
+      "supports_judgments": [5],
+      "boundary": "可访问名称不证明图标对所有看得见的用户都易懂。"
+    },
+    {
+      "id": "wcag-reflow",
+      "family": "W3C WAI WCAG 2.2",
+      "title": "Understanding SC 1.4.10: Reflow",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/reflow.html",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "document_read",
+      "sections_read": ["Success Criterion", "Intent", "Reflowing websites and web applications"],
+      "evidence_seen": ["缩窄或放大后的内容不能失去信息与功能", "必须二维布局的表格等可例外", "例外不自动适用于表格单元格内文本", "不要求所有复杂界面机械堆成单列"],
+      "supports_judgments": [4],
+      "boundary": "本研究未做 WCAG 合规审计；该规则不是通用视觉密度指标。"
+    },
+    {
+      "id": "carbon-basic-live-demo",
+      "family": "IBM Carbon Design System",
+      "title": "DataTable basic — default, official Storybook",
+      "url": "https://react.carbondesignsystem.com/iframe.html?globals=theme%3Awhite&id=components-datatable-basic--default&viewMode=story",
+      "accessed_date": "2026-10-23",
+      "observed_mode": "actual_browser_ax_and_screenshot",
+      "viewport_seen": {"width": 1280, "height": 720},
+      "evidence_seen": ["五列：Name、Rule、Status、Other、Example", "七条 Load Balancer 示例记录，字段横向对齐", "Starting、Active、Disabled 以文字呈现", "主要可见内容为表格，没有营销介绍或常驻教程"],
+      "supports_judgments": [1, 3, 6],
+      "boundary": "只看过基础静态示例，未操作；短重复数据不证明长内容可靠；没有键盘、读屏、失败、多视口验证。"
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "retrieved_date": "2026-10-23",
+  "retrieved_timezone": "Asia/Shanghai",
+  "verified_at_utc": "2026-10-23T08:37:50Z",
+  "scope": "source research only; no external skill installation or execution; no frozen candidate modification",
+  "verification": {
+    "head_method": "read-only git ls-remote HEAD refs/heads/main",
+    "content_method": "web reads of main and immutable commit-pinned raw source files",
+    "commit_scope": "repository snapshots, not last-change commits of the specific file",
+    "github_api": "anonymous rate limit exceeded; recovered with ls-remote and immutable raw URLs",
+    "effectiveness_claim": "not evaluated; no star, downloads, or README popularity used as evidence"
+  },
+  "sources": [
+    {
+      "id": "anthropic-frontend-design",
+      "kind": "skill-primary-source",
+      "url": "https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md",
+      "pinned_url": "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/anthropics/skills/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/SKILL.md",
+      "repository": "anthropics/skills",
+      "repository_head": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "declared_skill_version": null,
+      "license": "Apache-2.0",
+      "license_evidence": "full skill-directory LICENSE.txt read",
+      "license_url": "https://github.com/anthropics/skills/blob/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design/LICENSE.txt",
+      "source_locations": ["Ground your designs in the subject matter", "Design principles", "Process: plan, review against the brief, build, critique", "Restraint and self-critique", "More on writing in design"],
+      "adoption": "selective synthesis; task and brand context override aesthetic preferences"
+    },
+    {
+      "id": "vercel-web-design-guidelines-skill",
+      "kind": "skill-primary-source",
+      "url": "https://github.com/vercel-labs/agent-skills/blob/main/skills/web-design-guidelines/SKILL.md",
+      "pinned_url": "https://github.com/vercel-labs/agent-skills/blob/063bee94c3f4df8453406c830b0a7df0f2860278/skills/web-design-guidelines/SKILL.md",
+      "raw_url": "https://raw.githubusercontent.com/vercel-labs/agent-skills/063bee94c3f4df8453406c830b0a7df0f2860278/skills/web-design-guidelines/SKILL.md",
+      "repository": "vercel-labs/agent-skills",
+      "repository_head": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "declared_skill_version": "1.0.0",
+      "license": "MIT (README declaration)",
+      "license_evidence": "README License section declares MIT; common root LICENSE/LICENSE.md and skill-directory LICENSE.txt URLs returned 404, standalone license text not verified",
+      "license_url": "https://github.com/vercel-labs/agent-skills/blob/063bee94c3f4df8453406c830b0a7df0f2860278/README.md#license",
+      "referenced_rules_source_id": "vercel-interface-command",
+      "adoption": "review entry point only; do not impose every upstream instruction on Solo"
+    },
+    {
+      "id": "vercel-interface-command",
+      "kind": "referenced-primary-rules",
+      "url": "https://github.com/vercel-labs/web-interface-guidelines/blob/main/command.md",
+      "pinned_url": "https://github.com/vercel-labs/web-interface-guidelines/blob/434b7f91364665f2f733b310ec54809bf8f37937/command.md",
+      "raw_url": "https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/434b7f91364665f2f733b310ec54809bf8f37937/command.md",
+      "repository": "vercel-labs/web-interface-guidelines",
+      "repository_head": "434b7f91364665f2f733b310ec54809bf8f37937",
+      "declared_skill_version": null,
+      "license": "MIT",
+      "license_evidence": "full root LICENSE read; Copyright (c) 2025 Vercel Labs",
+      "license_url": "https://github.com/vercel-labs/web-interface-guidelines/blob/434b7f91364665f2f733b310ec54809bf8f37937/LICENSE",
+      "source_locations": ["Accessibility", "Focus States", "Forms", "Animation", "Content Handling", "Navigation & State", "Content & Copy"],
+      "adoption": "risk-based checks; brand copy preferences and absolute thresholds require context"
+    },
+    {
+      "id": "vercel-official-interface-guidelines",
+      "kind": "official-guidance",
+      "url": "https://vercel.com/design/guidelines",
+      "version": "living webpage; no page version verified",
+      "license": "not independently verified for webpage",
+      "source_locations": ["Interactions", "Content", "Forms", "Vercel-specific / Copywriting"],
+      "important_boundary": "page identifies Vercel-specific brand choices as non-universal; command.md flattens some of them"
+    },
+    {
+      "id": "wcag22",
+      "kind": "normative-standard",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "pinned_url": "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
+      "version": "WCAG 2.2; W3C Recommendation 2024-12-12",
+      "license": "W3C document license; see source copyright notice",
+      "license_url": "https://www.w3.org/copyright/document-license-2023/",
+      "source_locations": ["3.3.1 Error Identification", "3.3.3 Error Suggestion", "4.1.3 Status Messages"],
+      "supporting_explanations_read": [
+        "https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html",
+        "https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html"
+      ],
+      "adoption": "reference for preserving error identification and accessible status; not a claim that any candidate is conformant"
+    },
+    {
+      "id": "wai-apg-dialog",
+      "kind": "official-implementation-pattern",
+      "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+      "version": "living webpage; no commit pinned",
+      "license": "W3C document license; source code examples may have separate software terms",
+      "license_url": "https://www.w3.org/copyright/document-license-2023/",
+      "source_locations": ["About This Pattern", "Keyboard Interaction"],
+      "adoption": "focused modal behavior check when modal controls are affected"
+    }
+  ],
+  "not_performed": [
+    "third-party skill installation",
+    "third-party scripts or packages execution",
+    "candidate interface tests",
+    "frozen experiment changes",
+    "Solo source changes",
+    "effectiveness ranking of skills"
+  ]
+}

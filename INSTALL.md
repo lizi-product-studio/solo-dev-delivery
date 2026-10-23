@@ -1,8 +1,8 @@
-# Solo Dev Delivery 0.11.0 候选包使用说明
+# Solo Dev Delivery 0.11.1 候选包使用说明
 
-从[候选分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/packages/solo-dev-delivery-0.11.0.zip)下载并解开 `solo-dev-delivery-0.11.0.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
+从[候选分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/frontend-quality/packages/solo-dev-delivery-0.11.1.zip)下载并解开 `solo-dev-delivery-0.11.1.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
 
-包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/packages/solo-dev-delivery-0.11.0.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验并逐字节比较，不依赖Actions制品存储配额；它仍是未合并main的候选。
+包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/frontend-quality/packages/solo-dev-delivery-0.11.1.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验并逐字节比较，不依赖Actions制品存储配额；它仍是未合并main的候选。
 
 先确认目标 Agent 实际使用的 Skill 搜索根目录，再执行（Python 3.9+，按本机使用 python 或 python3）：
 
@@ -22,4 +22,4 @@ ZCode 可使用 `--host zcode`，默认 `~/.zcode/skills`；Kimi CLI 可用 `--h
 
 低风险任务不强制建计划、队列或子 Agent。多步骤任务按风险使用工程方法、验证和恢复引用。包内 gate/challenge/能力预检均为可选辅助；已有门禁和失败不能绕过。没有工具或实际目标环境时，结果保留未验证。
 
-安装不会启用 hooks、定时器或后台进程，不传播个人授权，也不增加账号权限。新文件不会自动替换所有活动聊天的旧上下文。完整说明及证据：[候选分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/release/v0.11.0)、[宿主接入](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/skill/solo-dev-delivery/references/host-integration.md)、[验证记录](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/VALIDATION.md)。
+安装不会启用 hooks、定时器或后台进程，不传播个人授权，也不增加账号权限。新文件不会自动替换所有活动聊天的旧上下文。完整说明及证据：[候选分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/feat/frontend-quality)、[宿主接入](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/frontend-quality/skill/solo-dev-delivery/references/host-integration.md)、[验证记录](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/frontend-quality/VALIDATION.md)。

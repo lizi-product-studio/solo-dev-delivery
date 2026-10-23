@@ -66,5 +66,6 @@ jobs:
           python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills" --verify
       - name: Verify downloadable package matches canonical source
         run: |
-          cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-"*.zip packages/solo-dev-delivery-*.zip
-          sha256sum -c packages/*.sha256
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
+          cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" "packages/solo-dev-delivery-$version.zip"
+          sha256sum -c "packages/solo-dev-delivery-$version.zip.sha256"

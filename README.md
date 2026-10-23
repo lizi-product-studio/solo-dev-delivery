@@ -2,7 +2,7 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**0.11.0 是统一验收候选，位于 `release/v0.11.0`，尚未合并 main。** 它收敛 0.10.0 之后的项目巡检、Windows 路径与回调、结果通道、进程停止和遇阻恢复改动。有真实仓库试点及工具回归，尚不等于已证明无人值守经营项目。证据与失败记录见 [VALIDATION.md](VALIDATION.md)。
+**0.11.1 是前端专项候选，位于 `feat/frontend-quality`，尚未合并 main。** 它在0.11.0上增加按需加载的产品界面方法：按任务安排文案与密度、保留真实状态、以实际页面和操作验收。通用交付、遇阻恢复与平台能力边界继续沿用；不宣称顶级审美、后端高并发或长期无人经营已经得到证明。证据与失败记录见 [VALIDATION.md](VALIDATION.md)。
 
 ## 适用方式
 
@@ -21,12 +21,12 @@
 Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python。以下命令选择本候选分支：
 
 ```sh
-git clone --branch release/v0.11.0 https://github.com/lizi-product-studio/solo-dev-delivery.git
+git clone --branch feat/frontend-quality https://github.com/lizi-product-studio/solo-dev-delivery.git
 cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-生成自包含目录及 `solo-dev-delivery-0.11.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.11.0.zip)及[校验值](packages/solo-dev-delivery-0.11.0.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对；下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `solo-dev-delivery-0.11.1.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.11.1.zip)及[校验值](packages/solo-dev-delivery-0.11.1.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -51,6 +51,7 @@ ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destina
 - [交付门禁](skill/solo-dev-delivery/references/execution-gate.md)：原文、候选、验收与证据绑定，按业务决策选择检查。
 - [结果核验](skill/solo-dev-delivery/references/result-verification.md)：独立本地检查、证据复用、失败优先和按需反例。
 - [恢复与最小交接](skill/solo-dev-delivery/references/blocker-recovery.md)：技术排障、等价入口、未知副作用与必要用户动作。
+- [产品界面与前端设计](skill/solo-dev-delivery/references/frontend-quality.md)：按任务选择文案、密度、视觉与交互检查；不统一模板、不用删重要提示换取简洁。
 - [项目巡检与接续](skill/solo-dev-delivery/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
 
 可选能力预检只检查任务实际依赖，不执行工具或创建 session：
@@ -78,7 +79,7 @@ python -X utf8 -m unittest discover -s tests -v
 
 完整原生兼容套件含 POSIX CLI fixture；Windows 以 CI 明确执行的交付、停止和所有权用例为准。系统和 Python 版本范围见 [CI 定义](.github/workflows/validate.yml)。CLI 导入开项 JSON 另需 Node.js。
 
-[验证记录](VALIDATION.md)保留首次失败、撤回候选、实际范围、行为样例及成本；[0.11.0统一验收](evaluations/release-0.11.0/README.md)、[仓库试点](evaluations/repository-pilot/2026-10-23.md)与[遇阻评测](evaluations/blocker-recovery/README.md)提供复现资产。模拟通过不证明跨平台泛化；此前新旧四题对照均通过，尚未证明新增指令带来净收益。下载后的独立说明见[INSTALL.md](INSTALL.md)。
+[验证记录](VALIDATION.md)保留首次失败、撤回候选、实际范围、行为样例及成本；[三组18次对照](evaluations/skill-comparison-2026-10-23/REPORT.md)、[0.11.0统一验收](evaluations/release-0.11.0/README.md)、[仓库试点](evaluations/repository-pilot/2026-10-23.md)与[遇阻评测](evaluations/blocker-recovery/README.md)提供复现资产。对照中三组质量均6/6；Solo相比无额外Skill未证明成功率收益且用量增加，不把流程完整当成净收益。下载后的独立说明见[INSTALL.md](INSTALL.md)。
 
 ## 来源
 

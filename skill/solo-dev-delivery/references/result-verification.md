@@ -109,6 +109,8 @@ python3 S/challenge.py status --receipt /work/review/attempt-1.json
 
 run默认60秒限制的是一次可抛弃的本地测试进程，可按具体测试调整1–300秒；超时保留UNKNOWN并只清理该测试进程组，不停止Agent、不夺项目写锁。该脚本运行受信审查Python代码，临时副本不构成安全沙箱，也不阻止测试自行联网；外部行为仍受任务授权约束。CHALLENGE_PASS不认证独立身份、完整业务覆盖、真实发布或生产可用；宿主核对审查者身份和原始工具观察，不能导入模型自写PASS冒充审核。
 
+Windows通过系统`taskkill.exe /PID /T /F`结束本次受管测试树，POSIX保留独立进程组清理；不按镜像名结束其他进程。超时回执包含`process_cleanup`，终止工具、进程回收或临时目录清理失败时保留具体错误，不能宣布通过。该机制不承诺约束主动脱离管理的恶意代码，也不对所有文件系统I/O提供严格总时限。
+
 ## 一次性关系检查，不必新建session
 
 在工作区外准备relations.json，scope声明要核对的文件，checks放所需probe。运行后同时核对候选依赖版本，不能拼接不同版本各自通过的结果：

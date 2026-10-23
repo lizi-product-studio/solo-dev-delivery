@@ -60,8 +60,8 @@
     },
     {
       "path": "evaluations/repository-pilot/2026-10-23.md",
-      "sha256": "e2a4c323920c21389d81af2026fde37b1a38856dc0b3f1acd109a4a92509beff",
-      "bytes": 4263
+      "sha256": "9f380cf91798b07d7928a1a52f2ec18abab02cadd15e5e01a5573da36092aa1b",
+      "bytes": 6649
     },
     {
       "path": "knowledge/methods.json",
@@ -225,8 +225,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "fcb9322cde92088740a41974f334b54134e3b5f55d4bdffa3f1ee8f3d2a8a4d6",
-      "bytes": 28399
+      "sha256": "90efc434a2e96758d7f9170d4c11b8de4c5bdca7a33eeb81c2c453ef12bfa0d0",
+      "bytes": 31098
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
@@ -247,6 +247,11 @@
       "path": "portable-agent-kit/tests/test_challenge.py",
       "sha256": "44338cec310eb4fcbef3153a8951bea812aeb7dc62f519aeb05ee68339e4b2fe",
       "bytes": 11970
+    },
+    {
+      "path": "portable-agent-kit/tests/test_challenge_timeout.py",
+      "sha256": "505ac90eaea8472631e2c3fa5f12400f86236838b0c14588d41069d38ea51678",
+      "bytes": 8343
     },
     {
       "path": "portable-agent-kit/tests/test_coverage.py",
@@ -385,8 +390,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "163ac52c150464b3394db03424444a02438241746114665dd0d30485e9599053",
-      "bytes": 14821
+      "sha256": "38a3c5350d6b08af966ada69f8c630cd51358cba4761b39d84cc1a0080b6531d",
+      "bytes": 15219
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

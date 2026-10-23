@@ -143,6 +143,45 @@ def tail(path):
     return {'text': data.decode('utf-8', errors='replace'), 'bytes': size, 'truncated': size > LIMIT}
 
 
+def _terminate_test_tree(proc):
+    """Stop only this disposable test tree; retain every cleanup fault."""
+    result = {'method': 'windows-taskkill-tree' if os.name == 'nt' else 'posix-process-group',
+              'pid': proc.pid, 'errors': []}
+    try:
+        if os.name == 'nt':
+            system_root = os.environ.get('SYSTEMROOT') or os.environ.get('WINDIR')
+            if not system_root:
+                raise OSError('Windows system directory is unavailable')
+            command = [str(Path(system_root) / 'System32/taskkill.exe'), '/PID', str(proc.pid), '/T', '/F']
+            stopped = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, timeout=5,
+                                     creationflags=subprocess.CREATE_NO_WINDOW)
+            result['tool_exit_code'] = stopped.returncode
+            if stopped.returncode:
+                result['errors'].append('taskkill exited ' + str(stopped.returncode) + ': '
+                                        + (stopped.stdout + stopped.stderr).decode('utf-8', errors='replace')[-2000:])
+        else:
+            # Popen starts a new session, so this group cannot include the host.
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    except (OSError, subprocess.SubprocessError) as exc:
+        result['errors'].append(type(exc).__name__ + ': ' + str(exc))
+    try:
+        proc.wait(timeout=5)
+    except (OSError, subprocess.SubprocessError) as exc:
+        result['errors'].append('test leader could not be reaped: ' + type(exc).__name__ + ': ' + str(exc)[:1000])
+        # A bounded leader-only fallback cannot establish tree cleanup success.
+        try:
+            proc.kill()
+            proc.wait(timeout=5)
+        except (OSError, subprocess.SubprocessError) as exc:
+            result['errors'].append(type(exc).__name__ + ': ' + str(exc))
+    result['status'] = 'FAILED' if result['errors'] else 'TERMINATED'
+    return result
+
+
 def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=None):
     packet_path = Path(packet_path).resolve(strict=True)
     packet_raw = packet_path.read_bytes()
@@ -164,8 +203,10 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
         raise ValueError('reviewer test must be a Python file of at most 64 KiB')
     started = time.monotonic()
     timed_out = False
-    with tempfile.TemporaryDirectory(prefix='solo-challenge-') as td:
-        scratch = Path(td)
+    termination, cleanup_errors = None, []
+    temporary = tempfile.TemporaryDirectory(prefix='solo-challenge-')
+    try:
+        scratch = Path(temporary.name)
         work = scratch / 'candidate'
         work.mkdir()
         for entry in packet['inputs'] + packet['outputs']:
@@ -206,10 +247,14 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                 code = proc.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
                 timed_out = True
-                # This stops only this disposable test process group, never an Agent.
-                os.killpg(proc.pid, signal.SIGKILL)
-                code = proc.wait()
+                termination = _terminate_test_tree(proc)
+                code = proc.returncode
         stdout, stderr = tail(stdout_path), tail(stderr_path)
+    finally:
+        try:
+            temporary.cleanup()
+        except OSError as exc:
+            cleanup_errors.append(type(exc).__name__ + ': ' + str(exc))
     summaries = [line[len(MARKER):] for line in stdout['text'].splitlines() if line.startswith(MARKER)]
     summary = json.loads(summaries[-1]) if summaries else None
     test_cases = summary.pop('cases', []) if summary else []
@@ -219,6 +264,9 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
             status = 'FAIL'
         elif not summary['skipped'] and not summary['expected_failures'] and code == 0:
             status = 'CHALLENGE_PASS'
+    cleanup_failed = bool(cleanup_errors or (termination and termination['status'] == 'FAILED'))
+    if cleanup_failed and status != 'FAIL':
+        status = 'UNKNOWN'
     try:
         unchanged = current(packet) and packet_path.read_bytes() == packet_raw and test_path.read_bytes() == test_bytes
     except OSError:
@@ -234,6 +282,10 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
+    if timed_out or cleanup_errors:
+        receipt['process_cleanup'] = {'status': 'FAILED' if cleanup_failed else 'COMPLETE',
+                                      'termination': termination, 'errors': cleanup_errors,
+                                      **({'scratch': str(scratch)} if cleanup_failed else {})}
     if patches:
         receipt['counterfactual_patches'] = patches
     write_new(receipt_path, receipt)

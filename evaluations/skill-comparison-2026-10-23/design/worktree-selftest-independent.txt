@@ -1,0 +1,6 @@
+test_declared_worktree_wins_without_selecting_highest_score (test_benchmark.SubmissionTests.test_declared_worktree_wins_without_selecting_highest_score) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.819s
+
+OK

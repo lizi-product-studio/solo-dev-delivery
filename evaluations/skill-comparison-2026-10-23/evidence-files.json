@@ -1,0 +1,81 @@
+{
+  "kind": "explicit_public_allowlist_no_credentials_no_raw_sessions",
+  "files": [
+    {
+      "file": "runtime.py",
+      "sha256": "924506dbb74a0686245f67c3f1ee9430a6ca775f1edf0fdd901d3704c76e43de"
+    },
+    {
+      "file": "benchmark.py",
+      "sha256": "ad5bd2d02e5b1c4a5f4d4fdccc17985f39e66b24e1a369aac2b9b22363ddf24a"
+    },
+    {
+      "file": "metrics.py",
+      "sha256": "2f1d5702b971591bc9962bfbf0fca2e93006eed7defedcb75b69e6b8852ac175"
+    },
+    {
+      "file": "test_metrics.py",
+      "sha256": "af74d2abaee03cccdcb06225f77abe18736591d20592add1280439c1b5b2a184"
+    },
+    {
+      "file": "test_benchmark.py",
+      "sha256": "95a5d806c2613ed33d2741c81365c1ff4c327292e41076e736e2c575486eddda"
+    },
+    {
+      "file": "summarize.py",
+      "sha256": "c88662b010ceb68b028ace239fe8efced3ae31bc8c3bde2bdec6cf77665fb135"
+    },
+    {
+      "file": "audit_runs.py",
+      "sha256": "86155df5b7abd6e82589767fcd0e41e7a76387d3c76200d540be73c026c8de1d"
+    },
+    {
+      "file": "make_blind_packets.py",
+      "sha256": "0060aa59d2f6fef39f74d93b395c9bd1f418fe43553ec5a6a69795783c8be006"
+    },
+    {
+      "file": "METHODOLOGY.md",
+      "sha256": "9f06faaf8216dcfb69fd7a81a29444195cf2f250649f8eaf4df342a6160b63fa"
+    },
+    {
+      "file": "registration.json",
+      "sha256": "2ba4a6cec6f8fbaba6ab37e9ccfacd6bf517f622ffb1f55e1aeaf2f08e43fb70"
+    },
+    {
+      "file": "design/fixture_tools.py",
+      "sha256": "b6bd7b62445eaa59fd0f55158490c7bfd498d3229505ac013af5414b37bb853b"
+    },
+    {
+      "file": "design/selftest.py",
+      "sha256": "4ba123c66e644e2685965cf2359a331cb50e2b6d4ebef3267cabed8968fdfdbf"
+    },
+    {
+      "file": "design/selftest-results.json",
+      "sha256": "952b7955056baa0a602ec7a67f9d3d3ee7399d3d4ef74b77c2e8d3fef37b9fe4"
+    },
+    {
+      "file": "design/README.md",
+      "sha256": "5cc165caad5c543e4c274cad04e8677a0df42e7420ee47686eba942591f2ce8c"
+    },
+    {
+      "file": "design/method-review.md",
+      "sha256": "f63bc807739866f424a244bc0ed19ad6a34caa76f66cf98b873730eff947fb46"
+    },
+    {
+      "file": "design/review-closure.md",
+      "sha256": "854830a5f00bfd9e0d552391a3373faab4069b65eac0746de9f75d5b299b3918"
+    },
+    {
+      "file": "design/worktree-selftest-independent.txt",
+      "sha256": "15e5cc90f7eb7112069467c06188a6a31b20fe157d16e417c6d85fdf88a164af"
+    },
+    {
+      "file": "design/superpowers-freeze.json",
+      "sha256": "be7b382901649698be10fde307e8400f3cc53be512156b478803b1a3d97bb56a"
+    },
+    {
+      "file": "design/superpowers-install.md",
+      "sha256": "911a16a8d7e93417e4df73db0760e560662f45001e2f674237cc8b58dce14dd1"
+    }
+  ]
+}

@@ -104,6 +104,8 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 
 本机Windows/Python3.12最终完整便携177项通过（25.474秒，`python -X utf8 -m unittest discover -s portable-agent-kit/tests -q`）。Windows默认编码下单独运行既有中文fixture曾失败，UTF-8模式通过；本轮文档明确UTF-8进程设置，没有宣称重写了所有默认编码处理。未在Windows重跑POSIX原生队列，跨系统结果另以本分支CI为准。
 
+首轮本分支[CI 39890842030](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/39890842030)暴露新增测试夹具的macOS别名错误：`Path.cwd()`返回`/private/var/...`，候选环境变量为等价的`/var/...`，错误的字面比较挡住了真实验证。现仅把夹具断言改为两侧解析后比较，原工作区误读仍须实际被拦截；本机相关15项重跑通过。生产复制和路径防护未因夹具失败而放宽，初次失败保留，修正后的跨系统执行见[该分支CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions?query=branch%3Aiterate%2Fproject-operations)。
+
 最终候选包24文件，Skill格式检查、临时宿主目录安装及逐文件BUNDLE核验通过，ZIP SHA256为`e486502576d632f519a989951d77706849831a9e5d769452d3afeff77441f3e2`。没有替换全局稳定安装、启用Stop信任或调度器；临时目录复制成功不代表其他宿主已加载或自动选择。
 
 ### 可复现与解释边界

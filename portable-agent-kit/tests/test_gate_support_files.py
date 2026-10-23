@@ -46,7 +46,7 @@ class GateSupportFileTests(unittest.TestCase):
             'from pathlib import Path\nimport os\nimport unittest\n'
             'class FrozenChecks(unittest.TestCase):\n'
             ' def test_existing_csv_suite(self):\n'
-            '  self.assertEqual(Path.cwd(), Path(os.environ["SOLO_CANDIDATE_ROOT"]))\n'
+            '  self.assertEqual(Path.cwd().resolve(), Path(os.environ["SOLO_CANDIDATE_ROOT"]).resolve())\n'
             '  suite = unittest.defaultTestLoader.discover("tests", pattern="test_csv_total.py")\n'
             '  result = unittest.TestResult()\n'
             '  suite.run(result)\n'

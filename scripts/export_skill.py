@@ -70,6 +70,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path)
     try:
-        print(json.dumps(export(parser.parse_args().destination), ensure_ascii=False, indent=2))
+        print(json.dumps(export(parser.parse_args().destination), ensure_ascii=True, indent=2))
     except (ValueError, OSError) as exc:
         parser.exit(2, str(exc) + "\n")

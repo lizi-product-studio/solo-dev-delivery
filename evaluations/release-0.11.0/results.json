@@ -1,0 +1,60 @@
+{
+  "version": "0.11.0",
+  "base_commit": "3d799223f4d31b8009bd41750299e4319c1df10f",
+  "branch": "release/v0.11.0",
+  "main_merged": false,
+  "local_checks": {
+    "portable": {
+      "tests": 203,
+      "skipped": 4,
+      "failures": 0,
+      "seconds": 56.556
+    },
+    "cp936_protocol": {
+      "tests": 6,
+      "skipped": 0,
+      "failures": 0
+    },
+    "windows_native": {
+      "delivery": 21,
+      "root_and_end_to_end": 6,
+      "review": 34,
+      "worker_stop": 9,
+      "resource_ownership": 7,
+      "failures": 0
+    },
+    "installed_runtime_modes": {
+      "checks": 6,
+      "all_expected_outcomes": true
+    },
+    "independent_review": {
+      "open_p1_p2": 0
+    }
+  },
+  "behavior_results": "behavior-results.json",
+  "author_controls": {
+    "main": 23,
+    "explicit_revision": 3,
+    "all_as_expected": true
+  },
+  "local_bundle": {
+    "version": "0.11.0",
+    "files": 25,
+    "sha256": "3ce3c8b041deab9ed1660229f2da8b3c86db980e699178875327017fa520b2f8"
+  },
+  "local_install": {
+    "version": "0.11.0",
+    "all_files_verified": true,
+    "previous_install_backed_up_outside_skill_root": true,
+    "global_agents_changed": false,
+    "hooks_or_schedulers_enabled": false,
+    "other_active_context_hot_reload": "unverified"
+  },
+  "remote_ci": "Read actual run for this commit; no result prefilled",
+  "limits": [
+    "No comparative gain established",
+    "Local synthetic behavior tasks; no production or cross-host loading claim",
+    "Original evaluator format defects retained, revised checker explicitly bound",
+    "No unattended business operation or adversarial isolation proof"
+  ]
+}

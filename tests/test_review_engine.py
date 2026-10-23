@@ -7,7 +7,9 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
+from unittest.mock import patch
 from review_helpers import assess,bind_all,review_data
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -36,7 +38,11 @@ class ReviewTests(unittest.TestCase):
             'open_business_decisions':[],'repository_idle_confirmed':True,'ux_required':False,
             'review_components':[{'id':'main','paths':['app.txt','test_probe.py','.gitignore'],'depends_on':[]}]}
 
-    def tearDown(self):self.q.db.close();self.temp.cleanup()
+    def tearDown(self):
+        try:
+            if hasattr(self,'owned_cleanup'):self.owned_cleanup()
+        finally:
+            self.q.db.close();self.temp.cleanup()
 
     def approve(self):
         self.t=self.q.approve(self.t['id'],self.c);return self.t
@@ -138,6 +144,122 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual('TIMEOUT',self.q.reviews.load(self.t['id'])['runs'][-1]['status'])
         self.assertIsNone(self.q.reviews.load(self.t['id'])['active_run'])
 
+    def owned_timeout_fixture(self):
+        """A real unittest process with an owned sleeping descendant."""
+        import test_worker_stop
+        self.start()
+        pidfile=self.root/'owned-test-pids.json'
+        code=('import json,os,subprocess,sys,time,unittest\nfrom pathlib import Path\n'
+              'class Probe(unittest.TestCase):\n'
+              ' def test_slow(self):\n'
+              '  child=subprocess.Popen([sys.executable,"-c","import time;time.sleep(30)"])\n'
+              '  Path('+repr(str(pidfile))+').write_text(json.dumps([os.getpid(),child.pid]))\n'
+              '  time.sleep(30)\n')
+        self.change('test_probe.py',code)
+        p=self.q.reviews.plan(self.t['id'])
+        self.q.reviews.bind(self.t['id'],'impl',{'revision':p['revision'],'local_only':True,'checks':{
+            cid:{'argv':[sys.executable,'-m','unittest','-v','test_probe.py'],'adapter':'unittest',
+                 'environment':check['environment'],'rationale':'Owned timeout tree fixture.','timeout':1}
+            for cid,check in p['checks'].items()}})
+        owned=[]
+        def cleanup():
+            if pidfile.exists():
+                owned[:]=json.loads(pidfile.read_text())
+            for pid in reversed(owned):
+                if not test_worker_stop.alive(pid):continue
+                if os.name=='nt':
+                    subprocess.run([str(Path(os.environ['SYSTEMROOT'])/'System32'/'taskkill.exe'),
+                                    '/PID',str(pid),'/T','/F'],capture_output=True,timeout=5)
+                else:
+                    os.kill(pid,9)
+                deadline=time.monotonic()+5
+                while test_worker_stop.alive(pid) and time.monotonic()<deadline:time.sleep(.02)
+                self.assertFalse(test_worker_stop.alive(pid),'Owned fixture survived cleanup: '+str(pid))
+        self.owned_cleanup=cleanup
+        self.addCleanup(cleanup)
+        return pidfile,cleanup,test_worker_stop.alive
+
+    def test_timeout_stops_actual_owned_tree_and_leaves_unrelated_process_alive(self):
+        pidfile,cleanup,alive=self.owned_timeout_fixture()
+        unrelated=subprocess.Popen([sys.executable,'-u','-c',
+            'import time;print("READY",flush=True);time.sleep(30)'],stdout=subprocess.PIPE)
+        try:
+            self.assertEqual(b'READY',unrelated.stdout.readline().strip())
+            self.q.reviews.run(self.t['id'],'impl')
+            state=self.q.reviews.load(self.t['id'])
+            self.assertEqual('TIMEOUT',state['runs'][-1]['status'])
+            self.assertEqual('COMPLETE',state['runs'][-1]['process_cleanup']['status'])
+            self.assertIsNone(state['active_run'])
+            self.assertTrue(pidfile.exists())
+            self.assertTrue(all(not alive(pid) for pid in json.loads(pidfile.read_text())))
+            self.assertIsNone(unrelated.poll())
+        finally:
+            cleanup()
+            if unrelated.poll() is None:unrelated.kill()
+            unrelated.wait(timeout=5);unrelated.stdout.close()
+
+    def test_timeout_stop_uncertainty_survives_restart_and_requires_tree_attestation(self):
+        pidfile,cleanup,alive=self.owned_timeout_fixture()
+        failed={'status':'FAILED','method':'injected-fixture-failure',
+                'leader_stopped':False,'tree_stopped':False,'errors':['injected stop failure']}
+        with patch('review_engine.stop_check_process',return_value=failed):
+            self.q.reviews.run(self.t['id'],'impl')
+        state=self.q.reviews.load(self.t['id']);active=state['active_run']
+        self.assertEqual('UNKNOWN',state['runs'][-1]['status'])
+        self.assertEqual(failed,active['process_cleanup'])
+        events=[row[0] for row in self.q.db.execute('SELECT kind FROM events WHERE task_id=?',(self.t['id'],))]
+        self.assertIn('REVIEW_CHECK_STOP_UNCONFIRMED',events)
+        self.assertNotIn('REVIEW_CHECK_FINISHED',events)
+        self.assertTrue(all(alive(pid) for pid in json.loads(pidfile.read_text())))
+        self.q.db.close();self.q=d.Queue(self.root/'runtime')
+        self.assertEqual(active,self.q.reviews.load(self.t['id'])['active_run'])
+        for action in (lambda:self.q.cancel(self.t['id'],'fixture'),
+                       lambda:self.q.reviews.run(self.t['id'],'impl'),
+                       lambda:self.q.reviews.reconcile(self.t['id'],'impl',str(self.proof))):
+            with self.assertRaises(ValueError):action()
+        # End only the actual leader first; its descendant is still a writer.
+        leader,child=json.loads(pidfile.read_text())
+        if os.name=='nt':
+            subprocess.run([str(Path(os.environ['SYSTEMROOT'])/'System32'/'taskkill.exe'),
+                            '/PID',str(leader),'/F'],capture_output=True,timeout=5,check=True)
+        else:
+            os.kill(leader,9);os.waitpid(leader,0)
+        deadline=time.monotonic()+5
+        while alive(leader) and time.monotonic()<deadline:time.sleep(.02)
+        self.assertFalse(alive(leader));self.assertTrue(alive(child))
+        # A dead leader alone cannot prove that the earlier tree stop succeeded.
+        with self.assertRaisesRegex(ValueError,'进程树'):
+            self.q.reviews.reconcile(self.t['id'],'impl',str(self.proof))
+        self.assertIsNotNone(self.q.reviews.load(self.t['id'])['active_run'])
+        cleanup()
+        scan=self.root/'actual-process-scan.json'
+        scan.write_text(json.dumps({'observed':[{'pid':pid,'alive':alive(pid)}
+                           for pid in json.loads(pidfile.read_text())]}),encoding='utf-8')
+        attestation=self.root/'tree-stopped.json'
+        attestation.write_text(json.dumps({'confirmed_stopped_run_ids':[active['id']],
+                                           'process_scan_evidence':str(scan)}),encoding='utf-8')
+        self.q.reviews.reconcile(self.t['id'],'impl',str(attestation))
+        state=self.q.reviews.load(self.t['id'])
+        self.assertIsNone(state['active_run'])
+        self.assertEqual('UNKNOWN',state['runs'][-1]['status'])
+        self.assertEqual(failed,state['runs'][-1]['process_cleanup'])
+        self.change('test_probe.py','import unittest\nclass P(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\n')
+        self.q.reviews.run(self.t['id'],'impl')
+        state=self.q.reviews.load(self.t['id'])
+        self.assertEqual('PASS',state['runs'][-1]['status'])
+        self.assertIsNone(state['active_run'])
+
+    def test_unexpected_timeout_cleanup_error_is_persisted_without_unlocking(self):
+        pidfile,cleanup,alive=self.owned_timeout_fixture()
+        with patch('codex_worker._stop',side_effect=RuntimeError('injected unexpected cleanup error')):
+            self.q.reviews.run(self.t['id'],'impl')
+        state=self.q.reviews.load(self.t['id'])
+        self.assertEqual('UNKNOWN',state['runs'][-1]['status'])
+        self.assertIn('injected unexpected',state['active_run']['process_cleanup']['errors'][0])
+        self.assertTrue(all(alive(pid) for pid in json.loads(pidfile.read_text())))
+        with self.assertRaises(ValueError):self.q.cancel(self.t['id'],'fixture')
+        cleanup()
+
     def test_test_that_changes_source_cannot_pass(self):
         self.start();self.change('test_probe.py',"import unittest\nfrom pathlib import Path\nclass P(unittest.TestCase):\n def test_a(self): Path('app.txt').write_text('mutated');self.assertTrue(True)\n")
         self.passes();self.assertEqual('STALE',self.q.reviews.load(self.t['id'])['runs'][-1]['status'])
@@ -151,6 +273,28 @@ class ReviewTests(unittest.TestCase):
         self.start();p=self.q.reviews.plan(self.t['id'])
         with self.assertRaisesRegex(ValueError,'shell'):self.q.reviews.bind(self.t['id'],'impl',{'revision':p['revision'],'local_only':True,'checks':{'AC:A':{'argv':['sh','-c','touch SENTINEL'],'adapter':'process','environment':'isolated','rationale':'no','timeout':1}}})
         self.assertFalse((self.repo/'SENTINEL').exists())
+
+    def test_current_native_interpreter_runs_actual_checks(self):
+        self.start();self.passes()
+        runs=self.q.reviews.load(self.t['id'])['runs']
+        self.assertTrue(runs)
+        self.assertTrue(all(r['status']=='PASS' and r['tests']==1 for r in runs))
+
+    @unittest.skipUnless(os.name=='nt','Native Windows executable names')
+    def test_windows_exe_names_preserve_explicit_tool_boundary(self):
+        self.start()
+        def binding(executable):
+            p=self.q.reviews.plan(self.t['id'])
+            return {'revision':p['revision'],'local_only':True,'checks':{'AC:A':{
+                'argv':[executable,'test_probe.py'],'adapter':'process','environment':'isolated',
+                'rationale':'Validate names only; do not execute fixture paths.','timeout':1}}}
+        for executable in ('C:/fixture tools/PYTHON.EXE','C:/fixture tools/node.exe',
+                           'C:/fixture tools/pytest.exe'):
+            self.q.reviews.bind(self.t['id'],'impl',binding(executable))
+        for executable in ('cmd.exe','powershell.exe','pwsh.exe','sh.exe',
+                           'python.exe.cmd','python.exe.bat','python.exe -c'):
+            with self.subTest(executable=executable),self.assertRaisesRegex(ValueError,'shell'):
+                self.q.reviews.bind(self.t['id'],'impl',binding(executable))
 
     def test_missing_or_altered_assessment_is_not_accepted(self):
         self.approve();assess(self.q,self.t,'impl',self.proof);self.proof.write_text('changed')

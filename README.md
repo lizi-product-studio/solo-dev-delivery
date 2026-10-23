@@ -1,114 +1,85 @@
-# 栗子的软件交付协作
+# Solo Dev Delivery
 
-目标是把真实项目做好，减少用户重复提醒、返工和日常操心。当前个人实例目录：`/Users/lizi/Documents/Codex/Systems/solo-delivery`。用户保留方向和经营政策控制权，系统在有效授权范围内逐步承担交付工作；当前能力不等于已实现无人经营。
+让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-## 当前分支候选：项目巡检与自主改进
+**0.11.0 是统一验收候选，位于 `release/v0.11.0`，尚未合并 main。** 它收敛 0.10.0 之后的项目巡检、Windows 路径与回调、结果通道、进程停止和遇阻恢复改动。有真实仓库试点及工具回归，尚不等于已证明无人值守经营项目。证据与失败记录见 [VALIDATION.md](VALIDATION.md)。
 
-`pilot/repository-autonomy` 接续 `iterate/project-operations`，在0.10.0及独立Windows修复上渐进开发，尚未合并main或发布新版本。主动维护或经营项目时，按需读取[项目巡检与自主改进](skill/solo-dev-delivery/references/project-operation.md)：核真实信号、已有任务与授权，选择下一项，交付后读回结果并留下恢复条件。普通明确任务不另开经营循环，不新增定时器或默认角色链。
+## 适用方式
 
-已有测试和样本可通过可选的重复`gate start --support-file`进入冻结候选，不再作为需求逐句登记；哈希变化仍阻断旧验收。[使用方法](skill/solo-dev-delivery/references/execution-gate.md)、[公开可复现的本地经营样例](evaluations/project-operation/README.md)和[实际对照结果及局限](VALIDATION.md)分开记录。
+| 任务 | 选择足够的方法 |
+| --- | --- |
+| 简单问答、一步低风险小改 | 直接完成与必要读回，不建立交付流程 |
+| 行为修复、软件或业务多步骤交付 | 按影响使用计划、定向验证和风险审查 |
+| 跨模块或高损失变化 | 按需要隔离、拆分、独立审查，复用已有有效控制 |
+| 用户授权的项目维护与持续改进 | 从真实失败、反馈和任务记录选下一项，交付后核项目结果 |
+| 工具错误、环境障碍或结果未知 | 核实际失败、尝试授权内恢复；未知副作用先对账，独立工作继续 |
 
-[仓库自身三轮真实试点](evaluations/repository-pilot/2026-10-23.md)记录两轮已验证修复、一次未通过验收的候选撤回，以及人工介入与原生Token观察。Windows控制协议统一UTF-8；超时保存UNKNOWN和进程清理证据。Windows hook启动方式仍有未完成的宿主接入验证，不以临时shell实验声称自动加载成功。
+入口是 [SKILL.md](skill/solo-dev-delivery/SKILL.md)。方法按需读取，不默认执行固定角色链、TDD、工作树或持久队列。普通技术决定由 Agent 推进；确需本人身份、额外权限、必要业务决定或已证实无可行恢复路径时，及时请求最小用户动作。
 
-## 0.10.0：由业务决策推导检查场景
+## 克隆并导出
 
-主Agent从独立原文语句选择真实业务链，直接复用现有验收，以checks.sources关联原文，不再重复写outcomes/expected/covers。只有缺少区分的关键条件、数值边界或优先级才写小型标量决策，工具自动生成对应检查；完整状态与持久读回保留在原生链路断言。六个独立允许条件可以用七个区分场景检查，不必执行64个组合；这不是对任意项目固定收取七项测试。
-
-新gate/2将原文语句、实际候选副本和验收绑定；禁止适配器误读/调用原工作区造成假通过。选择了决策模型时，全部生成检查均须执行，一个PASS不能代替其余边界。失败、缺证或模型/适配器/候选变化时不能交付；仍有效的执行回执复用。旧gate/1和既有队列保持兼容，不迁移活动任务，不新增模型调用、角色链或调度器。[执行接入与格式](skill/solo-dev-delivery/references/execution-gate.md)。
-
-Codex Stop定义已准备，宿主仍须按官方要求在`/hooks`审核信任并加载；安装文件不等于已启用自动结束拦截。其他宿主需等价结束回调。业务语义与真实环境仍以实际观察核实，不把形式覆盖冒称无限完整。[两项新业务对照、复核返工与成本](VALIDATION.md)。
-
-## 保留0.7.0的Lite与宿主整合
-
-当前Skill吸收Superpowers Lite的工程分流、系统调试与风险审查，作为一个按需引用，沿用现有证据回执和停止判断。跨平台默认仍是一个自包含的solo-dev-delivery包；不需要同时安装四个Lite Skill，不增加第二套DONE判定或默认持久流程。[取舍与验证](INTEGRATION.md)记录具体合并边界与第三方来源。
-
-从源码导出干净包，再安装到目标宿主实际的Skill搜索根目录（Python 3.9+，按本机选择python/python3）：
+Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python。以下命令选择本候选分支：
 
 ```sh
-python scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
-python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --dry-run
-python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills
-python /absolute/new-parent/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --verify
+git clone --branch release/v0.11.0 https://github.com/lizi-product-studio/solo-dev-delivery.git
+cd solo-dev-delivery
+python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-默认generic模式不猜任何平台路径，支持DeepSeek Harness、自建Agent及各种CLI/IDE的兼容Skill目录；具体注册机制由宿主确认。ZCode/Kimi CLI可改用 `--host zcode` 或 `--host kimi`。不支持Skill目录的宿主可显式加载Markdown并提供包路径。安装校验不代表平台真实调用，完整说明见[宿主安装与无状态预检](skill/solo-dev-delivery/references/host-integration.md)。
+生成自包含目录及 `solo-dev-delivery-0.11.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可在本分支成功的 GitHub Actions 运行页下载 `solo-dev-delivery-candidate` artifact；构建只在全部测试作业通过后执行，artifact 是候选包，不创建 GitHub Release 或合并分支。
 
-无状态预检只在任务依赖未知能力时使用，不创建session：
+## 安装到目标 Agent
+
+先从宿主当前配置或官方说明确认实际 Skill 搜索根目录，再执行：
+
+```sh
+python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --dry-run
+python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills
+python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --verify
+```
+
+安装到该根目录下的 `solo-dev-delivery/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。
+
+ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destination` 优先。DeepSeek Harness、自建 Agent 和其他 IDE/CLI 使用通用模式，不猜模型供应商对应的目录。仅支持提示词加载的宿主可显式读取 `SKILL.md` 并提供包位置。目录与调用方式见 [宿主接入](skill/solo-dev-delivery/references/host-integration.md)。
+
+**文件安装、客户端发现、自动选择和真实交付是不同结论。** 自动选择需要宿主实际加载元数据与指令。Skill 不增加工具、账号、权限或后台能力，不承诺所有平台下载后立即自动生效。
+
+## 验证与遇阻恢复
+
+低风险任务复用现有检查。有候选绑定或正式验收需要时，再用包内 `scripts/gate.py` 或 `scripts/challenge.py`；完整源码入口在 `portable-agent-kit/scripts/`。失败、未知、缺项和证据过期不能当作通过，UI、外部服务和生产结果需要对应环境的实际观察。
+
+- [交付门禁](skill/solo-dev-delivery/references/execution-gate.md)：原文、候选、验收与证据绑定，按业务决策选择检查。
+- [结果核验](skill/solo-dev-delivery/references/result-verification.md)：独立本地检查、证据复用、失败优先和按需反例。
+- [恢复与最小交接](skill/solo-dev-delivery/references/blocker-recovery.md)：技术排障、等价入口、未知副作用与必要用户动作。
+- [项目巡检与接续](skill/solo-dev-delivery/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
+
+可选能力预检只检查任务实际依赖，不执行工具或创建 session：
 
 ```sh
 python portable-agent-kit/scripts/capability_probe.py --capabilities host.json --require fs.read --format text
 ```
 
-READY/BLOCKED/NEEDS_CONTEXT分别表示所声明要求有支持、明确不支持、或仍未知；没有实际工具观察不能声称能力已验证。导出包也包含该工具、安装器和许可，所有引用/脚本可随目录移动；不携带个人偏好、客户数据或runtime。
+`supported / unsupported / unknown` 保留三态，输出 `READY / BLOCKED / NEEDS_CONTEXT`；READY 不代表任务完成或获准外部操作。格式见宿主接入说明。
 
-## 默认轻量，Codex 原生优先
+Codex Stop 定义由 `gate.py install-hook` 准备，须经宿主审核、信任并加载才生效。移动包或解释器后需复核定义，不能把安装等同于自动拦截。更新 Skill 不启用 hooks、定时或后台任务，也不向其他聊天发送指令。
 
-新软件聊天通过本机 `~/.codex/AGENTS.md` 加载个人偏好和 `solo-dev-delivery` Skill。主会话直接处理小改，按需使用原生子Agent、会话管理和适用工作树，不再强制为普通委派嵌套启动CLI或填写完整任务契约。资源与验证投入由实际影响决定。
+## 完整系统与兼容
 
-需要范围确认、持久交接、客户状态或正式验收门禁时才使用本地队列。已在队列中的任务保留原状态、锁、失败记录和质量要求。入口是 `python3 scripts/delivery.py`，任务参数由Agent填写，用户无需学习命令或重复批准已授权步骤。
+源码保留 `scripts/delivery.py`、SQLite 队列、原生审查登记、旧 CLI worker、业务接手和 portable session；明确需要正式状态、锁、客户闭环或持久交接时才使用。已有任务继续原门禁和锁，不迁移活动运行，不以轻量流程绕过已知失败。见 [本机软件交付](skill/solo-dev-delivery/references/software-delivery.md)和 [Portable Kit](portable-agent-kit/README.md)。
 
-## 保留有实际作用的部分
+本机偏好与授权属于所在实例，不随独立包传播；历史授权不扩展到新项目的发布、支付、通信或经营承诺。原生用量由宿主提供，没有数据时保留未知，不能填零或宣称节省成本。
 
-- `knowledge/preferences.json`：用户明确偏好、来源、适用范围和被替代决定。
-- `knowledge/methods.json`：从真实项目提炼的方法与反例；候选不冒称通用经验。
-- `review_engine.py`：将候选版本、实际检查、缺陷及证据绑定，阻止缺项、过期或未关闭问题的队列交付。
-- `business_loop.py`及队列：在需要时保存客户范围确认、交付/验收、变更和撤回状态；本地发件箱尚未连接真实客户渠道。
-- 项目自己的代码、决定和验收证据：技术检查、用户任务、体验及生产状态分别核实。
-
-## 原生执行与兼容路径
-
-普通工作及按需独立审查默认由Codex原生能力执行。正式队列的原生审核完成后，可用 `resource-native-review`登记真实宿主派发及完成证据；该命令不调用模型、不创建子进程、不管理第二套会话或超时器。候选、测试和缺陷门禁继续生效，身份由受信主会话核实，证据文件不是身份认证。
-
-旧 `resource-run`、`codex_worker.py`及监督接口保留兼容，已有回执和任务无需迁移；宿主原生不可用或具体项目要求旧入口时可明确使用。`resource-plan`的固定模型档位及内部预算仍用于旧CLI路径，不冒充原生Agent的资源实测。原生用量交由Codex宿主管理，此处记录未知，不填0消耗。
-
-## 按需验证工具与原生兼容
-
-主 Skill 已采用相对路径定位。完整本机系统继续使用原生 Codex 与现有队列，软件细节移至按需读取的 `references/software-delivery.md`。跨业务任务按目标使用专业标准，不进入软件队列。
-
-可以导出不包含个人偏好、客户事实、原始聊天或 runtime 的独立技能包：
+## 测试与证据
 
 ```sh
-python3 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+python -X utf8 -m unittest discover -s portable-agent-kit/tests -v
+python -X utf8 -m unittest discover -s tests -v
 ```
 
-输出符合 [Agent Skills 格式](https://agentskills.io/specification) 的目录和 zip，带相对引用和标准库一次性核验工具。独立包不包含旧session、协议状态机或契约资产，避免普通任务进入持久登记。格式与本地冷启动可验证；Cursor、Kimi Code、DeepSeek Harness等的真实加载和工具接入仍需各宿主验证，不能宣称所有平台即装即用。
+完整原生兼容套件含 POSIX CLI fixture；Windows 以 CI 明确执行的交付、停止和所有权用例为准。系统和 Python 版本范围见 [CI 定义](.github/workflows/validate.yml)。CLI 导入开项 JSON 另需 Node.js。
 
-完整系统的`portable-agent-kit/scripts/session.py`继续保留init/next/check/finish兼容入口，只有任务明确需要持久恢复且宿主记录不足时才使用。它逐项读回本地产物、冻结输入摘要、检查真实哈希并在交付前重验。失败历史保留，缺项、未知或产物变化阻断；它不执行外部动作、不调用模型、不创建定时器。现有任务的状态、门禁和锁不变。
+[验证记录](VALIDATION.md)保留首次失败、撤回候选、实际范围、行为样例及成本；[0.11.0统一验收](evaluations/release-0.11.0/README.md)、[仓库试点](evaluations/repository-pilot/2026-10-23.md)与[遇阻评测](evaluations/blocker-recovery/README.md)提供复现资产。模拟通过不证明跨平台泛化；此前新旧四题对照均通过，尚未证明新增指令带来净收益。下载后的独立说明见[INSTALL.md](INSTALL.md)。
 
-AAP-0.1 信封保持，内核状态改为 version 2。自定义宿主必须提供受信 `verify_evidence` 回调；任意 PASS 标签不再足够。旧 portable state 必须保留原历史并由宿主在当前产物上重新验证/创建新状态，禁止热改现有运行。原 Codex SQLite 队列未改。
+## 来源
 
-本地检查只证明契约中可机械验证的属性，不能认证业务语义、体验、身份、实际发布或“弱模型无敌”。真实项目的首次完成、漏检、返工和成本才用于评估收益。
-
-主Agent从用户原始痛点找可实际走的因果链：前置事实变化→下游业务结果→合法恢复与读回。中间字段正确不能代替下游拒绝或恢复；决策样例要让相邻政策产生不同结果。只补会改变交付判断的观察，不因有状态或多条政策自动建表。局部小改直接读回，真实App、小程序、网站按宿主真实界面/集成工具验收。关键人用结论需对实际结果或原始依据核实；没有未关闭缺陷及影响交付的未知才停止。
-
-`portable-agent-kit/scripts/challenge.py verify`把新本地检查压成一次命令：自动绑定声明输入/产物、实际运行主Agent选出的unittest、保存完整逐方法证据，平时只打印短摘要。相同候选/脚本的当前全套证据复用，已知失败优先；局部PASS、UNKNOWN和STALE不能冒充全套完成。控制文件在候选外，失败历史保留；脚本不认证业务语义、独立身份、完整环境或生产验收。
-
-关键本地Python链/决策可在同一命令加`--probes`：只在临时副本替换明确声明的代码，运行主Agent选出的同一业务观察；合理错误行为也能通过时返回`INSUFFICIENT`，不能把普通测试绿色当交付依据。断言识别才算有效，语法错误、执行异常、跳过和缺观察不算；遇首个缺口停止额外探针，修复后核查，相同证据复用。反例通过仅证明所选错误被识别，原文理解、选错反例、完整因果链及文稿仍由主Agent判断；非Python/界面使用宿主等价观察，不伪造证明。未增加模型、默认角色或定时器。
-
-0.6.0的反例机制已验证所选断言的识别能力，但未见任务未证明整体收益；0.8.0将其保持为按需诊断。原文条件未被选择时，更多反例也无法补齐漏检。
-
-既有`brief/assess`继续支持分批补证、覆盖争议和持久交接，作为按需工具；不同必要场景不能因共享宽泛结果而顶替。原`freeze/run/status`、精确`json.aggregate`及`json.table`兼容保留，原有队列门禁不变。详细参数按需见Skill的`references/result-verification.md`。
-
-验证更新后清除旧导出、回滚副本和临时迭代目录，只保留当前有效版本及其验收记录；Git提交履历保留用于追溯。
-
-## 按需查看
-
-- [当前实际验证](VALIDATION.md)：并行成果合并、两阶段未见任务、首次失败、复核与返工消耗。
-- [协作入口](skill/solo-dev-delivery/SKILL.md)：任务选择、产品判断与交付责任。
-- [主动审核](主动审核执行说明.md)：队列状态、缺陷扩查、版本和证据阻断。
-- [资源与原生回执](资源调度执行说明.md)：原生登记格式和旧CLI兼容操作。
-- [客户业务闭环](业务闭环执行说明.md)：仅相关客户接手任务需要加载。
-- [Git提交历史](https://github.com/lizi-product-studio/solo-dev-delivery/commits/main/)：保留来源，不当作新项目授权。
-
-## 运行边界与验证
-
-只使用Codex。定时任务继续暂停；不会因加载技能自行启用。上线、真实资金、新增费用与外部承诺依项目授权。`DELIVERED`仅表示约定本地交付，开发版上传与正式发布分别验证。
-
-Python 3.9及以上；开项JSON导入另需Node。无需新增依赖。`runtime/`保留私有数据和历史回执，备份SQLite使用其备份机制，不直接覆盖正在写入的数据库。
-
-```sh
-python3 scripts/delivery.py --help
-python3 -m unittest discover -s tests -v
-```
-
-本机配置不会自动同步到其他电脑或云任务；已打开的聊天可能持有旧上下文。更新本系统不向其他聊天发送指令，不修改客户项目的AGENTS或代码。
+整合 Superpowers Lite 的分流、系统调试和风险审查，保留 Solo 的候选绑定、验证、状态和授权边界。[整合说明](INTEGRATION.md)与[第三方许可](THIRD_PARTY.md)保留来源；`SOURCE_SNAPSHOT.json` 记录规范 Git 源文件摘要。

@@ -1,0 +1,122 @@
+{
+  "started_at": "2026-10-23T05:58:20.973Z",
+  "cutoff": "2026-10-23T06:17:52.911Z",
+  "latest_usage_at": "2026-10-23T06:17:52.645Z",
+  "wall_seconds": 1171.938,
+  "groups": {
+    "root": {
+      "responses": 56,
+      "tool_calls": 56,
+      "latest_usage_at": "2026-10-23T06:17:52.645Z",
+      "usage": {
+        "input_tokens": 7201348,
+        "cached_input_tokens": 7084288,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 40022,
+        "reasoning_output_tokens": 13127,
+        "total_tokens": 7241370,
+        "uncached_input_tokens": 117060
+      }
+    },
+    "windows_runtime": {
+      "responses": 37,
+      "tool_calls": 36,
+      "latest_usage_at": "2026-10-23T06:09:54.325Z",
+      "usage": {
+        "input_tokens": 3237286,
+        "cached_input_tokens": 3140864,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 24884,
+        "reasoning_output_tokens": 10710,
+        "total_tokens": 3262170,
+        "uncached_input_tokens": 96422
+      }
+    },
+    "portability": {
+      "responses": 18,
+      "tool_calls": 17,
+      "latest_usage_at": "2026-10-23T06:03:19.193Z",
+      "usage": {
+        "input_tokens": 1352086,
+        "cached_input_tokens": 1306112,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 8698,
+        "reasoning_output_tokens": 2719,
+        "total_tokens": 1360784,
+        "uncached_input_tokens": 45974
+      }
+    },
+    "fixture_author": {
+      "responses": 39,
+      "tool_calls": 37,
+      "latest_usage_at": "2026-10-23T06:15:08.691Z",
+      "usage": {
+        "input_tokens": 2841792,
+        "cached_input_tokens": 2767232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 37761,
+        "reasoning_output_tokens": 11179,
+        "total_tokens": 2879553,
+        "uncached_input_tokens": 74560
+      }
+    },
+    "independent_review": {
+      "responses": 25,
+      "tool_calls": 23,
+      "latest_usage_at": "2026-10-23T06:11:58.485Z",
+      "usage": {
+        "input_tokens": 2604055,
+        "cached_input_tokens": 2490880,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 9580,
+        "reasoning_output_tokens": 4720,
+        "total_tokens": 2613635,
+        "uncached_input_tokens": 113175
+      }
+    },
+    "dispatch_executor": {
+      "responses": 20,
+      "tool_calls": 19,
+      "latest_usage_at": "2026-10-23T06:10:47.458Z",
+      "usage": {
+        "input_tokens": 868852,
+        "cached_input_tokens": 845824,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 10210,
+        "reasoning_output_tokens": 1606,
+        "total_tokens": 879062,
+        "uncached_input_tokens": 23028
+      }
+    },
+    "invoice_executor": {
+      "responses": 9,
+      "tool_calls": 8,
+      "latest_usage_at": "2026-10-23T06:09:13.867Z",
+      "usage": {
+        "input_tokens": 332663,
+        "cached_input_tokens": 319360,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3708,
+        "reasoning_output_tokens": 1057,
+        "total_tokens": 336371,
+        "uncached_input_tokens": 13303
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 18438082,
+    "cached_input_tokens": 17954560,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 134863,
+    "reasoning_output_tokens": 45118,
+    "total_tokens": 18572945,
+    "uncached_input_tokens": 483522
+  },
+  "limits": "Native token_usage_record only, deduplicated by thread/response. Cached input is inside input; reasoning is inside output. Tool calls count host-visible envelopes, not all nested operations. Running/final responses and log flush delay may be missing. No currency or quota conversion.",
+  "human_intervention": {
+    "initial_upgrade_authorization": 1,
+    "followup_user_actions_or_corrections": 0,
+    "fixture_owner_handoff": "simulated-only; no real account owner action performed"
+  },
+  "measurement_scope": "Root plus six named child agents. Includes implementation, independent review, fixture author controls and format-defect correction, two fresh behavior executions and local install verification up to cutoff. Excludes subsequent staging/commit, remote CI wait, final response and delayed/unflushed usage. Not a no-Skill comparison or currency estimate."
+}

@@ -184,7 +184,9 @@ class Queue:
         route = validate_contract(contract)
         repo = str(Path(contract['repository']).resolve())
         need(Path(repo).is_dir(), '任务代码目录不存在')
-        need(git(repo, 'rev-parse', '--show-toplevel') == repo, 'repository必须为Git工作树根目录')
+        # Git emits '/' on Windows; compare the actual directory identity so
+        # equivalent spelling is accepted without admitting a different root.
+        need(Path(git(repo, 'rev-parse', '--show-toplevel')).samefile(repo), 'repository必须为Git工作树根目录')
         # 同一仓库的不同worktree也共用锁，避免两个任务改同一产品。
         common = Path(git(repo, 'rev-parse', '--git-common-dir'))
         repo_key = str((Path(repo)/common).resolve()) if not common.is_absolute() else str(common.resolve())

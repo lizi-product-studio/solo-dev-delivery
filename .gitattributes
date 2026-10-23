@@ -1,0 +1,2 @@
+# Preserve byte identity for the recorded original/revised evaluator hashes.
+evaluations/release-0.11.0/behavior/check*.py text eol=lf

@@ -35,7 +35,7 @@ python S/install_agent.py --host kimi --verify
 
 选择已安装的宿主执行。ZCode默认 `~/.zcode/skills`；当前Kimi CLI默认 `$KIMI_CODE_HOME/skills`，未设置时为 `~/.kimi-code/skills`。`--destination`优先于默认路径；不改全局配置、hooks或宿主权限。
 
-安装器读取BUNDLE.json并校验全部已列文件哈希，拒绝额外文件、源/目标重叠及符号链接/junction。哈希只证明包内一致性，不认证来源；从可信仓库获取包。同字节重复安装不重写；已有不同文件时停止，先把旧Skill备份到搜索根目录外再人工替换。Python运行生成的__pycache__/pyc不属于安装内容，校验时忽略。--verify只读安装文件，不代表客户端发现或模型行为。
+安装器读取BUNDLE.json并校验全部已列文件哈希，拒绝额外文件、源/目标重叠及符号链接/junction。复制在同文件系统临时目录完成并核对字节，再发布到最终Skill目录；普通写入失败清理本次暂存，可重新安装，机器/进程突然退出可能留下隐藏暂存目录。哈希只证明包内一致性，不认证来源；从可信仓库获取包。同字节重复安装不重写；已有不同文件时停止，先把旧Skill备份到搜索根目录外再替换。Python运行生成的__pycache__/pyc不属于安装内容，校验时忽略。--verify只读安装文件，不代表客户端发现或模型行为。
 
 ZCode在Settings → Skills刷新并启用，使用 `$solo-dev-delivery`；Kimi新会话用 `/skill:solo-dev-delivery`。其他Agent用自己的注册/调用方式。以当前版本真实菜单为准；不要同时安装重复Skill副本。
 
@@ -61,4 +61,4 @@ python S/capability_probe.py --capabilities host.json --require fs.read --format
 
 文件安装测试、客户端加载、自动分流和实际交付是不同结论。没有执行的宿主检查标为未测；这套说明不将本地PASS变成所有Agent已兼容。
 
-目录快捷方式核对于2026-10-22：[ZCode Skills](https://zcode.z.ai/en/docs/skill)、[Kimi Code Skills](https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html)。具体Harness加载机制由该宿主当前文档/配置确认。
+目录快捷方式核对于2026-10-23：[ZCode Skills](https://zcode.z.ai/en/docs/skill)、[Kimi Code Skills](https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html)。Kimi也支持共享的~/.agents/skills；已有有效安装优先复用，不同时安装重复副本。具体Harness加载机制由该宿主当前文档/配置确认。

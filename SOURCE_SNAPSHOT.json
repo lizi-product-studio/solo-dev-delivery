@@ -1,10 +1,10 @@
 {
   "created": "2026-10-23",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "c8137005b05e09015cc697e431ebce4fa219cce4",
-    "previous_version": "0.9.0",
+    "previous_head": "3d799223f4d31b8009bd41750299e4319c1df10f",
+    "previous_version": "0.10.0",
     "rewrite_history": false
   },
   "integrated_source": {
@@ -14,14 +14,24 @@
   },
   "files": [
     {
+      "path": ".gitattributes",
+      "sha256": "bc2a52c6f15eabd62ff478f1d60cbff602d0ee7e3cfe21395ae8af5cf3f036e2",
+      "bytes": 135
+    },
+    {
       "path": ".github/workflows/validate.yml",
-      "sha256": "bcc6bfeca3087ee0e22cd7df4f08970ec1108f0b14fad9ec68c58ba06133a031",
-      "bytes": 1125
+      "sha256": "9f56742fd9e9532669072619e134ba7d44a923f04dfb4d19e6b11b4aba36ddf7",
+      "bytes": 2714
     },
     {
       "path": ".gitignore",
       "sha256": "61c86e86f64a5d1c01a3bc87111b4a7ed207c4d9bbc6ce0af1ff024525563edb",
       "bytes": 38
+    },
+    {
+      "path": "INSTALL.md",
+      "sha256": "16bf815cd3cabfbe48e9d172f86c240b4cdf7bd9d952a8048fd6ddbe01462a21",
+      "bytes": 2711
     },
     {
       "path": "INTEGRATION.md",
@@ -30,8 +40,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "c80a65170a802c9ff94213fe340b727bf25dc0c42063339e4ecab83b0815e975",
-      "bytes": 12577
+      "sha256": "c58e9bce9d7973343f7551a4ad46cf35bf1588a38ddc2484f2c5f277a02450b7",
+      "bytes": 7164
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +50,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "4ecdf9b4c4576bed4081808e637479b1ade7900cb1b79ec84b10c81213e127f1",
-      "bytes": 21808
+      "sha256": "2fbb996415af2d3788f7c9e12fe5854064829d5c40e22fd305268b4f0515d84f",
+      "bytes": 23243
     },
     {
       "path": "evaluations/blocker-recovery/NEUTRAL_PROMPT.txt",
@@ -87,6 +97,86 @@
       "path": "evaluations/project-operation/evaluate.py",
       "sha256": "8931782f9e37df5e7500a1bf9c77d19756921b43e9ba2fb979ea94bd010f0cbc",
       "bytes": 9260
+    },
+    {
+      "path": "evaluations/release-0.11.0/README.md",
+      "sha256": "e916136cf5d5efd3d145caf0191b71a904c283037f254f96fc2b58dbeada51cf",
+      "bytes": 6245
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior-results.json",
+      "sha256": "188d2c2cc465f83a8efec32330767301cc2755cab58b1dfdaf84386cb018d582",
+      "bytes": 1101
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/README.md",
+      "sha256": "f99f5e5739fb602835a7b73d467ac7606613dc6e06065b1a4fd05d4e0dcc042f",
+      "bytes": 7497
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/check-first-format-defect.py",
+      "sha256": "fb7d4c84258f26b5a51ff60fda5f40efb88caeaf92d28fbad32f4c3adf566e8a",
+      "bytes": 15727
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/check.py",
+      "sha256": "098de782e13d42b306f195d6e6f786a380ffa0adfcc1180006b8214964ae5525",
+      "bytes": 17245
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/checker-revision-02.json",
+      "sha256": "149b765c423fe7587821a7186ee9ce1ceb771adb42f4f9528b6a091107d62945",
+      "bytes": 1440
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/create_suite.py",
+      "sha256": "609fdd14cd5ce637e055de2a22c0d689ddb02e1f593382450fb1e1dd1ae0a490",
+      "bytes": 15708
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/dispatch-first-evaluation.json",
+      "sha256": "bb71031baf6fca381a46614f354b1c2b400ba1212425fbcd4e84e22f0330d461",
+      "bytes": 500
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/fixture-defects-02.md",
+      "sha256": "ad1f2525bb9e93eae23561c6ac529f6d15a6dba7c8509e1ea79c5e8ab11449fa",
+      "bytes": 1530
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/invoice-first-evaluation.json",
+      "sha256": "a0bc42dd5b4502be40a53a19551d92d6ad964287abcd7a62cc672345ad7df5d8",
+      "bytes": 698
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/revision-selftest-results.json",
+      "sha256": "bb6602883581c3fd731534fd8d7727125ffbbb31ac97bda7c59412a816ee7534",
+      "bytes": 805
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/selftest-results.json",
+      "sha256": "2f09f31d206b6427fcc6361af659e010f3e87fe5c304c88197a008d862d9e7bd",
+      "bytes": 2512
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/selftest.py",
+      "sha256": "0a575089bf960cb886893de84ad3ff0cdad1dc6245bdda02764a124b4dd9e7c3",
+      "bytes": 12414
+    },
+    {
+      "path": "evaluations/release-0.11.0/behavior/service_host.py",
+      "sha256": "36d0579c4687631a8dd9b927e3108b9a5b08a3e43c58ea42a4727e8d00335df4",
+      "bytes": 5115
+    },
+    {
+      "path": "evaluations/release-0.11.0/costs.json",
+      "sha256": "1d9a325427b3dd8c02feae5a9b07960125208f4e8222d2dda2536ce78f1f44b6",
+      "bytes": 4198
+    },
+    {
+      "path": "evaluations/release-0.11.0/results.json",
+      "sha256": "1edf816aacd36b97d88c10a8c56d966b14c11281bc5c2a09251f25c7da81b9f9",
+      "bytes": 1628
     },
     {
       "path": "evaluations/repository-pilot/2026-10-23-costs.json",
@@ -180,8 +270,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "86b075c763ab5b782ba79c23f26ee67ed4531000ffdaf9dc330c78ec88251fab",
-      "bytes": 4872
+      "sha256": "648aa159d2f5036409229747fcc7204be5e182345c7e925b8a8fb9c09c512fb7",
+      "bytes": 4900
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -385,8 +475,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_portable_integration.py",
-      "sha256": "fea8160daabf3f5226c503651b6afae50f80134c3c9c7e86e94e647b978ab697",
-      "bytes": 9566
+      "sha256": "3f72c7c1cebc88aed603fa02950ad57d9dd1172d4e8a29ca006e8f993119b548",
+      "bytes": 15252
     },
     {
       "path": "portable-agent-kit/tests/test_relations.py",
@@ -420,18 +510,18 @@
     },
     {
       "path": "scripts/delivery.py",
-      "sha256": "02fc8f5bf7b9689108734ab36be514d983875841f9c22c85aabe974711fb8552",
-      "bytes": 26433
+      "sha256": "a233aed31c0e232249095287ad167382a7656ac307e2734368d3983318f57eb6",
+      "bytes": 26601
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "8c34b7503de427542dc1bcbdff4319490b52411ac68bfe5822c99ef6d69c85a1",
-      "bytes": 4068
+      "sha256": "d8ca6fbad28befee199bce6cfd5e5f7192768648c2d08fdb9a9646f71f0d798e",
+      "bytes": 4067
     },
     {
       "path": "scripts/install_agent.py",
-      "sha256": "c66b20ce49f528072e75e4bda0a41a3debd0b0215f0ba3e92221c3166dfa6202",
-      "bytes": 5706
+      "sha256": "4979a7a986927ce6dd3df9d29d881a51a9d40d50b1176b0c8f761bb9ccf83ced",
+      "bytes": 6465
     },
     {
       "path": "scripts/kickoff-import.mjs",
@@ -450,13 +540,13 @@
     },
     {
       "path": "scripts/review_engine.py",
-      "sha256": "b18fba8d6babfd0ef4a21b98d19cfeebf838537e7b5c78164bc7df57abb7b483",
-      "bytes": 31054
+      "sha256": "ef059aaa020a33883998c92b30830781d6650d72694614724eff99607c9af551",
+      "bytes": 33431
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "571afa7f861023456a62144e29ffdf7b69529661783b8fbeba35280015a770fe",
-      "bytes": 5473
+      "sha256": "c627085335a73ad4204ba6a1e2037621076339c09334e73803618021b65bed72",
+      "bytes": 6545
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -480,13 +570,13 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",
-      "sha256": "108914c7ef86e2ea953c2c22a2800a2620d9c0fa3e102dc49e105cb10db6ac9d",
-      "bytes": 8035
+      "sha256": "f24b3e9c8e14fb142c033faf4dff4c593474c5ec615d8a60a2c16dcb9471a33d",
+      "bytes": 8140
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",
-      "sha256": "ed12da7289d28e8f14738345dfb80d686e92628453bcbc265ab7fee9296fe5de",
-      "bytes": 4817
+      "sha256": "f06c3573fa910189824181f65fb7694489a27a1cee014883d658d3cdff0e8ccc",
+      "bytes": 5122
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
@@ -495,8 +585,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/project-operation.md",
-      "sha256": "a738c7b5a834fb26175ad0d065e05faa0a7bfd36730ff166ea9d94ec671228be",
-      "bytes": 5111
+      "sha256": "06b366d9c6a21e3eb277d0ff6efd4ecdbae25ccb11fce4b556e9df6c13a1ef7e",
+      "bytes": 5171
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
@@ -620,8 +710,13 @@
     },
     {
       "path": "tests/test_review_engine.py",
-      "sha256": "b9561659ffd0d745a4f97d6495b82a5652fd70220a86c51006c59d37527c08e6",
-      "bytes": 15067
+      "sha256": "7c1672254682fa99d92ada3a461b8e86f745c88412ccbd81cad7cebf9b434c13",
+      "bytes": 23624
+    },
+    {
+      "path": "tests/test_windows_delivery_path.py",
+      "sha256": "fc2ccf95950efc07eff0776ed30363ace3117d8f817b7fd8574929f35a617bbb",
+      "bytes": 9350
     },
     {
       "path": "tests/test_worker_stop.py",

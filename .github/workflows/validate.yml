@@ -21,6 +21,19 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s portable-agent-kit/tests -v
+      - uses: actions/setup-node@v4
+        if: matrix.os == 'windows-latest'
+        with:
+          node-version: '22'
+      - name: Windows native delivery and review
+        if: matrix.os == 'windows-latest'
+        run: |
+          python -m unittest discover -s tests -p test_delivery.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_windows_delivery_path.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_review_engine.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Windows worker stop and ownership recovery
         if: matrix.os == 'windows-latest'
         run: |
@@ -38,3 +51,24 @@ jobs:
         with:
           node-version: '22'
       - run: python -m unittest discover -s tests -v
+  package:
+    needs: [portable, native-compatibility]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Export and verify self-contained package
+        run: |
+          python scripts/export_skill.py "$RUNNER_TEMP/solo-export/solo-dev-delivery"
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills"
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills" --verify
+          cp INSTALL.md "$RUNNER_TEMP/solo-export/INSTALL.md"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: solo-dev-delivery-candidate
+          path: |
+            ${{ runner.temp }}/solo-export/*.zip
+            ${{ runner.temp }}/solo-export/INSTALL.md
+          if-no-files-found: error

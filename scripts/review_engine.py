@@ -8,7 +8,6 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
-import signal
 import subprocess
 import sys
 import time
@@ -69,6 +68,21 @@ def process_alive(pid):
         raise OSError('Could not confirm process state: ' + str(state))
     finally:
         api.CloseHandle(handle)
+
+
+def stop_check_process(process):
+    """Use the same owned-tree stop protocol as the optional CLI worker.
+
+    Import lazily because codex_worker imports this module's finding families.
+    Cleanup uncertainty is evidence to retain, never permission to unlock.
+    """
+    try:
+        from codex_worker import _stop
+        return _stop(process)
+    except Exception as exc:
+        return {'status':'FAILED','method':'unexpected-cleanup-error',
+                'leader_stopped':process.poll() is not None,'tree_stopped':False,
+                'errors':[type(exc).__name__+': '+str(exc)[:1000]]}
 
 
 def dumped(v):
@@ -238,6 +252,9 @@ class Reviews:
                 argv=b.get('argv',[])
                 require(isinstance(argv,list) and argv and all(isinstance(a,str) and a and '\x00' not in a for a in argv),'argv必须为非空字符串数组')
                 executable=Path(argv[0]).name
+                if os.name=='nt':
+                    executable=executable.casefold()
+                    if executable.endswith('.exe'):executable=executable[:-4]
                 require(executable in ('python','python3','node','pnpm','npm','pytest'),'只支持显式本地测试工具，不接受shell')
                 require(b.get('adapter') in ('unittest','process'),'adapter需为unittest或process')
                 require(b.get('environment')==s['checks'][cid]['environment'],'验证环境与计划不一致')
@@ -351,9 +368,9 @@ class Reviews:
             directory=self.q.root/'review-evidence'/tid;directory.mkdir(parents=True,exist_ok=True)
             log=directory/(rid+'.log')
             env={k:v for k,v in os.environ.items() if k in ('PATH','HOME','LANG','LC_ALL','TMPDIR','SYSTEMROOT','PYTHONPATH')}
-            env.update(PYTHONUNBUFFERED='1',CI='1')
-            started=time.time();code=None;state='ERROR';count=None
-            with log.open('w') as out:
+            env.update(PYTHONUNBUFFERED='1',PYTHONUTF8='1',PYTHONIOENCODING='utf-8',CI='1')
+            started=time.time();code=None;state='ERROR';count=None;cleanup=None
+            with log.open('w',encoding='utf-8') as out:
                 out.write(dumped({'argv':b['argv'],'cwd':t['contract']['repository'],'commit':commit,'checks':ids})+'\n');out.flush()
                 try:
                     with self.q.transaction():
@@ -363,26 +380,35 @@ class Reviews:
                         active=self.load(tid);active['active_run']['pid']=proc.pid;self.save(tid,active)
                     try:code=proc.wait(timeout=b.get('timeout',60))
                     except subprocess.TimeoutExpired:
-                        os.killpg(proc.pid,signal.SIGKILL);proc.wait();state='TIMEOUT'
+                        cleanup=stop_check_process(proc)
+                        state='TIMEOUT' if cleanup.get('tree_stopped') is True else 'UNKNOWN'
+                        out.write(dumped({'process_cleanup':cleanup})+'\n')
                     else:state='PASS' if code==0 else 'FAIL'
                 except ValueError as exc:
                     state='BLOCKED';out.write(str(exc)+'\n')
                 except OSError as exc:out.write(str(exc)+'\n')
             if b['adapter']=='unittest' and (state=='PASS' or (state=='FAIL' and code==5)):
-                raw=log.read_text(errors='replace');m=re.search(r'Ran (\d+) tests? in ',raw)
+                raw=log.read_text(encoding='utf-8',errors='replace');m=re.search(r'Ran (\d+) tests? in ',raw)
                 count=int(m.group(1)) if m else 0
                 # unittest may return 5 for an empty suite. It is still not PASS;
                 # keep import/execution failures as FAIL unless zero tests are explicit.
                 if (state=='PASS' and (not count or re.search(r'\b(skipped|expected failures|unexpected successes)=',raw))) or (code==5 and m and count==0):state='INCOMPLETE'
-            if git(t['contract']['repository'],'status','--porcelain') or git(t['contract']['repository'],'rev-parse','HEAD')!=commit:state='STALE'
+            if state!='UNKNOWN' and (git(t['contract']['repository'],'status','--porcelain') or git(t['contract']['repository'],'rev-parse','HEAD')!=commit):state='STALE'
             with self.q.transaction():
                 current=self.load(tid)
                 require(current['active_run'] and current['active_run']['id']==rid,'运行归属变化，需人工对账')
-                if current['revision']!=s['revision']:state='STALE'
+                if current['revision']!=s['revision'] and state!='UNKNOWN':state='STALE'
                 for cid in ids:current['runs'].append({'id':rid,'check':cid,'commit':commit,'signature':signatures[cid],
-                    'status':state,'exit_code':code,'tests':count,'seconds':round(time.time()-started,3),'evidence':proof(log)})
-                current['active_run']=None;current['review']=None
-                self.save(tid,current);self.q.event(tid,'REVIEW_CHECK_FINISHED',{'id':rid,'status':state,'checks':ids})
+                    'status':state,'exit_code':code,'tests':count,'seconds':round(time.time()-started,3),'evidence':proof(log),
+                    **({'process_cleanup':cleanup} if cleanup is not None else {})})
+                if cleanup is not None and cleanup.get('tree_stopped') is not True:
+                    current['active_run']['process_cleanup']=cleanup
+                    current['active_run']['process_running']=None if cleanup.get('leader_stopped') else True
+                else:current['active_run']=None
+                current['review']=None
+                self.save(tid,current)
+                event='REVIEW_CHECK_STOP_UNCONFIRMED' if current['active_run'] else 'REVIEW_CHECK_FINISHED'
+                self.q.event(tid,event,{'id':rid,'status':state,'checks':ids})
             if state!='PASS':break
         return self.plan(tid)
 
@@ -392,8 +418,19 @@ class Reviews:
             require(a is not None,'没有待对账运行')
             require(a.get('pid') is not None,'启动结果未知，不能自动释放；核查宿主进程后处理')
             require(not process_alive(a['pid']),'原检查进程仍存活，不能夺取执行权')
+            cleanup=a.get('process_cleanup');scan_ref=None
+            if cleanup is not None and cleanup.get('tree_stopped') is not True:
+                try:
+                    attestation=json.loads(Path(evidence).read_text(encoding='utf-8'))
+                    confirmed=attestation.get('confirmed_stopped_run_ids') if isinstance(attestation,dict) else None
+                    require(isinstance(confirmed,list) and a['id'] in confirmed,
+                            '进程树停止未知；需宿主扫描确认本次运行全部停止')
+                    scan_ref=proof(attestation.get('process_scan_evidence',''))
+                except (OSError,ValueError,TypeError) as exc:
+                    raise ValueError('进程树停止未知；需结构化宿主扫描证据后才能恢复') from exc
             ref=proof(evidence);s['active_run']=None;s['review']=None
-            self.save(tid,s);self.q.event(tid,'REVIEW_INTERRUPTION_RECONCILED',{'actor':actor,'evidence':ref})
+            self.save(tid,s);self.q.event(tid,'REVIEW_INTERRUPTION_RECONCILED',{'actor':actor,'evidence':ref,
+                **({'process_scan_evidence':scan_ref} if scan_ref else {})})
         return self.plan(tid)
 
     def finding(self,tid,actor,data):

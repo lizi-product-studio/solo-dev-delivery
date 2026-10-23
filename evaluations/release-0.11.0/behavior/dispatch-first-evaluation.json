@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "seed": 10232026,
+  "results": {
+    "02-dispatch": {
+      "status": "FAIL",
+      "reason": "handoff does not identify the actual missing permission"
+    }
+  },
+  "passed": 0,
+  "total": 1,
+  "limits": [
+    "Trusted scoped executor, not an OS sandbox or adversarial filesystem security proof",
+    "No real website, identity, network, platform, or business-outcome claim",
+    "Host-only reads and actual user notification timing need separately captured host transcript"
+  ]
+}

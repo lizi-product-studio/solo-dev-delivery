@@ -1,5 +1,5 @@
 {
-  "created": "2026-10-22",
+  "created": "2026-10-23",
   "version": "0.10.0",
   "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
   "history": {
@@ -25,13 +25,13 @@
     },
     {
       "path": "INTEGRATION.md",
-      "sha256": "0bea8e8254719713e52820e7d94a4c1220043391329e75b924a863f9e6589a6b",
-      "bytes": 4268
+      "sha256": "762799aaa174cefc332b8e6307d42c21d742966189969f974b2ce9bcef75ffa9",
+      "bytes": 5668
     },
     {
       "path": "README.md",
-      "sha256": "72f01ec492245442e58bbf4195dcd046e7af00de331570db606a4e1ad89a30f9",
-      "bytes": 11300
+      "sha256": "7756c740fe18a870ecd424e6e8c86dc18bbf4d9596c8a7463692160294cb2f5b",
+      "bytes": 12163
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +40,23 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "479b6edcaed4fb2c320547357cb8612a728c82c0ddd4dfbbf53a03b8835c12f8",
-      "bytes": 9303
+      "sha256": "db3d6d84e2711397ad916aa4efeaa893be02ebac08ae080251b3b977976a67f2",
+      "bytes": 15456
+    },
+    {
+      "path": "evaluations/project-operation/README.md",
+      "sha256": "534169bf927d58d45a9de9e5497a65e4486878996ba87d9c296836b583a46230",
+      "bytes": 4867
+    },
+    {
+      "path": "evaluations/project-operation/create_fixture.py",
+      "sha256": "e98990e8d3094873a97d628228c5936632a5bd4504748a34f47067096202b28f",
+      "bytes": 9494
+    },
+    {
+      "path": "evaluations/project-operation/evaluate.py",
+      "sha256": "8931782f9e37df5e7500a1bf9c77d19756921b43e9ba2fb979ea94bd010f0cbc",
+      "bytes": 9260
     },
     {
       "path": "knowledge/methods.json",
@@ -210,8 +225,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
-      "sha256": "9776b6b1a993b1b7072544901164ab1922f716603aae8b148aeb895ebeba3812",
-      "bytes": 17632
+      "sha256": "2aae1433f1fb1d5ff1bc74e82032981bba59947727ba41a79cb3c8a67437497d",
+      "bytes": 20815
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -242,6 +257,11 @@
       "path": "portable-agent-kit/tests/test_gate.py",
       "sha256": "20f1c8032c4c32cd0ffcbb8909fd1e1ca63ccf8e04122ae71daedfd1ba4a23aa",
       "bytes": 9978
+    },
+    {
+      "path": "portable-agent-kit/tests/test_gate_support_files.py",
+      "sha256": "ed706d070440631e17c37059382ede8af69fb3265f111f95dd1ee076eda5a1a2",
+      "bytes": 12854
     },
     {
       "path": "portable-agent-kit/tests/test_local_runner.py",
@@ -315,8 +335,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "38e50be19c2b6fc1cc6aa7456418bbfb97c057cb3d6387a2a44e04737813e424",
-      "bytes": 4166
+      "sha256": "2d9f0a642d8aa9dcb9ef83e68a2cd63ac5a9303ff649a7b2fc534344755e0c20",
+      "bytes": 4568
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -335,8 +355,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",
-      "sha256": "0c9203eabbc8dd424e96e1f097c7a31ff291c97911cd8039959443a5ec7494fa",
-      "bytes": 6280
+      "sha256": "6b7f3afc5b4ebc6db6b5b2d9b7c26c8602e54498842ecca60e4bdb0d7dcdfd1e",
+      "bytes": 7352
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",
@@ -347,6 +367,11 @@
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
       "sha256": "ea7e892298839ebb97d98a417cfb57ef76b037839ac5d14bb6fe9b2afe47998a",
       "bytes": 3108
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/project-operation.md",
+      "sha256": "a738c7b5a834fb26175ad0d065e05faa0a7bfd36730ff166ea9d94ec671228be",
+      "bytes": 5111
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",

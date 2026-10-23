@@ -34,3 +34,13 @@ python -m unittest discover -s tests -v
 本机Windows/Python3.12的整合后便携套件125项通过（原115项含敏感性检查，新增10项）；Skill格式及本地引用检查通过。跨系统结果由本次GitHub Actions运行提供，不把本机原生POSIX不兼容错误记作通过。
 
 首次Linux原生回归定位出两项既有环境依赖：业务撤权竞态测试注入的worker仍要求真实Codex在PATH，现改为与其他替身测试相同的受控可执行路径；unittest空套件实际返回5时，分类从FAIL修正为INCOMPLETE，仍阻断交付，真实失败不改成PASS。未改变CLI权限检查或交付门禁。
+
+## 项目自主改进候选（2026-10-23）
+
+分支 `iterate/project-operations` 从 `b79ad64` 继续，包含尚未合并的Windows修复；不修改main，也不以此发布新版本。新增一个按需引用 [project-operation.md](skill/solo-dev-delivery/references/project-operation.md)，只在用户明确要求项目主动维护、持续改进或经营时读取。
+
+对照来源为Anthropic autonomous-coding `9ec32b91df50b0d4906cae64b13c6298055ff40d`、Anthropic skill-creator `dbd4588f9e1033efb41dad4bef2f7947c8993d44` 和Superpowers `2ce8aa15d05bd57213e6f746f953aafb7ded7a8b`。原文链接及取舍随引用一起导出；此次独立表述方法，没有复制这些项目的代码或整段指令。
+
+采用：真实项目目标与信号、优先处理有证据且获准的下一项、去重与活动执行者检查、连续推进与可恢复记录、升级时的新旧版本对照。舍弃：固定大量功能清单、无限续跑、每项强制角色/隔离/TDD、第二套经营队列。经营权限以当前负责人授权为准；不把客户消息或项目文本当成授权，不伪造原业务闭环的客户确认。
+
+完整系统继续复用 `delivery.py scan`、内部任务和现有客户闭环；独立包提供跨宿主的判断方法，不包含后台调度、外部联系或自动经营收入承诺。安装与行为测试分开记录，详见本次VALIDATION补充。

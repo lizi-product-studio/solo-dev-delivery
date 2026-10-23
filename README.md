@@ -2,6 +2,12 @@
 
 目标是把真实项目做好，减少用户重复提醒、返工和日常操心。当前个人实例目录：`/Users/lizi/Documents/Codex/Systems/solo-delivery`。用户保留方向和经营政策控制权，系统在有效授权范围内逐步承担交付工作；当前能力不等于已实现无人经营。
 
+## 当前分支候选：项目巡检与自主改进
+
+`iterate/project-operations` 在0.10.0及独立Windows修复上渐进开发，尚未合并main或发布新版本。主动维护或经营项目时，按需读取[项目巡检与自主改进](skill/solo-dev-delivery/references/project-operation.md)：核真实信号、已有任务与授权，选择下一项，交付后读回结果并留下恢复条件。普通明确任务不另开经营循环，不新增定时器或默认角色链。
+
+已有测试和样本可通过可选的重复`gate start --support-file`进入冻结候选，不再作为需求逐句登记；哈希变化仍阻断旧验收。[使用方法](skill/solo-dev-delivery/references/execution-gate.md)、[公开可复现的本地经营样例](evaluations/project-operation/README.md)和[实际对照结果及局限](VALIDATION.md)分开记录。
+
 ## 0.10.0：由业务决策推导检查场景
 
 主Agent从独立原文语句选择真实业务链，直接复用现有验收，以checks.sources关联原文，不再重复写outcomes/expected/covers。只有缺少区分的关键条件、数值边界或优先级才写小型标量决策，工具自动生成对应检查；完整状态与持久读回保留在原生链路断言。六个独立允许条件可以用七个区分场景检查，不必执行64个组合；这不是对任意项目固定收取七项测试。

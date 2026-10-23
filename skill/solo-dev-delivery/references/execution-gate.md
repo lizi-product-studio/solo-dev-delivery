@@ -5,12 +5,24 @@
 完整系统工具为`portable-agent-kit/scripts/gate.py`，独立包为`scripts/gate.py`。控制目录在候选工作区外：
 
 ```sh
-python3 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output app.py --task "$CONTROL/task.json"
+python3 -X utf8 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output app.py --task "$CONTROL/task.json"
 # 从原始需求写 adapters.py 与 plan.json，尚不修改实现。
-python3 "$GATE" seal --task "$CONTROL/task.json" --plan "$CONTROL/plan.json"
+python3 -X utf8 "$GATE" seal --task "$CONTROL/task.json" --plan "$CONTROL/plan.json"
 # 按返回的区分场景实现/修复，实际验证；非零退出即不能交付。
-python3 "$GATE" check --task "$CONTROL/task.json" --run
+python3 -X utf8 "$GATE" check --task "$CONTROL/task.json" --run
 ```
+
+Windows可将`python3`换为`python`；`-X utf8`明确本次Python进程的文本编码，子进程也应按其实际编码配置，不修改用户全局环境。
+
+## 让既有测试与数据进入候选副本
+
+`--input`声明提供业务要求的原文，`--output`声明本轮产物。既有测试、CSV样本及其他运行所需但本轮不修改的文件，用可重复的`--support-file`明确列出项目内相对路径：
+
+```sh
+python3 -X utf8 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output src/report.py --support-file tests/test_report.py --support-file data/orders.csv --task "$CONTROL/task.json"
+```
+
+这些只读依赖进入冻结候选副本，供原有测试与真实CLI直接使用；不解析为待覆盖的业务语句，也不能代替`--input`中的验收义务。不自动复制整个目录或猜测依赖。开始时绑定文件哈希，依赖变动或缺失会阻止放行，旧PASS不能覆盖新内容；确需修改的依赖应作为产物声明并重新建立验收范围。旧任务不需迁移。
 
 ## 先复用链路检查，不重复填需求
 

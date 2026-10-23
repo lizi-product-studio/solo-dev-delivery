@@ -14,7 +14,7 @@ import sys
 
 import challenge
 from core.coverage import coverage_report, digest, discover_evidence, source_brief, validate_plan
-from core.local_checks import canonical, load_json
+from core.local_checks import artifact, canonical, load_json
 from core.decisions import compile_plan
 
 
@@ -49,17 +49,63 @@ def baseline(root, names):
     return values
 
 
-def start(workspace, inputs, outputs, task_path, session=None, home=None, decision_mode=True):
+def _support_artifacts(root, names, inputs, outputs):
+    """Bind explicitly selected dependencies without making them requirements."""
+    if not isinstance(names, (list, tuple)):
+        raise ValueError('support files must be an explicit list of relative files')
+    if len(inputs) + len(outputs) + len(names) > 200:
+        raise ValueError('declare at most 200 files; use native project review for larger scopes')
+    occupied = [(root / name).resolve() for name in inputs + outputs]
+    entries = []
+    for name in names:
+        if (not isinstance(name, str) or not name or Path(name).is_absolute()
+                or PureWindowsPath(name).drive or name.startswith(('\\', '/'))
+                or '..' in Path(name).parts or '..' in PureWindowsPath(name).parts):
+            raise ValueError('support files must be relative paths without traversal')
+        path = root
+        for part in Path(name).parts:
+            path = path / part
+            # lstat also detects dangling links; reparse points include Windows
+            # junctions on Python versions without Path.is_junction().
+            attributes = getattr(path.lstat(), 'st_file_attributes', 0)
+            if path.is_symlink() or attributes & 0x400:
+                raise ValueError('support files must not traverse links or junctions')
+        target = path.resolve(strict=True)
+        if any(target == other or target in other.parents or other in target.parents
+               for other in occupied):
+            raise ValueError('support files must not duplicate or overlap inputs, outputs or each other')
+        entries.append(artifact(root, name))
+        occupied.append(target)
+    return entries
+
+
+def _support_current(task):
+    try:
+        expected = task.get('support_files', [])
+        if task.get('plan') and expected != task['sealed'].get('support_files', []):
+            return False
+        if not expected:
+            return True
+        return _support_artifacts(Path(task['workspace']), [item['path'] for item in expected],
+                                  task['inputs'], task['outputs']) == expected
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def start(workspace, inputs, outputs, task_path, session=None, home=None, decision_mode=True, support_files=None):
     root = Path(workspace).resolve(strict=True)
     task_path = challenge.outside(task_path, root)
     if task_path.exists() or not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
         raise ValueError('new task and distinct inputs/outputs required')
+    support = _support_artifacts(root, support_files, inputs, outputs) if support_files is not None else []
     brief = source_brief(root, inputs, split_items=True, split_statements=decision_mode)
     challenge.write_new(task_path.parent / 'brief.json', brief)
     task = {'format': 'local-delivery-gate/2' if decision_mode else 'local-delivery-gate/1', 'workspace': str(root),
             'inputs': inputs, 'outputs': outputs, 'baseline': baseline(root, outputs),
             'brief': str(task_path.parent / 'brief.json'), 'state': 'NEEDS_SOURCE_CHECKS',
             'history': [], 'session': session}
+    if support:
+        task['support_files'] = support
     if session:
         reg = registry(home or os.environ.get('CODEX_HOME', str(Path.home() / '.codex')), session)
         if reg.exists():
@@ -125,6 +171,8 @@ def _resolved_path(value):
 def seal(task_path, plan_path, reason=None):
     task_path, plan_path = Path(task_path).resolve(strict=True), Path(plan_path).resolve(strict=True)
     task, plan = read(task_path), read(plan_path)
+    if not _support_current(task):
+        raise ValueError('support files changed or disappeared; create a new source-first task')
     if task.get('plan') and not (isinstance(reason, str) and reason.strip()):
         raise ValueError('amending checks requires a source-based reason; old failures stay in history')
     if not task.get('plan') and baseline(Path(task['workspace']), task['outputs']) != task['baseline']:
@@ -161,6 +209,8 @@ def seal(task_path, plan_path, reason=None):
     (version / 'checks.py').write_bytes(test.read_bytes())
     snapshot = {'plan': digest(plan_path), 'test': digest(test), 'brief': digest(task['brief']),
                 'reason': reason or 'source-first acceptance'}
+    if task.get('support_files'):
+        snapshot['support_files'] = task['support_files']
     active_plan = plan_path
     if generated is not None:
         generated_path = version / 'generated-checks.py'
@@ -190,12 +240,15 @@ def check(task_path, execute=False):
     task = read(task_path)
     if task.get('format') not in ('local-delivery-gate/1', 'local-delivery-gate/2'):
         raise ValueError('not a delivery task')
+    if not _support_current(task):
+        return {'status': 'BLOCKED', 'next_action': 'RESTART_WITH_CHANGED_SUPPORT_FILES'}
     if not task.get('plan'):
         return {'status': 'BLOCKED', 'next_action': 'SELECT_SOURCE_BUSINESS_SCENARIOS', 'brief': task['brief']}
     sealed = task['sealed']
     if any(digest(item['path']) != item for item in [sealed[k] for k in ('plan', 'test', 'brief', 'adapter', 'compiled', 'selection') if k in sealed]):
         return {'status': 'BLOCKED', 'next_action': 'RECONCILE_CHANGED_ACCEPTANCE_WITH_SOURCE'}
-    packet = challenge.candidate_packet(task['workspace'], task['inputs'], task['outputs'])
+    execution_inputs = task['inputs'] + [item['path'] for item in task.get('support_files', [])]
+    packet = challenge.candidate_packet(task['workspace'], execution_inputs, task['outputs'])
     if task['format'] == 'local-delivery-gate/2':
         packet['execution_scope'] = 'candidate-copy'
     binding = {'packet': packet, 'plan': sealed['plan'], 'test': sealed['test'], 'brief': sealed['brief']}
@@ -216,12 +269,14 @@ def check(task_path, execute=False):
         result = coverage_report(task['brief'], task['plan'], packet_path,
                                  discover_evidence([control]), 12800, challenge.status, challenge.current)
         result['executed_check_ids'] = []
-    sufficient = result['status'] == 'DECLARED_SCOPE_COVERED'
+    support_current = _support_current(task)
+    sufficient = result['status'] == 'DECLARED_SCOPE_COVERED' and support_current
     if execute:
         task.update(state='VERIFIED' if sufficient else 'CHECKING', last_report=str(report_path))
         save(task_path, task)
     return {'status': 'DELIVERABLE_WITHIN_DECLARED_SCOPE' if sufficient else 'BLOCKED',
-            'next_action': 'STOP' if sufficient else result['next_action'],
+            'next_action': ('RESTART_WITH_CHANGED_SUPPORT_FILES' if not support_current
+                            else 'STOP' if sufficient else result['next_action']),
             'missing_outcomes': result['missing_outcomes'], 'missing_checks': result['missing_required_checks'],
             'failed_outcomes': result['failed_outcomes'], 'related_outcomes_to_review': result['related_outcomes_to_review'],
             'executed_checks': result['executed_check_ids'], 'packet': str(packet_path),
@@ -280,6 +335,7 @@ def main():
     p = commands.add_parser('start')
     p.add_argument('--workspace', required=True, type=Path)
     p.add_argument('--input', required=True, action='append')
+    p.add_argument('--support-file', action='append', help='explicit read-only runtime/test dependency; copied into the candidate, not interpreted as a requirement')
     p.add_argument('--output', required=True, action='append')
     p.add_argument('--task', required=True, type=Path)
     p.add_argument('--session', default=os.environ.get('CODEX_THREAD_ID'))
@@ -303,7 +359,7 @@ def main():
     if args.op == 'install-hook':
         return install_hook(args.home)
     if args.op == 'start':
-        return start(args.workspace, args.input, args.output, args.task, args.session)
+        return start(args.workspace, args.input, args.output, args.task, args.session, support_files=args.support_file)
     if args.op == 'seal':
         return seal(args.task, args.plan, args.reason)
     if args.op == 'blocked':

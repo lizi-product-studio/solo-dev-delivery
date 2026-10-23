@@ -141,3 +141,7 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 从`64ff73f`建立`fix/windows-worker-handoff`。重放确认明确接手在Windows因killpg不存在而异常逃出、无回执；基线队列还可能将停止未知误归终态。修复Windows受管进程树清理和停止失败回执，未知保持活动锁且不生成交接patch；resource/review对账改为只读存活查询，停止未知须宿主扫描证据和原执行者已退，诊断解决后再派发。正常静默跨检查点仍继续，不新增时间杀Agent。
 
 本机Windows最终9项worker与7项恢复测试通过；独立OS探针、Git/SQLite恢复链和最终代码审查通过。CI新增Windows3.9/3.12定向回归，Ubuntu原生完整套件保留。队列fixture仅规范既有Git根分隔符字符串差异，未宣称生产Windows从零全链已验证；旧probe的最初错误推断、初次试验和警告均保留。详见[本轮质量、边界与成本](evaluations/repository-pilot/2026-10-23-worker-handoff.md)。不合并main、不替换全局安装。
+
+## 遇阻恢复与最小交接（2026-10-23）
+
+`feat/blocker-recovery`将任务遇阻责任放入Skill入口和按需引用，并备份后同步本机全局指导及已安装Skill的政策部分，其他runtime保持。独立作者四个本地CLI场景由新旧两个上下文实际执行，产物/日志验收均4/4；未证明相对改进或所有平台可靠性。独立审查纠正必要交接可能被延迟的串行措辞，保留身份/权限、外部结果未知和继续独立工作的边界。复现夹具、诚实限制及本机同步核验见[评测记录](evaluations/blocker-recovery/README.md)。

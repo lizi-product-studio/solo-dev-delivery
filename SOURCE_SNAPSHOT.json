@@ -40,8 +40,38 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "6da695ab79df59998832f34b11aaf72faff7e303ae9121038831e6708f420956",
-      "bytes": 21194
+      "sha256": "4ecdf9b4c4576bed4081808e637479b1ade7900cb1b79ec84b10c81213e127f1",
+      "bytes": 21808
+    },
+    {
+      "path": "evaluations/blocker-recovery/NEUTRAL_PROMPT.txt",
+      "sha256": "d7c46fa0fcfb05a8b99a0f1df375cf1d80f9214a4a20019236cb5b22063c3b9f",
+      "bytes": 466
+    },
+    {
+      "path": "evaluations/blocker-recovery/README.md",
+      "sha256": "6045a670c4bba423c536048458bc91a393282a1f5f750b33ba55f90565717a59",
+      "bytes": 6364
+    },
+    {
+      "path": "evaluations/blocker-recovery/check.py",
+      "sha256": "5ff5d6637de39f5a9fb6ab7ffd2ee391b208801dfcc9a248f5e0363ab58c4d1e",
+      "bytes": 4188
+    },
+    {
+      "path": "evaluations/blocker-recovery/costs.json",
+      "sha256": "c2bf4be12703b7b0f39cad28b7c91c964e5c9aa3d736565c6b94e9f96ac69863",
+      "bytes": 2767
+    },
+    {
+      "path": "evaluations/blocker-recovery/create_fixtures.py",
+      "sha256": "f03b05cf7e302d3447f913aa89eab94ba44f741316d0630df8041ba37d815196",
+      "bytes": 7852
+    },
+    {
+      "path": "evaluations/blocker-recovery/results.json",
+      "sha256": "74a04d81345f000a73d487fcdbb204b0a1eed2436184ac464fdc8a6cd2ad3c76",
+      "bytes": 2036
     },
     {
       "path": "evaluations/project-operation/README.md",
@@ -425,13 +455,18 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "2d9f0a642d8aa9dcb9ef83e68a2cd63ac5a9303ff649a7b2fc534344755e0c20",
-      "bytes": 4568
+      "sha256": "571afa7f861023456a62144e29ffdf7b69529661783b8fbeba35280015a770fe",
+      "bytes": 5473
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
       "sha256": "2c603f3982e3ac710511a2dbfb7145161bd402077c3ac1e40683690f868bf1b9",
       "bytes": 369
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/blocker-recovery.md",
+      "sha256": "00e7c4756f005fb2447367476d6beeaef3b29ea87e4da0fe5449012c07dcf09e",
+      "bytes": 3280
     },
     {
       "path": "skill/solo-dev-delivery/references/decision-foundation.md",

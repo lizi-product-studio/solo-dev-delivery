@@ -1,0 +1,60 @@
+{
+  "started_at": "2026-10-23T04:59:01.621Z",
+  "cutoff": "2026-10-23T05:08:31.095Z",
+  "latest_usage_at": "2026-10-23T05:08:31.014Z",
+  "wall_seconds": 569.474,
+  "groups": {
+    "root": {
+      "responses": 21,
+      "tool_calls": 21,
+      "latest_usage_at": "2026-10-23T05:08:31.014Z",
+      "usage": {
+        "input_tokens": 2986999,
+        "cached_input_tokens": 2955264,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 15000,
+        "reasoning_output_tokens": 5298,
+        "total_tokens": 3001999,
+        "uncached_input_tokens": 31735
+      }
+    },
+    "gate_scan_and_implementation": {
+      "responses": 21,
+      "tool_calls": 19,
+      "latest_usage_at": "2026-10-23T05:05:06.953Z",
+      "usage": {
+        "input_tokens": 1351660,
+        "cached_input_tokens": 1294976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 8134,
+        "reasoning_output_tokens": 1359,
+        "total_tokens": 1359794,
+        "uncached_input_tokens": 56684
+      }
+    },
+    "recovery_scan_and_independent_review": {
+      "responses": 18,
+      "tool_calls": 16,
+      "latest_usage_at": "2026-10-23T05:06:30.592Z",
+      "usage": {
+        "input_tokens": 1167726,
+        "cached_input_tokens": 1115520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 7906,
+        "reasoning_output_tokens": 1774,
+        "total_tokens": 1175632,
+        "uncached_input_tokens": 52206
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 5506385,
+    "cached_input_tokens": 5365760,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 31040,
+    "reasoning_output_tokens": 8431,
+    "total_tokens": 5537425,
+    "uncached_input_tokens": 140625
+  },
+  "limits": "Native token_usage_record only, deduplicated by thread/response. Cached input is inside input; reasoning is inside output. Tool calls count host-visible envelopes, not all nested operations. Running/final responses and log flush delay may be missing. No currency or quota conversion."
+}

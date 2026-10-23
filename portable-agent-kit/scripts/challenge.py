@@ -23,7 +23,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from core.local_checks import artifact, canonical, file_bytes, load_json, pointer, precise_json, run_check
 
 LIMIT = 65536
-MARKER = 'SOLO_CHALLENGE_RESULT='
 HARNESS = '''import importlib.util, json, os, sys, unittest
 # Binding protects against accidental tests of the original workspace rather
 # than the frozen copy. Trusted test code can bypass this; it is not a sandbox.
@@ -83,7 +82,12 @@ class Observed(unittest.TextTestResult):
 result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr, resultclass=Observed).run(suite)
 summary = {"tests":result.testsRun,"failures":len(result.failures),"errors":len(result.errors),"skipped":len(result.skipped),"expected_failures":len(result.expectedFailures),"unexpected_successes":len(result.unexpectedSuccesses)}
 summary['cases'] = [{'id':name,'status':status} for name,status in result.cases.items()]
-print("SOLO_CHALLENGE_RESULT=" + json.dumps(summary), flush=True)
+try:
+    with open(sys.argv[3], 'w', encoding='utf-8') as stream:
+        json.dump(summary, stream, ensure_ascii=False)
+except (OSError, ValueError, UnicodeError) as exc:
+    print('Challenge result channel failed: ' + str(exc), file=sys.stderr)
+    sys.exit(2)
 sys.exit(0 if result.wasSuccessful() and result.testsRun and not (result.skipped or result.expectedFailures) else 1)
 '''
 
@@ -141,6 +145,19 @@ def tail(path):
         stream.seek(max(0, size - LIMIT))
         data = stream.read(LIMIT)
     return {'text': data.decode('utf-8', errors='replace'), 'bytes': size, 'truncated': size > LIMIT}
+
+
+def _read_test_result(path):
+    """Read the private UTF-8 control channel independently of bounded logs."""
+    value = json.loads(Path(path).read_text(encoding='utf-8'))
+    counts = ('tests', 'failures', 'errors', 'skipped', 'expected_failures', 'unexpected_successes')
+    if (not isinstance(value, dict)
+            or any(type(value.get(name)) is not int or value[name] < 0 for name in counts)
+            or not isinstance(value.get('cases'), list)
+            or any(not isinstance(case, dict) or not isinstance(case.get('id'), str) or not case['id']
+                   or case.get('status') not in ('PASS', 'FAIL', 'UNKNOWN') for case in value['cases'])):
+        raise ValueError('invalid test result structure')
+    return value
 
 
 def _terminate_test_tree(proc):
@@ -204,6 +221,7 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
     started = time.monotonic()
     timed_out = False
     termination, cleanup_errors = None, []
+    summary, result_channel_error = None, None
     temporary = tempfile.TemporaryDirectory(prefix='solo-challenge-')
     try:
         scratch = Path(temporary.name)
@@ -234,13 +252,14 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
         test = scratch / 'review_checks.py'
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
+        result_path = scratch / 'test-result.json'
         env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work),
                'SOLO_CANDIDATE_ROOT': str(work)}
         env.pop('SOLO_SOURCE_WORKSPACE', None)
         if packet.get('execution_scope') == 'candidate-copy':
             env['SOLO_SOURCE_WORKSPACE'] = str(root)
         with stdout_path.open('wb') as out, stderr_path.open('wb') as err:
-            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected)], cwd=work,
+            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected), str(result_path)], cwd=work,
                                     env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err,
                                     start_new_session=True)
             try:
@@ -250,13 +269,15 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                 termination = _terminate_test_tree(proc)
                 code = proc.returncode
         stdout, stderr = tail(stdout_path), tail(stderr_path)
+        try:
+            summary = _read_test_result(result_path)
+        except (OSError, ValueError, UnicodeError) as exc:
+            result_channel_error = type(exc).__name__ + ': ' + str(exc)
     finally:
         try:
             temporary.cleanup()
         except OSError as exc:
             cleanup_errors.append(type(exc).__name__ + ': ' + str(exc))
-    summaries = [line[len(MARKER):] for line in stdout['text'].splitlines() if line.startswith(MARKER)]
-    summary = json.loads(summaries[-1]) if summaries else None
     test_cases = summary.pop('cases', []) if summary else []
     status = 'UNKNOWN'
     if not timed_out and summary and summary['tests'] > 0:
@@ -282,6 +303,8 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
+    if result_channel_error:
+        receipt['result_channel'] = {'status': 'FAILED', 'error': result_channel_error}
     if timed_out or cleanup_errors:
         receipt['process_cleanup'] = {'status': 'FAILED' if cleanup_failed else 'COMPLETE',
                                       'termination': termination, 'errors': cleanup_errors,

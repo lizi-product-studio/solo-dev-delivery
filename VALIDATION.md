@@ -129,3 +129,9 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 独立分支`fix/windows-hook-launch`从`4b5312d`继续第三轮。先用已安装Codex 0.163.0-alpha.11.2真实SessionStart与Stop事件、进程父链确认Windows直接使用`pwsh.exe -NoProfile -Command`，再生成无嵌套shell的`commandWindows`；保留精确native退出码和POSIX命令，旧定义原地升级、重复安装幂等。旧包真实待验证及已验证结束登记均失败，固定包六个生命周期场景全部通过；独立审查补足exit1探针的实际Stop观察后，两项退出码契约复跑通过。
 
 全量便携195项退出0（48.220秒，4项条件跳过），默认cp936协议6项另跑通过；新增夹具的venv重定向器问题经独立复现修复，同一venv定向6项退出0（11.587秒，POSIX一项跳过）。手动实际宿主复现器、边界、失败保留及成本见[接续记录](evaluations/repository-pilot/2026-10-23-windows-hooks.md)。实际生命周期测试只在临时空CODEX_HOME使用已审查测试hooks的一次调用信任选项及本地SSE替身；未更改全局安装/持久信任，未验证真实模型业务推理或桌面聊天热加载，不合并main。
+
+## 大套件结果通道（2026-10-23，第4轮）
+
+从`9621036`建立独立分支`fix/challenge-result-channel`。巡检与独立旧包重放均发现：1000项真实通过或一项真实失败时，逐方法JSON超过日志64KiB上限，被截断后只能记录UNKNOWN并失去方法归属，阻碍交付及复用。结果改走私有临时UTF-8文件，日志继续限尾部；通道故障保留UNKNOWN和诊断，不凭退出0放行。旧回执、FAIL优先、selected、STALE与超时规则保持。
+
+新增5项先红后绿；干净导出包6场景全部符合预期；主Agent完整便携200项退出0（47.770秒，4项条件跳过），实际Windows cp936协议6项另跑通过。独立审查另11个真实unittest结果及旧回执复用均通过。未修的Windows旧CLI接手故障保留为下一候选，未扩大本轮。选题、初次失败、复现器、人工与成本见[本轮记录](evaluations/repository-pilot/2026-10-23-result-channel.md)，不合并main或更换全局安装。

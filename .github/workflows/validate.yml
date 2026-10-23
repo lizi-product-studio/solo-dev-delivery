@@ -21,6 +21,12 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s portable-agent-kit/tests -v
+      - name: Windows worker stop and ownership recovery
+        if: matrix.os == 'windows-latest'
+        run: |
+          python -m unittest discover -s tests -p test_worker_stop.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_resource_stop.py -v
   native-compatibility:
     runs-on: ubuntu-latest
     steps:

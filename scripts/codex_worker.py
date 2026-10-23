@@ -167,21 +167,52 @@ def _events(path, receipt):
 
 
 def _stop(process):
-    try:
-        os.killpg(process.pid, signal.SIGTERM)
-    except ProcessLookupError:
-        pass
-    try:
-        process.communicate(timeout=2)
-    except subprocess.TimeoutExpired:
-        pass
-    finally:
-        # Also stop descendants that outlived the group leader after TERM.
+    """Stop only the owned worker tree and retain uncertainty for the caller."""
+    result = {'method': 'windows-taskkill-tree' if os.name == 'nt' else 'posix-process-group',
+              'status': 'FAILED', 'leader_stopped': False, 'tree_stopped': False, 'errors': []}
+    if os.name == 'nt':
         try:
-            os.killpg(process.pid, signal.SIGKILL)
+            system_root = os.environ.get('SYSTEMROOT') or os.environ.get('WINDIR')
+            if not system_root:
+                raise OSError('SYSTEMROOT and WINDIR are unavailable; cannot locate taskkill.exe')
+            command = [str(Path(system_root) / 'System32' / 'taskkill.exe'),
+                       '/PID', str(process.pid), '/T', '/F']
+            stopped = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, timeout=5, creationflags=subprocess.CREATE_NO_WINDOW)
+            if stopped.returncode:
+                detail = (stopped.stdout + stopped.stderr).decode(errors='replace')[:1000]
+                result['errors'].append('taskkill exited ' + str(stopped.returncode) + ': ' + detail)
+        except (OSError, subprocess.SubprocessError) as exc:
+            result['errors'].append(type(exc).__name__ + ': ' + str(exc)[:1000])
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
         except ProcessLookupError:
             pass
+        except OSError as exc:
+            result['errors'].append(type(exc).__name__ + ': ' + str(exc)[:1000])
+        try:
+            process.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            pass
+        except (OSError, subprocess.SubprocessError) as exc:
+            result['errors'].append(type(exc).__name__ + ': ' + str(exc)[:1000])
+        finally:
+            # Descendants may outlive a TERM-compliant group leader.
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            except OSError as exc:
+                result['errors'].append(type(exc).__name__ + ': ' + str(exc)[:1000])
+    try:
         process.wait(timeout=5)
+    except (OSError, subprocess.SubprocessError) as exc:
+        result['errors'].append('worker wait failed: ' + type(exc).__name__ + ': ' + str(exc)[:1000])
+    result['leader_stopped'] = process.poll() is not None
+    result['tree_stopped'] = result['leader_stopped'] and not result['errors']
+    result['status'] = 'COMPLETE' if result['tree_stopped'] else 'FAILED'
+    return result
 
 
 class ParentHandoff(Exception):
@@ -266,7 +297,7 @@ def _monitored_wait(process, instructions, stdout, progress_path, timeout, obser
                   'events_file':str(stdout), 'event_bytes_observed':offset, 'control_error':control_error,
                   'limit':'Time and silence request parent assessment; neither stops the process.'}
         tmp = progress_path.with_suffix('.tmp')
-        tmp.write_text(json.dumps(report, ensure_ascii=False))
+        tmp.write_text(json.dumps(report, ensure_ascii=False), encoding='utf-8')
         os.replace(tmp, progress_path)
         if not running:
             if supervise:
@@ -340,7 +371,7 @@ def run_worker(*, executable, repository, candidate, role, model, effort, prompt
                'execution_status': 'ERROR', 'requested_model': model, 'effort': effort, 'role': role,
                'candidate': candidate, 'snapshot_commit': None, 'workspace': str(workspace),
                'output_dir': str(root), 'child_pid': None, 'thread_id': None, 'usage': None,
-               'returncode': None, 'patch': None, 'changed_paths': [], 'logs': {}}
+               'returncode': None, 'patch': None, 'changed_paths': [], 'logs': {}, 'process_running': False}
     process, started = None, time.monotonic()
     if observation_seconds is not None:
         receipt['supervision'] = {'observation_seconds':observation_seconds, 'initial_checkpoint_seconds':timeout,
@@ -395,22 +426,39 @@ def run_worker(*, executable, repository, candidate, role, model, effort, prompt
         receipt['summary'] = type(exc).__name__ + ': ' + str(exc)[:600]
     finally:
         if process is not None:
-            if process.poll() is None or receipt['execution_status'] == 'PARENT_HANDOFF':
-                _stop(process)
+            if process.poll() is None or receipt['execution_status'] != 'COMPLETED':
+                try:
+                    receipt['process_cleanup'] = _stop(process)
+                except Exception as exc:
+                    receipt['process_cleanup'] = {'status': 'FAILED', 'method': 'unexpected-cleanup-error',
+                        'leader_stopped': process.poll() is not None, 'tree_stopped': False,
+                        'errors': [type(exc).__name__ + ': ' + str(exc)[:1000]]}
+            cleanup = receipt.get('process_cleanup')
+            stop_failed = bool(cleanup and not cleanup['tree_stopped'])
+            receipt['process_running'] = True if process.poll() is None else (None if stop_failed else False)
+            if stop_failed:
+                receipt.update(status='BLOCKED', execution_status='ERROR', failure_kind='environment',
+                               summary=receipt['summary'] + '; worker tree stop unconfirmed: ' + '; '.join(cleanup['errors']))
             receipt['returncode'] = process.returncode
+            if process.poll() is not None and process.stdin and not process.stdin.closed:
+                try:
+                    process.stdin.close()
+                except OSError as exc:
+                    receipt['stdin_close_error'] = type(exc).__name__ + ': ' + str(exc)[:1000]
             if receipt['execution_status'] != 'COMPLETED' and stdout.exists():
                 try:
                     _events(stdout, receipt)
                 except (OSError, ValueError):
                     pass
-        if role != 'implement' and receipt['snapshot_commit']:
+        stopped = receipt['process_running'] is False
+        if stopped and role != 'implement' and receipt['snapshot_commit']:
             try:
                 after = _fingerprint(workspace)
                 receipt['changed_paths'] = sorted(p for p in before.keys() | after.keys() if before.get(p) != after.get(p))
                 _require(not receipt['changed_paths'], 'Read-only worker mutated its snapshot')
             except (OSError, ValueError) as exc:
                 receipt.update(status='BLOCKED', failure_kind='environment', execution_status='ERROR', summary=str(exc))
-        if role == 'implement' and receipt['snapshot_commit']:
+        if stopped and role == 'implement' and receipt['snapshot_commit']:
             try:
                 _git(workspace, 'add', '--all', '--force', '.', git_dir=control)
                 patch_path = root / 'changes.patch'
@@ -427,10 +475,19 @@ def run_worker(*, executable, repository, candidate, role, model, effort, prompt
                 receipt['logs'][key] = {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
         receipt['seconds'] = round(time.monotonic() - started, 3)
         if observation_seconds is not None and (destination/'progress.json').exists():
-            progress = json.loads((destination/'progress.json').read_text())
+            try:
+                progress = json.loads((destination/'progress.json').read_text(encoding='utf-8'))
+            except (OSError, ValueError, UnicodeError):
+                progress = {'workspace': str(workspace), 'child_pid': receipt['child_pid']}
             progress.update(state=receipt['execution_status'], observed_at=time.time(),
-                            process_running=False, needs_decision=False, decision_reasons=[],
+                            process_running=receipt['process_running'], needs_decision=not stopped,
+                            decision_reasons=[] if stopped else ['PROCESS_STOP_UNCONFIRMED'],
                             handoff_workspace=str(workspace), patch=receipt.get('patch'))
-            (destination/'progress.json').write_text(json.dumps(progress, ensure_ascii=False))
-        (root / 'receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2))
+            if receipt.get('process_cleanup'):
+                progress['process_cleanup'] = receipt['process_cleanup']
+            try:
+                (destination/'progress.json').write_text(json.dumps(progress, ensure_ascii=False), encoding='utf-8')
+            except OSError as exc:
+                receipt['progress_error'] = type(exc).__name__ + ': ' + str(exc)[:1000]
+        (root / 'receipt.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2), encoding='utf-8')
     return receipt

@@ -135,3 +135,9 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 从`9621036`建立独立分支`fix/challenge-result-channel`。巡检与独立旧包重放均发现：1000项真实通过或一项真实失败时，逐方法JSON超过日志64KiB上限，被截断后只能记录UNKNOWN并失去方法归属，阻碍交付及复用。结果改走私有临时UTF-8文件，日志继续限尾部；通道故障保留UNKNOWN和诊断，不凭退出0放行。旧回执、FAIL优先、selected、STALE与超时规则保持。
 
 新增5项先红后绿；干净导出包6场景全部符合预期；主Agent完整便携200项退出0（47.770秒，4项条件跳过），实际Windows cp936协议6项另跑通过。独立审查另11个真实unittest结果及旧回执复用均通过。未修的Windows旧CLI接手故障保留为下一候选，未扩大本轮。选题、初次失败、复现器、人工与成本见[本轮记录](evaluations/repository-pilot/2026-10-23-result-channel.md)，不合并main或更换全局安装。
+
+## Windows旧CLI停止与恢复（2026-10-23，第5轮）
+
+从`64ff73f`建立`fix/windows-worker-handoff`。重放确认明确接手在Windows因killpg不存在而异常逃出、无回执；基线队列还可能将停止未知误归终态。修复Windows受管进程树清理和停止失败回执，未知保持活动锁且不生成交接patch；resource/review对账改为只读存活查询，停止未知须宿主扫描证据和原执行者已退，诊断解决后再派发。正常静默跨检查点仍继续，不新增时间杀Agent。
+
+本机Windows最终9项worker与7项恢复测试通过；独立OS探针、Git/SQLite恢复链和最终代码审查通过。CI新增Windows3.9/3.12定向回归，Ubuntu原生完整套件保留。队列fixture仅规范既有Git根分隔符字符串差异，未宣称生产Windows从零全链已验证；旧probe的最初错误推断、初次试验和警告均保留。详见[本轮质量、边界与成本](evaluations/repository-pilot/2026-10-23-worker-handoff.md)。不合并main、不替换全局安装。

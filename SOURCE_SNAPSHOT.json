@@ -15,8 +15,8 @@
   "files": [
     {
       "path": ".github/workflows/validate.yml",
-      "sha256": "13e569f16a5388472a3ce60de536c596827f9325a4c437c430f8a0863b63e526",
-      "bytes": 805
+      "sha256": "bcc6bfeca3087ee0e22cd7df4f08970ec1108f0b14fad9ec68c58ba06133a031",
+      "bytes": 1125
     },
     {
       "path": ".gitignore",
@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "71f3c1f54f6c09b3ae5ae266e841cf55f4e2c22c9d488a6f5cb7cb24482e7a60",
-      "bytes": 20144
+      "sha256": "6da695ab79df59998832f34b11aaf72faff7e303ae9121038831e6708f420956",
+      "bytes": 21194
     },
     {
       "path": "evaluations/project-operation/README.md",
@@ -92,6 +92,21 @@
       "path": "evaluations/repository-pilot/2026-10-23-windows-hooks.md",
       "sha256": "efcc7e6625154ac9ee4d93c4f33d77618fe02f53822c14103e19fe7fcbd7a55f",
       "bytes": 8208
+    },
+    {
+      "path": "evaluations/repository-pilot/2026-10-23-worker-handoff-costs.json",
+      "sha256": "1206c91518f345c21ad2a9d2829746b8bccce57c40e7d78ecd5797fdf23e9974",
+      "bytes": 1973
+    },
+    {
+      "path": "evaluations/repository-pilot/2026-10-23-worker-handoff-results.json",
+      "sha256": "d982de1278a9ba284032aaf7293416ceb478f161f83eaf9be086326349fae357",
+      "bytes": 1703
+    },
+    {
+      "path": "evaluations/repository-pilot/2026-10-23-worker-handoff.md",
+      "sha256": "2e90fd1b071771e182fa06b8ec48cd7f50153ecd8440de2e069db1f1171c8d2f",
+      "bytes": 7326
     },
     {
       "path": "evaluations/repository-pilot/2026-10-23.md",
@@ -370,8 +385,8 @@
     },
     {
       "path": "scripts/codex_worker.py",
-      "sha256": "98fc68379409d1cedd73031d3912b48562347215f29c6653ac2f3f4af92689f4",
-      "bytes": 24045
+      "sha256": "d7becd9cae886b7f2833fb3f9cfee9a7cb31bf409f7e485d2a515a8ed52c91bf",
+      "bytes": 27973
     },
     {
       "path": "scripts/delivery.py",
@@ -395,8 +410,8 @@
     },
     {
       "path": "scripts/resource_engine.py",
-      "sha256": "9c3ba82f89c48246171c8e102c6e6a8e4d7fd4ee4c3e047a0d408712a0ae68b1",
-      "bytes": 53282
+      "sha256": "c3b84d08b475e97ec3c47337096452c749edf6910d59917ec5dfb369fe12bdca",
+      "bytes": 54676
     },
     {
       "path": "scripts/review_brief.py",
@@ -405,8 +420,8 @@
     },
     {
       "path": "scripts/review_engine.py",
-      "sha256": "87bb2d3349e35095e17b39a20c4eb4ab23338c23142a596d958285ad1b2ca749",
-      "bytes": 29810
+      "sha256": "b18fba8d6babfd0ef4a21b98d19cfeebf838537e7b5c78164bc7df57abb7b483",
+      "bytes": 31054
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
@@ -555,8 +570,13 @@
     },
     {
       "path": "tests/test_resource_engine.py",
-      "sha256": "014632d0668c526fb29547fe0ac4f699e16a87ab73a80b73880c3052af3277fc",
-      "bytes": 46711
+      "sha256": "d88f45b5e82005c009feb8837d1e8919a0e54dcaca493223203897488e9394d6",
+      "bytes": 46702
+    },
+    {
+      "path": "tests/test_resource_stop.py",
+      "sha256": "2c1101a8ac73774382ca52626b60764d2a40dda333dd72e22e4944f05cb5eab7",
+      "bytes": 7433
     },
     {
       "path": "tests/test_review_brief.py",
@@ -567,6 +587,11 @@
       "path": "tests/test_review_engine.py",
       "sha256": "b9561659ffd0d745a4f97d6495b82a5652fd70220a86c51006c59d37527c08e6",
       "bytes": 15067
+    },
+    {
+      "path": "tests/test_worker_stop.py",
+      "sha256": "09e824a6856cae5c38cffc941b80b3e354b23a2bb2a5f7dfc26aba7ab64c54c8",
+      "bytes": 12541
     },
     {
       "path": "vendor/SOURCES.json",
@@ -610,8 +635,8 @@
     },
     {
       "path": "资源调度执行说明.md",
-      "sha256": "8f18154bbe540733faba383e6844cda4b6eeebd82254bcee66b22fbd91726557",
-      "bytes": 18069
+      "sha256": "8100e07165f30d4f3dac941d251429d22f92893ea9a441857d17c3046f9b7d62",
+      "bytes": 18713
     }
   ]
 }

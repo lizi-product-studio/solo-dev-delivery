@@ -1,0 +1,60 @@
+{
+  "started_at": "2026-10-23T05:12:57.735Z",
+  "cutoff": "2026-10-23T05:27:38.784Z",
+  "latest_usage_at": "2026-10-23T05:27:37.089Z",
+  "wall_seconds": 881.049,
+  "groups": {
+    "root": {
+      "responses": 25,
+      "tool_calls": 25,
+      "latest_usage_at": "2026-10-23T05:27:37.089Z",
+      "usage": {
+        "input_tokens": 5443824,
+        "cached_input_tokens": 5405056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 20652,
+        "reasoning_output_tokens": 6664,
+        "total_tokens": 5464476,
+        "uncached_input_tokens": 38768
+      }
+    },
+    "independent_review": {
+      "responses": 40,
+      "tool_calls": 38,
+      "latest_usage_at": "2026-10-23T05:25:21.478Z",
+      "usage": {
+        "input_tokens": 5065028,
+        "cached_input_tokens": 4939008,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 10581,
+        "reasoning_output_tokens": 3285,
+        "total_tokens": 5075609,
+        "uncached_input_tokens": 126020
+      }
+    },
+    "worker_implementation": {
+      "responses": 28,
+      "tool_calls": 26,
+      "latest_usage_at": "2026-10-23T05:21:09.965Z",
+      "usage": {
+        "input_tokens": 3015613,
+        "cached_input_tokens": 2923904,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 17913,
+        "reasoning_output_tokens": 6663,
+        "total_tokens": 3033526,
+        "uncached_input_tokens": 91709
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 13524465,
+    "cached_input_tokens": 13267968,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 49146,
+    "reasoning_output_tokens": 16612,
+    "total_tokens": 13573611,
+    "uncached_input_tokens": 256497
+  },
+  "limits": "Native token_usage_record only, deduplicated by thread/response. Cached input is inside input; reasoning is inside output. Tool calls count host-visible envelopes, not all nested operations. Running/final responses and log flush delay may be missing. No currency or quota conversion."
+}

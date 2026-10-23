@@ -37,6 +37,40 @@ def require(ok, why):
         raise ValueError(why)
 
 
+def process_alive(pid):
+    """Read-only liveness check; Windows os.kill(pid, 0) can emit console events."""
+    if os.name != 'nt':
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return False
+        return True
+    import ctypes
+    from ctypes import wintypes
+    api = ctypes.WinDLL('kernel32', use_last_error=True)
+    api.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    api.OpenProcess.restype = wintypes.HANDLE
+    api.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+    api.WaitForSingleObject.restype = wintypes.DWORD
+    api.CloseHandle.argtypes = [wintypes.HANDLE]
+    api.CloseHandle.restype = wintypes.BOOL
+    handle = api.OpenProcess(0x100000, False, pid)  # SYNCHRONIZE only.
+    if not handle:
+        error = ctypes.get_last_error()
+        if error == 87:  # ERROR_INVALID_PARAMETER: no such PID.
+            return False
+        raise ctypes.WinError(error)
+    try:
+        state = api.WaitForSingleObject(handle, 0)
+        if state == 0:  # WAIT_OBJECT_0: process has exited.
+            return False
+        if state == 258:  # WAIT_TIMEOUT: still running.
+            return True
+        raise OSError('Could not confirm process state: ' + str(state))
+    finally:
+        api.CloseHandle(handle)
+
+
 def dumped(v):
     return json.dumps(v, ensure_ascii=False, sort_keys=True)
 
@@ -357,9 +391,7 @@ class Reviews:
             t=self.q.task(tid);self.actor(t,actor);s=self.load(tid);a=s['active_run']
             require(a is not None,'没有待对账运行')
             require(a.get('pid') is not None,'启动结果未知，不能自动释放；核查宿主进程后处理')
-            try:os.kill(a['pid'],0)
-            except ProcessLookupError:pass
-            else:raise ValueError('原检查进程仍存活，不能夺取执行权')
+            require(not process_alive(a['pid']),'原检查进程仍存活，不能夺取执行权')
             ref=proof(evidence);s['active_run']=None;s['review']=None
             self.save(tid,s);self.q.event(tid,'REVIEW_INTERRUPTION_RECONCILED',{'actor':actor,'evidence':ref})
         return self.plan(tid)

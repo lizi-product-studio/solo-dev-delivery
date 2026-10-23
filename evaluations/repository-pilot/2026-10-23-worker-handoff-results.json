@@ -1,0 +1,48 @@
+{
+  "baseline_commit": "64ff73f280b125fb7bb542e463ca4d1fec656529",
+  "branch": "fix/windows-worker-handoff",
+  "baseline_worker": {
+    "takeover_raised": "AttributeError: os.killpg unavailable",
+    "final_receipt_exists": false,
+    "owned_tree_remained_alive": true,
+    "fixture_cleaned_after_observation": true
+  },
+  "baseline_queue": {
+    "stop_unconfirmed_classified": "BLOCKED",
+    "expected_active_state": "RUNNING",
+    "independent_assertion_failed": true
+  },
+  "candidate": {
+    "worker_tests": {
+      "run": 9,
+      "passed": 9,
+      "skipped": 0,
+      "seconds": 18.589
+    },
+    "resource_stop_tests": {
+      "run": 7,
+      "passed": 7,
+      "skipped": 0,
+      "seconds": 11.862
+    },
+    "independent_review_blockers": 0,
+    "readonly_probe_live_checks": 20,
+    "recovered_state": "INTERRUPTED",
+    "old_failure_preserved": true,
+    "calls_after_diagnosis_resolved": 1,
+    "retry_status": "SUCCESS"
+  },
+  "human_intervention": {
+    "initial_authorization": 1,
+    "clarification": 0,
+    "additional_approval": 0,
+    "manual_user_fix": 0
+  },
+  "limits": [
+    "Local owned OS processes and CLI substitute; no model, account, global Skill or scheduling change.",
+    "Queue fixture normalizes existing Windows Git root path-string transport only; production approve remains unchanged.",
+    "Independent recovery simulates an exited launcher using another already-ended owned process.",
+    "Initial Windows sig=0 TerminateProcess inference was incorrect; CTRL_C_EVENT is zero. Initial signal-side-effect experiments retained and not repeated.",
+    "Injected stop failures intentionally keep owned processes alive until fixture cleanup; warnings retained."
+  ]
+}

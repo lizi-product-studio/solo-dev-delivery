@@ -13,7 +13,7 @@ import shutil
 import time
 import uuid
 
-from review_engine import require, digest, dumped, proof, valid_proof, clean_commit, git
+from review_engine import require, digest, dumped, proof, valid_proof, clean_commit, git, process_alive
 
 PROFILES = {
     'light': {'model': 'gpt-6-luna', 'effort': 'high'},
@@ -27,6 +27,17 @@ POLICY = {'version': 3, 'max_active': 2, 'max_calls': 8,
           'max_elapsed_seconds': 1800, 'observed_token_stop': 180000,
           'max_prompt_chars': 48000, 'review_reserve': 2}
 ACTIVE = ('RESERVED', 'RUNNING')
+
+
+def stop_unconfirmed(result):
+    """New explicit stop uncertainty keeps ownership; absent legacy fields do not."""
+    if 'process_running' in result and result['process_running'] is not False:
+        return True
+    if 'process_cleanup' in result:
+        cleanup = result['process_cleanup']
+        return (not isinstance(cleanup, dict) or cleanup.get('status') != 'COMPLETE'
+                or cleanup.get('tree_stopped') is not True)
+    return False
 
 
 def run_limits(policy, complexity, role, requested=None):
@@ -156,7 +167,7 @@ class Resources:
             progress = None
             if path.is_file() and not path.is_symlink():
                 try:
-                    progress = json.loads(path.read_text())
+                    progress = json.loads(path.read_text(encoding='utf-8'))
                     progress['stale'] = time.time()-progress['observed_at'] > 10
                 except (OSError,ValueError,KeyError,TypeError):
                     progress = {'state':'UNREADABLE_NEEDS_INSPECTION'}
@@ -583,6 +594,7 @@ class Resources:
         # Threads perform only process I/O; each callback owns a fresh SQLite connection.
         def start(item,pid):
             import sqlite3
+            item['launched_pid']=pid
             if item.get('launch_db') is not None:
                 db=item['launch_db']
                 r=json.loads(db.execute('SELECT receipt FROM resource_runs WHERE id=?',(item['id'],)).fetchone()[0])
@@ -627,25 +639,38 @@ class Resources:
                               on_start=lambda pid:start(item,pid),
                               launch_guard=lambda:launch_guard(item))
             except Exception as exc:
-                return {'status':'BLOCKED','summary':str(exc),'failure_kind':'environment','execution_status':'ERROR',
+                result={'status':'BLOCKED','summary':str(exc),'failure_kind':'environment','execution_status':'ERROR',
                         'usage':None,'seconds':0,'logs':{},'thread_id':None}
+                if item.get('launched_pid'):
+                    result.update(process_running=None,process_cleanup={
+                        'status':'FAILED','tree_stopped':False,'method':'worker-exception',
+                        'errors':['Worker raised after on_start; process-tree stop is unconfirmed']})
+                return result
         completed=[]
         with concurrent.futures.ThreadPoolExecutor(max_workers=max(1,len(pending))) as pool:
             futures={pool.submit(execute_safe,item):item for item in pending}
             for future in concurrent.futures.as_completed(futures):
                 item=futures[future];result=future.result()
-                path=self.q.root/'resource-runs'/item['id']/'receipt.json';path.write_text(dumped(result))
+                path=self.q.root/'resource-runs'/item['id']/'receipt.json';path.write_text(dumped(result),encoding='utf-8')
                 with self.q.transaction():
                     row=self.q.db.execute('SELECT receipt FROM resource_runs WHERE id=?',(item['id'],)).fetchone()
                     receipt=json.loads(row[0]);receipt.update(result=result,result_file=proof(path))
+                    if item.get('launched_pid') and not receipt.get('child_pid'):
+                        receipt['child_pid']=item['launched_pid']
                     status='SUCCESS' if result.get('status')=='PASS' and result.get('execution_status')=='COMPLETED' and result.get('thread_id') else 'FINDINGS' if result.get('status')=='FINDINGS' else 'BLOCKED'
                     try: current=clean_commit(t['contract']['repository'])
                     except ValueError:current=None
                     if current!=receipt['candidate'] or self.q.reviews.load(tid)['revision']!=receipt['review_revision']:status='STALE'
                     if result.get('changed_paths') and any(not within(p,item['unit']['paths']) for p in result['changed_paths']):status='SCOPE_VIOLATION'
+                    unconfirmed=stop_unconfirmed(result)
+                    if unconfirmed:status='RUNNING'
                     self.update_run(item['id'],status,receipt)
-                    self.q.db.execute("UPDATE resource_decisions SET status='NOT_APPLIED_RUN_FINISHED' WHERE run_id=? AND status='PENDING'",(item['id'],))
-                    self.q.event(tid,'RESOURCE_FINISHED',{'run_id':item['id'],'status':status,'usage':result.get('usage')})
+                    if unconfirmed:
+                        self.q.event(tid,'RESOURCE_STOP_UNCONFIRMED',{'run_id':item['id'],'status':status,
+                                     'cleanup':result.get('process_cleanup')})
+                    else:
+                        self.q.db.execute("UPDATE resource_decisions SET status='NOT_APPLIED_RUN_FINISHED' WHERE run_id=? AND status='PENDING'",(item['id'],))
+                        self.q.event(tid,'RESOURCE_FINISHED',{'run_id':item['id'],'status':status,'usage':result.get('usage')})
                 completed.append(item['id'])
                 if item['unit']['role']=='review' and status in ('SUCCESS','FINDINGS'):
                     try:self._accept_review(tid,item['id'])
@@ -653,7 +678,7 @@ class Resources:
                         with self.q.transaction():
                             receipt['validation_error']=str(exc)
                             receipt['result']={**result,'status':'BLOCKED','failure_kind':'reasoning'}
-                            path.write_text(dumped(receipt['result']));receipt['result_file']=proof(path)
+                            path.write_text(dumped(receipt['result']),encoding='utf-8');receipt['result_file']=proof(path)
                             self.update_run(item['id'],'BLOCKED',receipt)
                             self.q.event(tid,'RESOURCE_RESULT_REJECTED',{'run_id':item['id'],'reason':str(exc)})
         return {'task_id':tid,'executed':completed,'reused':cached,'plan':self.plan(tid),
@@ -732,17 +757,15 @@ class Resources:
             require(rows,'没有待对账子进程')
             for row in rows:
                 r=row['receipt']
-                if not r.get('child_pid'):
-                    try:attestation=json.loads(Path(evidence).read_text())
+                if not r.get('child_pid') or stop_unconfirmed(r.get('result',{})):
+                    try:attestation=json.loads(Path(evidence).read_text(encoding='utf-8'))
                     except (ValueError,OSError):attestation={}
                     require(row['id'] in attestation.get('confirmed_stopped_run_ids',[]),
-                            '启动状态未知：需要宿主核查并明确确认本次run_id没有遗留进程')
+                            '进程树停止未知：需要宿主核查并明确确认本次run_id没有遗留进程')
                     proof(attestation.get('process_scan_evidence',''))
                 for pid in (r['runner_pid'],r.get('child_pid')):
                     if pid is None:continue
-                    try:os.kill(pid,0)
-                    except ProcessLookupError:pass
-                    else:raise ValueError('原执行进程仍存活')
+                    require(not process_alive(pid),'原执行进程仍存活')
             for row in rows:
                 r=row['receipt'];r['reconciliation']=ref
                 self.update_run(row['id'],'INTERRUPTED',r)

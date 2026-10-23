@@ -3,6 +3,7 @@
 
 This enforces fresh execution of the host's selected business scenarios. It does
 not prove semantic completeness, authenticate reviewers, or sandbox host code.
+Control JSON and trusted Python source use UTF-8 independently of host locale.
 """
 import argparse
 import hashlib
@@ -19,14 +20,14 @@ from core.decisions import compile_plan
 
 
 def read(path):
-    return load_json(Path(path).read_text())
+    return load_json(Path(path).read_text(encoding='utf-8'))
 
 
 def save(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(canonical(value) + '\n')
+    temporary.write_text(canonical(value) + '\n', encoding='utf-8')
     temporary.replace(path)
 
 
@@ -191,10 +192,10 @@ def seal(task_path, plan_path, reason=None):
     if task['format'] == 'local-delivery-gate/2':
         workspace = _resolved_path(task['workspace'])
         if any(path == workspace or workspace in path.parents
-               for path in (_resolved_path(value) for value in _absolute_literals(test.read_text()))):
+               for path in (_resolved_path(value) for value in _absolute_literals(test.read_text(encoding='utf-8')))):
             raise ValueError('adapter references original workspace; use Path.cwd() or SOLO_CANDIDATE_ROOT to observe the frozen candidate copy')
         if plan.get('decisions'):
-            plan, generated, selection = compile_plan(brief, plan, test.read_text())
+            plan, generated, selection = compile_plan(brief, plan, test.read_text(encoding='utf-8'))
     if validate_plan(brief, plan):
         raise ValueError('unaccounted source units: ' + ', '.join(sorted(validate_plan(brief, plan))))
     covered = {x for c in plan['checks'] for x in c['covers']}
@@ -214,7 +215,7 @@ def seal(task_path, plan_path, reason=None):
     active_plan = plan_path
     if generated is not None:
         generated_path = version / 'generated-checks.py'
-        generated_path.write_text(generated)
+        generated_path.write_text(generated, encoding='utf-8')
         selection_path = version / 'selection.json'
         save(selection_path, selection)
         plan['test_file'] = str(generated_path)
@@ -355,7 +356,8 @@ def main():
     commands.add_parser('hook')
     args = parser.parse_args()
     if args.op == 'hook':
-        return hook(json.load(sys.stdin), os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
+        return hook(json.loads(sys.stdin.buffer.read().decode('utf-8')),
+                    os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
     if args.op == 'install-hook':
         return install_hook(args.home)
     if args.op == 'start':
@@ -375,7 +377,8 @@ def main():
 if __name__ == '__main__':
     try:
         result = main()
-        print(json.dumps(result, ensure_ascii=False))
+        # ASCII escapes are UTF-8-valid JSON even on a legacy stdio locale.
+        print(json.dumps(result, ensure_ascii=True))
         sys.exit(0 if 'status' not in result or result['status'] in ('NEEDS_SOURCE_CHECKS', 'CHECKS_SEALED', 'DELIVERABLE_WITHIN_DECLARED_SCOPE', 'HOOK_PREPARED_REQUIRES_HOST_TRUST') else 1)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(json.dumps({'status': 'BLOCKED', 'error': str(exc)}))

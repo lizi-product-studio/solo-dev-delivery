@@ -147,7 +147,7 @@ def inspect_evidence(plan, packet_path, evidence_paths, status_fn):
     for path in dict.fromkeys(str(Path(p).resolve()) for p in evidence_paths):
         dep = digest(path)
         dependencies.append(dep)
-        receipt = load_json(Path(path).read_text())
+        receipt = load_json(Path(path).read_text(encoding='utf-8'))
         reason, valid = '', False
         if receipt.get('format') != 'local-challenge-result/1':
             reason = 'not an attributable challenge execution; relation/self-written PASS cannot substitute'
@@ -198,7 +198,7 @@ def discover_evidence(directories):
         if path.stat().st_size > 262144:
             continue
         try:
-            value = load_json(path.read_text())
+            value = load_json(path.read_text(encoding='utf-8'))
             if isinstance(value, dict) and value.get('format') == 'local-challenge-result/1':
                 receipts.append(str(path))
         except (OSError, ValueError):
@@ -209,7 +209,7 @@ def discover_evidence(directories):
 def coverage_report(brief_path, plan_path, packet_path, evidence_paths, budget, status_fn, current_fn):
     require(type(budget) is int and 0 <= budget <= 12800, 'budget must be 0..12800 relative check effort units')
     brief_path, plan_path, packet_path = map(lambda p: Path(p).resolve(strict=True), (brief_path, plan_path, packet_path))
-    brief, plan, packet = [load_json(p.read_text()) for p in (brief_path, plan_path, packet_path)]
+    brief, plan, packet = [load_json(p.read_text(encoding='utf-8')) for p in (brief_path, plan_path, packet_path)]
     require(brief.get('format') == 'local-coverage-brief/1', 'need a source brief')
     require(packet.get('format') == 'local-challenge/1', 'need a frozen candidate packet')
     require(brief['workspace'] == packet['workspace'], 'brief and packet workspace differ')
@@ -263,7 +263,7 @@ def fresh_report(report, current_fn, status_fn):
             # New counterevidence needs reconciliation, even if the earlier
             # bytes still match. A prior covered report is not a timeless pass.
             return False
-        packet = load_json(Path(report['packet']).read_text())
+        packet = load_json(Path(report['packet']).read_text(encoding='utf-8'))
         return current_fn(packet) and all(status_fn(p)['status'] not in ('STALE',) for p in report['evidence'])
     except (OSError, ValueError, KeyError, TypeError):
         return False

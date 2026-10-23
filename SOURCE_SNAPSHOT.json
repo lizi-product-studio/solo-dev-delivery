@@ -59,6 +59,11 @@
       "bytes": 9260
     },
     {
+      "path": "evaluations/repository-pilot/2026-10-23.md",
+      "sha256": "e2a4c323920c21389d81af2026fde37b1a38856dc0b3f1acd109a4a92509beff",
+      "bytes": 4263
+    },
+    {
       "path": "knowledge/methods.json",
       "sha256": "e18ce60c8b88682b636e9ccd72652706a9a036f7820660770ed5a61862bfef34",
       "bytes": 6191
@@ -115,8 +120,8 @@
     },
     {
       "path": "portable-agent-kit/core/coverage.py",
-      "sha256": "95400cf9e8f72cc48912ebdf717b6079931d52f89da8f301340d1feaa13f23dd",
-      "bytes": 15736
+      "sha256": "01e6dfe3bd430333b34147280247e57362238d98ebfd4d0e544ed2ac05e0d84e",
+      "bytes": 15800
     },
     {
       "path": "portable-agent-kit/core/decisions.py",
@@ -135,8 +140,8 @@
     },
     {
       "path": "portable-agent-kit/core/sensitivity.py",
-      "sha256": "0b22df9e2585a59b18794c74768485a953ee1c1bf6293fc1a4730ee47933794f",
-      "bytes": 8082
+      "sha256": "1dc7b5eca2264542e02bb7b8a5ca67719dbbf1e8af3d9f201fc5aadb85039bc8",
+      "bytes": 8098
     },
     {
       "path": "portable-agent-kit/core/state_machine.py",
@@ -220,13 +225,13 @@
     },
     {
       "path": "portable-agent-kit/scripts/challenge.py",
-      "sha256": "bdd1199fb7972eadc4a7c7fdff5be936e46f3dc96460f50748ad55462dc0e542",
-      "bytes": 28078
+      "sha256": "fcb9322cde92088740a41974f334b54134e3b5f55d4bdffa3f1ee8f3d2a8a4d6",
+      "bytes": 28399
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
-      "sha256": "2aae1433f1fb1d5ff1bc74e82032981bba59947727ba41a79cb3c8a67437497d",
-      "bytes": 20815
+      "sha256": "278970ed5868fb82a030bbd542d7973e04036e54c31d90f0672d3555299de05a",
+      "bytes": 21104
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -287,6 +292,11 @@
       "path": "portable-agent-kit/tests/test_state_machine.py",
       "sha256": "cde8ea309569faa151a2b6fb6a1ca1ac9c219c8ff72f43a6deccd1988f421447",
       "bytes": 25673
+    },
+    {
+      "path": "portable-agent-kit/tests/test_utf8_protocol.py",
+      "sha256": "58bc25dd60941ff47bee6530419360184eb01bf9c8194b7743c8a2633a8fe358",
+      "bytes": 10139
     },
     {
       "path": "scripts/business_loop.py",
@@ -375,8 +385,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
-      "sha256": "af5b6daf77eb893ca82bebb3525003a80a0975a2de5069f92f27f23903d5f61b",
-      "bytes": 14558
+      "sha256": "163ac52c150464b3394db03424444a02438241746114665dd0d30485e9599053",
+      "bytes": 14821
     },
     {
       "path": "skill/solo-dev-delivery/references/software-delivery.md",

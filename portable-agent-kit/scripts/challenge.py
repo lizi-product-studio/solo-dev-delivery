@@ -4,6 +4,7 @@
 No model, network or scheduler. The supplied Python test is trusted host code,
 executed against a temporary copy of declared files. This is NOT a security
 sandbox, independent-identity authentication or a production acceptance gate.
+Control JSON and trusted Python source use UTF-8; candidate files copy as bytes.
 """
 from __future__ import annotations
 
@@ -183,12 +184,12 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                 if target.suffix != '.py':
                     raise ValueError('counterfactual patch must target Python code, not source policies or data')
                 before, after = change['before'], change['after']
-                text = target.read_text()
+                text = target.read_text(encoding='utf-8')
                 if not before or before == after or text.count(before) != 1:
                     raise ValueError('counterfactual needs one exact, nontrivial replacement')
                 text = text.replace(before, after, 1)
                 compile(text, str(target), 'exec')
-                target.write_text(text)
+                target.write_text(text, encoding='utf-8')
         test = scratch / 'review_checks.py'
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
@@ -264,11 +265,11 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
     from core.coverage import discover_evidence
     reusable = []
     for path in discover_evidence([receipt_path.parent]):
-        value = load_json(Path(path).read_text())
+        value = load_json(Path(path).read_text(encoding='utf-8'))
         if value.get('test') != str(test_path) or value.get('test_sha256') != sha(test_path.read_bytes()):
             continue
         try:
-            same = load_json(Path(value['packet']).read_text()) == packet
+            same = load_json(Path(value['packet']).read_text(encoding='utf-8')) == packet
             observed = status(path)['status'] if same else 'STALE'
         except (OSError, ValueError, KeyError, TypeError):
             continue
@@ -284,7 +285,7 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
             raise ValueError('receipt exists but is not reusable; preserve it and choose a new report')
         packet_path = receipt_path.with_name(receipt_path.stem + '-packet.json')
         if packet_path.exists():
-            if load_json(packet_path.read_text()) != packet:
+            if load_json(packet_path.read_text(encoding='utf-8')) != packet:
                 raise ValueError('packet exists for other bytes; preserve it and choose a new report')
         else:
             write_new(packet_path, packet)
@@ -301,7 +302,7 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
 
 
 def status(receipt_path):
-    receipt = load_json(Path(receipt_path).read_text())
+    receipt = load_json(Path(receipt_path).read_text(encoding='utf-8'))
     if receipt.get('format') == 'local-sensitivity-result/1':
         from core.sensitivity import fresh
         valid = fresh(receipt, status)
@@ -315,7 +316,7 @@ def status(receipt_path):
     if receipt.get('format') == 'local-relations-result/1':
         try:
             spec_path = Path(receipt['spec'])
-            spec = load_json(spec_path.read_text())
+            spec = load_json(spec_path.read_text(encoding='utf-8'))
             valid = sha(spec_path.read_bytes()) == receipt['spec_sha256']
             valid = valid and all(artifact(receipt['workspace'], x['path']) == x for x in receipt['artifacts'])
             fresh = [{'id': c['id'], **run_check(receipt['workspace'], c, spec['scope'])} for c in spec['checks']]
@@ -327,7 +328,7 @@ def status(receipt_path):
     try:
         packet_path = Path(receipt['packet'])
         valid = sha(packet_path.read_bytes()) == receipt['packet_sha256']
-        packet = load_json(packet_path.read_text())
+        packet = load_json(packet_path.read_text(encoding='utf-8'))
         valid = valid and current(packet) and sha(Path(receipt['test']).read_bytes()) == receipt['test_sha256']
     except (OSError, ValueError, KeyError):
         valid = False
@@ -397,14 +398,14 @@ def brief(workspace, inputs, target):
 
 def assess(brief_path, plan_path, packet_path, evidence, budget, execute, report_path):
     from core.coverage import coverage_report, digest, discover_evidence
-    packet = load_json(Path(packet_path).read_text())
+    packet = load_json(Path(packet_path).read_text(encoding='utf-8'))
     root = Path(packet['workspace']).resolve(strict=True)
     report_path = outside(report_path, root)
     if report_path.exists():
         raise ValueError('report exists; preserve previous result and use a new report')
     for path in (brief_path, plan_path, packet_path):
         outside(path, root)
-    plan = load_json(Path(plan_path).read_text())
+    plan = load_json(Path(plan_path).read_text(encoding='utf-8'))
     outside(plan['test_file'], root)
     evidence = list(evidence) + discover_evidence([report_path.parent])
     result = coverage_report(brief_path, plan_path, packet_path, evidence, budget, status, current)
@@ -511,8 +512,9 @@ def main():
 if __name__ == '__main__':
     try:
         result = main()
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        # ASCII escapes keep the JSON pipe UTF-8-valid on legacy stdio locales.
+        print(json.dumps(result, ensure_ascii=True, indent=2))
         sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'SENSITIVITY_PASS', 'RELATIONS_PASS', 'RENDERED', 'SOURCE_BRIEF', 'DECLARED_SCOPE_COVERED') else 1)
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
-        print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=False), file=sys.stderr)
+        print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=True), file=sys.stderr)
         sys.exit(2)

@@ -46,19 +46,20 @@ def export(destination):
         shutil.copyfile(src, target)
     # The native core initializer imports the persistent protocol. The thin
     # export intentionally exposes only local verification modules.
-    (destination / 'scripts/core/__init__.py').write_text('"""Bounded local verification helpers."""\n', encoding='utf-8')
+    (destination / 'scripts/core/__init__.py').write_bytes(b'"""Bounded local verification helpers."""\n')
     files = [{"path": p.relative_to(destination).as_posix(),
               "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
-             for p in sorted(destination.rglob("*")) if p.is_file()]
-    (destination / "BUNDLE.json").write_text(json.dumps({
+             for p in sorted(destination.rglob("*"), key=lambda item: item.relative_to(destination).as_posix()) if p.is_file()]
+    (destination / "BUNDLE.json").write_bytes((json.dumps({
         "version": version, "format": "Agent Skills", "python": "3.9+", "files": files,
         "personal_data_included": False, "scheduler": "none",
         "platform_status": "format-and-local-runtime-verified; platform loading must be checked by its host",
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    }, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
-        for p in sorted(destination.rglob("*")):
+        for p in sorted(destination.rglob("*"), key=lambda item: item.relative_to(destination).as_posix()):
             if p.is_file():
                 info = zipfile.ZipInfo(p.relative_to(destination.parent).as_posix(), (2026, 10, 22, 0, 0, 0))
+                info.create_system = 3
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.external_attr = 0o100644 << 16
                 bundle.writestr(info, p.read_bytes())

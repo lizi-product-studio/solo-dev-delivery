@@ -26,7 +26,7 @@ cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-生成自包含目录及 `solo-dev-delivery-0.11.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可在本分支成功的 GitHub Actions 运行页下载 `solo-dev-delivery-candidate` artifact；构建只在全部测试作业通过后执行，artifact 是候选包，不创建 GitHub Release 或合并分支。
+生成自包含目录及 `solo-dev-delivery-0.11.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.11.0.zip)及[校验值](packages/solo-dev-delivery-0.11.0.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对；下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -82,4 +82,4 @@ python -X utf8 -m unittest discover -s tests -v
 
 ## 来源
 
-整合 Superpowers Lite 的分流、系统调试和风险审查，保留 Solo 的候选绑定、验证、状态和授权边界。[整合说明](INTEGRATION.md)与[第三方许可](THIRD_PARTY.md)保留来源；`SOURCE_SNAPSHOT.json` 记录规范 Git 源文件摘要。
+整合 Superpowers Lite 的分流、系统调试和风险审查，保留 Solo 的候选绑定、验证、状态和授权边界。[整合说明](INTEGRATION.md)与[第三方许可](THIRD_PARTY.md)保留来源；`SOURCE_SNAPSHOT.json` 记录规范 Git 源文件与版本化分发摘要。

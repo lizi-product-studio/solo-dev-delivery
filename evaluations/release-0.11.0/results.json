@@ -29,6 +29,11 @@
     },
     "independent_review": {
       "open_p1_p2": 0
+    },
+    "archive_and_install_after_canonical_fix": {
+      "tests": 14,
+      "failures": 0,
+      "seconds": 8.03
     }
   },
   "behavior_results": "behavior-results.json",
@@ -40,7 +45,9 @@
   "local_bundle": {
     "version": "0.11.0",
     "files": 25,
-    "sha256": "3ce3c8b041deab9ed1660229f2da8b3c86db980e699178875327017fa520b2f8"
+    "sha256": "e8bbc8b74887427716e0ddf8578c83d85e63d56ab0d8574e96ac6dcbaefdb610",
+    "path": "packages/solo-dev-delivery-0.11.0.zip",
+    "canonical_git_build": true
   },
   "local_install": {
     "version": "0.11.0",
@@ -56,5 +63,7 @@
     "Local synthetic behavior tasks; no production or cross-host loading claim",
     "Original evaluator format defects retained, revised checker explicitly bound",
     "No unattended business operation or adversarial isolation proof"
-  ]
+  ],
+  "behavior_frozen_bundle_sha256": "3ce3c8b041deab9ed1660229f2da8b3c86db980e699178875327017fa520b2f8",
+  "packaging_recovery": "packaging-recovery.json"
 }

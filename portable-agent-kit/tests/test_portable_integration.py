@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from unittest.mock import patch
 
 KIT = Path(__file__).resolve().parents[1]
@@ -77,6 +78,21 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
 
     def installer(self, *args, **kwargs):
         return self.call(self.source / "scripts/install_agent.py", *args, **kwargs)
+
+    def test_archive_order_and_generated_protocol_are_platform_independent(self):
+        archive = next(self.source.parent.glob("solo-dev-delivery-*.zip"))
+        with zipfile.ZipFile(archive) as packed:
+            self.assertEqual(sorted(packed.namelist()), packed.namelist())
+            self.assertTrue(all(member.create_system == 3 for member in packed.infolist()))
+            self.assertTrue(all(member.date_time == (2026, 10, 22, 0, 0, 0) for member in packed.infolist()))
+            self.assertTrue(all(member.external_attr == 0o100644 << 16 for member in packed.infolist()))
+        bundle = json.loads((self.source / "BUNDLE.json").read_text(encoding="utf-8"))
+        paths = [row["path"] for row in bundle["files"]]
+        self.assertEqual(sorted(paths), paths)
+        for generated in ("BUNDLE.json", "scripts/core/__init__.py"):
+            self.assertNotIn(b"\r\n", (self.source / generated).read_bytes())
+        self.assertEqual((ROOT / "skill/solo-dev-delivery/SKILL.md").read_bytes(),
+                         (self.source / "SKILL.md").read_bytes())
 
     def test_all_hosts_install_self_contained_payload_without_configuration(self):
         for host in ("generic", "zcode", "kimi"):

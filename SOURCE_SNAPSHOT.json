@@ -1,10 +1,10 @@
 {
   "created": "2026-10-23",
   "version": "0.11.0",
-  "scope": "Canonical Git source blobs only; excludes this manifest, runtime, customer project code, raw conversations and generated bundles. Working-tree newline conversion is not source identity.",
+  "scope": "Canonical Git source and versioned distribution blobs only; excludes this manifest, private runtime, customer project code, raw conversations and temporary exports. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "3d799223f4d31b8009bd41750299e4319c1df10f",
-    "previous_version": "0.10.0",
+    "previous_head": "6e38e37c2f249cab17eae79ec143794574c96024",
+    "previous_version": "0.11.0",
     "rewrite_history": false
   },
   "integrated_source": {
@@ -20,8 +20,8 @@
     },
     {
       "path": ".github/workflows/validate.yml",
-      "sha256": "9f56742fd9e9532669072619e134ba7d44a923f04dfb4d19e6b11b4aba36ddf7",
-      "bytes": 2714
+      "sha256": "cf89c9259d16f5558c82e91567dead9c7f8677c6662b6bb0e3a5b3710782a152",
+      "bytes": 2618
     },
     {
       "path": ".gitignore",
@@ -30,8 +30,8 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "16bf815cd3cabfbe48e9d172f86c240b4cdf7bd9d952a8048fd6ddbe01462a21",
-      "bytes": 2711
+      "sha256": "a887942f52b9b9a7d11b26cb7acf47e2b4a2d288df5e8e4af1fdc768d2960fda",
+      "bytes": 3174
     },
     {
       "path": "INTEGRATION.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "c58e9bce9d7973343f7551a4ad46cf35bf1588a38ddc2484f2c5f277a02450b7",
-      "bytes": 7164
+      "sha256": "70a0a5956a15e6a0caea2237a5bf8eb0468b9ed7f680f0f15ddcab4504c14401",
+      "bytes": 7253
     },
     {
       "path": "THIRD_PARTY.md",
@@ -50,8 +50,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "2fbb996415af2d3788f7c9e12fe5854064829d5c40e22fd305268b4f0515d84f",
-      "bytes": 23243
+      "sha256": "c4b9f490c70321635274cf17e39f6ae0ff2ba12ee1c5b53e890e104a97aef037",
+      "bytes": 23573
     },
     {
       "path": "evaluations/blocker-recovery/NEUTRAL_PROMPT.txt",
@@ -100,8 +100,8 @@
     },
     {
       "path": "evaluations/release-0.11.0/README.md",
-      "sha256": "e916136cf5d5efd3d145caf0191b71a904c283037f254f96fc2b58dbeada51cf",
-      "bytes": 6245
+      "sha256": "339216bd3d6f4717e0ec031fe2a2d921ff7bdf387fd0e8069910fd6aeef01ed7",
+      "bytes": 7707
     },
     {
       "path": "evaluations/release-0.11.0/behavior-results.json",
@@ -170,13 +170,18 @@
     },
     {
       "path": "evaluations/release-0.11.0/costs.json",
-      "sha256": "1d9a325427b3dd8c02feae5a9b07960125208f4e8222d2dda2536ce78f1f44b6",
-      "bytes": 4198
+      "sha256": "949b2dc8fdd3581877dabb6a6830e42e57aeb7d07bbe94d5b399ee5d025e429d",
+      "bytes": 4217
+    },
+    {
+      "path": "evaluations/release-0.11.0/packaging-recovery.json",
+      "sha256": "aab075d298924969f7a9d142a67998528a7c57ce14b7175afb76756d294962ef",
+      "bytes": 1652
     },
     {
       "path": "evaluations/release-0.11.0/results.json",
-      "sha256": "1edf816aacd36b97d88c10a8c56d966b14c11281bc5c2a09251f25c7da81b9f9",
-      "bytes": 1628
+      "sha256": "e1a9940fa7afd1f866cb4e9890dbbb961e0d836bdf6889bead39ef7d574ab156",
+      "bytes": 1986
     },
     {
       "path": "evaluations/repository-pilot/2026-10-23-costs.json",
@@ -257,6 +262,16 @@
       "path": "knowledge/preferences.json",
       "sha256": "0365c1c9a7575cbc20e1ce742906a73c9456a5f4e718c0b1e4fe40de0c93495e",
       "bytes": 16884
+    },
+    {
+      "path": "packages/solo-dev-delivery-0.11.0.zip",
+      "sha256": "e8bbc8b74887427716e0ddf8578c83d85e63d56ab0d8574e96ac6dcbaefdb610",
+      "bytes": 78071
+    },
+    {
+      "path": "packages/solo-dev-delivery-0.11.0.zip.sha256",
+      "sha256": "e23364b0c86ec49a63d74cd52cf5e07f3f9686f847502b9ff369928e467e0b68",
+      "bytes": 104
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
@@ -475,8 +490,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_portable_integration.py",
-      "sha256": "3f72c7c1cebc88aed603fa02950ad57d9dd1172d4e8a29ca006e8f993119b548",
-      "bytes": 15252
+      "sha256": "150b1a9ad073f3a1f97c2e0b9ac6627d1e686b024e4307ba8a9338c2c36e042b",
+      "bytes": 16344
     },
     {
       "path": "portable-agent-kit/tests/test_relations.py",
@@ -515,8 +530,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "d8ca6fbad28befee199bce6cfd5e5f7192768648c2d08fdb9a9646f71f0d798e",
-      "bytes": 4067
+      "sha256": "931e8aff193fdbfe3cf32867f041f59effec8114edd86faf338010b6507da53d",
+      "bytes": 4209
     },
     {
       "path": "scripts/install_agent.py",

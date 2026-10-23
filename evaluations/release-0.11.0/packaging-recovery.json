@@ -1,0 +1,26 @@
+{
+  "initial_run": 39910795637,
+  "initial_commit": "6e38e37c2f249cab17eae79ec143794574c96024",
+  "test_jobs": {
+    "success": 7,
+    "failed": 0
+  },
+  "package_build_install_verify": "success",
+  "artifact_upload": {
+    "status": "failure",
+    "job_id": 120274505076,
+    "observed_error": "Artifact storage quota has been hit. Unable to upload any new artifacts. Usage is recalculated every 6-12 hours."
+  },
+  "recovery": "Version the current self-contained ZIP and SHA256 in repository; CI rebuilds/installs then compares exact ZIP bytes and checksum. No unrelated artifact deletion, permission expansion, fees, Release creation or main merge.",
+  "canonical_source": "git -c core.autocrlf=false archive; generated control files UTF-8 LF, explicit path ordering and Unix ZIP metadata; mapped source bytes preserved",
+  "initial_local_build_probes": [
+    "default git archive converted source to CRLF; generated files used host newlines",
+    "source newline recovery alone still differed due WindowsPath ordering and ZIP create_system defaults"
+  ],
+  "canonical_zip_sha256": "e8bbc8b74887427716e0ddf8578c83d85e63d56ab0d8574e96ac6dcbaefdb610",
+  "independent_rebuild": "same bytes; archive metadata and testzip verified",
+  "local_install": "all 25 files match canonical package; direct six result modes expected",
+  "behavior_frozen_bundle": "Original frozen 3ce3c8b... retained, candidate unchanged. Compared nonmanifest content with LF normalization: identical instructions/code. No claimed behavioral improvement from ZIP normalization.",
+  "human_followup_actions": 0,
+  "final_remote_result": "Read run for next commit; not prefilled"
+}

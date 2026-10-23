@@ -64,11 +64,7 @@ jobs:
           python scripts/export_skill.py "$RUNNER_TEMP/solo-export/solo-dev-delivery"
           python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills"
           python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills" --verify
-          cp INSTALL.md "$RUNNER_TEMP/solo-export/INSTALL.md"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: solo-dev-delivery-candidate
-          path: |
-            ${{ runner.temp }}/solo-export/*.zip
-            ${{ runner.temp }}/solo-export/INSTALL.md
-          if-no-files-found: error
+      - name: Verify downloadable package matches canonical source
+        run: |
+          cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-"*.zip packages/solo-dev-delivery-*.zip
+          sha256sum -c packages/*.sha256

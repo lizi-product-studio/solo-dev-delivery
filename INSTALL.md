@@ -1,6 +1,8 @@
 # Solo Dev Delivery 0.11.0 候选包使用说明
 
-下载本分支成功 Actions 运行的 `solo-dev-delivery-candidate` artifact，解开其中的 `solo-dev-delivery-0.11.0.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。
+从[候选分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/packages/solo-dev-delivery-0.11.0.zip)下载并解开 `solo-dev-delivery-0.11.0.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
+
+包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/release/v0.11.0/packages/solo-dev-delivery-0.11.0.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验并逐字节比较，不依赖Actions制品存储配额；它仍是未合并main的候选。
 
 先确认目标 Agent 实际使用的 Skill 搜索根目录，再执行（Python 3.9+，按本机使用 python 或 python3）：
 

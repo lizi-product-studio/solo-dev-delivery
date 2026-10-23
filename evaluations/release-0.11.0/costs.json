@@ -1,21 +1,21 @@
 {
   "started_at": "2026-10-23T05:58:20.973Z",
-  "cutoff": "2026-10-23T06:17:52.911Z",
-  "latest_usage_at": "2026-10-23T06:17:52.645Z",
-  "wall_seconds": 1171.938,
+  "cutoff": "2026-10-23T06:31:26.198Z",
+  "latest_usage_at": "2026-10-23T06:31:25.773Z",
+  "wall_seconds": 1985.225,
   "groups": {
     "root": {
-      "responses": 56,
-      "tool_calls": 56,
-      "latest_usage_at": "2026-10-23T06:17:52.645Z",
+      "responses": 80,
+      "tool_calls": 80,
+      "latest_usage_at": "2026-10-23T06:31:25.773Z",
       "usage": {
-        "input_tokens": 7201348,
-        "cached_input_tokens": 7084288,
+        "input_tokens": 12615561,
+        "cached_input_tokens": 12441984,
         "cache_write_input_tokens": 0,
-        "output_tokens": 40022,
-        "reasoning_output_tokens": 13127,
-        "total_tokens": 7241370,
-        "uncached_input_tokens": 117060
+        "output_tokens": 66913,
+        "reasoning_output_tokens": 28875,
+        "total_tokens": 12682474,
+        "uncached_input_tokens": 173577
       }
     },
     "windows_runtime": {
@@ -61,17 +61,17 @@
       }
     },
     "independent_review": {
-      "responses": 25,
-      "tool_calls": 23,
-      "latest_usage_at": "2026-10-23T06:11:58.485Z",
+      "responses": 34,
+      "tool_calls": 31,
+      "latest_usage_at": "2026-10-23T06:30:26.650Z",
       "usage": {
-        "input_tokens": 2604055,
-        "cached_input_tokens": 2490880,
+        "input_tokens": 4038489,
+        "cached_input_tokens": 3906560,
         "cache_write_input_tokens": 0,
-        "output_tokens": 9580,
-        "reasoning_output_tokens": 4720,
-        "total_tokens": 2613635,
-        "uncached_input_tokens": 113175
+        "output_tokens": 14204,
+        "reasoning_output_tokens": 7412,
+        "total_tokens": 4052693,
+        "uncached_input_tokens": 131929
       }
     },
     "dispatch_executor": {
@@ -104,13 +104,13 @@
     }
   },
   "usage": {
-    "input_tokens": 18438082,
-    "cached_input_tokens": 17954560,
+    "input_tokens": 25286729,
+    "cached_input_tokens": 24727936,
     "cache_write_input_tokens": 0,
-    "output_tokens": 134863,
-    "reasoning_output_tokens": 45118,
-    "total_tokens": 18572945,
-    "uncached_input_tokens": 483522
+    "output_tokens": 166378,
+    "reasoning_output_tokens": 63558,
+    "total_tokens": 25453107,
+    "uncached_input_tokens": 558793
   },
   "limits": "Native token_usage_record only, deduplicated by thread/response. Cached input is inside input; reasoning is inside output. Tool calls count host-visible envelopes, not all nested operations. Running/final responses and log flush delay may be missing. No currency or quota conversion.",
   "human_intervention": {
@@ -118,5 +118,5 @@
     "followup_user_actions_or_corrections": 0,
     "fixture_owner_handoff": "simulated-only; no real account owner action performed"
   },
-  "measurement_scope": "Root plus six named child agents. Includes implementation, independent review, fixture author controls and format-defect correction, two fresh behavior executions and local install verification up to cutoff. Excludes subsequent staging/commit, remote CI wait, final response and delayed/unflushed usage. Not a no-Skill comparison or currency estimate."
+  "measurement_scope": "Root plus six named child agents. Includes implementation, independent review, fixture author controls and format correction, fresh behavior executions, first commit/CI wait, artifact-quota recovery and canonical packaging up to cutoff. Excludes final follow-up commit, final remote CI wait/response and delayed usage. Not a no-Skill comparison or currency estimate."
 }

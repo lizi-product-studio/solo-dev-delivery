@@ -30,8 +30,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "7756c740fe18a870ecd424e6e8c86dc18bbf4d9596c8a7463692160294cb2f5b",
-      "bytes": 12163
+      "sha256": "c80a65170a802c9ff94213fe340b727bf25dc0c42063339e4ecab83b0815e975",
+      "bytes": 12577
     },
     {
       "path": "THIRD_PARTY.md",
@@ -40,8 +40,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "691444c2d70390fafca064ec5c91cabf21f27ccf579885856775a9e5f1c89a09",
-      "bytes": 16105
+      "sha256": "d3238e3b0dddf3989c0fed9fc4285b56a3db9d5898d549b876eb7a2cb08cd823",
+      "bytes": 17954
     },
     {
       "path": "evaluations/project-operation/README.md",
@@ -59,9 +59,19 @@
       "bytes": 9260
     },
     {
+      "path": "evaluations/repository-pilot/2026-10-23-costs.json",
+      "sha256": "6918266379bf0a54bc2f9ee995e7cca75013e5757d36f144e0532e513bc4bc4f",
+      "bytes": 2413
+    },
+    {
       "path": "evaluations/repository-pilot/2026-10-23.md",
-      "sha256": "9f380cf91798b07d7928a1a52f2ec18abab02cadd15e5e01a5573da36092aa1b",
-      "bytes": 6649
+      "sha256": "233c057766d1a7ec189a3babe05e9c408c439ee2f12fad20a98a95c8ad390f7d",
+      "bytes": 11325
+    },
+    {
+      "path": "evaluations/repository-pilot/measure_usage.py",
+      "sha256": "a4540be9264806184c124675a32c039df2c7d7a926651f41d10384603ef9ab45",
+      "bytes": 3195
     },
     {
       "path": "knowledge/methods.json",

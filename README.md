@@ -4,9 +4,11 @@
 
 ## 当前分支候选：项目巡检与自主改进
 
-`iterate/project-operations` 在0.10.0及独立Windows修复上渐进开发，尚未合并main或发布新版本。主动维护或经营项目时，按需读取[项目巡检与自主改进](skill/solo-dev-delivery/references/project-operation.md)：核真实信号、已有任务与授权，选择下一项，交付后读回结果并留下恢复条件。普通明确任务不另开经营循环，不新增定时器或默认角色链。
+`pilot/repository-autonomy` 接续 `iterate/project-operations`，在0.10.0及独立Windows修复上渐进开发，尚未合并main或发布新版本。主动维护或经营项目时，按需读取[项目巡检与自主改进](skill/solo-dev-delivery/references/project-operation.md)：核真实信号、已有任务与授权，选择下一项，交付后读回结果并留下恢复条件。普通明确任务不另开经营循环，不新增定时器或默认角色链。
 
 已有测试和样本可通过可选的重复`gate start --support-file`进入冻结候选，不再作为需求逐句登记；哈希变化仍阻断旧验收。[使用方法](skill/solo-dev-delivery/references/execution-gate.md)、[公开可复现的本地经营样例](evaluations/project-operation/README.md)和[实际对照结果及局限](VALIDATION.md)分开记录。
+
+[仓库自身三轮真实试点](evaluations/repository-pilot/2026-10-23.md)记录两轮已验证修复、一次未通过验收的候选撤回，以及人工介入与原生Token观察。Windows控制协议统一UTF-8；超时保存UNKNOWN和进程清理证据。Windows hook启动方式仍有未完成的宿主接入验证，不以临时shell实验声称自动加载成功。
 
 ## 0.10.0：由业务决策推导检查场景
 

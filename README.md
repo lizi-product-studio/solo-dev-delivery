@@ -2,7 +2,7 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**0.11.2 是交付前主动自审候选，位于 `feat/customer-retro-self-review-2026-10-26`，尚未合并 main。** 它在0.11.1上增加按需的反馈回放、异常反例和可见结果自审方法，减少用户必须先指出可由任务事实推导的问题。前端质量、遇阻恢复与平台能力边界继续沿用；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。证据与失败记录见 [VALIDATION.md](VALIDATION.md) 和[本轮客服 Agent 复盘](evaluations/customer-agent-retro-2026-10-26/README.md)。
+**0.12.0 是自主化核心重构候选，位于 `feat/autonomy-core-2026-10-26`，尚未合并 main。** 它把任务识别、边界判断、实际验收和下一轮迭代统一为一个按需核心循环，并收缩入口与主动自审引用中的重复内容。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。证据与失败记录见 [VALIDATION.md](VALIDATION.md)、[客服 Agent 复盘](evaluations/customer-agent-retro-2026-10-26/README.md) 和[核心重构审计](evaluations/autonomy-core-review-2026-10-26/README.md)。
 
 用户反馈先转为可验证的问题，再决定补方法、修工具或删去无效要求；后续前端、后端／数据库、真实项目与跨平台验证的推进标准见 [迭代路线](ROADMAP.md)。本轮[前端研究与新任务试跑](evaluations/frontend-quality-2026-10-23/README.md)保留来源取舍、实际页面、首次中断和续接成本。
 
@@ -23,12 +23,12 @@
 Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python。以下命令选择本候选分支：
 
 ```sh
-git clone --branch feat/customer-retro-self-review-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
+git clone --branch feat/autonomy-core-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
 cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-生成自包含目录及 `solo-dev-delivery-0.11.2.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.11.2.zip)及[校验值](packages/solo-dev-delivery-0.11.2.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `solo-dev-delivery-0.12.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.12.0.zip)及[校验值](packages/solo-dev-delivery-0.12.0.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -56,6 +56,7 @@ ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destina
 - [产品界面与前端设计](skill/solo-dev-delivery/references/frontend-quality.md)：按任务选择文案、密度、视觉与交互检查；不统一模板、不用删重要提示换取简洁。
 - [项目巡检与接续](skill/solo-dev-delivery/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
 - [交付前主动自审](skill/solo-dev-delivery/references/delivery-self-review.md)：从反馈和失败生成按需反例，先恢复和读回，拆开证据边界。
+- [自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)：统一任务分流、能力/授权边界、证据状态、停止条件和迭代选择。
 
 可选能力预检只检查任务实际依赖，不执行工具或创建 session：
 

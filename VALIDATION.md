@@ -1,5 +1,10 @@
-# 0.11.2：交付前主动自审候选（2026-10-26）
+# 0.12.0：自主化核心重构候选（2026-10-26）
 
+`feat/autonomy-core-2026-10-26` 从 0.11.2 候选 `85b52a18350ded72fddf2f0365f3942b98b2380f` 分叉，未合并 `main`。本轮把任务识别、自动边界判断、实际验收和下一轮迭代计划抽成[自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)，并收缩 `SKILL.md` 与主动自审引用的重复内容；正式门禁、结果核验、宿主接入、本机队列和前端专项仍保留为按需细节。核心抽象与重复审计见[autonomy-core-review-2026-10-26](evaluations/autonomy-core-review-2026-10-26/README.md)。
+
+本轮变更尚未完成最终包构建和远端 CI；0.11.2 的 204 项本机便携测试、六平台便携/原生兼容和包校验结果作为父版本证据保留。0.12.0 目标是减少入口和引用的重复，而不是增加默认流程；完成后需重新验证导出包、临时安装、源快照和全套兼容测试。当前本机用户级安装仍为0.11.0。
+
+# 0.11.2：交付前主动自审候选（2026-10-26）
 `feat/customer-retro-self-review-2026-10-26` 从 `feat/frontend-quality` 的 `eed59ba80b7bef7b8bd065b7e053afac4611eb79` 分叉，未合并 `main`。本轮读取实际聊天“智能客服Agent”和只读核查“查找客服Agent中的终极Skill用法”，把用户先指出的技术阻塞、异常恢复、可见界面/话术和能力边界问题归纳为按需的[交付前主动自审](skill/solo-dev-delivery/references/delivery-self-review.md)，并加入脱敏回放矩阵。入口只增加条件式引用，不增加默认计划、子Agent、审批或固定全量清单。
 
 代码与文档检查：Skill 入口版本为0.11.2；新引用与回放矩阵在规范导出和临时安装中存在且内容一致。本机便携套件 **204 项通过、4 项按平台跳过**；远端[第二轮 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40253561749) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本化包校验全部成功。第一轮 CI 的包比较失败由 Windows 工作树 CRLF 与 Linux 规范导出 LF 造成，已用原始 Git 字节重建并复验；不是 Skill 内容失败。包 `packages/solo-dev-delivery-0.11.2.zip` SHA256 为 `4532dc9877bb2f7d0ffdc353d27fc2e333ba5de51069ac381ff8d39b4dafd277`。客服项目报告的13轮真实模型回合、22次模型调用、模拟平台状态和4个平台待联调只作为复盘来源，不作为本 Skill 的新通过证据。用户反馈“耗时更短、返工更少”暂没有同口径基线，收益保留为待测假设。

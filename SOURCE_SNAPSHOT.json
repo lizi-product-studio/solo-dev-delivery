@@ -56,13 +56,13 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "14551a0088625a5f916235ce1051a4a212986deea23cbc7d92d60e22035e2d6e",
-      "bytes": 29911
+      "sha256": "881774211245e9e393a04e6c43f6cbf680bed1299bcb03b80c3b946f70550bd2",
+      "bytes": 30127
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "47d7f73e0ef96903bc63b57840ee8fe7b771f79d1989fef25b4379ae1494969a",
-      "bytes": 3692
+      "sha256": "bc1b2d6424b188690079a10a2323b2da2a7c646fea2e34cc0b968cb8aebb1d77",
+      "bytes": 4828
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-mapping-progress.jsonl",
@@ -416,7 +416,7 @@
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/README.md",
-      "sha256": "5e45db336f6e4766cef6ebcfaf88bb0b80960edb347def846142929cc52958ce",
+      "sha256": "3fdc77097585766c6e9cf3a31acd1c4d4da57add40ddb176aad5ebff72859fd4",
       "bytes": 471
     },
     {
@@ -426,37 +426,37 @@
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/evidence/install.log",
-      "sha256": "8afe2b3ce173662619c17f0c8b664abd5ccda4017dcf0676280606a016965554",
-      "bytes": 493
+      "sha256": "c7d53eaa8b3015476cfdecb105ef3344994f1c70072910dd2f8c21264a17cb88",
+      "bytes": 289
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/evidence/invoke.log",
-      "sha256": "9a07659b4ae83f2b3f8656ba1140fa9046aa458b1e969d1d99bf57d34612b901",
-      "bytes": 853
+      "sha256": "12aea29178d2a28d10bf27a3e8260dfcfc1bb82716bbf4536f70af84eb5b41cb",
+      "bytes": 434
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/evidence/load.log",
-      "sha256": "c6ff4195044eff0c2372adb82c1a1c7a416a6f60c5acb2742f25bff5c63767f6",
-      "bytes": 51
+      "sha256": "162b693c5495d5fe7ed9e9eb46672fa0ec0194ba172478d2c3da0758a8b36f88",
+      "bytes": 87
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/evidence/route.log",
-      "sha256": "e3685e794da0ba4ceebf88afee1f18140523930d6291e2b3dcabee895557374e",
-      "bytes": 550
+      "sha256": "b6f4c2d60938588ed208de6f9072be2a8bf44d1ba06af73de575d72bcacf2b5f",
+      "bytes": 266
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/evidence/verify.log",
-      "sha256": "4b9103104531b1caf89337e2c9a853e7b9aef29d2f1595de5c4c5cca08b0bf9a",
-      "bytes": 508
+      "sha256": "b21eec82cff92063a9fe7e17ac150c0ba012252b7062b273ee0f9fdd0f3d1601",
+      "bytes": 295
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/replay.json",
-      "sha256": "be347d4c2562e8f9bb7a0df443f90c52aacc771a23412307c7b90293ea0141c8",
+      "sha256": "f6ea6c5752c7ad89efeed04f4e57905e070d5128fe95353f215a9d2e3d317903",
       "bytes": 2731
     },
     {
       "path": "evaluations/host-replay-20261026/codex-cli/validation.json",
-      "sha256": "50894d21a96d8a19137a46ff0047a7eb776dcf32cd2f26e2e7974f789257ff9d",
+      "sha256": "d731a2233fa4e284821c48f338bbd43b9fb560e735274ca70e6b64ab6a16a1bf",
       "bytes": 2942
     },
     {
@@ -861,12 +861,12 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949",
-      "bytes": 100154
+      "sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866",
+      "bytes": 101428
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "57caf11a528c3fff88d29a6fd60f28e739ad6c449cabe3ad33e0c8eee649770a",
+      "sha256": "f234ef5a32b3e8a8df1e5c7b870e5f0ae73dc6aeb70e3ba3f8d0f6a6adf9733c",
       "bytes": 95
     },
     {
@@ -1016,8 +1016,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/blind_review.py",
-      "sha256": "20719c952400cb7aef3c12d6e5bac3b8aa2ab7507f9ca584a67d2fdc13da5709",
-      "bytes": 11306
+      "sha256": "edb9d88715b61f7599b801004dbd2976da61445d59960b88565cc1053fdc9422",
+      "bytes": 21431
     },
     {
       "path": "portable-agent-kit/scripts/capability_probe.py",
@@ -1061,8 +1061,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_blind_review.py",
-      "sha256": "7ff9f8ef82b01ab3c18407e6dc7f73f50b4c9143a17d18e062810593d5e87609",
-      "bytes": 5682
+      "sha256": "d53a9488a9ca2419773f7b86e6d043955b7a00930b0e60b9008d7070ef39c31a",
+      "bytes": 9090
     },
     {
       "path": "portable-agent-kit/tests/test_capability_receipt.py",
@@ -1450,5 +1450,5 @@
       "bytes": 18713
     }
   ],
-  "snapshot_commit": "1d1af2f45d6b8eb1daba2059dcd0d0de9485b429"
+  "snapshot_commit": "2c8f01e1de6985d9eebbc182a11652eb3b7229d9"
 }

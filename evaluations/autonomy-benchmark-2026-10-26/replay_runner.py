@@ -62,6 +62,11 @@ def matrix(contract: dict):
 
 
 def safe_ref(value: object, evidence_root: Path) -> Path:
+    # The replay checker accepts the compact path form and the richer blind
+    # review form. Both resolve the same relative evidence file; the latter is
+    # additionally checked for identity by blind_review.py.
+    if isinstance(value, dict):
+        value = value.get("path")
     if not isinstance(value, str) or not value.strip():
         raise ReplayError("evidence reference must be a non-empty relative path")
     candidate = Path(value)
@@ -113,25 +118,36 @@ def validate_provenance(row: dict, task: dict, evidence_root: Path, allow_synthe
             raise ReplayError(f"{row['trial_id']} provenance.{field} is required")
     if provenance.get("task_objective") != task["objective"]:
         raise ReplayError(f"{row['trial_id']} provenance task objective drift")
+    candidate_sha = row.get("candidate_sha256")
+    if candidate_sha is not None and (not isinstance(candidate_sha, str) or len(candidate_sha) != 64
+                                      or any(ch not in "0123456789abcdef" for ch in candidate_sha)):
+        raise ReplayError(f"{row['trial_id']} candidate_sha256 invalid")
     refs = row.get("evidence_refs")
     if not isinstance(refs, list) or not refs:
         raise ReplayError(f"{row['trial_id']} needs top-level evidence_refs")
     for ref in refs:
-        safe_ref(ref, evidence_root)
+        path = safe_ref(ref, evidence_root)
+        if isinstance(ref, dict):
+            expected = ref.get("sha256")
+            if not isinstance(expected, str) or len(expected) != 64 or any(ch not in "0123456789abcdef" for ch in expected):
+                raise ReplayError(f"{row['trial_id']} evidence sha256 invalid")
+            if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise ReplayError(f"{row['trial_id']} evidence digest mismatch: {ref.get('path')}")
     digests = provenance.get("evidence_sha256", {})
     if digests is not None:
         if not isinstance(digests, dict):
             raise ReplayError(f"{row['trial_id']} provenance.evidence_sha256 invalid")
         for ref in refs:
-            if ref in digests:
-                if digests[ref] != hashlib.sha256(safe_ref(ref, evidence_root).read_bytes()).hexdigest():
-                    raise ReplayError(f"{row['trial_id']} evidence digest mismatch: {ref}")
+            key = ref.get("path") if isinstance(ref, dict) else ref
+            if key in digests:
+                if digests[key] != hashlib.sha256(safe_ref(ref, evidence_root).read_bytes()).hexdigest():
+                    raise ReplayError(f"{row['trial_id']} evidence digest mismatch: {key}")
 
 
 def validate_receipts(contract_path: Path, receipts_path: Path, evidence_root: Path, allow_synthetic: bool = False):
     contract = load(contract_path)
     eval_contract.validate_contract(contract)
-    rows = eval_contract.validate_receipts(contract, receipts_path)
+    rows = eval_contract.validate_receipts(contract, receipts_path, contract_path=contract_path)
     tasks = {task["id"]: task for task in contract["tasks"]}
     expected = {entry["trial_id"]: entry for entry in matrix(contract)}
     seen = set()

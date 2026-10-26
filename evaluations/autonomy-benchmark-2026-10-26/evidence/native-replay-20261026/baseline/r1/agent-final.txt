@@ -1,0 +1,8 @@
+已完成修复并生成交付物：
+
+- `summarize_ranges` 现支持重叠、包含、重复及相邻区间合并，并正确计算闭区间页数。
+- 保留并验证 CLI：`python src/page_ranges.py --input PATH --output PATH`
+- 补充 API 行为测试。
+- 产物：[artifacts/page_coverage.json](C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-replay-20261026-04/software-quick-patch__baseline__r1/workspace/artifacts/page_coverage.json)
+
+实际产物结果：3 个文档，`total_pages = 18`。测试通过：3/3。

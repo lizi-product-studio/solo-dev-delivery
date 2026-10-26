@@ -1,4 +1,5 @@
 import json
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -67,3 +68,18 @@ class EvaluationContractTests(unittest.TestCase):
             path.write_text(json.dumps(row) + "\n", encoding="utf-8")
             with self.assertRaises(eval_contract.ContractError):
                 eval_contract.validate_receipts(contract(), path)
+
+    def test_receipt_hash_binds_explicit_nondefault_contract_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            frozen = root / "pilot-contract.json"
+            default = root / "contract.json"
+            frozen.write_text(json.dumps(contract(), ensure_ascii=False), encoding="utf-8")
+            default.write_text(json.dumps({"different": True}), encoding="utf-8")
+            row = {"schema_version": "0.13", "contract_id": "test-contract", "trial_id": "t1",
+                   "task_id": "task-a", "arm_id": "baseline", "repeat": 1, "status": "unknown",
+                   "evidence_status": "NEEDS_EVIDENCE", "final_success": None, "evidence_refs": [],
+                   "contract_sha256": hashlib.sha256(frozen.read_bytes()).hexdigest()}
+            receipts = root / "receipts.jsonl"
+            receipts.write_text(json.dumps(row) + "\n", encoding="utf-8")
+            self.assertEqual(1, len(eval_contract.validate_receipts(contract(), receipts, contract_path=frozen)))

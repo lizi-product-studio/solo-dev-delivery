@@ -74,9 +74,11 @@ def opt_bool(v, field):
 def opt_num(v, field):
     require(v is None or (not isinstance(v, bool) and isinstance(v, (int, float))), f"{field} must be numeric or null")
 
-def validate_receipts(contract, path):
+def validate_receipts(contract, path, contract_path=None):
     meta = validate_contract(contract)
-    contract_path = Path(path).parent / "contract.json"
+    # Callers that use a frozen contract with a non-default filename must pass
+    # that exact path; falling back preserves the original CLI layout.
+    contract_path = Path(contract_path) if contract_path is not None else Path(path).parent / "contract.json"
     contract_sha = digest(contract_path) if contract_path.exists() else None
     rows, seen = [], set()
     try:

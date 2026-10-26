@@ -26,4 +26,15 @@ python evaluations/autonomy-benchmark-2026-10-26/replay_runner.py validate \
 
 `--allow-synthetic` 只适合验证工具链，不得用于 0.13 的真实质量结论。回执中的 `provenance.skill_revision`、`run_id` 和证据文件由执行宿主填写；本工具不会替 Agent 调用模型，也不会把计划状态升级为完成。
 
+在 Codex CLI 上做小范围真实回放可用 `native_replay.py`。它会创建隔离 profile、调用真实 `codex exec`，并把原始日志留在输出目录；目前只实现 `software-quick-patch` 的 baseline、0.12.0 和 0.13.0 臂，另外 11 类任务仍需各自的独立夹具和检查器：
+
+```sh
+python evaluations/autonomy-benchmark-2026-10-26/native_replay.py \
+  --arm solo-0.13.0 --repeat 1 --output /tmp/autonomy-native-replay
+```
+
+执行结果必须再经过 `replay_runner.py validate`；单条成功只能证明该任务、该宿主、该版本和该运行的观察成立，不能外推成整体质量或 1.0 达标。
+
+当前仓库内已保存 3 条真实 `software-quick-patch` 回放回执（baseline、0.12.0、0.13.0，各 1 次），三条独立夹具验收均为 4/4，盲审包已生成但尚未完成独立判分。其余 69 条计划试次仍缺失，因此总评测保持 `INCOMPLETE`，不作整体质量结论。
+
 0.13 的停止条件是：合同与评估器冻结、所有计划试次都有终态回执、回执证据可读且绑定当前版本、独立判分器自测通过、无旧证据复用、未知和高风险副作用没有被包装成成功。完成这些后再扩展到 30～50 题和多宿主。

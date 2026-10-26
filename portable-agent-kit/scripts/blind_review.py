@@ -90,7 +90,7 @@ def _receipt_evidence(receipt, line_label):
 def validate_receipts_for_review(contract, contract_path, receipt_path):
     """Apply the normal receipt checks plus strict version/evidence binding."""
     eval_contract.validate_contract(contract)
-    rows = eval_contract.validate_receipts(contract, receipt_path)
+    rows = eval_contract.validate_receipts(contract, receipt_path, contract_path=contract_path)
     contract_sha = digest_file(contract_path)
     by_trial = {}
     for index, row in enumerate(rows, 1):

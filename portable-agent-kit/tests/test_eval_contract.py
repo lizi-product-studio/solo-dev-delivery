@@ -24,6 +24,12 @@ def contract():
 
 
 class EvaluationContractTests(unittest.TestCase):
+    def test_semantic_decisions_map_to_existing_runtime_states(self):
+        mapping = eval_contract.decision_map("MAINTENANCE", "DEFER", "BUSINESS_DECISION")
+        self.assertIsNone(mapping["route"])
+        self.assertEqual("NEEDS_CONTEXT", mapping["boundary"])
+        self.assertEqual("NEEDS_INPUT", mapping["evidence"])
+
     def test_contract_validation_and_semantic_names(self):
         meta = eval_contract.validate_contract(contract())
         self.assertEqual(["baseline", "candidate"], meta["arms"])

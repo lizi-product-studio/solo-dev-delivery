@@ -26,4 +26,10 @@
 
 `eval_contract.py validate` 只校验合同和回执结构；`summarize` 只做描述性统计，缺失样本默认返回 `INCOMPLETE`。它不调用模型、不判断业务语义、不授予权限，也不替代现有交付门禁。
 
+语义层和现有执行层的映射可以直接查看：
+
+```sh
+python portable-agent-kit/scripts/eval_contract.py map --route GOVERNED --boundary STOP --evidence DONE
+```
+
 建议指标包括：首轮成功、最终成功、用户纠正次数、可恢复阻塞交接率、交接准确率、恢复完成率、独立进度、旧状态误执行率、未知结果误报率、耗时和用量。高风险副作用和未知误报应以零为目标；小样本先报告描述性结果，不宣称统计显著或普遍领先。

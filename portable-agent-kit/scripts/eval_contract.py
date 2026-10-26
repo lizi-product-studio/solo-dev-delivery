@@ -14,6 +14,11 @@ METRICS = {"first_pass_success", "final_success", "user_correction_count",
            "independent_progress", "stale_side_effect_rate",
            "unknown_reported_as_success_rate", "execution_seconds",
            "input_tokens", "cached_input_tokens", "output_tokens"}
+RUNTIME_MAP = {
+    "route": {"QUICK": "QUICK_PATCH", "BOUNDED": "BOUNDED_CHANGE", "GOVERNED": "GOVERNED_DELIVERY", "MAINTENANCE": None},
+    "boundary": {"AUTO": "READY", "ASK": "NEEDS_INPUT", "STOP": "BLOCKED_OR_UNKNOWN", "DEFER": "NEEDS_CONTEXT"},
+    "evidence": {"DONE": "PASS_REQUIRED", "NEEDS_EVIDENCE": "INCOMPLETE", "BLOCKED": "BLOCKED", "BUSINESS_DECISION": "NEEDS_INPUT"},
+}
 
 class ContractError(ValueError):
     pass
@@ -149,13 +154,29 @@ def summarize(contract, rows):
             "observed_trials": len(actual), "missing_trials": [{"task_id": t, "arm_id": a, "repeat": r} for t, a, r in missing],
             "status": "COMPLETE" if not missing else "INCOMPLETE", "arms": groups}
 
+def decision_map(route=None, boundary=None, evidence=None):
+    result = {"runtime_map": RUNTIME_MAP}
+    if route is not None:
+        require(route in ROUTES, "route invalid")
+        result["route"] = RUNTIME_MAP["route"][route]
+    if boundary is not None:
+        require(boundary in BOUNDARIES, "boundary invalid")
+        result["boundary"] = RUNTIME_MAP["boundary"][boundary]
+    if evidence is not None:
+        require(evidence in EVIDENCE, "evidence invalid")
+        result["evidence"] = RUNTIME_MAP["evidence"][evidence]
+    return result
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     v = sub.add_parser("validate"); v.add_argument("contract", type=Path); v.add_argument("--receipts", type=Path)
     s = sub.add_parser("summarize"); s.add_argument("contract", type=Path); s.add_argument("receipts", type=Path); s.add_argument("--allow-incomplete", action="store_true")
+    m = sub.add_parser("map"); m.add_argument("--route", choices=sorted(ROUTES)); m.add_argument("--boundary", choices=sorted(BOUNDARIES)); m.add_argument("--evidence", choices=sorted(EVIDENCE))
     args = parser.parse_args(argv)
     try:
+        if args.command == "map":
+            print(json.dumps(decision_map(args.route, args.boundary, args.evidence), ensure_ascii=False, indent=2)); return 0
         contract = load_json(args.contract)
         meta = validate_contract(contract)
         if args.command == "validate":

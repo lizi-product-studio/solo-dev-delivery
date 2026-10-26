@@ -68,4 +68,11 @@ jobs:
         run: |
           version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
           cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" "packages/solo-dev-delivery-$version.zip"
-          sha256sum -c "packages/solo-dev-delivery-$version.zip.sha256"
+          (cd packages && sha256sum -c "solo-dev-delivery-$version.zip.sha256")
+      - name: Run release self-check
+        run: |
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/release_check.py" \
+            "$RUNNER_TEMP/solo-export/solo-dev-delivery" \
+            "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" \
+            --checksum "packages/solo-dev-delivery-$version.zip.sha256"

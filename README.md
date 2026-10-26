@@ -2,7 +2,7 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**0.13.0 是评测合同候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它在0.12.0核心循环上增加跨任务、版本和宿主可复用的评测合同、回执校验和描述性汇总，开始用真实指标证明是否减少人工介入和返工。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心和评测证据见 [VALIDATION.md](VALIDATION.md)、[评测合同](skill/solo-dev-delivery/references/evaluation-contract.md) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
+**1.0.0 是当前可交付候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它沿用 0.13 的评测合同兼容层，补上可复现的发布自检、版本化导出和安装包校验；评测合同的 `schema_version: 0.13` 继续用于历史回执，不把未完成的真实回放写成质量证明。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心证据见 [VALIDATION.md](VALIDATION.md)、[发布自检](scripts/release_check.py) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
 
 当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
 
@@ -30,7 +30,7 @@ cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-生成自包含目录及 `solo-dev-delivery-0.13.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.13.0.zip)及[校验值](packages/solo-dev-delivery-0.13.0.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `solo-dev-delivery-1.0.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-1.0.0.zip)及[校验值](packages/solo-dev-delivery-1.0.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -40,6 +40,15 @@ python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --dry-run
 python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills
 python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --verify
+```
+
+发布包生成后可运行一次只读自检：
+
+```sh
+python /absolute/export/solo-dev-delivery/scripts/release_check.py \
+  /absolute/export/solo-dev-delivery \
+  /absolute/source/packages/solo-dev-delivery-1.0.0.zip \
+  --checksum /absolute/source/packages/solo-dev-delivery-1.0.0.zip.sha256
 ```
 
 安装到该根目录下的 `solo-dev-delivery/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。

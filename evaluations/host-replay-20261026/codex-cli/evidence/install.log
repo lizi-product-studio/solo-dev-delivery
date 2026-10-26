@@ -1,0 +1,13 @@
+$ C:\Users\Administrator\AppData\Local\Programs\Python\Python312\python.exe scripts/install_agent.py --source <exported-skill> --destination <host-replay-output>\host\skills
+returncode=0
+stdout:
+{
+  "status": "INSTALLED",
+  "destination": "C:\\Users\\Administrator\\Desktop\\\u7ec8\u6781\u901a\u7528Skill\\outputs\\host-replay-codex-20261026-v1\\host\\skills\\solo-dev-delivery",
+  "files": 34,
+  "changed": true,
+  "host_loading": "unverified",
+  "automatic_routing": "unverified"
+}
+
+stderr:

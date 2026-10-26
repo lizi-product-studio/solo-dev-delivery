@@ -1,0 +1,22 @@
+$ C:\Users\Administrator\AppData\Local\Programs\Python\Python312\python.exe <host-replay-output>\host\skills\solo-dev-delivery\scripts\capability_probe.py --capabilities <host-replay-output>\host.json --require fs.read --require shell.exec --format json
+returncode=0
+stdout:
+{
+  "status": "READY",
+  "required": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "supported": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "unsupported": [],
+  "unknown": [],
+  "errors": [],
+  "advisory": true,
+  "tools_executed": false,
+  "authorization_granted": false
+}
+
+stderr:

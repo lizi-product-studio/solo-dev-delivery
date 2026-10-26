@@ -4,6 +4,8 @@
 
 **0.13.0 是评测合同候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它在0.12.0核心循环上增加跨任务、版本和宿主可复用的评测合同、回执校验和描述性汇总，开始用真实指标证明是否减少人工介入和返工。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心和评测证据见 [VALIDATION.md](VALIDATION.md)、[评测合同](skill/solo-dev-delivery/references/evaluation-contract.md) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
 
+当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
+
 用户反馈先转为可验证的问题，再决定补方法、修工具或删去无效要求；后续前端、后端／数据库、真实项目与跨平台验证的推进标准见 [迭代路线](ROADMAP.md)。本轮[前端研究与新任务试跑](evaluations/frontend-quality-2026-10-23/README.md)保留来源取舍、实际页面、首次中断和续接成本。
 
 ## 适用方式

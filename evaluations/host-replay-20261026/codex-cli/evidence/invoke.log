@@ -1,0 +1,22 @@
+$ C:\Users\Administrator\AppData\Local\Programs\Python\Python312\python.exe <host-replay-output>\host\skills\solo-dev-delivery\scripts\capability_receipt.py --capabilities <host-replay-output>\host.json --host-id codex-cli --host-version codex-cli 0.164.0-alpha.11.1 --platform windows --require fs.read --require shell.exec --output <host-replay-output>\evidence\capability-snapshot.json
+returncode=0
+stdout:
+{
+  "format": "capability-snapshot/1",
+  "host_id": "codex-cli",
+  "host_version": "codex-cli 0.164.0-alpha.11.1",
+  "platform": "windows",
+  "capabilities": {
+    "browser.control": "unknown",
+    "fs.read": "supported",
+    "shell.exec": "supported"
+  },
+  "required_capabilities": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "status": "READY",
+  "snapshot_sha256": "f963bc1c7c1eb57d7efe9eca8755af49aa849ac8ff58693f168154740c4bc85c"
+}
+
+stderr:

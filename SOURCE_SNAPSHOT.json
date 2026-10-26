@@ -681,12 +681,12 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.11.2.zip",
-      "sha256": "4a05237381787851b762b77c41ed73d9d52ac3415ae698fdb7aa00d72974e6c8",
-      "bytes": 84615
+      "sha256": "4532dc9877bb2f7d0ffdc353d27fc2e333ba5de51069ac381ff8d39b4dafd277",
+      "bytes": 84239
     },
     {
       "path": "packages/solo-dev-delivery-0.11.2.zip.sha256",
-      "sha256": "bfad3b260766e43728a26c4fed649cae4b266e51e2655f9d5621f7d799c9942f",
+      "sha256": "9d89118ca2f946bb44a2792672c31d286b81cb7b3e1ed02ec7f46c89a7fd79e5",
       "bytes": 103
     },
     {

@@ -60,9 +60,19 @@
       "bytes": 29736
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
+      "sha256": "39638f3f1f74352ef25d3be4bbdf2b8c343253fe3ae62b32e30f1e3014f39443",
+      "bytes": 1309
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
       "sha256": "2185832a455e1ae39162f991b2e2d15f184332c1f43553f26927a8802f449413",
       "bytes": 1373
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json",
+      "sha256": "ab0a50a759ec143b87f5bb4595894d1990cc0ebfded6e3f8db15b695c229e015",
+      "bytes": 6266
     },
     {
       "path": "evaluations/autonomy-core-review-2026-10-26/README.md",

@@ -1,10 +1,10 @@
 {
   "created": "2026-10-26",
-  "version": "0.13.0",
+  "version": "1.0.0",
   "scope": "Canonical Git source and versioned distribution blobs only; excludes this manifest, private runtime, customer project code, raw conversations and temporary exports. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "c57659e7d1722edd08fbfcd15426ea7c79c32087b9",
-    "previous_version": "0.12.0",
+    "previous_head": "b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+    "previous_version": "0.13.0",
     "rewrite_history": false
   },
   "frozen_skill_source_commit": "cf712eb",
@@ -21,8 +21,8 @@
     },
     {
       "path": ".github/workflows/validate.yml",
-      "sha256": "6f8e739d0af484fd8bfc410edf07a19a06db43f3fe80d10781d089e6b1ecff9a",
-      "bytes": 2863
+      "sha256": "95305e795d40cfde43fbcd43d30973c498274d3716d67698ae7b7d063a92a642",
+      "bytes": 3413
     },
     {
       "path": ".gitignore",
@@ -31,8 +31,8 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "b746466d290473f1e99b16ab5cbdc1a8f82c93a9eea561572e8eb91b71ed881c",
-      "bytes": 3232
+      "sha256": "ae61aac79d83a0fbcd0b9e9c997f088667cdb5e8615af16b94acc0e202615d53",
+      "bytes": 3278
     },
     {
       "path": "INTEGRATION.md",
@@ -41,13 +41,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "f9f88de4a85f2bb9454c942dbf8b1aca33d8f9d1c16856ec6cce5ebee6db6590",
-      "bytes": 9128
+      "sha256": "a3c6f42522d6dc5148dc7c47b0b68a864cf4c6fbcd4cc6acfa3c592e219512ed",
+      "bytes": 9467
     },
     {
       "path": "ROADMAP.md",
-      "sha256": "aad2350953f6f7638cef7206178f9efef44c030e836dc9339bd126e04c5ab689",
-      "bytes": 5319
+      "sha256": "603226ae649ea8896bd2daccb3de3a7d47e6311126de8c32780953a717b57c9a",
+      "bytes": 5628
     },
     {
       "path": "THIRD_PARTY.md",
@@ -56,13 +56,13 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "881774211245e9e393a04e6c43f6cbf680bed1299bcb03b80c3b946f70550bd2",
-      "bytes": 30127
+      "sha256": "e39840f170bf15324e28e99eb37d70e5b9cc222e593ad6270d9368f4983b63ad",
+      "bytes": 31506
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "bc1b2d6424b188690079a10a2323b2da2a7c646fea2e34cc0b968cb8aebb1d77",
-      "bytes": 4828
+      "sha256": "ba641e1139aa6c1847b488927868dd19e3387f23c3ce46ef0db5f2af16707fa8",
+      "bytes": 4974
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-mapping-progress.jsonl",
@@ -130,6 +130,21 @@
       "bytes": 29169
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r2/agent-final.txt",
+      "sha256": "d024c86f773f678906c9194cc450c9dd0f69ead576b07d0043ff2b2feb686e3d",
+      "bytes": 213
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r2/independent-evaluation.json",
+      "sha256": "a195ce9786bbb428f3ec502c369b8d1475a8d7709e5fa5de0f42597e98f55c90",
+      "bytes": 31309
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r2/receipt.json",
+      "sha256": "28cda33ef1c1b1b292b72f9b33d3e933f60c911fe34216af451378edc24a33ed",
+      "bytes": 4339
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/recovery-r1/agent-final.txt",
       "sha256": "5f9c73868a844b8f5ee38d9910ec5f78df38f83f4c90bcc65adb8355fdcc683e",
       "bytes": 217
@@ -161,8 +176,8 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-progress-receipts.jsonl",
-      "sha256": "4f98842a5c8424dfe89b41239105aa5641f28b46002fa61f2465cdc0a5a9c593",
-      "bytes": 24364
+      "sha256": "e8d48a089e4bf35dd6fabb9433b23d0f56541e102093753a6c5648b660f4a608",
+      "bytes": 28024
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py",
@@ -870,6 +885,16 @@
       "bytes": 95
     },
     {
+      "path": "packages/solo-dev-delivery-1.0.0.zip",
+      "sha256": "6b2480a54e0485b6ed2607eb4c1b2fa62ece9cf4085e90b131b229aedd452cc2",
+      "bytes": 103831
+    },
+    {
+      "path": "packages/solo-dev-delivery-1.0.0.zip.sha256",
+      "sha256": "81b3a2a39660b0273a6a8ed280bdf39d9a63e98a713b3bec64c53fea342ed4b2",
+      "bytes": 94
+    },
+    {
       "path": "portable-agent-kit/MANIFEST.json",
       "sha256": "f7d0af5960726e22b4e57d2c18e09ee54402d12a04ee53b0fbe57b0e2feabc4b",
       "bytes": 2439
@@ -881,8 +906,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "751126208790d40aef381ce5c72ce604600fb9a93c413639957e3f6d616b39be",
-      "bytes": 5489
+      "sha256": "77fc54c041cb64fa0011c63ee377ef83bbb3c5f7974fb077fa82faebb21ac873",
+      "bytes": 5664
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -1156,8 +1181,8 @@
     },
     {
       "path": "scripts/business_loop.py",
-      "sha256": "df5c0d81e9a5670e2451a5252e1a3a0f5bcb96a6b5584be823ff641dba190197",
-      "bytes": 25296
+      "sha256": "9faed875cc6227170ea2f000ade3a839c2e93187ebe0be26ad677be9262de916",
+      "bytes": 25451
     },
     {
       "path": "scripts/codex_worker.py",
@@ -1171,8 +1196,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "268f11763a96bb7e4a885bde96e966fd245ea98f86b411e42cfc2d393445ba45",
-      "bytes": 4357
+      "sha256": "28d63781628c9256baba18799d53016e504852dd92ba51f0e47f704a6e0cf259",
+      "bytes": 4439
     },
     {
       "path": "scripts/install_agent.py",
@@ -1183,6 +1208,11 @@
       "path": "scripts/kickoff-import.mjs",
       "sha256": "6c486c8b6807ce922ca8287751bc079b0d059f7d01f2651fc1962d43caf99a65",
       "bytes": 893
+    },
+    {
+      "path": "scripts/release_check.py",
+      "sha256": "55fcf8b9e56d66caac6674597a8c500b6f111c5cfa580799ac8ee8938be20c59",
+      "bytes": 6854
     },
     {
       "path": "scripts/resource_engine.py",
@@ -1201,8 +1231,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "b92bba2f2d025a636631589bfb15e66a6e97740b93814af4fb522409cd4a3f69",
-      "bytes": 2289
+      "sha256": "d1d2b5944b619ed77823c05a7aa94ce85e7d1817138baceb443ca7f30eaa242b",
+      "bytes": 2288
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -1375,6 +1405,11 @@
       "bytes": 8019
     },
     {
+      "path": "tests/test_release_check.py",
+      "sha256": "080f04065f2a295f52ee25d7b9b43710eb6a15489137c199109265eb2e414328",
+      "bytes": 3099
+    },
+    {
       "path": "tests/test_resource_engine.py",
       "sha256": "d88f45b5e82005c009feb8837d1e8919a0e54dcaca493223203897488e9394d6",
       "bytes": 46702
@@ -1450,5 +1485,5 @@
       "bytes": 18713
     }
   ],
-  "snapshot_commit": "2c8f01e1de6985d9eebbc182a11652eb3b7229d9"
+  "snapshot_commit": "48375dbaa243424c0e011e6aeb72c31c8ea089e5"
 }

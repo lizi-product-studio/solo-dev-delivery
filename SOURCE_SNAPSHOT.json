@@ -1,13 +1,13 @@
 {
   "created": "2026-10-26",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "scope": "Canonical Git source and versioned distribution blobs only; excludes this manifest, private runtime, customer project code, raw conversations and temporary exports. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "85b52a18350ded72fddf2f0365f3942b98b2380f",
-    "previous_version": "0.11.2",
+    "previous_head": "c57659e7d1722edd08fbfcd15426ea7c79c32087",
+    "previous_version": "0.12.0",
     "rewrite_history": false
   },
-  "frozen_skill_source_commit": "f9af7b3",
+  "frozen_skill_source_commit": "cf712eb",
   "integrated_source": {
     "repository": "https://github.com/lizi-product-studio/superpowers-lite",
     "commit": "e753ab13097b9f987f6f3ec4dadaea2656b887b2",
@@ -31,8 +31,8 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "b217471ae5f5b78396455cfc66164982da5aa30c0867d7555aad116afad1939b",
-      "bytes": 3220
+      "sha256": "b746466d290473f1e99b16ab5cbdc1a8f82c93a9eea561572e8eb91b71ed881c",
+      "bytes": 3232
     },
     {
       "path": "INTEGRATION.md",
@@ -41,13 +41,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "7f24a704e523dda0a58271e7128baa9371b88c4c76d9a074cc5644837200b5c9",
-      "bytes": 8630
+      "sha256": "8efe1bbda310c1fd28856709a1f332354746f44ca48b6b705426d986e1d2f9dd",
+      "bytes": 8797
     },
     {
       "path": "ROADMAP.md",
-      "sha256": "7527516623d81655cf20f761b056f38c57d05cd157bbfb61f280b118cf5f734a",
-      "bytes": 4583
+      "sha256": "f7e3b55a4deba35a4e925601f1ddc63dd6cb94df1f74d20c6220def4bca7d95a",
+      "bytes": 4827
     },
     {
       "path": "THIRD_PARTY.md",
@@ -56,8 +56,13 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "e5c13877f0a33da0ec3d63fe86c507a309627628309acb21b6546ecb515aaca8",
-      "bytes": 28611
+      "sha256": "6cb9fd9b97be0a38654ddcc596db8dad6762fb17a07e3384a0e363ab05b6ed42",
+      "bytes": 29354
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
+      "sha256": "2185832a455e1ae39162f991b2e2d15f184332c1f43553f26927a8802f449413",
+      "bytes": 1373
     },
     {
       "path": "evaluations/autonomy-core-review-2026-10-26/README.md",
@@ -705,6 +710,16 @@
       "bytes": 103
     },
     {
+      "path": "packages/solo-dev-delivery-0.13.0.zip",
+      "sha256": "7a20c81dbd4796027b0045920f5f9917f90674dc8414c9aa562ebee12e2ef655",
+      "bytes": 88809
+    },
+    {
+      "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
+      "sha256": "c5c3fde3d66720e86a9dbc491d368dec1d811b1f3e8ffe97ddf8b62e0205370d",
+      "bytes": 103
+    },
+    {
       "path": "portable-agent-kit/MANIFEST.json",
       "sha256": "f1ab95705e46c0e5f47c6c76f3987f442a79e5d14a400029401ae1522a5f4d4d",
       "bytes": 2122
@@ -716,8 +731,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "648aa159d2f5036409229747fcc7204be5e182345c7e925b8a8fb9c09c512fb7",
-      "bytes": 4900
+      "sha256": "7e6ebc3221cad0eeb62b58b1ce4fc3ab4e26234126ae10878a28b20dffe960c4",
+      "bytes": 5089
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -860,6 +875,11 @@
       "bytes": 32266
     },
     {
+      "path": "portable-agent-kit/scripts/eval_contract.py",
+      "sha256": "12aede9a6b30c0940612040678bdc7dc60e43d85d57789bebe36fcfe18fbf09d",
+      "bytes": 10620
+    },
+    {
       "path": "portable-agent-kit/scripts/gate.py",
       "sha256": "642a5ea382c39880c0959f77858a5cbe70f4e643c256821ab27383c9de6da0ad",
       "bytes": 22559
@@ -898,6 +918,11 @@
       "path": "portable-agent-kit/tests/test_decisions.py",
       "sha256": "e393cd13035fe6513caee5b6d8820ceeaa80714185c11c415ec65b1666af0646",
       "bytes": 15017
+    },
+    {
+      "path": "portable-agent-kit/tests/test_eval_contract.py",
+      "sha256": "19f1707cf9cda04c31231fb8e9c397bdf81f7862f2ffe5fbb21c8eb1c0050ace",
+      "bytes": 3138
     },
     {
       "path": "portable-agent-kit/tests/test_gate.py",
@@ -961,8 +986,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "931e8aff193fdbfe3cf32867f041f59effec8114edd86faf338010b6507da53d",
-      "bytes": 4209
+      "sha256": "9967a9988413525942fc2f6500db88e3309578fc2300b9216c58c0c31839ea5b",
+      "bytes": 4229
     },
     {
       "path": "scripts/install_agent.py",
@@ -991,8 +1016,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "9c999cc14b1f3163a4633109fe4df6b323dba64958c6c944836de712fcafc774",
-      "bytes": 2173
+      "sha256": "b92bba2f2d025a636631589bfb15e66a6e97740b93814af4fb522409cd4a3f69",
+      "bytes": 2289
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -1001,8 +1026,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/autonomy-core.md",
-      "sha256": "39c7c4c41038401f962410218c012a84962610cb8356d2cfd13d83ea02a423de",
-      "bytes": 4557
+      "sha256": "05950ddba97a0df0bc1e021c66275b5bcc4009f88fe0a06e99d164fc3cc72d34",
+      "bytes": 4738
     },
     {
       "path": "skill/solo-dev-delivery/references/blocker-recovery.md",
@@ -1023,6 +1048,11 @@
       "path": "skill/solo-dev-delivery/references/engineering-practice.md",
       "sha256": "f2ab03203b412fc1e91346870a3d4c40c135264815a6009aa85742999316ce82",
       "bytes": 3341
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/evaluation-contract.md",
+      "sha256": "531f5d4a6dbce6d4297214cd8867444e492913e85a3e348ffe8e58a9e460f32a",
+      "bytes": 2356
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",

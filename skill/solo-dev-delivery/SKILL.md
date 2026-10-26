@@ -2,7 +2,7 @@
 name: solo-dev-delivery
 description: 推进软件交付、业务方案、数据分析和其他有明确产物的多步骤任务，按事实选择执行深度，自动判断能力与授权边界，实际验收、恢复失败并安排下一步；简单问答与普通闲聊不启动流程。
 metadata:
-  version: "0.12.0"
+  version: "0.13.0"
 ---
 
 # 自主交付协作
@@ -20,6 +20,7 @@ metadata:
 - 真实阻塞：`blocker-recovery.md`；风险分流/诊断：`engineering-practice.md`。
 - 用户反馈驱动的主动发现：`delivery-self-review.md`；主要界面：`frontend-quality.md`。
 - 正式验收：`execution-gate.md`、`result-verification.md`；项目经营：`project-operation.md`。
+- 跨任务/版本/宿主比较：`evaluation-contract.md`，不要把小样本或单次成功写成普遍领先。
 - 跨宿主能力/安装：`host-integration.md`；完整本机队列：`software-delivery.md`；轻量跨业务检查：`portable-workflow.md`。
 
 Skill 只提供判断方法和可选工具，不增加账号、权限、后台运行、定时器或平台能力；其他宿主必须实际加载并验证它。

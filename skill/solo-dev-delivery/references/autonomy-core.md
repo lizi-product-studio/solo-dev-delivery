@@ -40,4 +40,5 @@
 - 排障和风险分流不清：读[工程方法](engineering-practice.md)；实际阻塞和最小交接：读[恢复与最小交接](blocker-recovery.md)。
 - 用户要求自己找问题、出现同类返工或主要界面/多轮行为变化：读[交付前主动自审](delivery-self-review.md)；新界面再读[产品界面与前端设计](frontend-quality.md)。
 - 需要正式候选绑定、决策模型或隔离反例：读[交付门禁](execution-gate.md)和[结果核验](result-verification.md)，不重复建立另一套门禁。
+- 需要跨任务、版本或宿主比较：读[评测合同](evaluation-contract.md)，使用 `scripts/eval_contract.py` 校验/汇总，不把描述性统计当成业务验收。
 - 用户授权的项目巡检和持续改进：读[项目巡检与自主改进](project-operation.md)。跨宿主安装和能力探测：读[宿主安装与预检](host-integration.md)。完整本机队列：读[本机软件交付](software-delivery.md)；轻量跨业务检查：读[跨业务工作](portable-workflow.md)。

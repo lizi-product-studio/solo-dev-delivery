@@ -1,5 +1,10 @@
-# 0.12.0：自主化核心重构候选（2026-10-26）
+# 0.13.0：评测合同候选（2026-10-26）
 
+`feat/evaluation-contract-2026-10-26` 从 0.12.0 候选 `c57659e7d1722edd08fbfcd15426ea7c79c32087b9` 分叉，未合并 `main`。本轮新增评测合同、JSONL 运行回执校验、描述性指标汇总和脱敏试点合同，统一跨任务/版本/宿主的证据字段；现有 gate/challenge/队列仍是交付门禁，不重建第二套门禁。当前先验证合同和工具本身，尚未宣称 0.13 对真实 Agent 质量有提升。
+
+已通过：Skill Creator quick validation、评测合同 4 项自测、示例合同 CLI 校验。待完成：0.13 版本包、全套兼容 CI、12 题真实回放和独立盲审。指标缺失必须保留 `unknown`；小样本只做描述性结论。
+
+# 0.12.0：自主化核心重构候选（2026-10-26）
 `feat/autonomy-core-2026-10-26` 从 0.11.2 候选 `85b52a18350ded72fddf2f0365f3942b98b2380f` 分叉，未合并 `main`。本轮把任务识别、自动边界判断、实际验收和下一轮迭代计划抽成[自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)，并收缩 `SKILL.md` 与主动自审引用的重复内容；正式门禁、结果核验、宿主接入、本机队列和前端专项仍保留为按需细节。核心抽象与重复审计见[autonomy-core-review-2026-10-26](evaluations/autonomy-core-review-2026-10-26/README.md)。
 
 0.12.0 已完成本机 Skill Creator 校验、204 项便携测试（4 项按平台跳过）、28 文件临时安装/校验，以及[远端 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40255539964) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本包逐字节校验。包 `packages/solo-dev-delivery-0.12.0.zip` SHA256 为 `da34dd63f4cbf2aa9c3e19647e6e0efb758839b8b67da01b38c8e2d1c92e7b49`。0.12.0 目标是减少入口和引用的重复，而不是增加默认流程；当前本机用户级安装仍为0.11.0，其他宿主加载和自动分流仍需宿主实机验证。

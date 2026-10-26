@@ -14,6 +14,7 @@ AAP-0.1是完整系统的兼容请求信封；0.11.0候选保留version 2状态�
 - `adapters/example_adapter.py`：内存 JSONL 演示，不执行工具、不持久化 state，也不是可直接接入的平台适配器。
 - `scripts/export_skill.py`（系统源码包入口）：从完整系统目录生成自包含 Skill 文件夹和 ZIP；导出内容不带个人偏好或本机运行时。
 - `scripts/capability_probe.py`：可选无状态预检；只检查本次显式需要的能力，输出READY/BLOCKED/NEEDS_CONTEXT，不创建任务状态、不执行工具。与持久核心共享三态归一化。
+- `scripts/eval_contract.py`：校验冻结的0.13评测合同和JSONL运行回执，并输出保留unknown的描述性指标；不调用模型、不授予权限、不替代交付门禁。
 - `../scripts/install_agent.py`：安装已导出的Skill目录；generic模式显式指定任意宿主的真实Skill根目录，ZCode/Kimi CLI支持目录快捷方式。
 
 普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：

@@ -1,8 +1,8 @@
-# Solo Dev Delivery 0.12.0 候选包使用说明
+# Solo Dev Delivery 0.13.0 候选包使用说明
 
-从[候选分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/autonomy-core-2026-10-26/packages/solo-dev-delivery-0.12.0.zip)下载并解开 `solo-dev-delivery-0.12.0.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
+从[候选分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/evaluation-contract-2026-10-26/packages/solo-dev-delivery-0.13.0.zip)下载并解开 `solo-dev-delivery-0.13.0.zip`。保留整个 `solo-dev-delivery/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
 
-包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/autonomy-core-2026-10-26/packages/solo-dev-delivery-0.12.0.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验并逐字节比较，不依赖Actions制品存储配额；它仍是未合并main的候选。
+包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/feat/evaluation-contract-2026-10-26/packages/solo-dev-delivery-0.13.0.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验并逐字节比较，不依赖Actions制品存储配额；它仍是未合并main的候选。
 
 先确认目标 Agent 实际使用的 Skill 搜索根目录，再执行（Python 3.9+，按本机使用 python 或 python3）：
 

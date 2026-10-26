@@ -721,12 +721,12 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "7a20c81dbd4796027b0045920f5f9917f90674dc8414c9aa562ebee12e2ef655",
-      "bytes": 88809
+      "sha256": "fb4d1c29bce40cc83b68218c072974886c0b87f22304d7e05f8f2231362136a0",
+      "bytes": 89273
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "c5c3fde3d66720e86a9dbc491d368dec1d811b1f3e8ffe97ddf8b62e0205370d",
+      "sha256": "37bbcc8f36ef6967866086e010cb8e7ba6b3468e80e9bc2fac7308bc57b65cbe",
       "bytes": 103
     },
     {
@@ -886,8 +886,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/eval_contract.py",
-      "sha256": "12aede9a6b30c0940612040678bdc7dc60e43d85d57789bebe36fcfe18fbf09d",
-      "bytes": 10620
+      "sha256": "d1e7864971ef87b97acd492a0326f442511858feec04158e39eeaba7399ff429",
+      "bytes": 11914
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
@@ -931,8 +931,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_eval_contract.py",
-      "sha256": "19f1707cf9cda04c31231fb8e9c397bdf81f7862f2ffe5fbb21c8eb1c0050ace",
-      "bytes": 3138
+      "sha256": "2a7df2479a2e05a41942ad12cd28026fd7169e693eda9ec6d9d938bfba6d1f8e",
+      "bytes": 3467
     },
     {
       "path": "portable-agent-kit/tests/test_gate.py",
@@ -1061,8 +1061,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/evaluation-contract.md",
-      "sha256": "531f5d4a6dbce6d4297214cd8867444e492913e85a3e348ffe8e58a9e460f32a",
-      "bytes": 2356
+      "sha256": "6456ee8c67013933ef1cb0be7b22bfa64232fdf9238e5e0d0465b163ce40999a",
+      "bytes": 2530
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",

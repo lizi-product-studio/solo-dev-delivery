@@ -26,6 +26,8 @@
 
 `eval_contract.py validate` 只校验合同和回执结构；`summarize` 只做描述性统计，缺失样本默认返回 `INCOMPLETE`。它不调用模型、不判断业务语义、不授予权限，也不替代现有交付门禁。
 
+真实回放应先用 `evaluations/autonomy-benchmark-2026-10-26/replay_runner.py` 校验宿主、版本、运行标识、观察项和证据文件，再用 `portable-agent-kit/scripts/blind_review.py make-packets` 生成不暴露 arm 的独立判分包。没有实际回放和独立判分时，只能报告工具链已验证，不能报告 Skill 质量已被证明。
+
 语义层和现有执行层的映射可以直接查看：
 
 ```sh

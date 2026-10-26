@@ -61,4 +61,13 @@ python S/capability_probe.py --capabilities host.json --require fs.read --format
 
 文件安装测试、客户端加载、自动分流和实际交付是不同结论。没有执行的宿主检查标为未测；这套说明不将本地PASS变成所有Agent已兼容。
 
+可把真实宿主回放保存为 `host-replay-receipt/1`，并用包内 `host_replay.py` 做机械核对：
+
+```sh
+python S/host_replay.py replay.json --evidence-root evidence/ \
+  --expected-package-sha256 <当前包SHA256> --expected-candidate <当前版本或提交>
+```
+
+回执必须分别记录 `install`、`load`、`invoke`、`route`、`verify` 五个阶段。每个 `PASS`/`FAIL` 阶段都要有相对 `evidence_refs`，工具会重新读取并核对 SHA-256，同时拒绝旧候选或旧包的回执；`UNKNOWN`/`UNVERIFIED` 保持 `INCOMPLETE`，不按零成本或成功处理。该检查器只证明证据绑定和文件完整性，不证明宿主菜单、路由语义、界面含义或业务验收，后者仍需独立复核。
+
 目录快捷方式核对于2026-10-23：[ZCode Skills](https://zcode.z.ai/en/docs/skill)、[Kimi Code Skills](https://www.kimi.com/code/docs/en/kimi-code-cli/customization/skills.html)。Kimi也支持共享的~/.agents/skills；已有有效安装优先复用，不同时安装重复副本。具体Harness加载机制由该宿主当前文档/配置确认。

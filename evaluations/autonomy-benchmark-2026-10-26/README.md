@@ -12,4 +12,18 @@ python portable-agent-kit/scripts/eval_contract.py validate evaluations/autonomy
 
 完成回放后，把每次运行写入 JSONL，并通过 `summarize` 汇总。缺失、不可读或未终态样本会保持 `INCOMPLETE`；未知值必须写 `null`，不填零。最终只报告描述性结果，先不宣称统计显著或普遍领先。
 
+`replay_runner.py` 把冻结矩阵和真实证据校验分开：`plan` 只生成待执行清单，绝不生成结果；`validate` 只接受带宿主、版本、运行标识、观察项和可读证据文件的实际回放回执。默认拒绝 `synthetic_fixture`，因此自测夹具不能被误当成真实 Agent 结果：
+
+```sh
+python evaluations/autonomy-benchmark-2026-10-26/replay_runner.py plan \
+  evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json \
+  /tmp/autonomy-pilot-plan.jsonl
+python evaluations/autonomy-benchmark-2026-10-26/replay_runner.py validate \
+  evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json \
+  /path/to/receipts.jsonl --evidence-root /path/to/evidence \
+  --require-complete
+```
+
+`--allow-synthetic` 只适合验证工具链，不得用于 0.13 的真实质量结论。回执中的 `provenance.skill_revision`、`run_id` 和证据文件由执行宿主填写；本工具不会替 Agent 调用模型，也不会把计划状态升级为完成。
+
 0.13 的停止条件是：合同与评估器冻结、所有计划试次都有终态回执、回执证据可读且绑定当前版本、独立判分器自测通过、无旧证据复用、未知和高风险副作用没有被包装成成功。完成这些后再扩展到 30～50 题和多宿主。

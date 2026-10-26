@@ -2,8 +2,8 @@
   "format": "host-replay-receipt/1",
   "status": "PASS",
   "host_id": "codex-cli",
-  "candidate": "git:f54a986",
-  "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949",
+  "candidate": "git:8174811",
+  "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866",
   "required_phases": [
     "install",
     "load",
@@ -23,11 +23,11 @@
       "evidence_refs": [
         {
           "path": "install.log",
-          "sha256": "b64bb6ce144eaa08540e43f846a38202d677e1d67632297f5818f3ed9b8252d5"
+          "sha256": "ee7ec12730b2270daeefbdc3073ab651cb3b49de2a3795cdfa976f0a96eacdc0"
         }
       ],
-      "candidate": "git:f54a986",
-      "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949"
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
     },
     {
       "id": "load",
@@ -37,11 +37,11 @@
       "evidence_refs": [
         {
           "path": "load.log",
-          "sha256": "3aa067e13379c5c28b24db4f8e62a3c6b43f78c647472feeaabb3cc3a04d7b21"
+          "sha256": "ddcca00e60b01c441ea0f48bdffe47f618cbfd7af7d7b876640b3f20e9464210"
         }
       ],
-      "candidate": "git:f54a986",
-      "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949"
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
     },
     {
       "id": "invoke",
@@ -51,11 +51,11 @@
       "evidence_refs": [
         {
           "path": "invoke.log",
-          "sha256": "d413b3609caf83aa5f37cffe6e443430e953f26783766809c96ed7b659eedc3d"
+          "sha256": "c094db5b8066d8a000e7e389eb9d5212cbb4d0d7eba5241c2ec52bd33a03b9f5"
         }
       ],
-      "candidate": "git:f54a986",
-      "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949"
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
     },
     {
       "id": "route",
@@ -65,15 +65,15 @@
       "evidence_refs": [
         {
           "path": "route.log",
-          "sha256": "44f03dcd6db4246c312ca392d5625e4ad9838ef459f2ec536d6f82bc86a3dbc0"
+          "sha256": "05a5761e507a5173fac2e0f4e85ee183349330613cf783f59cda30721f435d94"
         },
         {
           "path": "capability-snapshot.json",
           "sha256": "c094db5b8066d8a000e7e389eb9d5212cbb4d0d7eba5241c2ec52bd33a03b9f5"
         }
       ],
-      "candidate": "git:f54a986",
-      "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949"
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
     },
     {
       "id": "verify",
@@ -83,11 +83,11 @@
       "evidence_refs": [
         {
           "path": "verify.log",
-          "sha256": "ba828ff940af2bc3de08d2b6bd52766a2e822ca13f63ec656d95915d893d179b"
+          "sha256": "edf6cff0b2dd292c8bffe3d2833963c03ef4ac15780b2a0ea117ce83ba937120"
         }
       ],
-      "candidate": "git:f54a986",
-      "package_sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949"
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
     }
   ],
   "limits": "Evidence binding only; host loading, route semantics, UI meaning and business acceptance still require independent review.",

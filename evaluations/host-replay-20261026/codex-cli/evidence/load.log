@@ -1,2 +1,1 @@
-skill_exists=True
-version_line=  version: "0.13.0"
+host skill path=<host-replay-output>\host\skills\solo-dev-delivery   version: "0.13.0"

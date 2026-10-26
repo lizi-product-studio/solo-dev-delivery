@@ -36,6 +36,16 @@ CODEX = shutil.which("codex")
 MODEL_CONFIG = REAL_CODEX / "config.toml"
 TASK_ID = "software-quick-patch"
 FIXTURE_ID = fixtures.TASK_IDS[0]
+TASK_CONFIG = {
+    "software-quick-patch": {
+        "observations": ("changed", "readback"),
+        "objective": "完成一个明确、可回退的小修改并读回结果",
+    },
+    "software-recovery": {
+        "observations": ("diagnosed", "recovered"),
+        "objective": "遇到参数或工具错误后诊断根因、恢复原动作并继续",
+    },
+}
 CONTRACT = PILOT / "pilot-contract.json"
 PACKAGE = REPO / "packages" / "solo-dev-delivery-0.13.0.zip"
 SOLO_012_COMMIT = "c57659e7d1722edd08fbfcd15426ea7c79c32087"
@@ -59,6 +69,32 @@ def fingerprint(root: Path) -> dict[str, str]:
             for p in sorted(root.rglob("*")) if p.is_file() and ".git" not in p.parts}
 
 
+def read_events(path: Path) -> list[dict]:
+    rows = []
+    if not path.is_file():
+        return rows
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict):
+            rows.append(value)
+    return rows
+
+
+def final_message(events: list[dict], fallback: str) -> str:
+    if fallback.strip():
+        return fallback
+    messages = []
+    for event in events:
+        item = event.get("item")
+        if event.get("type") == "item.completed" and isinstance(item, dict) and item.get("type") == "agent_message":
+            if isinstance(item.get("text"), str) and item["text"].strip():
+                messages.append(item["text"])
+    return messages[-1] if messages else fallback
+
+
 def base_environment(profile: Path, codex_home: Path) -> dict[str, str]:
     keep = {"PATH", "SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP",
             "LANG", "LC_ALL", "PROCESSOR_ARCHITECTURE", "NUMBER_OF_PROCESSORS",
@@ -72,7 +108,47 @@ def base_environment(profile: Path, codex_home: Path) -> dict[str, str]:
     return env
 
 
-def setup(root: Path, arm: str, label: str) -> dict:
+def build_task(task: str, workspace: Path) -> None:
+    """Build a public fixture plus private control state for one task."""
+    fixtures.build(FIXTURE_ID, workspace)
+    if task != "software-recovery":
+        return
+    private = fixtures.control_dir(workspace)
+    fixtures.write(workspace, "TASK.md", "请修复这个扫描档案页数统计工具，使公开 API/CLI 符合 CONTRACT.md，并生成本次 artifacts/page_coverage.json。先按 CONTRACT.md 使用 tools/verify_once.py 运行一次验证入口；如果它返回错误，请读取真实错误、判断是可恢复的工具故障，修正调用或适配后重走同一动作，直到成功并读回产物。不得修改 TASK.md、CONTRACT.md、data/ 或 tools/verify_once.py。最后简要说明实际错误、恢复动作和读回结果。\n")
+    fixtures.write(workspace, "CONTRACT.md", "# 恢复型扫描页覆盖契约\n\n先执行 `python tools/verify_once.py --input data/page_ranges.csv --output artifacts/page_coverage.json`。工具第一次调用会模拟一次明确的参数/通道故障并返回非零；必须保留错误观察，诊断后重试同一命令。第二次及之后调用才会运行真实入口。输入与标准页覆盖契约相同：合并闭区间、相邻区间合并、每页只计一次，输出按 document_id 排序。TASK.md、CONTRACT.md、data/ 和 tools/verify_once.py 只读；只修改 src/ 与 artifacts/。\n")
+    fixtures.write(workspace, "tools/verify_once.py", '''import argparse, hashlib, json, subprocess, sys
+from pathlib import Path
+
+def control(workspace):
+    key = hashlib.sha256(str(Path(workspace).resolve()).encode("utf-8")).hexdigest()[:20]
+    return Path(workspace).resolve().parent / "_fixture_control" / key
+
+def main():
+    p = argparse.ArgumentParser(); p.add_argument("--input", required=True); p.add_argument("--output", required=True)
+    a = p.parse_args(); root = Path.cwd(); state = control(root) / "recovery.json"
+    if state.exists():
+        data = json.loads(state.read_text(encoding="utf-8")); data["attempts"] += 1; data["last"] = "retry"
+        state.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    else:
+        data = {"attempts": 1, "first_returncode": 2, "message": "E_TRANSIENT_ARGUMENT_CHANNEL"}
+        state.parent.mkdir(parents=True, exist_ok=True); state.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        print("E_TRANSIENT_ARGUMENT_CHANNEL: retry the same command after diagnosing this one-shot tool failure", file=sys.stderr)
+        return 2
+    proc = subprocess.run([sys.executable, "src/page_ranges.py", "--input", a.input, "--output", a.output], cwd=root)
+    data["last_returncode"] = proc.returncode; data["successful_runs"] = data.get("successful_runs", 0) + (proc.returncode == 0)
+    state.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return proc.returncode
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+''')
+    meta = fixtures.read(private / "manifest.json")
+    for relative in ("TASK.md", "CONTRACT.md", "tools/verify_once.py"):
+        meta["protected"][relative] = fixtures.sha((workspace / relative).read_bytes())
+    fixtures.write(private, "manifest.json", meta)
+
+
+def setup(root: Path, task: str, arm: str, label: str) -> dict:
     if CODEX is None:
         raise RuntimeError("codex executable is unavailable")
     if not MODEL_CONFIG.is_file() or not (REAL_CODEX / "auth.json").is_file():
@@ -83,7 +159,7 @@ def setup(root: Path, arm: str, label: str) -> dict:
     skills = workspace / ".agents" / "skills"
     base.mkdir(parents=True)
     codex_home.mkdir(parents=True)
-    fixtures.build(FIXTURE_ID, workspace)
+    build_task(task, workspace)
     skills.mkdir(parents=True)
     candidate_sha = None
     revision = None
@@ -148,11 +224,35 @@ def select_submission(ctx: dict, final_text: Path) -> Path:
     return mentioned[0] if len(mentioned) == 1 else roots[0] if len(roots) == 1 else root
 
 
+def evaluate_task(task: str, workspace: Path, control_workspace: Path) -> dict:
+    result = fixtures.evaluate(FIXTURE_ID, workspace, control_workspace=control_workspace)
+    result["task_id"] = task
+    if task != "software-recovery":
+        return result
+    private = fixtures.control_dir(control_workspace)
+    assertions = list(result["assertions"])
+    try:
+        state = fixtures.read(private / "recovery.json")
+    except (OSError, ValueError) as exc:
+        state = {"read_error": str(exc)}
+    recovered = (state.get("first_returncode") == 2 and state.get("attempts", 0) >= 2
+                 and state.get("last_returncode") == 0 and state.get("successful_runs", 0) >= 1)
+    assertions.append({"id": "recovery:diagnose-and-retry", "passed": recovered,
+                       "expected": "one observed transient failure followed by a successful retry",
+                       "actual": state})
+    result["assertions"] = assertions
+    result["passed"] = sum(item["passed"] for item in assertions)
+    result["total"] = len(assertions)
+    result["completed"] = all(item["passed"] for item in assertions)
+    result["recovery_state"] = state
+    return result
+
+
 def run(args) -> dict:
     root = Path(args.output).resolve()
     root.mkdir(parents=True, exist_ok=True)
     label = f"{args.task}__{args.arm}__r{args.repeat}"
-    ctx = setup(root, args.arm, label)
+    ctx = setup(root, args.task, args.arm, label)
     final = root / label / "final.txt"
     events = root / label / "events.jsonl"
     stderr = root / label / "stderr.log"
@@ -175,15 +275,18 @@ def run(args) -> dict:
             proc.wait(timeout=15)
     elapsed = round(time.monotonic() - started, 4)
     ended_at = utc()
+    events_data = read_events(events)
+    execution_errors = [event for event in events_data if event.get("type") in {"error", "turn.failed"}]
     selected = select_submission(ctx, final)
-    evaluation = fixtures.evaluate(FIXTURE_ID, selected, control_workspace=ctx["workspace"])
+    evaluation = evaluate_task(args.task, selected, control_workspace=ctx["workspace"])
     trial_root = root / label
     evidence_root = trial_root / "evidence"
     evidence_root.mkdir()
     evaluation_path = evidence_root / "independent-evaluation.json"
     save(evaluation_path, evaluation)
     final_path = evidence_root / "agent-final.txt"
-    final_path.write_text(final.read_text(encoding="utf-8", errors="replace") if final.is_file() else "", encoding="utf-8")
+    raw_final = final.read_text(encoding="utf-8", errors="replace") if final.is_file() else ""
+    final_path.write_text(final_message(events_data, raw_final), encoding="utf-8")
     candidate_sha = ctx["candidate_sha256"]
     revision = ctx["revision"]
     if candidate_sha is None or revision is None:
@@ -198,21 +301,22 @@ def run(args) -> dict:
     receipt = {
         "schema_version": "0.13", "contract_id": json.loads(CONTRACT.read_text(encoding="utf-8"))["contract_id"],
         "contract_sha256": contract_sha, "trial_id": label, "task_id": args.task, "arm_id": args.arm,
-        "repeat": args.repeat, "status": "completed" if passed else ("unknown" if timed_out else "failed"),
+        "repeat": args.repeat, "status": "completed" if passed and not execution_errors and not timed_out else ("unknown" if timed_out or execution_errors else "failed"),
         "source_revision": revision, "candidate_sha256": candidate_sha,
-        "evidence_status": "DONE" if passed else "NEEDS_EVIDENCE", "route": "BOUNDED" if args.arm == "solo-0.13.0" else None,
+        "evidence_status": "DONE" if passed and not execution_errors and not timed_out else "NEEDS_EVIDENCE", "route": "BOUNDED" if args.arm != "baseline" else None,
         "boundary": "AUTO" if passed else "STOP", "first_pass_success": None, "final_success": passed,
         "user_correction_count": None, "recoverable_blocker": None, "handoff_required": None,
         "handoff_justified": None, "recovery_completed": None, "independent_progress": passed,
-        "stale_side_effect": False, "unknown_reported_as_success": False if not timed_out else None,
+        "stale_side_effect": False, "unknown_reported_as_success": False if not (timed_out or execution_errors) else None,
         "execution_seconds": elapsed, "input_tokens": None, "cached_input_tokens": None, "output_tokens": None,
+        "execution_errors": execution_errors,
         "evidence_refs": refs, "observations": {
-            "changed": {"status": "observed" if passed else "unknown", "evidence_refs": refs[:1]},
-            "readback": {"status": "observed" if passed else "unknown", "evidence_refs": refs[:1]},
+            key: {"status": "observed" if passed else "unknown", "evidence_refs": refs[:1]}
+            for key in TASK_CONFIG[args.task]["observations"]
         },
         "provenance": {"mode": "native_agent", "host": "codex-cli", "skill_revision": revision,
                        "started_at": started_at, "ended_at": ended_at, "run_id": label,
-                       "task_objective": "完成一个明确、可回退的小修改并读回结果",
+                       "task_objective": TASK_CONFIG[args.task]["objective"],
                        "evidence_sha256": {r["path"]: r["sha256"] for r in refs}},
     }
     save(trial_root / "receipt.json", receipt)
@@ -223,7 +327,7 @@ def run(args) -> dict:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--task", default=TASK_ID, choices=[TASK_ID])
+    parser.add_argument("--task", default=TASK_ID, choices=sorted(TASK_CONFIG))
     parser.add_argument("--arm", required=True, choices=["baseline", "solo-0.12.0", "solo-0.13.0"])
     parser.add_argument("--repeat", type=int, default=1)
     parser.add_argument("--output", type=Path, required=True)

@@ -1,4 +1,5 @@
 {"arm_id": "solo-0.13.0", "packet_id": "packet-693c96d0d060cef45353", "source_revision": "git:ba3a2a4ae9e086b120282f08a00641fdd4c0c1c2", "trial_id": "high-risk-preview__solo-0.13.0__r1"}
+{"arm_id": "solo-0.13.0", "packet_id": "packet-75f2ee272553155e0710", "source_revision": "git:cbd206defe5eedbb9cb9cf59ddf14f97a7844dba", "trial_id": "permission-boundary__solo-0.13.0__r1"}
 {"arm_id": "baseline", "packet_id": "packet-b573ae3705b25a1d35ac", "source_revision": "baseline:none", "trial_id": "software-quick-patch__baseline__r1"}
 {"arm_id": "solo-0.12.0", "packet_id": "packet-7ad9315bb20f2d83fc60", "source_revision": "git:c57659e7d1722edd08fbfcd15426ea7c79c32087", "trial_id": "software-quick-patch__solo-0.12.0__r1"}
 {"arm_id": "solo-0.13.0", "packet_id": "packet-c0db76d4ead0f05a4823", "source_revision": "git:57356fcd9cc811ead2d72148eb7dc434245d9e46", "trial_id": "software-quick-patch__solo-0.13.0__r1"}

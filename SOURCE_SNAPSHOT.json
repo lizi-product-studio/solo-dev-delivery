@@ -41,13 +41,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "8efe1bbda310c1fd28856709a1f332354746f44ca48b6b705426d986e1d2f9dd",
-      "bytes": 8797
+      "sha256": "f9f88de4a85f2bb9454c942dbf8b1aca33d8f9d1c16856ec6cce5ebee6db6590",
+      "bytes": 9128
     },
     {
       "path": "ROADMAP.md",
-      "sha256": "f7e3b55a4deba35a4e925601f1ddc63dd6cb94df1f74d20c6220def4bca7d95a",
-      "bytes": 4827
+      "sha256": "aad2350953f6f7638cef7206178f9efef44c030e836dc9339bd126e04c5ab689",
+      "bytes": 5319
     },
     {
       "path": "THIRD_PARTY.md",
@@ -56,8 +56,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "85b7e8769df4e1d84e492522867ae1f12eda0bd85e5f7136110516157c5dc35e",
-      "bytes": 29736
+      "sha256": "14551a0088625a5f916235ce1051a4a212986deea23cbc7d92d60e22035e2d6e",
+      "bytes": 29911
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
@@ -403,6 +403,51 @@
       "path": "evaluations/frontend-quality-2026-10-23/submission/verify.mjs",
       "sha256": "c9675baabd861be9b0aa889e994cba95be9dc7c4b35b502f97c39b6791896469",
       "bytes": 16352
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/README.md",
+      "sha256": "5e45db336f6e4766cef6ebcfaf88bb0b80960edb347def846142929cc52958ce",
+      "bytes": 471
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/capability-snapshot.json",
+      "sha256": "12aea29178d2a28d10bf27a3e8260dfcfc1bb82716bbf4536f70af84eb5b41cb",
+      "bytes": 434
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/install.log",
+      "sha256": "8afe2b3ce173662619c17f0c8b664abd5ccda4017dcf0676280606a016965554",
+      "bytes": 493
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/invoke.log",
+      "sha256": "9a07659b4ae83f2b3f8656ba1140fa9046aa458b1e969d1d99bf57d34612b901",
+      "bytes": 853
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/load.log",
+      "sha256": "c6ff4195044eff0c2372adb82c1a1c7a416a6f60c5acb2742f25bff5c63767f6",
+      "bytes": 51
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/route.log",
+      "sha256": "e3685e794da0ba4ceebf88afee1f18140523930d6291e2b3dcabee895557374e",
+      "bytes": 550
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/evidence/verify.log",
+      "sha256": "4b9103104531b1caf89337e2c9a853e7b9aef29d2f1595de5c4c5cca08b0bf9a",
+      "bytes": 508
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/replay.json",
+      "sha256": "be347d4c2562e8f9bb7a0df443f90c52aacc771a23412307c7b90293ea0141c8",
+      "bytes": 2731
+    },
+    {
+      "path": "evaluations/host-replay-20261026/codex-cli/validation.json",
+      "sha256": "50894d21a96d8a19137a46ff0047a7eb776dcf32cd2f26e2e7974f789257ff9d",
+      "bytes": 2942
     },
     {
       "path": "evaluations/project-operation/README.md",
@@ -806,13 +851,13 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "45c63c5cba2baf56606b9ab0c9cb0d4e9a61b752f42ce796036c6faff2264761",
-      "bytes": 97737
+      "sha256": "ed5bafd33fd4d6eba114a67b665f4288d1600016eb8549399a195057a2efe949",
+      "bytes": 100154
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "2d47b0ba20af2dc99484ce8eef9bffb0dc72e89dfdc01ac69f968fd4dbd1164c",
-      "bytes": 103
+      "sha256": "57caf11a528c3fff88d29a6fd60f28e739ad6c449cabe3ad33e0c8eee649770a",
+      "bytes": 95
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
@@ -970,6 +1015,11 @@
       "bytes": 1700
     },
     {
+      "path": "portable-agent-kit/scripts/capability_receipt.py",
+      "sha256": "f7838b8ec1e05948b6d46e5d6d2c6901fd2a5569abd45ecfdc6ad3f17dbf3a37",
+      "bytes": 4467
+    },
+    {
       "path": "portable-agent-kit/scripts/challenge.py",
       "sha256": "578baeed05e0c1597b4d43a30c6991fe460bb64343febe0db095fe804e0c84ca",
       "bytes": 32266
@@ -986,8 +1036,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/host_replay.py",
-      "sha256": "1aa4f1fc9b7ea11ca4f2607308ff9093c43c3e881884a5a1bfdaaee915f05471",
-      "bytes": 8234
+      "sha256": "608c2da8defb7ce24332e174a45c87287fd742079a68931ea2e960349611f427",
+      "bytes": 10830
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -1003,6 +1053,11 @@
       "path": "portable-agent-kit/tests/test_blind_review.py",
       "sha256": "7ff9f8ef82b01ab3c18407e6dc7f73f50b4c9143a17d18e062810593d5e87609",
       "bytes": 5682
+    },
+    {
+      "path": "portable-agent-kit/tests/test_capability_receipt.py",
+      "sha256": "c318e0a2f8aa6f98c4ddc20adf39e197e3f4da5fb4c894f9901b200f2b173b60",
+      "bytes": 4944
     },
     {
       "path": "portable-agent-kit/tests/test_challenge.py",
@@ -1106,8 +1161,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "d11c3c09ff393eff9ad63b9bbe37416a03458d65ec4ef262654498c770bb9b7f",
-      "bytes": 4266
+      "sha256": "268f11763a96bb7e4a885bde96e966fd245ea98f86b411e42cfc2d393445ba45",
+      "bytes": 4357
     },
     {
       "path": "scripts/install_agent.py",
@@ -1191,8 +1246,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",
-      "sha256": "adb311b52cc34eec23603a66985a123a32dbbb2937d3f3a7ff298f42d05fe583",
-      "bytes": 5863
+      "sha256": "927c7981b45793fd80222a396afbc119a40eeb180db5c78bf76f6839f2a32ffe",
+      "bytes": 6684
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",
@@ -1385,5 +1440,5 @@
       "bytes": 18713
     }
   ],
-  "snapshot_commit": "7e51fdc8f7e2cb5959f96c085e0445eb83031bbc"
+  "snapshot_commit": "689df91a03c55e6d53182930512ae82ee93dbebc"
 }

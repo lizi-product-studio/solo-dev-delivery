@@ -61,8 +61,18 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "2794c8c5c2c873827ccfd8eddd191f08cee5c674ad3f2d99a19d9a7ba75ba7e8",
-      "bytes": 2306
+      "sha256": "94dbb235c629f4d8a73d05dee38643788a164f01754fda9c48ea06454bb4dffb",
+      "bytes": 3257
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/blind-mapping-progress.jsonl",
+      "sha256": "7dfacdbc9b93d2e4e8d90321bf354a6c3bc4a78042c8403717c0272915a22b52",
+      "bytes": 533
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/blind-packets-progress.jsonl",
+      "sha256": "20c3e44d3ec3b89708fd703e79e82924e0810bbe2b83b5556688a6300ae46f18",
+      "bytes": 2256
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
@@ -70,14 +80,54 @@
       "bytes": 1373
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/baseline/r1/agent-final.txt",
+      "sha256": "b5850cf633cc97c7c3c8a070e176620f09291cc9c8fde9cf919f9a81953b381c",
+      "bytes": 545
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/baseline/r1/independent-evaluation.json",
+      "sha256": "3c41c0b16c0c38eb377ab2305f249fdff4f4ad0c7ffc7776627d5b0ebdaf3a0b",
+      "bytes": 29169
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.12.0/r1/agent-final.txt",
+      "sha256": "c156ae3fe53d53f4999af5732744557662abb00e1ab2187f06e5e397b4cefc06",
+      "bytes": 843
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.12.0/r1/independent-evaluation.json",
+      "sha256": "3c41c0b16c0c38eb377ab2305f249fdff4f4ad0c7ffc7776627d5b0ebdaf3a0b",
+      "bytes": 29169
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r1/agent-final.txt",
+      "sha256": "f738bab1b375bfe2413d99d534b9fbca635be292ba0e1d31abcab7e76d1d1999",
+      "bytes": 463
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r1/independent-evaluation.json",
+      "sha256": "3c41c0b16c0c38eb377ab2305f249fdff4f4ad0c7ffc7776627d5b0ebdaf3a0b",
+      "bytes": 29169
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/native_replay.py",
+      "sha256": "0e74cfcd15a291b2081eb94978e1de05485fa01b458b9fb1f8ed0963a09aee5c",
+      "bytes": 12753
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json",
       "sha256": "ab0a50a759ec143b87f5bb4595894d1990cc0ebfded6e3f8db15b695c229e015",
       "bytes": 6266
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-progress-receipts.jsonl",
+      "sha256": "3168fa30265de2cfdd4bf6ad40175bc1a24741e15e2a1f7accffad2ad1f98bfb",
+      "bytes": 10073
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py",
-      "sha256": "86058515f183ae9dd6c1b84252f5ef3185e10d121375e0c08c3814dca38a0590",
-      "bytes": 8791
+      "sha256": "1a1912b463dc0f3a4fc0ee61fe34f80c343a0be5309c7eb36b038be3fae1e435",
+      "bytes": 9953
     },
     {
       "path": "evaluations/autonomy-core-review-2026-10-26/README.md",
@@ -726,12 +776,12 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "93f4af90ef2c86ee5ff4b3345cd5cde73a927dc2f157a1052126db9f32c23c1b",
-      "bytes": 97622
+      "sha256": "45c63c5cba2baf56606b9ab0c9cb0d4e9a61b752f42ce796036c6faff2264761",
+      "bytes": 97737
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "b520b2ce0d17f74ec827ad1273a830805e76f97f348bba5ad487d39a658c0839",
+      "sha256": "2d47b0ba20af2dc99484ce8eef9bffb0dc72e89dfdc01ac69f968fd4dbd1164c",
       "bytes": 103
     },
     {
@@ -881,8 +931,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/blind_review.py",
-      "sha256": "4d9afb6410cdd9d1ca8c09c1437f493cc438b7f0a22660c713e8af854a47e992",
-      "bytes": 11277
+      "sha256": "20719c952400cb7aef3c12d6e5bac3b8aa2ab7507f9ca584a67d2fdc13da5709",
+      "bytes": 11306
     },
     {
       "path": "portable-agent-kit/scripts/capability_probe.py",
@@ -896,8 +946,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/eval_contract.py",
-      "sha256": "d1e7864971ef87b97acd492a0326f442511858feec04158e39eeaba7399ff429",
-      "bytes": 11914
+      "sha256": "92dc1755b82a29f0781e4fe8d657591377e48be5cc09d3d6379eb5962e2bdcd8",
+      "bytes": 12138
     },
     {
       "path": "portable-agent-kit/scripts/gate.py",
@@ -951,8 +1001,8 @@
     },
     {
       "path": "portable-agent-kit/tests/test_eval_contract.py",
-      "sha256": "2a7df2479a2e05a41942ad12cd28026fd7169e693eda9ec6d9d938bfba6d1f8e",
-      "bytes": 3467
+      "sha256": "c9a6023071ba10ea7d86bb3090cc4ea4485b61433d1a3d3f5df70cbb89e6cd76",
+      "bytes": 4518
     },
     {
       "path": "portable-agent-kit/tests/test_gate.py",

@@ -55,6 +55,16 @@ python S/capability_probe.py --capabilities host.json --require fs.read --format
 
 全部必要能力supported返回READY/退出0；显式unsupported返回BLOCKED/退出2；缺失、unknown、非法输入或没有声明要求返回NEEDS_CONTEXT/退出2。支持bool和 `{"supported":true/false/"unknown"}`，其他未知值保留unknown。它不执行探测、不证明任务完成、不授予权限、不默认要求checkpoint，也不创建session。需要持久恢复时仍使用完整系统原门禁，不能以这里READY绕过它。
 
+需要把能力状态绑定到一次宿主回放时，再生成能力快照；简单任务不需要额外生成：
+
+```sh
+python S/capability_receipt.py --capabilities host.json \
+  --host-id codex-cli --host-version <实际版本> --platform windows \
+  --require fs.read --require shell.exec --output capability-snapshot.json
+```
+
+快照格式为 `capability-snapshot/1`，包含宿主身份、规范化三态、必需能力、`READY / BLOCKED / NEEDS_CONTEXT` 和 `snapshot_sha256`。它只记录宿主声明，不执行工具、不授予权限；`unknown` 或 `unsupported` 不能被宿主回放当成 PASS。把 `capability_sha256`、`required_capabilities` 和 `capability_status` 写入 `host-replay-receipt/1` 后，`host_replay.py` 会拒绝旧哈希/旧要求，并将非 READY 回放保持为 `INCOMPLETE`。
+
 ## 在目标宿主做一次真实验证
 
 在临时项目做文案小改并读回，再做一个有可复现失败的修复并跑相关回归。分别记录Skill是否在菜单出现、是否显式加载、自动选择是否发生、实际检查结果和环境版本；小改不应强制设计审批、worktree或子Agent。再确认包内challenge能在移动后的目录运行，能力缺失仍保持未知/阻断。

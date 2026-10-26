@@ -34,6 +34,7 @@ def export(destination):
     # in the complete system and is tested there.
     mappings += [(kit / "scripts" / name, "scripts/" + name) for name in ("challenge.py", "gate.py", "eval_contract.py", "host_replay.py", "blind_review.py")]
     mappings += [(kit / "scripts/capability_probe.py", "scripts/capability_probe.py"),
+                 (kit / "scripts/capability_receipt.py", "scripts/capability_receipt.py"),
                  (ROOT / "scripts/install_agent.py", "scripts/install_agent.py"),
                  (ROOT / "THIRD_PARTY.md", "THIRD_PARTY.md"),
                  (ROOT / "vendor/superpowers-lite/LICENSE", "licenses/superpowers-lite-MIT.txt")]

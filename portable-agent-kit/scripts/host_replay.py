@@ -78,7 +78,8 @@ def _evidence(root, value):
 
 
 def validate(receipt, *, evidence_root=None, expected_package_sha256=None,
-             expected_candidate=None, required_phases=PHASES):
+             expected_candidate=None, required_phases=PHASES,
+             expected_capability_sha256=None, expected_required_capabilities=None):
     if not isinstance(receipt, dict):
         _fail("receipt must be an object")
     if receipt.get("format") != FORMAT:
@@ -91,6 +92,32 @@ def validate(receipt, *, evidence_root=None, expected_package_sha256=None,
         _fail("receipt is bound to a different package hash")
     if expected_candidate is not None and receipt["candidate"] != expected_candidate:
         _fail("receipt is bound to a different candidate")
+    capability_sha256 = receipt.get("capability_sha256")
+    if capability_sha256 is not None:
+        if not isinstance(capability_sha256, str) or not HEX64.fullmatch(capability_sha256):
+            _fail("receipt.capability_sha256 must be a lowercase SHA-256")
+    if expected_capability_sha256 is not None:
+        if not isinstance(expected_capability_sha256, str) or not HEX64.fullmatch(expected_capability_sha256):
+            _fail("expected_capability_sha256 must be a lowercase SHA-256")
+        if capability_sha256 is None:
+            _fail("receipt is missing capability_sha256")
+        if capability_sha256 != expected_capability_sha256:
+            _fail("receipt is bound to a different capability snapshot")
+    required_capabilities = receipt.get("required_capabilities")
+    if required_capabilities is not None:
+        if (not isinstance(required_capabilities, list) or
+                any(not isinstance(item, str) or not item.strip() for item in required_capabilities) or
+                required_capabilities != sorted(set(required_capabilities))):
+            _fail("receipt.required_capabilities must be a sorted unique list of names")
+    if expected_required_capabilities is not None:
+        expected_required_capabilities = sorted(set(expected_required_capabilities))
+        if required_capabilities is None:
+            _fail("receipt is missing required_capabilities")
+        if required_capabilities != expected_required_capabilities:
+            _fail("receipt required_capabilities do not match expected requirements")
+    capability_status = receipt.get("capability_status")
+    if capability_status is not None and capability_status not in ("READY", "BLOCKED", "NEEDS_CONTEXT"):
+        _fail("receipt.capability_status is invalid")
     phases = tuple(required_phases)
     if not phases or any(p not in PHASES for p in phases):
         _fail("required_phases must use known host replay phases")
@@ -146,14 +173,23 @@ def validate(receipt, *, evidence_root=None, expected_package_sha256=None,
         overall = "FAIL" if failed else "INCOMPLETE"
     elif incomplete:
         overall = "INCOMPLETE"
+    elif capability_status is not None and capability_status != "READY":
+        overall = "INCOMPLETE"
     else:
         overall = "PASS"
-    return {"format": FORMAT, "status": overall, "host_id": receipt["host_id"],
+    result = {"format": FORMAT, "status": overall, "host_id": receipt["host_id"],
             "candidate": receipt["candidate"], "package_sha256": receipt["package_sha256"],
             "required_phases": list(phases), "missing_phases": missing,
             "incomplete_phases": incomplete, "failed_phases": failed,
             "observations": normalized,
             "limits": "Evidence binding only; host loading, route semantics, UI meaning and business acceptance still require independent review."}
+    if capability_sha256 is not None:
+        result["capability_sha256"] = capability_sha256
+    if required_capabilities is not None:
+        result["required_capabilities"] = required_capabilities
+    if capability_status is not None:
+        result["capability_status"] = capability_status
+    return result
 
 
 def main(argv=None):
@@ -162,6 +198,8 @@ def main(argv=None):
     parser.add_argument("--evidence-root", type=Path, required=True)
     parser.add_argument("--expected-package-sha256")
     parser.add_argument("--expected-candidate")
+    parser.add_argument("--expected-capability-sha256")
+    parser.add_argument("--require-capability", action="append", dest="required_capabilities")
     parser.add_argument("--require-phase", action="append", dest="phases")
     args = parser.parse_args(argv)
     try:
@@ -169,7 +207,9 @@ def main(argv=None):
         result = validate(receipt, evidence_root=args.evidence_root,
                           expected_package_sha256=args.expected_package_sha256,
                           expected_candidate=args.expected_candidate,
-                          required_phases=tuple(args.phases or PHASES))
+                          required_phases=tuple(args.phases or PHASES),
+                          expected_capability_sha256=args.expected_capability_sha256,
+                          expected_required_capabilities=args.required_capabilities)
     except (OSError, ValueError, json.JSONDecodeError) as error:
         print(json.dumps({"format": FORMAT, "status": "INVALID", "error": str(error)}, ensure_ascii=False, indent=2))
         return 2

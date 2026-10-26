@@ -3,7 +3,7 @@
   "version": "0.13.0",
   "scope": "Canonical Git source and versioned distribution blobs only; excludes this manifest, private runtime, customer project code, raw conversations and temporary exports. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "c57659e7d1722edd08fbfcd15426ea7c79c32087",
+    "previous_head": "c57659e7d1722edd08fbfcd15426ea7c79c32087b9",
     "previous_version": "0.12.0",
     "rewrite_history": false
   },
@@ -56,8 +56,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "6cb9fd9b97be0a38654ddcc596db8dad6762fb17a07e3384a0e363ab05b6ed42",
-      "bytes": 29354
+      "sha256": "85b7e8769df4e1d84e492522867ae1f12eda0bd85e5f7136110516157c5dc35e",
+      "bytes": 29736
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",

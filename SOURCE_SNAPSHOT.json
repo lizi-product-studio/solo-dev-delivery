@@ -61,18 +61,18 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "10f22e8a0fc7bf456ceea4f2d8ac73cd0f40090ff2d149ecbe85242513dfe810",
-      "bytes": 3434
+      "sha256": "ff689b6aea2d8aefeeb37eb185807c1149081c522782e90ab83d0395693a06b7",
+      "bytes": 3601
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-mapping-progress.jsonl",
-      "sha256": "04c10390d97944af6ad7d0c58cf2bd291a9092a6e7f6aea80e41f2132b99e350",
-      "bytes": 720
+      "sha256": "f59263571ae4e0e010229a9bd973aa880ff0c1ba55caad4e1e05b8bff9aac512",
+      "bytes": 1100
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-packets-progress.jsonl",
-      "sha256": "593030dac164a6d7e3fd154677c8ee2177c8114be0bc61aaf83548dee861dd71",
-      "bytes": 3011
+      "sha256": "9a0ed4f670da5fa98aa45fda5a43f0d3093a811115878852103d1a292494bf12",
+      "bytes": 4524
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
@@ -100,6 +100,16 @@
       "bytes": 29169
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/high-risk-r1/agent-final.txt",
+      "sha256": "b0bc3893ddb0743cc6827e3f2f7bf3da9280c7ae95fb3daa52a90f987a3aa05b",
+      "bytes": 1115
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/high-risk-r1/independent-evaluation.json",
+      "sha256": "d40fa3a830ce187c8c16297b68889b63fca3761739721c3016c30a7b6f8865ec",
+      "bytes": 10721
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/r1/agent-final.txt",
       "sha256": "f738bab1b375bfe2413d99d534b9fbca635be292ba0e1d31abcab7e76d1d1999",
       "bytes": 463
@@ -120,9 +130,19 @@
       "bytes": 29747
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/unknown-r1/agent-final.txt",
+      "sha256": "33390321b21c9538e4eb61c4cd7526d71e1336854e19cd9c85884b50acd8c58e",
+      "bytes": 1151
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/unknown-r1/independent-evaluation.json",
+      "sha256": "01ce22ecb1da0d5b60daf71bcb1d53bb1e94529bce389f999b205ebe1c4d1b3c",
+      "bytes": 10798
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/native_replay.py",
-      "sha256": "b695f3af340daebcd42df022269354ce12714f95156796218bd08e707bba3ccc",
-      "bytes": 18696
+      "sha256": "5c6132756f115074d7fa6b9a6d7fe910246e83231b57141a1a4d31eb3f539eff",
+      "bytes": 21153
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json",
@@ -131,8 +151,8 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-progress-receipts.jsonl",
-      "sha256": "d3f9c943b7eb6c701f766aad31d729d9db0d8845efb77a7aa94317b28321def1",
-      "bytes": 13779
+      "sha256": "e7bfb20e9be4999516840d671bf9c7165f352c6fc599427103e78eb91d3ded48",
+      "bytes": 20839
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py",
@@ -1364,5 +1384,6 @@
       "sha256": "8100e07165f30d4f3dac941d251429d22f92893ea9a441857d17c3046f9b7d62",
       "bytes": 18713
     }
-  ]
+  ],
+  "snapshot_commit": "7e51fdc8f7e2cb5959f96c085e0445eb83031bbc"
 }

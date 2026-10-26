@@ -61,8 +61,8 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "39638f3f1f74352ef25d3be4bbdf2b8c343253fe3ae62b32e30f1e3014f39443",
-      "bytes": 1309
+      "sha256": "2794c8c5c2c873827ccfd8eddd191f08cee5c674ad3f2d99a19d9a7ba75ba7e8",
+      "bytes": 2306
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
@@ -73,6 +73,11 @@
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json",
       "sha256": "ab0a50a759ec143b87f5bb4595894d1990cc0ebfded6e3f8db15b695c229e015",
       "bytes": 6266
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py",
+      "sha256": "86058515f183ae9dd6c1b84252f5ef3185e10d121375e0c08c3814dca38a0590",
+      "bytes": 8791
     },
     {
       "path": "evaluations/autonomy-core-review-2026-10-26/README.md",
@@ -721,18 +726,18 @@
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "fb4d1c29bce40cc83b68218c072974886c0b87f22304d7e05f8f2231362136a0",
-      "bytes": 89273
+      "sha256": "93f4af90ef2c86ee5ff4b3345cd5cde73a927dc2f157a1052126db9f32c23c1b",
+      "bytes": 97622
     },
     {
       "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "37bbcc8f36ef6967866086e010cb8e7ba6b3468e80e9bc2fac7308bc57b65cbe",
+      "sha256": "b520b2ce0d17f74ec827ad1273a830805e76f97f348bba5ad487d39a658c0839",
       "bytes": 103
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "f1ab95705e46c0e5f47c6c76f3987f442a79e5d14a400029401ae1522a5f4d4d",
-      "bytes": 2122
+      "sha256": "f7d0af5960726e22b4e57d2c18e09ee54402d12a04ee53b0fbe57b0e2feabc4b",
+      "bytes": 2439
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -741,8 +746,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "7e6ebc3221cad0eeb62b58b1ce4fc3ab4e26234126ae10878a28b20dffe960c4",
-      "bytes": 5089
+      "sha256": "751126208790d40aef381ce5c72ce604600fb9a93c413639957e3f6d616b39be",
+      "bytes": 5489
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -875,6 +880,11 @@
       "bytes": 1191
     },
     {
+      "path": "portable-agent-kit/scripts/blind_review.py",
+      "sha256": "4d9afb6410cdd9d1ca8c09c1437f493cc438b7f0a22660c713e8af854a47e992",
+      "bytes": 11277
+    },
+    {
       "path": "portable-agent-kit/scripts/capability_probe.py",
       "sha256": "ba15c4afbe9c078efa238487baaa45030ea7fcdd16bb3b8addfaf58edf9bfa3b",
       "bytes": 1700
@@ -895,6 +905,11 @@
       "bytes": 22559
     },
     {
+      "path": "portable-agent-kit/scripts/host_replay.py",
+      "sha256": "1aa4f1fc9b7ea11ca4f2607308ff9093c43c3e881884a5a1bfdaaee915f05471",
+      "bytes": 8234
+    },
+    {
       "path": "portable-agent-kit/scripts/session.py",
       "sha256": "5707d4ab0f284b1e9700b3145601862fa0928d8ead360b1fb55d1b652b24efc8",
       "bytes": 8476
@@ -903,6 +918,11 @@
       "path": "portable-agent-kit/tests/test_adapter.py",
       "sha256": "3afb81b0a9331640645a8402cb7f573780a8984e27e94f6b335d5a6c2357fbdc",
       "bytes": 2775
+    },
+    {
+      "path": "portable-agent-kit/tests/test_blind_review.py",
+      "sha256": "7ff9f8ef82b01ab3c18407e6dc7f73f50b4c9143a17d18e062810593d5e87609",
+      "bytes": 5682
     },
     {
       "path": "portable-agent-kit/tests/test_challenge.py",
@@ -950,9 +970,19 @@
       "bytes": 10434
     },
     {
+      "path": "portable-agent-kit/tests/test_host_replay.py",
+      "sha256": "bfe4d7c0b47b703782dfb2b4331262ed4dea7cf657fdaff387566a6aaa6ad16e",
+      "bytes": 4701
+    },
+    {
       "path": "portable-agent-kit/tests/test_local_runner.py",
       "sha256": "afdef66173e92d4bf71e738ee7b45545755a871e631318cdaaaa43830b542752",
       "bytes": 13193
+    },
+    {
+      "path": "portable-agent-kit/tests/test_pilot_replay.py",
+      "sha256": "86a5f1dfcf66f9bd307b5b8255da8c3cd3e5c9eee7bea7fa8b90cc13572fc479",
+      "bytes": 4110
     },
     {
       "path": "portable-agent-kit/tests/test_portable_integration.py",
@@ -996,8 +1026,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "9967a9988413525942fc2f6500db88e3309578fc2300b9216c58c0c31839ea5b",
-      "bytes": 4229
+      "sha256": "d11c3c09ff393eff9ad63b9bbe37416a03458d65ec4ef262654498c770bb9b7f",
+      "bytes": 4266
     },
     {
       "path": "scripts/install_agent.py",
@@ -1040,6 +1070,11 @@
       "bytes": 4738
     },
     {
+      "path": "skill/solo-dev-delivery/references/blind-review.md",
+      "sha256": "db060845a2a67996ba0ad973da715a0d141ee2bc7b114a3148444677dcb88b59",
+      "bytes": 1805
+    },
+    {
       "path": "skill/solo-dev-delivery/references/blocker-recovery.md",
       "sha256": "00e7c4756f005fb2447367476d6beeaef3b29ea87e4da0fe5449012c07dcf09e",
       "bytes": 3280
@@ -1061,8 +1096,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/evaluation-contract.md",
-      "sha256": "6456ee8c67013933ef1cb0be7b22bfa64232fdf9238e5e0d0465b163ce40999a",
-      "bytes": 2530
+      "sha256": "d853242042a994441e3028075b8ab9a4716cb758e6acee93b3ae3f302e0656cc",
+      "bytes": 2899
     },
     {
       "path": "skill/solo-dev-delivery/references/execution-gate.md",
@@ -1076,8 +1111,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/references/host-integration.md",
-      "sha256": "f06c3573fa910189824181f65fb7694489a27a1cee014883d658d3cdff0e8ccc",
-      "bytes": 5122
+      "sha256": "adb311b52cc34eec23603a66985a123a32dbbb2937d3f3a7ff298f42d05fe583",
+      "bytes": 5863
     },
     {
       "path": "skill/solo-dev-delivery/references/portable-workflow.md",

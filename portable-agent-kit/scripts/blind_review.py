@@ -64,6 +64,52 @@ def load_jsonl(path, label):
     return rows
 
 
+def _packet_observation_ids(task):
+    return {obs["id"] for obs in task["expected_observations"]}
+
+
+def validate_packets(contract, contract_path, packet_path):
+    """Validate the arm-blind packet set before any reviewer sees identity data."""
+    eval_contract.validate_contract(contract)
+    packets = load_jsonl(packet_path, "packets")
+    tasks = _task_by_id(contract)
+    seen = set()
+    for index, packet in enumerate(packets, 1):
+        label = "packet %d" % index
+        require(packet.get("schema_version") == VERSION, "%s schema_version mismatch" % label)
+        require(packet.get("contract_id") == contract["contract_id"], "%s contract mismatch" % label)
+        packet_id = packet.get("packet_id")
+        require(isinstance(packet_id, str) and packet_id, "%s packet_id required" % label)
+        require(packet_id not in seen, "%s packet_id duplicated" % label)
+        seen.add(packet_id)
+        require(packet.get("blind") is True, "%s blind must be true" % label)
+        require(all(key not in packet for key in ("trial_id", "arm_id", "source_revision", "candidate_sha256")),
+                "%s leaks trial or arm identity" % label)
+        task_id = packet.get("task_id")
+        require(task_id in tasks, "%s task_id unknown" % label)
+        require(isinstance(packet.get("repeat"), int) and 1 <= packet["repeat"] <= contract["repetitions"],
+                "%s repeat invalid" % label)
+        task = tasks[task_id]
+        require(packet.get("objective") == task["objective"], "%s objective mismatch" % label)
+        expected = packet.get("expected_observations")
+        require(isinstance(expected, list) and {item.get("id") for item in expected if isinstance(item, dict)} == _packet_observation_ids(task),
+                "%s expected_observations mismatch" % label)
+        require(HEX64.fullmatch(packet.get("receipt_sha256", "")) is not None,
+                "%s receipt_sha256 invalid" % label)
+        evidence = packet.get("evidence")
+        require(isinstance(evidence, list) and evidence, "%s evidence required" % label)
+        evidence_ids = set()
+        for evidence_index, item in enumerate(evidence):
+            require(isinstance(item, dict), "%s evidence[%d] must be an object" % (label, evidence_index))
+            evidence_id = item.get("id")
+            require(isinstance(evidence_id, str) and evidence_id and evidence_id not in evidence_ids,
+                    "%s evidence[%d] id invalid or duplicated" % (label, evidence_index))
+            require(HEX64.fullmatch(item.get("sha256", "")) is not None,
+                    "%s evidence[%d] sha256 invalid" % (label, evidence_index))
+            evidence_ids.add(evidence_id)
+    return {packet["packet_id"]: packet for packet in packets}
+
+
 def _task_by_id(contract):
     return {task["id"]: task for task in contract["tasks"]}
 
@@ -156,6 +202,96 @@ def validate_reviews(contract, contract_path, receipt_path, review_path):
     return {"status": "COMPLETE" if not missing else "INCOMPLETE", "reviews": len(output), "expected_reviews": len(expected), "missing_reviews": [{"task_id": t, "arm_id": a, "repeat": r} for t, a, r in missing]}
 
 
+def _validate_packet_review(contract, packet, row, label):
+    require(row.get("schema_version") == VERSION, "%s schema_version mismatch" % label)
+    require(row.get("contract_id") == contract["contract_id"], "%s contract mismatch" % label)
+    require(row.get("packet_id") == packet["packet_id"], "%s packet mismatch" % label)
+    require(row.get("task_id") == packet["task_id"], "%s task mismatch" % label)
+    require(row.get("repeat") == packet["repeat"], "%s repeat mismatch" % label)
+    require(row.get("receipt_sha256") == packet["receipt_sha256"], "%s receipt_sha256 mismatch" % label)
+    require(isinstance(row.get("reviewer_id"), str) and row["reviewer_id"].strip(), "%s reviewer_id required" % label)
+    require(row.get("blind") is True, "%s blind must be true" % label)
+    require(all(key not in row for key in ("trial_id", "arm_id", "source_revision", "candidate_sha256")),
+            "%s leaks trial or arm identity" % label)
+    require(row.get("evaluator_sha256") == contract.get("freeze", {}).get("evaluator_sha256"),
+            "%s evaluator hash mismatch" % label)
+    require(row.get("final_verdict") in VERDICTS, "%s final_verdict invalid" % label)
+    observations = row.get("observations")
+    require(isinstance(observations, dict), "%s observations must be an object" % label)
+    expected = _packet_observation_ids(_task_by_id(contract)[packet["task_id"]])
+    require(set(observations) == expected, "%s observations must exactly match expected observation ids" % label)
+    allowed_evidence = {item["id"] for item in packet["evidence"]}
+    for obs_id in sorted(expected):
+        item = observations[obs_id]
+        require(isinstance(item, dict), "%s observation %s must be an object" % (label, obs_id))
+        require(item.get("verdict") in VERDICTS, "%s observation %s verdict invalid" % (label, obs_id))
+        refs = item.get("evidence_refs", [])
+        require(isinstance(refs, list), "%s observation %s evidence_refs invalid" % (label, obs_id))
+        require(all(isinstance(ref, str) and ref in allowed_evidence for ref in refs),
+                "%s observation %s references unbound evidence" % (label, obs_id))
+        if item["verdict"] in {"PASS", "FAIL"}:
+            require(refs, "%s observation %s %s needs evidence" % (label, obs_id, item["verdict"]))
+        if item["verdict"] == "UNKNOWN":
+            require(isinstance(item.get("reason"), str) and item["reason"].strip(),
+                    "%s observation %s UNKNOWN needs reason" % (label, obs_id))
+    if row["final_verdict"] == "PASS":
+        require(all(item["verdict"] == "PASS" for item in observations.values()),
+                "%s PASS requires all observations PASS" % label)
+
+
+def validate_blind_reviews(contract, contract_path, packet_path, review_path):
+    """Validate reviewer output while the packet-to-trial mapping stays sealed."""
+    packets = validate_packets(contract, contract_path, packet_path)
+    reviews = load_jsonl(review_path, "blind reviews")
+    seen = set()
+    for index, row in enumerate(reviews, 1):
+        label = "blind review %d" % index
+        packet_id = row.get("packet_id")
+        require(packet_id in packets, "%s packet_id unknown" % label)
+        require(packet_id not in seen, "%s packet_id duplicated" % label)
+        seen.add(packet_id)
+        _validate_packet_review(contract, packets[packet_id], row, label)
+    missing = sorted(set(packets) - seen)
+    return {
+        "status": "COMPLETE" if not missing else "INCOMPLETE",
+        "reviews": len(reviews),
+        "expected_reviews": len(packets),
+        "missing_packets": missing,
+    }
+
+
+def bind_reviews(contract, contract_path, receipt_path, packet_path, mapping_path, review_path, output_path):
+    """Resolve packet identities after blind scoring, then run the strict bound validator."""
+    packets = validate_packets(contract, contract_path, packet_path)
+    blind_result = validate_blind_reviews(contract, contract_path, packet_path, review_path)
+    mappings = load_jsonl(mapping_path, "mapping")
+    mapping_by_packet = {}
+    for index, mapping in enumerate(mappings, 1):
+        label = "mapping %d" % index
+        packet_id = mapping.get("packet_id")
+        require(packet_id in packets, "%s packet_id unknown" % label)
+        require(packet_id not in mapping_by_packet, "%s packet_id duplicated" % label)
+        require(isinstance(mapping.get("trial_id"), str) and mapping["trial_id"], "%s trial_id required" % label)
+        mapping_by_packet[packet_id] = mapping
+    require(set(mapping_by_packet) == set(packets), "mapping must cover every packet")
+    receipts = validate_receipts_for_review(contract, contract_path, receipt_path)
+    trial_ids = [mapping["trial_id"] for mapping in mapping_by_packet.values()]
+    require(len(set(trial_ids)) == len(trial_ids), "mapping trial_id duplicated")
+    require(set(trial_ids) <= set(receipts), "mapping references unknown trial")
+    rows = load_jsonl(review_path, "blind reviews")
+    bound = []
+    for row in rows:
+        packet = packets[row["packet_id"]]
+        receipt = receipts[mapping_by_packet[row["packet_id"]]["trial_id"]]
+        require(packet["receipt_sha256"] == digest_value(receipt), "packet and receipt digest mismatch")
+        item = dict(row)
+        item["trial_id"] = receipt["trial_id"]
+        bound.append(item)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text("".join(json.dumps(item, ensure_ascii=False, sort_keys=True) + "\n" for item in bound), encoding="utf-8")
+    return validate_reviews(contract, contract_path, receipt_path, output_path) | {"blind_status": blind_result["status"]}
+
+
 def make_packets(contract, contract_path, receipt_path):
     receipts = validate_receipts_for_review(contract, contract_path, receipt_path)
     tasks = _task_by_id(contract)
@@ -187,6 +323,15 @@ def main(argv=None):
     v = sub.add_parser("validate")
     v.add_argument("contract", type=Path); v.add_argument("receipts", type=Path); v.add_argument("reviews", type=Path)
     v.add_argument("--allow-incomplete", action="store_true")
+    b = sub.add_parser("validate-blind")
+    b.add_argument("contract", type=Path); b.add_argument("packets", type=Path); b.add_argument("reviews", type=Path)
+    b.add_argument("--allow-incomplete", action="store_true")
+    q = sub.add_parser("validate-packets")
+    q.add_argument("contract", type=Path); q.add_argument("packets", type=Path)
+    d = sub.add_parser("bind")
+    d.add_argument("contract", type=Path); d.add_argument("receipts", type=Path); d.add_argument("packets", type=Path)
+    d.add_argument("mapping", type=Path); d.add_argument("reviews", type=Path); d.add_argument("output", type=Path)
+    d.add_argument("--allow-incomplete", action="store_true")
     p = sub.add_parser("make-packets")
     p.add_argument("contract", type=Path); p.add_argument("receipts", type=Path); p.add_argument("output", type=Path); p.add_argument("--mapping", type=Path)
     args = parser.parse_args(argv)
@@ -194,6 +339,20 @@ def main(argv=None):
         contract = load_json(args.contract)
         if args.command == "validate":
             result = validate_reviews(contract, args.contract, args.receipts, args.reviews)
+            if result["status"] == "INCOMPLETE" and not args.allow_incomplete:
+                print(json.dumps(result, ensure_ascii=False, indent=2)); return 2
+            print(json.dumps(result, ensure_ascii=False, indent=2)); return 0
+        if args.command == "validate-blind":
+            result = validate_blind_reviews(contract, args.contract, args.packets, args.reviews)
+            if result["status"] == "INCOMPLETE" and not args.allow_incomplete:
+                print(json.dumps(result, ensure_ascii=False, indent=2)); return 2
+            print(json.dumps(result, ensure_ascii=False, indent=2)); return 0
+        if args.command == "validate-packets":
+            packets = validate_packets(contract, args.contract, args.packets)
+            result = {"status": "VALID", "packets": len(packets)}
+            print(json.dumps(result, ensure_ascii=False, indent=2)); return 0
+        if args.command == "bind":
+            result = bind_reviews(contract, args.contract, args.receipts, args.packets, args.mapping, args.reviews, args.output)
             if result["status"] == "INCOMPLETE" and not args.allow_incomplete:
                 print(json.dumps(result, ensure_ascii=False, indent=2)); return 2
             print(json.dumps(result, ensure_ascii=False, indent=2)); return 0

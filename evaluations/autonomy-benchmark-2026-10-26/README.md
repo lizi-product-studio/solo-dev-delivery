@@ -26,6 +26,29 @@ python evaluations/autonomy-benchmark-2026-10-26/replay_runner.py validate \
 
 `--allow-synthetic` 只适合验证工具链，不得用于 0.13 的真实质量结论。回执中的 `provenance.skill_revision`、`run_id` 和证据文件由执行宿主填写；本工具不会替 Agent 调用模型，也不会把计划状态升级为完成。
 
+盲审先执行包结构检查，再让独立审查者只接收盲包和证据文件：
+
+```sh
+python portable-agent-kit/scripts/blind_review.py validate-packets \
+  evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json \
+  evaluations/autonomy-benchmark-2026-10-26/blind-packets-progress.jsonl
+python portable-agent-kit/scripts/blind_review.py validate-blind \
+  evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json \
+  /path/to/blind-packets.jsonl /path/to/blind-reviews.jsonl
+```
+
+盲审结果不填写 `trial_id`、`arm_id`、源码版本或候选哈希；完成评分后，持有密封映射的一方再解盲绑定：
+
+```sh
+python portable-agent-kit/scripts/blind_review.py bind \
+  evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json \
+  /path/to/receipts.jsonl /path/to/blind-packets.jsonl \
+  /path/to/sealed-mapping.jsonl /path/to/blind-reviews.jsonl \
+  /path/to/bound-reviews.jsonl
+```
+
+`validate-blind` 的通过只证明评分格式、证据引用和盲审边界正确；它不代表审查结果真实，也不替代独立审查。`bind` 会再次核对回执、契约哈希和证据绑定。
+
 在 Codex CLI 上做小范围真实回放可用 `native_replay.py`。它会创建隔离 profile、调用真实 `codex exec`，并把原始日志留在输出目录；目前只实现 `software-quick-patch` 的 baseline、0.12.0 和 0.13.0 臂，另外 11 类任务仍需各自的独立夹具和检查器：
 
 ```sh

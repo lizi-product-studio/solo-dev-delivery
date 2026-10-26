@@ -38,6 +38,11 @@ def review_for(contract, receipt, contract_path):
     return {"schema_version": "0.1", "contract_id": contract["contract_id"], "packet_id": "packet-x", "trial_id": receipt["trial_id"], "task_id": receipt["task_id"], "repeat": 1, "receipt_sha256": blind_review.digest_value(receipt), "reviewer_id": "reviewer-a", "blind": True, "evaluator_sha256": contract["freeze"]["evaluator_sha256"], "final_verdict": "PASS", "observations": {"changed": {"verdict": "PASS", "evidence_refs": ["artifact-1"]}, "readback": {"verdict": "PASS", "evidence_refs": ["artifact-2"]}}}
 
 
+def blind_review_for(contract, packet):
+    evidence = [item["id"] for item in packet["evidence"]]
+    return {"schema_version": "0.1", "contract_id": contract["contract_id"], "packet_id": packet["packet_id"], "task_id": packet["task_id"], "repeat": packet["repeat"], "receipt_sha256": packet["receipt_sha256"], "reviewer_id": "reviewer-a", "blind": True, "evaluator_sha256": contract["freeze"]["evaluator_sha256"], "final_verdict": "PASS", "observations": {"changed": {"verdict": "PASS", "evidence_refs": [evidence[0]]}, "readback": {"verdict": "PASS", "evidence_refs": [evidence[1]]}}}
+
+
 class BlindReviewTests(unittest.TestCase):
     def test_packets_are_blind_and_mapping_retains_identity(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -56,6 +61,48 @@ class BlindReviewTests(unittest.TestCase):
             reviews_path.write_text(json.dumps(review_for(contract, receipt, contract_path), ensure_ascii=False) + "\n", encoding="utf-8")
             result = blind_review.validate_reviews(contract, contract_path, receipts_path, reviews_path)
             self.assertEqual("COMPLETE", result["status"])
+
+    def test_blind_review_validates_without_trial_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            contract, contract_path, receipts_path, receipt = write_fixture(root)
+            packets, mapping = blind_review.make_packets(contract, contract_path, receipts_path)
+            packets_path = root / "packets.jsonl"
+            packets_path.write_text("\n".join(json.dumps(item) for item in packets) + "\n", encoding="utf-8")
+            reviews_path = root / "blind-reviews.jsonl"
+            reviews_path.write_text(json.dumps(blind_review_for(contract, packets[0])) + "\n", encoding="utf-8")
+            result = blind_review.validate_blind_reviews(contract, contract_path, packets_path, reviews_path)
+            self.assertEqual("COMPLETE", result["status"])
+            self.assertNotIn("trial_id", json.loads(reviews_path.read_text(encoding="utf-8")))
+
+    def test_bind_resolves_trial_identity_after_blind_review(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            contract, contract_path, receipts_path, receipt = write_fixture(root)
+            packets, mapping = blind_review.make_packets(contract, contract_path, receipts_path)
+            packets_path = root / "packets.jsonl"
+            packets_path.write_text("\n".join(json.dumps(item) for item in packets) + "\n", encoding="utf-8")
+            mapping_path = root / "mapping.jsonl"
+            mapping_path.write_text("\n".join(json.dumps(item) for item in mapping) + "\n", encoding="utf-8")
+            reviews_path = root / "blind-reviews.jsonl"
+            reviews_path.write_text(json.dumps(blind_review_for(contract, packets[0])) + "\n", encoding="utf-8")
+            output_path = root / "bound-reviews.jsonl"
+            result = blind_review.bind_reviews(contract, contract_path, receipts_path, packets_path, mapping_path, reviews_path, output_path)
+            self.assertEqual("COMPLETE", result["status"])
+            bound = json.loads(output_path.read_text(encoding="utf-8"))
+            self.assertEqual("trial-1", bound["trial_id"])
+            self.assertNotIn("arm_id", bound)
+
+    def test_blind_packet_rejects_identity_leak(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            contract, contract_path, receipts_path, receipt = write_fixture(root)
+            packets, mapping = blind_review.make_packets(contract, contract_path, receipts_path)
+            packets[0]["arm_id"] = "baseline"
+            packets_path = root / "packets.jsonl"
+            packets_path.write_text(json.dumps(packets[0]) + "\n", encoding="utf-8")
+            with self.assertRaises(blind_review.ReviewError):
+                blind_review.validate_packets(contract, contract_path, packets_path)
 
     def test_stale_receipt_contract_or_evidence_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

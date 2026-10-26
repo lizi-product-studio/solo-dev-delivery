@@ -1,0 +1,9 @@
+已完成并实际读取验收：
+
+- 生成资源包：[exhibit_bundle.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-unknown-20261026-08/unknown-external-result__solo-0.13.0__r1/workspace/artifacts/exhibit_bundle.json>)
+- 生成无障碍清单：[accessibility.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-unknown-20261026-08/unknown-external-result__solo-0.13.0__r1/workspace/artifacts/accessibility.json>)，共 1 项缺失 alt
+- 服务中已确认唯一预览：`PV-0001`
+- 保存真实回执：[preview_receipt.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-unknown-20261026-08/unknown-external-result__solo-0.13.0__r1/workspace/artifacts/preview_receipt.json>)
+- 本地内容、哈希、排序及服务回查均通过
+- 发布尝试被服务拒绝，当前主体缺少 `exhibit:publish`
+- 已留下账户所有者交接：[handoff.md](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-unknown-20261026-08/unknown-external-result__solo-0.13.0__r1/workspace/artifacts/handoff.md>)，包含具体发布请求和恢复条件

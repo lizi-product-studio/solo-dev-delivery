@@ -1,4 +1,6 @@
+{"arm_id": "solo-0.13.0", "packet_id": "packet-693c96d0d060cef45353", "source_revision": "git:ba3a2a4ae9e086b120282f08a00641fdd4c0c1c2", "trial_id": "high-risk-preview__solo-0.13.0__r1"}
 {"arm_id": "baseline", "packet_id": "packet-b573ae3705b25a1d35ac", "source_revision": "baseline:none", "trial_id": "software-quick-patch__baseline__r1"}
 {"arm_id": "solo-0.12.0", "packet_id": "packet-7ad9315bb20f2d83fc60", "source_revision": "git:c57659e7d1722edd08fbfcd15426ea7c79c32087", "trial_id": "software-quick-patch__solo-0.12.0__r1"}
 {"arm_id": "solo-0.13.0", "packet_id": "packet-c0db76d4ead0f05a4823", "source_revision": "git:57356fcd9cc811ead2d72148eb7dc434245d9e46", "trial_id": "software-quick-patch__solo-0.13.0__r1"}
 {"arm_id": "solo-0.13.0", "packet_id": "packet-55f3cc59a274783a4927", "source_revision": "git:8e740c0c40d132a36cef7a13792fba8c4ae0c28b", "trial_id": "software-recovery__solo-0.13.0__r1"}
+{"arm_id": "solo-0.13.0", "packet_id": "packet-ee25bcdfede117cb2ad0", "source_revision": "git:ba3a2a4ae9e086b120282f08a00641fdd4c0c1c2", "trial_id": "unknown-external-result__solo-0.13.0__r1"}

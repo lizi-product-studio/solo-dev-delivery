@@ -2,7 +2,7 @@
 
 `feat/customer-retro-self-review-2026-10-26` 从 `feat/frontend-quality` 的 `eed59ba80b7bef7b8bd065b7e053afac4611eb79` 分叉，未合并 `main`。本轮读取实际聊天“智能客服Agent”和只读核查“查找客服Agent中的终极Skill用法”，把用户先指出的技术阻塞、异常恢复、可见界面/话术和能力边界问题归纳为按需的[交付前主动自审](skill/solo-dev-delivery/references/delivery-self-review.md)，并加入脱敏回放矩阵。入口只增加条件式引用，不增加默认计划、子Agent、审批或固定全量清单。
 
-代码与文档检查：Skill 入口版本为0.11.2；新引用与回放矩阵在规范导出和临时安装中存在且内容一致；原有 portable 与 native 兼容套件在本轮未改动前的通过结果保留，待本轮改动后重新运行。客服项目报告的13轮真实模型回合、22次模型调用、模拟平台状态和4个平台待联调只作为复盘来源，不作为本 Skill 的新通过证据。用户反馈“耗时更短、返工更少”暂没有同口径基线，收益保留为待测假设。
+代码与文档检查：Skill 入口版本为0.11.2；新引用与回放矩阵在规范导出和临时安装中存在且内容一致。本机便携套件 **204 项通过、4 项按平台跳过**；远端[第二轮 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40253561749) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本化包校验全部成功。第一轮 CI 的包比较失败由 Windows 工作树 CRLF 与 Linux 规范导出 LF 造成，已用原始 Git 字节重建并复验；不是 Skill 内容失败。包 `packages/solo-dev-delivery-0.11.2.zip` SHA256 为 `4532dc9877bb2f7d0ffdc353d27fc2e333ba5de51069ac381ff8d39b4dafd277`。客服项目报告的13轮真实模型回合、22次模型调用、模拟平台状态和4个平台待联调只作为复盘来源，不作为本 Skill 的新通过证据。用户反馈“耗时更短、返工更少”暂没有同口径基线，收益保留为待测假设。
 
 本轮仍未更新本机用户级安装（当前安装入口仍为0.11.0），未创建Release、未合并main，也未宣称其他宿主自动加载。完整复盘与限制见[客服 Agent 复盘](evaluations/customer-agent-retro-2026-10-26/README.md)。
 

@@ -61,18 +61,18 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/README.md",
-      "sha256": "94dbb235c629f4d8a73d05dee38643788a164f01754fda9c48ea06454bb4dffb",
-      "bytes": 3257
+      "sha256": "10f22e8a0fc7bf456ceea4f2d8ac73cd0f40090ff2d149ecbe85242513dfe810",
+      "bytes": 3434
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-mapping-progress.jsonl",
-      "sha256": "7dfacdbc9b93d2e4e8d90321bf354a6c3bc4a78042c8403717c0272915a22b52",
-      "bytes": 533
+      "sha256": "04c10390d97944af6ad7d0c58cf2bd291a9092a6e7f6aea80e41f2132b99e350",
+      "bytes": 720
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/blind-packets-progress.jsonl",
-      "sha256": "20c3e44d3ec3b89708fd703e79e82924e0810bbe2b83b5556688a6300ae46f18",
-      "bytes": 2256
+      "sha256": "593030dac164a6d7e3fd154677c8ee2177c8114be0bc61aaf83548dee861dd71",
+      "bytes": 3011
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/contract.json",
@@ -110,9 +110,19 @@
       "bytes": 29169
     },
     {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/recovery-r1/agent-final.txt",
+      "sha256": "5f9c73868a844b8f5ee38d9910ec5f78df38f83f4c90bcc65adb8355fdcc683e",
+      "bytes": 217
+    },
+    {
+      "path": "evaluations/autonomy-benchmark-2026-10-26/evidence/native-replay-20261026/solo-0.13.0/recovery-r1/independent-evaluation.json",
+      "sha256": "38ce267ee0e3c5303d887a6e689df25cd3a16bc8000af308b200729b2222c058",
+      "bytes": 29747
+    },
+    {
       "path": "evaluations/autonomy-benchmark-2026-10-26/native_replay.py",
-      "sha256": "0e74cfcd15a291b2081eb94978e1de05485fa01b458b9fb1f8ed0963a09aee5c",
-      "bytes": 12753
+      "sha256": "b695f3af340daebcd42df022269354ce12714f95156796218bd08e707bba3ccc",
+      "bytes": 18696
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-contract.json",
@@ -121,8 +131,8 @@
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/pilot-progress-receipts.jsonl",
-      "sha256": "3168fa30265de2cfdd4bf6ad40175bc1a24741e15e2a1f7accffad2ad1f98bfb",
-      "bytes": 10073
+      "sha256": "d3f9c943b7eb6c701f766aad31d729d9db0d8845efb77a7aa94317b28321def1",
+      "bytes": 13779
     },
     {
       "path": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py",

@@ -4,6 +4,7 @@
 No model, network or scheduler. The supplied Python test is trusted host code,
 executed against a temporary copy of declared files. This is NOT a security
 sandbox, independent-identity authentication or a production acceptance gate.
+Control JSON and trusted Python source use UTF-8; candidate files copy as bytes.
 """
 from __future__ import annotations
 
@@ -22,19 +23,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from core.local_checks import artifact, canonical, file_bytes, load_json, pointer, precise_json, run_check
 
 LIMIT = 65536
-MARKER = 'SOLO_CHALLENGE_RESULT='
 HARNESS = '''import importlib.util, json, os, sys, unittest
 # Binding protects against accidental tests of the original workspace rather
 # than the frozen copy. Trusted test code can bypass this; it is not a sandbox.
 source_root = os.environ.get('SOLO_SOURCE_WORKSPACE')
 if source_root:
+    source_root = os.path.normcase(os.path.realpath(source_root))
     def bound_path(value):
         if isinstance(value, (list, tuple)):
             return any(bound_path(x) for x in value)
         if not isinstance(value, (str, bytes, os.PathLike)):
             return False
-        value = os.fsdecode(value)
-        resolved = os.path.realpath(value) if value.startswith("/") else value
+        value = os.path.normcase(os.fsdecode(value))
+        resolved = os.path.normcase(os.path.realpath(value)) if os.path.isabs(value) else value
         return source_root in value or resolved == source_root or resolved.startswith(source_root + os.sep)
     def candidate_binding(event, args):
         values = args[:3] if event == 'subprocess.Popen' else args[:1]
@@ -81,7 +82,12 @@ class Observed(unittest.TextTestResult):
 result = unittest.TextTestRunner(verbosity=2, stream=sys.stderr, resultclass=Observed).run(suite)
 summary = {"tests":result.testsRun,"failures":len(result.failures),"errors":len(result.errors),"skipped":len(result.skipped),"expected_failures":len(result.expectedFailures),"unexpected_successes":len(result.unexpectedSuccesses)}
 summary['cases'] = [{'id':name,'status':status} for name,status in result.cases.items()]
-print("SOLO_CHALLENGE_RESULT=" + json.dumps(summary), flush=True)
+try:
+    with open(sys.argv[3], 'w', encoding='utf-8') as stream:
+        json.dump(summary, stream, ensure_ascii=False)
+except (OSError, ValueError, UnicodeError) as exc:
+    print('Challenge result channel failed: ' + str(exc), file=sys.stderr)
+    sys.exit(2)
 sys.exit(0 if result.wasSuccessful() and result.testsRun and not (result.skipped or result.expectedFailures) else 1)
 '''
 
@@ -141,6 +147,58 @@ def tail(path):
     return {'text': data.decode('utf-8', errors='replace'), 'bytes': size, 'truncated': size > LIMIT}
 
 
+def _read_test_result(path):
+    """Read the private UTF-8 control channel independently of bounded logs."""
+    value = json.loads(Path(path).read_text(encoding='utf-8'))
+    counts = ('tests', 'failures', 'errors', 'skipped', 'expected_failures', 'unexpected_successes')
+    if (not isinstance(value, dict)
+            or any(type(value.get(name)) is not int or value[name] < 0 for name in counts)
+            or not isinstance(value.get('cases'), list)
+            or any(not isinstance(case, dict) or not isinstance(case.get('id'), str) or not case['id']
+                   or case.get('status') not in ('PASS', 'FAIL', 'UNKNOWN') for case in value['cases'])):
+        raise ValueError('invalid test result structure')
+    return value
+
+
+def _terminate_test_tree(proc):
+    """Stop only this disposable test tree; retain every cleanup fault."""
+    result = {'method': 'windows-taskkill-tree' if os.name == 'nt' else 'posix-process-group',
+              'pid': proc.pid, 'errors': []}
+    try:
+        if os.name == 'nt':
+            system_root = os.environ.get('SYSTEMROOT') or os.environ.get('WINDIR')
+            if not system_root:
+                raise OSError('Windows system directory is unavailable')
+            command = [str(Path(system_root) / 'System32/taskkill.exe'), '/PID', str(proc.pid), '/T', '/F']
+            stopped = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE, timeout=5,
+                                     creationflags=subprocess.CREATE_NO_WINDOW)
+            result['tool_exit_code'] = stopped.returncode
+            if stopped.returncode:
+                result['errors'].append('taskkill exited ' + str(stopped.returncode) + ': '
+                                        + (stopped.stdout + stopped.stderr).decode('utf-8', errors='replace')[-2000:])
+        else:
+            # Popen starts a new session, so this group cannot include the host.
+            try:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    except (OSError, subprocess.SubprocessError) as exc:
+        result['errors'].append(type(exc).__name__ + ': ' + str(exc))
+    try:
+        proc.wait(timeout=5)
+    except (OSError, subprocess.SubprocessError) as exc:
+        result['errors'].append('test leader could not be reaped: ' + type(exc).__name__ + ': ' + str(exc)[:1000])
+        # A bounded leader-only fallback cannot establish tree cleanup success.
+        try:
+            proc.kill()
+            proc.wait(timeout=5)
+        except (OSError, subprocess.SubprocessError) as exc:
+            result['errors'].append(type(exc).__name__ + ': ' + str(exc))
+    result['status'] = 'FAILED' if result['errors'] else 'TERMINATED'
+    return result
+
+
 def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=None):
     packet_path = Path(packet_path).resolve(strict=True)
     packet_raw = packet_path.read_bytes()
@@ -162,8 +220,11 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
         raise ValueError('reviewer test must be a Python file of at most 64 KiB')
     started = time.monotonic()
     timed_out = False
-    with tempfile.TemporaryDirectory(prefix='solo-challenge-') as td:
-        scratch = Path(td)
+    termination, cleanup_errors = None, []
+    summary, result_channel_error = None, None
+    temporary = tempfile.TemporaryDirectory(prefix='solo-challenge-')
+    try:
+        scratch = Path(temporary.name)
         work = scratch / 'candidate'
         work.mkdir()
         for entry in packet['inputs'] + packet['outputs']:
@@ -182,34 +243,41 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                 if target.suffix != '.py':
                     raise ValueError('counterfactual patch must target Python code, not source policies or data')
                 before, after = change['before'], change['after']
-                text = target.read_text()
+                text = target.read_text(encoding='utf-8')
                 if not before or before == after or text.count(before) != 1:
                     raise ValueError('counterfactual needs one exact, nontrivial replacement')
                 text = text.replace(before, after, 1)
                 compile(text, str(target), 'exec')
-                target.write_text(text)
+                target.write_text(text, encoding='utf-8')
         test = scratch / 'review_checks.py'
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
+        result_path = scratch / 'test-result.json'
         env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work),
                'SOLO_CANDIDATE_ROOT': str(work)}
         env.pop('SOLO_SOURCE_WORKSPACE', None)
         if packet.get('execution_scope') == 'candidate-copy':
             env['SOLO_SOURCE_WORKSPACE'] = str(root)
         with stdout_path.open('wb') as out, stderr_path.open('wb') as err:
-            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected)], cwd=work,
+            proc = subprocess.Popen([sys.executable, '-B', '-c', HARNESS, str(test), json.dumps(selected), str(result_path)], cwd=work,
                                     env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err,
                                     start_new_session=True)
             try:
                 code = proc.wait(timeout=timeout)
             except subprocess.TimeoutExpired:
                 timed_out = True
-                # This stops only this disposable test process group, never an Agent.
-                os.killpg(proc.pid, signal.SIGKILL)
-                code = proc.wait()
+                termination = _terminate_test_tree(proc)
+                code = proc.returncode
         stdout, stderr = tail(stdout_path), tail(stderr_path)
-    summaries = [line[len(MARKER):] for line in stdout['text'].splitlines() if line.startswith(MARKER)]
-    summary = json.loads(summaries[-1]) if summaries else None
+        try:
+            summary = _read_test_result(result_path)
+        except (OSError, ValueError, UnicodeError) as exc:
+            result_channel_error = type(exc).__name__ + ': ' + str(exc)
+    finally:
+        try:
+            temporary.cleanup()
+        except OSError as exc:
+            cleanup_errors.append(type(exc).__name__ + ': ' + str(exc))
     test_cases = summary.pop('cases', []) if summary else []
     status = 'UNKNOWN'
     if not timed_out and summary and summary['tests'] > 0:
@@ -217,6 +285,9 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
             status = 'FAIL'
         elif not summary['skipped'] and not summary['expected_failures'] and code == 0:
             status = 'CHALLENGE_PASS'
+    cleanup_failed = bool(cleanup_errors or (termination and termination['status'] == 'FAILED'))
+    if cleanup_failed and status != 'FAIL':
+        status = 'UNKNOWN'
     try:
         unchanged = current(packet) and packet_path.read_bytes() == packet_raw and test_path.read_bytes() == test_bytes
     except OSError:
@@ -232,6 +303,12 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
                'stdout': stdout, 'stderr': stderr,
                'independent_identity_authenticated': False,
                'limits': 'Observed local unittest results only. Host verifies reviewer independence and business coverage. Not a sandbox, publication or production acceptance.'}
+    if result_channel_error:
+        receipt['result_channel'] = {'status': 'FAILED', 'error': result_channel_error}
+    if timed_out or cleanup_errors:
+        receipt['process_cleanup'] = {'status': 'FAILED' if cleanup_failed else 'COMPLETE',
+                                      'termination': termination, 'errors': cleanup_errors,
+                                      **({'scratch': str(scratch)} if cleanup_failed else {})}
     if patches:
         receipt['counterfactual_patches'] = patches
     write_new(receipt_path, receipt)
@@ -263,11 +340,11 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
     from core.coverage import discover_evidence
     reusable = []
     for path in discover_evidence([receipt_path.parent]):
-        value = load_json(Path(path).read_text())
+        value = load_json(Path(path).read_text(encoding='utf-8'))
         if value.get('test') != str(test_path) or value.get('test_sha256') != sha(test_path.read_bytes()):
             continue
         try:
-            same = load_json(Path(value['packet']).read_text()) == packet
+            same = load_json(Path(value['packet']).read_text(encoding='utf-8')) == packet
             observed = status(path)['status'] if same else 'STALE'
         except (OSError, ValueError, KeyError, TypeError):
             continue
@@ -283,7 +360,7 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
             raise ValueError('receipt exists but is not reusable; preserve it and choose a new report')
         packet_path = receipt_path.with_name(receipt_path.stem + '-packet.json')
         if packet_path.exists():
-            if load_json(packet_path.read_text()) != packet:
+            if load_json(packet_path.read_text(encoding='utf-8')) != packet:
                 raise ValueError('packet exists for other bytes; preserve it and choose a new report')
         else:
             write_new(packet_path, packet)
@@ -300,7 +377,7 @@ def _verify_suite(workspace, inputs, outputs, test_path, receipt_path, timeout=6
 
 
 def status(receipt_path):
-    receipt = load_json(Path(receipt_path).read_text())
+    receipt = load_json(Path(receipt_path).read_text(encoding='utf-8'))
     if receipt.get('format') == 'local-sensitivity-result/1':
         from core.sensitivity import fresh
         valid = fresh(receipt, status)
@@ -314,7 +391,7 @@ def status(receipt_path):
     if receipt.get('format') == 'local-relations-result/1':
         try:
             spec_path = Path(receipt['spec'])
-            spec = load_json(spec_path.read_text())
+            spec = load_json(spec_path.read_text(encoding='utf-8'))
             valid = sha(spec_path.read_bytes()) == receipt['spec_sha256']
             valid = valid and all(artifact(receipt['workspace'], x['path']) == x for x in receipt['artifacts'])
             fresh = [{'id': c['id'], **run_check(receipt['workspace'], c, spec['scope'])} for c in spec['checks']]
@@ -326,7 +403,7 @@ def status(receipt_path):
     try:
         packet_path = Path(receipt['packet'])
         valid = sha(packet_path.read_bytes()) == receipt['packet_sha256']
-        packet = load_json(packet_path.read_text())
+        packet = load_json(packet_path.read_text(encoding='utf-8'))
         valid = valid and current(packet) and sha(Path(receipt['test']).read_bytes()) == receipt['test_sha256']
     except (OSError, ValueError, KeyError):
         valid = False
@@ -396,14 +473,14 @@ def brief(workspace, inputs, target):
 
 def assess(brief_path, plan_path, packet_path, evidence, budget, execute, report_path):
     from core.coverage import coverage_report, digest, discover_evidence
-    packet = load_json(Path(packet_path).read_text())
+    packet = load_json(Path(packet_path).read_text(encoding='utf-8'))
     root = Path(packet['workspace']).resolve(strict=True)
     report_path = outside(report_path, root)
     if report_path.exists():
         raise ValueError('report exists; preserve previous result and use a new report')
     for path in (brief_path, plan_path, packet_path):
         outside(path, root)
-    plan = load_json(Path(plan_path).read_text())
+    plan = load_json(Path(plan_path).read_text(encoding='utf-8'))
     outside(plan['test_file'], root)
     evidence = list(evidence) + discover_evidence([report_path.parent])
     result = coverage_report(brief_path, plan_path, packet_path, evidence, budget, status, current)
@@ -510,8 +587,9 @@ def main():
 if __name__ == '__main__':
     try:
         result = main()
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        # ASCII escapes keep the JSON pipe UTF-8-valid on legacy stdio locales.
+        print(json.dumps(result, ensure_ascii=True, indent=2))
         sys.exit(0 if result['status'] in ('FROZEN', 'CHALLENGE_PASS', 'SENSITIVITY_PASS', 'RELATIONS_PASS', 'RENDERED', 'SOURCE_BRIEF', 'DECLARED_SCOPE_COVERED') else 1)
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
-        print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=False), file=sys.stderr)
+        print(json.dumps({'status': 'ERROR', 'error': str(exc)}, ensure_ascii=True), file=sys.stderr)
         sys.exit(2)

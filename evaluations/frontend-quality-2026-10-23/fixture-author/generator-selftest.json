@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "deterministic generation",
+    "expected public files",
+    "refuse overwrite",
+    "five unique representative records",
+    "seed substitution",
+    "no remote page resources",
+    "JavaScript syntax"
+  ],
+  "functional_ui_test": "not claimed by generator self-test",
+  "browser_ui_verification": "Not claimed; parent agent will verify using local service on 127.0.0.1:8876."
+}

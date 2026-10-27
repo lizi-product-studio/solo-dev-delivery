@@ -868,9 +868,9 @@ print(json.dumps({'type':'turn.completed','usage':{'input_tokens':12,'cached_inp
         with self.assertRaises(ValueError):
             self.q.resources.reconcile(self.t['id'], 'impl', str(attestation))
         self.assertEqual('RESERVED', self.q.resources.rows(self.t['id'])[0]['status'])
-        with patch.object(engine.os, 'kill', side_effect=ProcessLookupError) as process_check:
+        with patch.object(engine, 'process_alive', return_value=False) as process_check:
             result = self.q.resources.reconcile(self.t['id'], 'impl', str(attestation))
-        process_check.assert_called_once_with(os.getpid(), 0)
+        process_check.assert_called_once_with(os.getpid())
         self.assertEqual([], result['active'])
         self.assertEqual('INTERRUPTED', self.q.resources.rows(self.t['id'])[0]['status'])
         with self.assertRaises(ValueError):

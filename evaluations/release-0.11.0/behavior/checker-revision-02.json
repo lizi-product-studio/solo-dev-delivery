@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "kind": "coordinator-authorized-fixture-format-defect-correction",
+  "original_checker_sha256": "fb7d4c84258f26b5a51ff60fda5f40efb88caeaf92d28fbad32f4c3adf566e8a",
+  "revised_checker_sha256": "098de782e13d42b306f195d6e6f786a380ffa0adfcc1180006b8214964ae5525",
+  "original_checker_file": "check-first-format-defect.py",
+  "preserved_first_results": ["invoice-first-evaluation.json", "dispatch-first-evaluation.json"],
+  "changes": [
+    "Invoice task did not declare a status enum: accept complete or completed.",
+    "Verification did not declare a scalar schema: accept nonempty prose or meaningful structured evidence; reject empty evidence.",
+    "Blocking permission did not declare an enum: accept explanatory text containing the exact real capability identifier; reject missing or wrong identifiers.",
+    "Keep the original manifest and seal. Rejudge an old freeze only with explicit matching revision record; report frozen and executed checker hashes."
+  ],
+  "unchanged": ["Public tasks", "Candidate source and artifacts", "Business contracts and independent input oracles", "Dispatch needs_user status", "Actual service side effects and reconciliation", "Permission boundary and protected-file checks"],
+  "interpretation": "Both first checker failures remain recorded as fixture defects. Any later success is revised-checker acceptance, not an unchanged first-pass success or comparative Skill improvement."
+}

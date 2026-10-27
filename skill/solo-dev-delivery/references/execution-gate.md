@@ -1,16 +1,28 @@
 # 从源政策生成验收并阻止过早交付
 
-多步骤、有业务条件的任务使用；简单问答与纯文案样式不登记。已有队列与gate/1任务保持原行为。新任务用gate/2：原文按行为语句分开核对，实际检查绑定候选副本；原生链路验收充分时直接复用，不为使用模型再造产品状态机。
+任务需要候选绑定、正式验收门禁，或已经在此门禁中时使用；多步骤或有业务条件本身不要求额外登记。简单问答与纯文案样式不登记。已有队列与gate/1任务保持原行为。选择新门禁时用gate/2：原文按行为语句分开核对，实际检查绑定候选副本；原生链路验收充分时直接复用，不为使用模型再造产品状态机。
 
 完整系统工具为`portable-agent-kit/scripts/gate.py`，独立包为`scripts/gate.py`。控制目录在候选工作区外：
 
 ```sh
-python3 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output app.py --task "$CONTROL/task.json"
+python3 -X utf8 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output app.py --task "$CONTROL/task.json"
 # 从原始需求写 adapters.py 与 plan.json，尚不修改实现。
-python3 "$GATE" seal --task "$CONTROL/task.json" --plan "$CONTROL/plan.json"
+python3 -X utf8 "$GATE" seal --task "$CONTROL/task.json" --plan "$CONTROL/plan.json"
 # 按返回的区分场景实现/修复，实际验证；非零退出即不能交付。
-python3 "$GATE" check --task "$CONTROL/task.json" --run
+python3 -X utf8 "$GATE" check --task "$CONTROL/task.json" --run
 ```
+
+Windows可将`python3`换为`python`；`-X utf8`明确本次Python进程的文本编码，子进程也应按其实际编码配置，不修改用户全局环境。
+
+## 让既有测试与数据进入候选副本
+
+`--input`声明提供业务要求的原文，`--output`声明本轮产物。既有测试、CSV样本及其他运行所需但本轮不修改的文件，用可重复的`--support-file`明确列出项目内相对路径：
+
+```sh
+python3 -X utf8 "$GATE" start --workspace "$WORKSPACE" --input REQUEST.md --output src/report.py --support-file tests/test_report.py --support-file data/orders.csv --task "$CONTROL/task.json"
+```
+
+这些只读依赖进入冻结候选副本，供原有测试与真实CLI直接使用；不解析为待覆盖的业务语句，也不能代替`--input`中的验收义务。不自动复制整个目录或猜测依赖。开始时绑定文件哈希，依赖变动或缺失会阻止放行，旧PASS不能覆盖新内容；确需修改的依赖应作为产物声明并重新建立验收范围。旧任务不需迁移。
 
 ## 先复用链路检查，不重复填需求
 
@@ -59,6 +71,8 @@ seal返回候选组合数、区分义务及选中检查数；scope-N/selection.j
 check复用已有执行器，只运行缺失且仍需要的检查；所有生成场景都是required，不能用同一outcome的一个PASS代替其他独立场景。模型、适配器、生成测试、原文和候选均绑定哈希。失败返回共享来源的相关结果；修改验收须seal --reason说明原文依据，旧验收和失败保留。真实UI/外部服务没有观察时保留缺口，不把本地替身PASS说成完成。
 
 `install-hook`合并用户级Stop定义，保留其他钩子。按Codex官方要求在`/hooks`审核信任当前定义；安装不是启用。start默认用CODEX_THREAD_ID登记当前会话，子Agent隔离测试可传`--session ''`。无登记不拦聊天；有缺口则返回最小补查项，不因stop_hook_active豁免、不按时限杀Agent。通过且证据新鲜才结束登记。其他宿主需自己的等价结束回调。
+
+安装器保留POSIX的`command`，另生成Windows专用`commandWindows`，直接向Codex的PowerShell命令宿主传递表达式；使用安装时当前Python与脚本的绝对路径，支持中文、空格及单引号，不再依赖Windows的`python3`别名。原生命令的0/1/2退出码原样传递，解释器无法启动返回2。当前路径的旧定义原地补齐，保留其他字段；移动包或更换解释器后重新运行`install-hook`并按宿主要求复核变更后的定义。本机Codex 0.163.0-alpha.11.2实测使用`pwsh.exe -NoProfile -Command`；其他版本的加载、信任与shell策略仍需在其宿主核实，不能用临时安装成功代替。
 
 确实需要用户信息/外部环境时，保留实际失败证据，用`blocked --task ... --reason ... --evidence /absolute/error.txt`如实交接BLOCKED，不标完成。恢复后重跑check。
 

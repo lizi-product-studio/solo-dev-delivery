@@ -1,0 +1,8 @@
+{
+  "status": "FIXTURE_DEFECT",
+  "original_checker_sha256": "fb7d4c84258f26b5a51ff60fda5f40efb88caeaf92d28fbad32f4c3adf566e8a",
+  "first_result": {"01-invoice": {"status": "FAIL", "reason": "incorrect delivery status"}},
+  "public_contract": "result.json with status, summary, verification; no status enum or verification scalar schema was specified",
+  "actual_result": {"status": "completed", "verification_type": "object", "artifact_total": "4.04"},
+  "handling": "Preserve candidate unchanged. Independently correct undeclared format restrictions, retain the original checker and original failed result. Revised-checker evaluation must be reported as such, not original first-pass success."
+}

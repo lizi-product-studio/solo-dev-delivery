@@ -1,0 +1,10 @@
+{
+  "format":"host-adapter/1",
+  "host_id":"codex-cli",
+  "host_version":"0.164.0",
+  "platform":"windows",
+  "capabilities":{"fs.read":"supported","fs.write":"supported","shell.exec":"supported"},
+  "required_capabilities":["fs.read","fs.write","shell.exec"],
+  "phases":["install","load","invoke","route","verify"],
+  "observations":[{"phase":"install","status":"PASS","evidence_refs":["evidence/install.json"]},{"phase":"load","status":"PASS","evidence_refs":["evidence/load.json"]},{"phase":"invoke","status":"PASS","evidence_refs":["evidence/invoke.json"]},{"phase":"route","status":"PASS","evidence_refs":["evidence/route.json"]},{"phase":"verify","status":"PASS","evidence_refs":["evidence/verify.json"]}]
+}

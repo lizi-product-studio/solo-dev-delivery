@@ -1,0 +1,7 @@
+sources/
+runs/
+preflight/
+blind-packets/
+__pycache__/
+design/__pycache__/
+design/_selftest_temp/

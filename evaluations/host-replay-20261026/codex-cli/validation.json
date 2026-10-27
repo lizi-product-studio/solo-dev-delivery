@@ -1,0 +1,100 @@
+{
+  "format": "host-replay-receipt/1",
+  "status": "PASS",
+  "host_id": "codex-cli",
+  "candidate": "git:8174811",
+  "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866",
+  "required_phases": [
+    "install",
+    "load",
+    "invoke",
+    "route",
+    "verify"
+  ],
+  "missing_phases": [],
+  "incomplete_phases": [],
+  "failed_phases": [],
+  "observations": [
+    {
+      "id": "install",
+      "phase": "install",
+      "status": "PASS",
+      "source": "host-command",
+      "evidence_refs": [
+        {
+          "path": "install.log",
+          "sha256": "ee7ec12730b2270daeefbdc3073ab651cb3b49de2a3795cdfa976f0a96eacdc0"
+        }
+      ],
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    },
+    {
+      "id": "load",
+      "phase": "load",
+      "status": "PASS",
+      "source": "host-command",
+      "evidence_refs": [
+        {
+          "path": "load.log",
+          "sha256": "ddcca00e60b01c441ea0f48bdffe47f618cbfd7af7d7b876640b3f20e9464210"
+        }
+      ],
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    },
+    {
+      "id": "invoke",
+      "phase": "invoke",
+      "status": "PASS",
+      "source": "host-command",
+      "evidence_refs": [
+        {
+          "path": "invoke.log",
+          "sha256": "c094db5b8066d8a000e7e389eb9d5212cbb4d0d7eba5241c2ec52bd33a03b9f5"
+        }
+      ],
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    },
+    {
+      "id": "route",
+      "phase": "route",
+      "status": "PASS",
+      "source": "host-command",
+      "evidence_refs": [
+        {
+          "path": "route.log",
+          "sha256": "05a5761e507a5173fac2e0f4e85ee183349330613cf783f59cda30721f435d94"
+        },
+        {
+          "path": "capability-snapshot.json",
+          "sha256": "c094db5b8066d8a000e7e389eb9d5212cbb4d0d7eba5241c2ec52bd33a03b9f5"
+        }
+      ],
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    },
+    {
+      "id": "verify",
+      "phase": "verify",
+      "status": "PASS",
+      "source": "host-command",
+      "evidence_refs": [
+        {
+          "path": "verify.log",
+          "sha256": "edf6cff0b2dd292c8bffe3d2833963c03ef4ac15780b2a0ea117ce83ba937120"
+        }
+      ],
+      "candidate": "git:8174811",
+      "package_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    }
+  ],
+  "limits": "Evidence binding only; host loading, route semantics, UI meaning and business acceptance still require independent review.",
+  "capability_sha256": "f963bc1c7c1eb57d7efe9eca8755af49aa849ac8ff58693f168154740c4bc85c",
+  "required_capabilities": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "capability_status": "READY"
+}

@@ -1,0 +1,6 @@
+已完成 TASK.md：
+
+- 修复 `summarize_ranges`：合并重叠/相邻区间，按闭区间正确计页，并保持排序。
+- CLI 已生成 [artifacts/page_coverage.json](C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-replay-20261026-05/software-quick-patch__solo-0.12.0__r1/workspace/artifacts/page_coverage.json)，结果为 3 个文档、总计 18 页。
+- 测试通过：2 项测试；`git diff --check` 通过。
+- 修改文件：[src/page_ranges.py](C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-replay-20261026-05/software-quick-patch__solo-0.12.0__r1/workspace/src/page_ranges.py)、[tests/test_page_ranges.py](C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-replay-20261026-05/software-quick-patch__solo-0.12.0__r1/workspace/tests/test_page_ranges.py)。

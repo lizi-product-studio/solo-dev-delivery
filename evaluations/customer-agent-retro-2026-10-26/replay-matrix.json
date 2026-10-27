@@ -1,0 +1,15 @@
+{
+  "version": "0.11.2",
+  "purpose": "脱敏的按需主动发现回放类别，不是所有任务的强制清单",
+  "source": "智能客服Agent 实际开发对话的用户反馈与失败类别",
+  "cases": [
+    {"id": "tool_entry_failure", "observe": ["原始错误", "工具状态", "已有结果"], "autonomous": ["等价入口", "读回目标"], "handoff": ["登录", "验证码", "第三方授权"]},
+    {"id": "bad_model_or_timeout", "observe": ["空响应", "格式", "耗时", "容量"], "autonomous": ["有界重识别", "继续独立工作", "保留unknown"], "handoff": ["无安全恢复路径"]},
+    {"id": "greeting_menu", "observe": ["首响应", "菜单数字", "上下文"], "autonomous": ["快速分支", "不计业务失败"], "handoff": []},
+    {"id": "normalized_multiturn_intent", "observe": ["同义", "否定", "大小写", "空格", "全角", "跨轮指代"], "autonomous": ["归一化", "重核对象", "失效旧确认"], "handoff": ["业务语义仍含糊"]},
+    {"id": "interruption_reversal_switch_expiry", "observe": ["插话", "反悔", "取消", "切单", "重复", "过期"], "autonomous": ["撤销或暂存非执行性任务", "新预览", "幂等读回"], "handoff": ["明确人工请求"]},
+    {"id": "permission_boundary", "observe": ["归属", "租户", "权限", "签名"], "autonomous": ["安全停止", "不泄露"], "handoff": ["本人授权", "有权人决定"]},
+    {"id": "unknown_external_write", "observe": ["操作身份", "回执", "回读", "冲突"], "autonomous": ["对账", "禁止盲重试", "保留unknown"], "handoff": ["外部系统核实"]},
+    {"id": "visible_result_quality", "observe": ["真实页面", "关键状态", "可见文案", "持久结果"], "autonomous": ["删冗余", "修回归", "重读实际入口"], "handoff": ["品牌或经营取舍"]}
+  ]
+}

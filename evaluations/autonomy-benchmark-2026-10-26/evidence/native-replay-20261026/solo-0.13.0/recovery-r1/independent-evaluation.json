@@ -1,0 +1,1248 @@
+{
+  "task_id": "software-recovery",
+  "version": "2026-10-23.1",
+  "completed": true,
+  "passed": 5,
+  "total": 5,
+  "assertions": [
+    {
+      "id": "public_inputs_and_contract_unchanged",
+      "passed": true,
+      "expected": "all frozen public inputs/contracts/tools unchanged",
+      "actual": []
+    },
+    {
+      "id": "artifact:page_coverage.json",
+      "passed": true,
+      "expected": {
+        "documents": [
+          {
+            "document_id": "FOLIO-A",
+            "ranges": [
+              [
+                1,
+                9
+              ]
+            ],
+            "pages": 9
+          },
+          {
+            "document_id": "FOLIO-B",
+            "ranges": [
+              [
+                1,
+                6
+              ],
+              [
+                9,
+                10
+              ]
+            ],
+            "pages": 8
+          },
+          {
+            "document_id": "FOLIO-C",
+            "ranges": [
+              [
+                8,
+                8
+              ]
+            ],
+            "pages": 1
+          }
+        ],
+        "total_pages": 18
+      },
+      "actual": {
+        "documents": [
+          {
+            "document_id": "FOLIO-A",
+            "ranges": [
+              [
+                1,
+                9
+              ]
+            ],
+            "pages": 9
+          },
+          {
+            "document_id": "FOLIO-B",
+            "ranges": [
+              [
+                1,
+                6
+              ],
+              [
+                9,
+                10
+              ]
+            ],
+            "pages": 8
+          },
+          {
+            "document_id": "FOLIO-C",
+            "ranges": [
+              [
+                8,
+                8
+              ]
+            ],
+            "pages": 1
+          }
+        ],
+        "total_pages": 18
+      }
+    },
+    {
+      "id": "unseen_cli_business_cases",
+      "passed": true,
+      "expected": {
+        "cases": 18,
+        "all_match": true
+      },
+      "actual": {
+        "passed": 18,
+        "failures": []
+      }
+    },
+    {
+      "id": "public_api",
+      "passed": true,
+      "expected": {
+        "cases": 18,
+        "all_match": true
+      },
+      "actual": {
+        "all_match": true,
+        "result": [
+          {
+            "ok": true,
+            "value": {
+              "documents": [],
+              "total_pages": 0
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "one",
+                  "ranges": [
+                    [
+                      7,
+                      7
+                    ]
+                  ],
+                  "pages": 1
+                }
+              ],
+              "total_pages": 1
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "mix",
+                  "ranges": [
+                    [
+                      1,
+                      8
+                    ],
+                    [
+                      10,
+                      11
+                    ],
+                    [
+                      13,
+                      14
+                    ]
+                  ],
+                  "pages": 12
+                }
+              ],
+              "total_pages": 12
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      17,
+                      19
+                    ],
+                    [
+                      24,
+                      26
+                    ],
+                    [
+                      53,
+                      57
+                    ],
+                    [
+                      64,
+                      73
+                    ]
+                  ],
+                  "pages": 21
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      10,
+                      16
+                    ],
+                    [
+                      51,
+                      55
+                    ]
+                  ],
+                  "pages": 12
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      5,
+                      8
+                    ],
+                    [
+                      35,
+                      41
+                    ]
+                  ],
+                  "pages": 11
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      5,
+                      8
+                    ],
+                    [
+                      29,
+                      29
+                    ],
+                    [
+                      33,
+                      33
+                    ],
+                    [
+                      37,
+                      46
+                    ],
+                    [
+                      61,
+                      66
+                    ]
+                  ],
+                  "pages": 22
+                }
+              ],
+              "total_pages": 66
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      20,
+                      23
+                    ],
+                    [
+                      58,
+                      60
+                    ]
+                  ],
+                  "pages": 7
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      38,
+                      38
+                    ]
+                  ],
+                  "pages": 1
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      11,
+                      19
+                    ],
+                    [
+                      59,
+                      66
+                    ]
+                  ],
+                  "pages": 17
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      31,
+                      35
+                    ],
+                    [
+                      42,
+                      46
+                    ]
+                  ],
+                  "pages": 10
+                }
+              ],
+              "total_pages": 35
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      33,
+                      37
+                    ]
+                  ],
+                  "pages": 5
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      26,
+                      27
+                    ]
+                  ],
+                  "pages": 2
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      11,
+                      20
+                    ],
+                    [
+                      28,
+                      34
+                    ],
+                    [
+                      55,
+                      55
+                    ],
+                    [
+                      60,
+                      69
+                    ]
+                  ],
+                  "pages": 28
+                }
+              ],
+              "total_pages": 35
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      13,
+                      22
+                    ]
+                  ],
+                  "pages": 10
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      5,
+                      13
+                    ],
+                    [
+                      26,
+                      30
+                    ],
+                    [
+                      51,
+                      60
+                    ]
+                  ],
+                  "pages": 24
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      7,
+                      10
+                    ],
+                    [
+                      28,
+                      40
+                    ],
+                    [
+                      51,
+                      56
+                    ]
+                  ],
+                  "pages": 23
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      50,
+                      59
+                    ]
+                  ],
+                  "pages": 10
+                }
+              ],
+              "total_pages": 67
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      26,
+                      33
+                    ],
+                    [
+                      36,
+                      37
+                    ],
+                    [
+                      61,
+                      61
+                    ]
+                  ],
+                  "pages": 11
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      13,
+                      24
+                    ]
+                  ],
+                  "pages": 12
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      43,
+                      48
+                    ]
+                  ],
+                  "pages": 6
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      4,
+                      13
+                    ]
+                  ],
+                  "pages": 10
+                }
+              ],
+              "total_pages": 39
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      3,
+                      13
+                    ],
+                    [
+                      16,
+                      17
+                    ],
+                    [
+                      37,
+                      42
+                    ]
+                  ],
+                  "pages": 19
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      35,
+                      42
+                    ],
+                    [
+                      52,
+                      63
+                    ]
+                  ],
+                  "pages": 20
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      7,
+                      13
+                    ],
+                    [
+                      21,
+                      30
+                    ],
+                    [
+                      50,
+                      60
+                    ]
+                  ],
+                  "pages": 28
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      8,
+                      17
+                    ],
+                    [
+                      22,
+                      25
+                    ],
+                    [
+                      28,
+                      42
+                    ],
+                    [
+                      50,
+                      62
+                    ]
+                  ],
+                  "pages": 42
+                }
+              ],
+              "total_pages": 109
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      2,
+                      14
+                    ],
+                    [
+                      32,
+                      40
+                    ]
+                  ],
+                  "pages": 22
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      15,
+                      16
+                    ],
+                    [
+                      27,
+                      37
+                    ],
+                    [
+                      54,
+                      56
+                    ],
+                    [
+                      58,
+                      68
+                    ]
+                  ],
+                  "pages": 27
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      8,
+                      21
+                    ],
+                    [
+                      25,
+                      28
+                    ]
+                  ],
+                  "pages": 18
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      5,
+                      14
+                    ],
+                    [
+                      32,
+                      32
+                    ],
+                    [
+                      58,
+                      65
+                    ]
+                  ],
+                  "pages": 19
+                }
+              ],
+              "total_pages": 86
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      6,
+                      12
+                    ],
+                    [
+                      18,
+                      24
+                    ],
+                    [
+                      34,
+                      34
+                    ]
+                  ],
+                  "pages": 15
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      22,
+                      22
+                    ],
+                    [
+                      30,
+                      33
+                    ],
+                    [
+                      43,
+                      49
+                    ]
+                  ],
+                  "pages": 12
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      56,
+                      62
+                    ]
+                  ],
+                  "pages": 7
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      3,
+                      9
+                    ],
+                    [
+                      51,
+                      56
+                    ]
+                  ],
+                  "pages": 13
+                }
+              ],
+              "total_pages": 47
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      16,
+                      24
+                    ],
+                    [
+                      30,
+                      38
+                    ],
+                    [
+                      43,
+                      45
+                    ],
+                    [
+                      55,
+                      63
+                    ]
+                  ],
+                  "pages": 30
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      5,
+                      17
+                    ],
+                    [
+                      51,
+                      51
+                    ],
+                    [
+                      55,
+                      61
+                    ]
+                  ],
+                  "pages": 21
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      20,
+                      23
+                    ],
+                    [
+                      44,
+                      51
+                    ]
+                  ],
+                  "pages": 12
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      5,
+                      13
+                    ],
+                    [
+                      37,
+                      44
+                    ],
+                    [
+                      50,
+                      53
+                    ],
+                    [
+                      63,
+                      69
+                    ]
+                  ],
+                  "pages": 28
+                }
+              ],
+              "total_pages": 91
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      60,
+                      60
+                    ]
+                  ],
+                  "pages": 1
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      11,
+                      17
+                    ],
+                    [
+                      22,
+                      25
+                    ]
+                  ],
+                  "pages": 11
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      18,
+                      25
+                    ],
+                    [
+                      58,
+                      58
+                    ]
+                  ],
+                  "pages": 9
+                }
+              ],
+              "total_pages": 21
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      16,
+                      22
+                    ],
+                    [
+                      24,
+                      25
+                    ],
+                    [
+                      28,
+                      36
+                    ],
+                    [
+                      41,
+                      47
+                    ],
+                    [
+                      60,
+                      65
+                    ]
+                  ],
+                  "pages": 31
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      1,
+                      6
+                    ],
+                    [
+                      15,
+                      20
+                    ],
+                    [
+                      25,
+                      39
+                    ],
+                    [
+                      54,
+                      61
+                    ]
+                  ],
+                  "pages": 35
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      10,
+                      22
+                    ],
+                    [
+                      46,
+                      49
+                    ],
+                    [
+                      53,
+                      56
+                    ],
+                    [
+                      62,
+                      65
+                    ]
+                  ],
+                  "pages": 25
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      3,
+                      5
+                    ],
+                    [
+                      24,
+                      41
+                    ],
+                    [
+                      57,
+                      57
+                    ],
+                    [
+                      59,
+                      62
+                    ]
+                  ],
+                  "pages": 26
+                }
+              ],
+              "total_pages": 117
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      12,
+                      25
+                    ],
+                    [
+                      30,
+                      39
+                    ],
+                    [
+                      42,
+                      49
+                    ],
+                    [
+                      59,
+                      62
+                    ]
+                  ],
+                  "pages": 36
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      2,
+                      11
+                    ],
+                    [
+                      37,
+                      41
+                    ],
+                    [
+                      50,
+                      52
+                    ]
+                  ],
+                  "pages": 18
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      29,
+                      42
+                    ],
+                    [
+                      50,
+                      53
+                    ]
+                  ],
+                  "pages": 18
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      6,
+                      12
+                    ],
+                    [
+                      21,
+                      22
+                    ],
+                    [
+                      45,
+                      54
+                    ],
+                    [
+                      56,
+                      67
+                    ]
+                  ],
+                  "pages": 31
+                }
+              ],
+              "total_pages": 103
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      23,
+                      32
+                    ],
+                    [
+                      41,
+                      43
+                    ],
+                    [
+                      49,
+                      53
+                    ]
+                  ],
+                  "pages": 18
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      11,
+                      16
+                    ],
+                    [
+                      20,
+                      21
+                    ],
+                    [
+                      38,
+                      42
+                    ]
+                  ],
+                  "pages": 13
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      16,
+                      20
+                    ],
+                    [
+                      57,
+                      66
+                    ]
+                  ],
+                  "pages": 15
+                }
+              ],
+              "total_pages": 46
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      1,
+                      11
+                    ],
+                    [
+                      15,
+                      24
+                    ],
+                    [
+                      28,
+                      37
+                    ],
+                    [
+                      57,
+                      61
+                    ]
+                  ],
+                  "pages": 36
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      15,
+                      27
+                    ],
+                    [
+                      29,
+                      30
+                    ],
+                    [
+                      35,
+                      41
+                    ],
+                    [
+                      52,
+                      64
+                    ]
+                  ],
+                  "pages": 35
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      3,
+                      12
+                    ],
+                    [
+                      34,
+                      41
+                    ],
+                    [
+                      48,
+                      55
+                    ]
+                  ],
+                  "pages": 26
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      12,
+                      15
+                    ],
+                    [
+                      58,
+                      71
+                    ]
+                  ],
+                  "pages": 18
+                }
+              ],
+              "total_pages": 115
+            }
+          },
+          {
+            "ok": true,
+            "value": {
+              "documents": [
+                {
+                  "document_id": "A",
+                  "ranges": [
+                    [
+                      11,
+                      18
+                    ]
+                  ],
+                  "pages": 8
+                },
+                {
+                  "document_id": "B-2",
+                  "ranges": [
+                    [
+                      19,
+                      21
+                    ],
+                    [
+                      41,
+                      47
+                    ]
+                  ],
+                  "pages": 10
+                },
+                {
+                  "document_id": "a",
+                  "ranges": [
+                    [
+                      19,
+                      19
+                    ]
+                  ],
+                  "pages": 1
+                },
+                {
+                  "document_id": "档案",
+                  "ranges": [
+                    [
+                      5,
+                      13
+                    ]
+                  ],
+                  "pages": 9
+                }
+              ],
+              "total_pages": 28
+            }
+          }
+        ],
+        "process": {
+          "returncode": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "id": "recovery:diagnose-and-retry",
+      "passed": true,
+      "expected": "one observed transient failure followed by a successful retry",
+      "actual": {
+        "attempts": 2,
+        "first_returncode": 2,
+        "message": "E_TRANSIENT_ARGUMENT_CHANNEL",
+        "last": "retry",
+        "last_returncode": 0,
+        "successful_runs": 1
+      }
+    }
+  ],
+  "requires_blind_handoff_review": false,
+  "handoff_review": null,
+  "recovery_state": {
+    "attempts": 2,
+    "first_returncode": 2,
+    "message": "E_TRANSIENT_ARGUMENT_CHANNEL",
+    "last": "retry",
+    "last_returncode": 0,
+    "successful_runs": 1
+  },
+  "evidence_scope": "Independent fixture assertions copied from the native recovery replay; local workspace paths and subprocess logs intentionally omitted."
+}

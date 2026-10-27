@@ -49,7 +49,11 @@ class Business:
         services=data.get('services',{})
         require(isinstance(services,dict) and services,'需已授权服务范围')
         repo=str(Path(data['repository']).resolve())
-        require(git(repo,'rev-parse','--show-toplevel')==repo,'repository需Git工作树根目录')
+        try:
+            is_git_root = Path(git(repo, 'rev-parse', '--show-toplevel')).resolve().samefile(Path(repo))
+        except (OSError, ValueError):
+            is_git_root = False
+        require(is_git_root, 'repository需Git工作树根目录')
         for sid,s in services.items():
             require(re.fullmatch(r'[a-zA-Z0-9_-]{1,50}',sid) and s.get('label') and s.get('excluded'),'服务需标识、名称及排除项')
             require(type(s.get('ux_required')) is bool and s.get('environment'),'服务需真实验收环境')

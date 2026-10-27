@@ -8,6 +8,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
+from unittest.mock import patch
 
 KIT = Path(__file__).resolve().parents[1]
 ROOT = KIT.parent
@@ -61,7 +63,9 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         self.base = Path(self.temp.name).resolve()
         self.source = self.base / "export/solo-dev-delivery"
         self.env = dict(os.environ, PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1",
-                        USERPROFILE=str(self.base / "home"), HOME=str(self.base / "home"))
+                        USERPROFILE=str(self.base / "home"), HOME=str(self.base / "home"),
+                        CODEX_HOME=str(self.base / "home/.codex"))
+        self.env.pop("CODEX_THREAD_ID", None)
         self.env.pop("KIMI_CODE_HOME", None)
         self.call(ROOT / "scripts/export_skill.py", self.source)
 
@@ -74,6 +78,21 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
 
     def installer(self, *args, **kwargs):
         return self.call(self.source / "scripts/install_agent.py", *args, **kwargs)
+
+    def test_archive_order_and_generated_protocol_are_platform_independent(self):
+        archive = next(self.source.parent.glob("solo-dev-delivery-*.zip"))
+        with zipfile.ZipFile(archive) as packed:
+            self.assertEqual(sorted(packed.namelist()), packed.namelist())
+            self.assertTrue(all(member.create_system == 3 for member in packed.infolist()))
+            self.assertTrue(all(member.date_time == (2026, 10, 22, 0, 0, 0) for member in packed.infolist()))
+            self.assertTrue(all(member.external_attr == 0o100644 << 16 for member in packed.infolist()))
+        bundle = json.loads((self.source / "BUNDLE.json").read_text(encoding="utf-8"))
+        paths = [row["path"] for row in bundle["files"]]
+        self.assertEqual(sorted(paths), paths)
+        for generated in ("BUNDLE.json", "scripts/core/__init__.py"):
+            self.assertNotIn(b"\r\n", (self.source / generated).read_bytes())
+        self.assertEqual((ROOT / "skill/solo-dev-delivery/SKILL.md").read_bytes(),
+                         (self.source / "SKILL.md").read_bytes())
 
     def test_all_hosts_install_self_contained_payload_without_configuration(self):
         for host in ("generic", "zcode", "kimi"):
@@ -147,6 +166,95 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         cache.mkdir()
         (cache / "example.pyc").write_bytes(b"generated cache")
         self.installer("--destination", destination, "--verify")
+
+    def test_unicode_paths_report_success_under_legacy_stdio(self):
+        # A successful file operation must not become a failed CLI response just
+        # because a host's pipe encoding cannot represent a path character.
+        env = dict(self.env, PYTHONUTF8="0", PYTHONIOENCODING="cp936")
+        source = self.base / "export-\U0001f9ea/solo-dev-delivery"
+        exported = self.call(ROOT / "scripts/export_skill.py", source, env=env)
+        self.assertEqual(str(source), json.loads(exported.stdout)["skill"])
+        destination = self.base / "host-\U0001f680/skills"
+        result = self.call(source / "scripts/install_agent.py", "--destination", destination, env=env)
+        self.assertEqual("INSTALLED", json.loads(result.stdout)["status"])
+        self.call(source / "scripts/install_agent.py", "--destination", destination, "--verify", env=env)
+
+    def test_interrupted_install_can_retry_without_a_partial_skill(self):
+        spec = importlib.util.spec_from_file_location("solo_installer", ROOT / "scripts/install_agent.py")
+        installer = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(installer)
+        destination = self.base / "interrupted/skills"
+        target = destination / "solo-dev-delivery"
+        original_open = Path.open
+        writes = []
+
+        def fail_during_copy(path, mode="r", *args, **kwargs):
+            if mode == "xb":
+                writes.append(str(path))
+                if len(writes) == 2:
+                    raise OSError("fixture: write interrupted")
+            return original_open(path, mode, *args, **kwargs)
+
+        with patch.object(Path, "open", fail_during_copy):
+            with self.assertRaisesRegex(OSError, "write interrupted"):
+                installer.install(self.source, destination)
+        self.assertEqual(2, len(writes))
+        self.assertFalse(target.exists(), "an incomplete Skill must never become discoverable")
+        self.assertEqual([], list(destination.iterdir()))
+        result = installer.install(self.source, destination)
+        self.assertTrue(result["changed"])
+        self.assertEqual("FILES_VERIFIED", installer.install(self.source, destination, verify=True)["status"])
+
+    def test_moved_bundle_runs_real_gate_and_challenge_without_the_checkout(self):
+        moved = self.base / "moved package/solo-dev-delivery"
+        moved.parent.mkdir()
+        self.source.rename(moved)
+        self.assertFalse(self.source.exists())
+        destination = self.base / "unrelated host/skills"
+        self.call(moved / "scripts/install_agent.py", "--destination", destination)
+        installed = destination / "solo-dev-delivery/scripts"
+        workspace = self.base / "project"
+        workspace.mkdir()
+        (workspace / "request.md").write_text(
+            "Return positive values unchanged.\nReject negative values.\n", encoding="utf-8")
+        control = self.base / "gate-control"
+        task = control / "task.json"
+
+        def gate_call(*args, code=0):
+            return json.loads(self.call(installed / "gate.py", *args, code=code).stdout)
+
+        started = gate_call("start", "--workspace", workspace, "--input", "request.md",
+                            "--output", "candidate.py", "--task", task)
+        self.assertEqual("NEEDS_SOURCE_CHECKS", started["status"])
+        test_file = control / "checks.py"
+        test_file.write_text(
+            "import unittest\nimport candidate\nclass Business(unittest.TestCase):\n"
+            " def test_save(self): self.assertEqual(7, candidate.save(7))\n"
+            " def test_negative(self):\n  with self.assertRaises(ValueError): candidate.save(-1)\n",
+            encoding="utf-8")
+        units = [row["id"] for row in started["source_units"]]
+        self.assertEqual(2, len(units))
+        plan = control / "plan.json"
+        plan.write_text(json.dumps({"test_file": str(test_file), "checks": [
+            {"id": "save", "test": "Business.test_save", "sources": [units[0]]},
+            {"id": "negative", "test": "Business.test_negative", "sources": [units[1]]}]}), encoding="utf-8")
+        self.assertEqual("CHECKS_SEALED", gate_call("seal", "--task", task, "--plan", plan)["status"])
+        (workspace / "candidate.py").write_text(
+            'def save(value):\n if value < 0: raise ValueError("negative")\n return value\n', encoding="utf-8")
+        result = gate_call("check", "--task", task, "--run")
+        self.assertEqual("DELIVERABLE_WITHIN_DECLARED_SCOPE", result["status"])
+        self.assertEqual({"save", "negative"}, set(result["executed_checks"]))
+        self.assertEqual([], gate_call("check", "--task", task, "--run")["executed_checks"])
+        args = ("verify", "--workspace", workspace, "--input", "request.md", "--output", "candidate.py",
+                "--test", test_file, "--report", self.base / "challenge-control/report.json")
+        result = json.loads(self.call(installed / "challenge.py", *args).stdout)
+        self.assertEqual("CHALLENGE_PASS", result["status"])
+        self.assertFalse(result["reused"])
+        self.assertTrue(json.loads(self.call(installed / "challenge.py", *args).stdout)["reused"])
+        (workspace / "candidate.py").write_text('def save(value): return value\n', encoding="utf-8")
+        self.assertNotEqual("DELIVERABLE_WITHIN_DECLARED_SCOPE", gate_call("check", "--task", task, code=1)["status"])
+        result = self.call(installed / "challenge.py", "status", "--receipt", result["receipt"], code=1)
+        self.assertEqual("STALE", json.loads(result.stdout)["status"])
 
     def test_target_link_cannot_redirect_installation(self):
         outside = self.base / "outside"

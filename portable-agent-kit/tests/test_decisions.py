@@ -87,6 +87,25 @@ class DecisionSelectionTests(unittest.TestCase):
             compile_decision(d)
 
 
+class AdapterPathTests(unittest.TestCase):
+    def test_windows_and_posix_absolute_literals_are_recognized(self):
+        paths = [r'C:\projects\candidate workspace\app.py',
+                 'C:/projects/candidate workspace/app.py',
+                 r'\\server\share\candidate\app.py',
+                 r'\\?\C:\projects\candidate\app.py',
+                 r'\\?\UNC\server\share\candidate\app.py',
+                 '/projects/candidate workspace/app.py']
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertEqual(gate._absolute_literals('APP = ' + repr(path)), [path])
+
+    def test_relative_paths_and_ordinary_strings_are_not_absolute(self):
+        for value in ('candidate.py', '../candidate.py', r'C:candidate.py',
+                      'expected result', 'https://example.com/app.py'):
+            with self.subTest(value=value):
+                self.assertEqual(gate._absolute_literals('VALUE = ' + repr(value)), [])
+
+
 class DecisionGateTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -182,20 +201,43 @@ class DecisionGateTests(unittest.TestCase):
         self.assertEqual(gate.validate_plan(brief, normalized), {x['id'] for x in brief['units'][1:]})
 
     def test_literal_original_workspace_is_rejected_before_freezing_false_acceptance(self):
-        self.adapter.write_text('from pathlib import Path\nAPP=Path(' + repr(str(self.work / 'candidate.py')) + ')\ndef admit(facts): return True\n')
-        with self.assertRaisesRegex(ValueError, 'frozen candidate copy'):
-            gate.seal(self.task, self.plan)
+        paths = [str(self.work), str(self.work / 'candidate.py'),
+                 self.work.as_posix(), (self.work / 'candidate.py').as_posix()]
+        if sys.platform == 'win32':
+            paths += [str(self.work).swapcase(), str(self.work / 'candidate.py').swapcase()]
+            paths += ['\\\\?\\' + str(self.work), '\\\\?\\' + str(self.work / 'candidate.py')]
+        for index, path in enumerate(dict.fromkeys(paths)):
+            with self.subTest(path=path):
+                task = self.control / ('literal-' + str(index)) / 'task.json'
+                gate.start(self.work, ['request.md'], ['candidate.py'], task)
+                self.adapter.write_text('from pathlib import Path\nAPP=Path(' + repr(path) + ')\ndef admit(facts): return True\n')
+                with self.assertRaisesRegex(ValueError, 'frozen candidate copy'):
+                    gate.seal(task, self.plan)
+                self.assertEqual(gate.read(task)['state'], 'NEEDS_SOURCE_CHECKS')
+
+    def test_unrelated_absolute_path_does_not_block_candidate_acceptance(self):
+        self.adapter.write_text('import candidate\nREFERENCE = ' + repr(str(self.root / 'reference')) +
+                                '\ndef admit(facts): return candidate.admit(**facts)\n')
+        gate.seal(self.task, self.plan)
+        self.assertEqual(gate.check(self.task, True)['status'], 'DELIVERABLE_WITHIN_DECLARED_SCOPE')
 
     def test_indirect_original_path_cannot_observe_correct_original_instead_of_faulty_copy(self):
         # Split the literal so static checking is insufficient; runtime binding
         # must still reject opening the unfrozen original.
-        self.adapter.write_text('from pathlib import Path\nBASE=Path(' + repr(str(self.work.parent)) + ')\ndef admit(facts):\n text=(BASE/"work"/"candidate.py").read_text()\n return facts["enabled"] and facts["score"] >= 5\n')
-        gate.seal(self.task, self.plan)
-        result = gate.check(self.task, True)
-        self.assertEqual(result['status'], 'BLOCKED')
-        receipt = gate.read(next(Path(result['packet']).parent.glob('*-replay.json')))
-        self.assertGreater(receipt['test_summary']['errors'], 0)
-        self.assertIn('frozen candidate copy', receipt['stderr']['text'])
+        bases = [str(self.work.parent), self.work.parent.as_posix()]
+        if sys.platform == 'win32':
+            bases.append(str(self.work.parent).swapcase())
+        for index, base in enumerate(dict.fromkeys(bases)):
+            with self.subTest(base=base):
+                task = self.control / ('indirect-' + str(index)) / 'task.json'
+                gate.start(self.work, ['request.md'], ['candidate.py'], task)
+                self.adapter.write_text('from pathlib import Path\nBASE=Path(' + repr(base) + ')\ndef admit(facts):\n text=(BASE/"work"/"candidate.py").read_text()\n return facts["enabled"] and facts["score"] >= 5\n')
+                gate.seal(task, self.plan)
+                result = gate.check(task, True)
+                self.assertEqual(result['status'], 'BLOCKED')
+                receipt = gate.read(next(Path(result['packet']).parent.glob('*-replay.json')))
+                self.assertGreater(receipt['test_summary']['errors'], 0)
+                self.assertIn('frozen candidate copy', receipt['stderr']['text'])
 
     def test_json_boolean_is_not_accepted_as_integer_result(self):
         gate.seal(self.task, self.plan)

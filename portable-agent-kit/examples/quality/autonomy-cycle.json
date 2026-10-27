@@ -1,0 +1,9 @@
+{
+  "format":"autonomy-cycle/1",
+  "signals":[{"id":"failed-check","source":"ci/run-42","status":"PASS","observed_at":"2026-10-27T10:00:00+08:00"}],
+  "authorization":{"scope":"local repository","allowed_actions":["edit source","run local tests"],"forbidden_actions":["publish","send external messages"]},
+  "budget": 2,
+  "next_action":{"id":"repair-check","kind":"bounded-repair","reason":"known failing assertion","estimated_cost":2,"rollback":"revert one commit"},
+  "stop_conditions":["budget exhausted","unknown external result","required permission missing"],
+  "recovery":{"on_error":"diagnose and try a reversible equivalent","unknown_state":"preserve receipt and stop","external_result_unknown":"reconcile before retry"}
+}

@@ -3,30 +3,31 @@
 
 This enforces fresh execution of the host's selected business scenarios. It does
 not prove semantic completeness, authenticate reviewers, or sandbox host code.
+Control JSON and trusted Python source use UTF-8 independently of host locale.
 """
 import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import shlex
 import sys
 
 import challenge
 from core.coverage import coverage_report, digest, discover_evidence, source_brief, validate_plan
-from core.local_checks import canonical, load_json
+from core.local_checks import artifact, canonical, load_json
 from core.decisions import compile_plan
 
 
 def read(path):
-    return load_json(Path(path).read_text())
+    return load_json(Path(path).read_text(encoding='utf-8'))
 
 
 def save(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(canonical(value) + '\n')
+    temporary.write_text(canonical(value) + '\n', encoding='utf-8')
     temporary.replace(path)
 
 
@@ -49,17 +50,63 @@ def baseline(root, names):
     return values
 
 
-def start(workspace, inputs, outputs, task_path, session=None, home=None, decision_mode=True):
+def _support_artifacts(root, names, inputs, outputs):
+    """Bind explicitly selected dependencies without making them requirements."""
+    if not isinstance(names, (list, tuple)):
+        raise ValueError('support files must be an explicit list of relative files')
+    if len(inputs) + len(outputs) + len(names) > 200:
+        raise ValueError('declare at most 200 files; use native project review for larger scopes')
+    occupied = [(root / name).resolve() for name in inputs + outputs]
+    entries = []
+    for name in names:
+        if (not isinstance(name, str) or not name or Path(name).is_absolute()
+                or PureWindowsPath(name).drive or name.startswith(('\\', '/'))
+                or '..' in Path(name).parts or '..' in PureWindowsPath(name).parts):
+            raise ValueError('support files must be relative paths without traversal')
+        path = root
+        for part in Path(name).parts:
+            path = path / part
+            # lstat also detects dangling links; reparse points include Windows
+            # junctions on Python versions without Path.is_junction().
+            attributes = getattr(path.lstat(), 'st_file_attributes', 0)
+            if path.is_symlink() or attributes & 0x400:
+                raise ValueError('support files must not traverse links or junctions')
+        target = path.resolve(strict=True)
+        if any(target == other or target in other.parents or other in target.parents
+               for other in occupied):
+            raise ValueError('support files must not duplicate or overlap inputs, outputs or each other')
+        entries.append(artifact(root, name))
+        occupied.append(target)
+    return entries
+
+
+def _support_current(task):
+    try:
+        expected = task.get('support_files', [])
+        if task.get('plan') and expected != task['sealed'].get('support_files', []):
+            return False
+        if not expected:
+            return True
+        return _support_artifacts(Path(task['workspace']), [item['path'] for item in expected],
+                                  task['inputs'], task['outputs']) == expected
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def start(workspace, inputs, outputs, task_path, session=None, home=None, decision_mode=True, support_files=None):
     root = Path(workspace).resolve(strict=True)
     task_path = challenge.outside(task_path, root)
     if task_path.exists() or not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
         raise ValueError('new task and distinct inputs/outputs required')
+    support = _support_artifacts(root, support_files, inputs, outputs) if support_files is not None else []
     brief = source_brief(root, inputs, split_items=True, split_statements=decision_mode)
     challenge.write_new(task_path.parent / 'brief.json', brief)
     task = {'format': 'local-delivery-gate/2' if decision_mode else 'local-delivery-gate/1', 'workspace': str(root),
             'inputs': inputs, 'outputs': outputs, 'baseline': baseline(root, outputs),
             'brief': str(task_path.parent / 'brief.json'), 'state': 'NEEDS_SOURCE_CHECKS',
             'history': [], 'session': session}
+    if support:
+        task['support_files'] = support
     if session:
         reg = registry(home or os.environ.get('CODEX_HOME', str(Path.home() / '.codex')), session)
         if reg.exists():
@@ -104,12 +151,29 @@ def _absolute_literals(text):
     except SyntaxError as exc:
         raise ValueError("adapter syntax error: " + str(exc)) from exc
     return [node.value for node in ast.walk(tree)
-            if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value.startswith("/")]
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+            and (node.value.startswith("/") or PureWindowsPath(node.value).is_absolute())]
+
+
+def _resolved_path(value):
+    if os.name != 'nt' and PureWindowsPath(value).is_absolute() and not Path(value).is_absolute():
+        # A foreign Windows path must not become a relative POSIX workspace path.
+        return PureWindowsPath(value)
+    if os.name == 'nt':
+        # Extended paths name the same files but retain their prefix in resolve().
+        value = str(PureWindowsPath(value))
+        if value[:8].lower() == '\\\\?\\unc\\':
+            value = '\\\\' + value[8:]
+        elif value.startswith('\\\\?\\'):
+            value = value[4:]
+    return Path(value).resolve()
 
 
 def seal(task_path, plan_path, reason=None):
     task_path, plan_path = Path(task_path).resolve(strict=True), Path(plan_path).resolve(strict=True)
     task, plan = read(task_path), read(plan_path)
+    if not _support_current(task):
+        raise ValueError('support files changed or disappeared; create a new source-first task')
     if task.get('plan') and not (isinstance(reason, str) and reason.strip()):
         raise ValueError('amending checks requires a source-based reason; old failures stay in history')
     if not task.get('plan') and baseline(Path(task['workspace']), task['outputs']) != task['baseline']:
@@ -126,11 +190,12 @@ def seal(task_path, plan_path, reason=None):
     if task['format'] == 'local-delivery-gate/2':
         plan = source_checks(brief, plan)
     if task['format'] == 'local-delivery-gate/2':
-        if any(str(Path(value).resolve()) == task['workspace'] or Path(task['workspace']) in Path(value).resolve().parents
-               for value in _absolute_literals(test.read_text())):
+        workspace = _resolved_path(task['workspace'])
+        if any(path == workspace or workspace in path.parents
+               for path in (_resolved_path(value) for value in _absolute_literals(test.read_text(encoding='utf-8')))):
             raise ValueError('adapter references original workspace; use Path.cwd() or SOLO_CANDIDATE_ROOT to observe the frozen candidate copy')
         if plan.get('decisions'):
-            plan, generated, selection = compile_plan(brief, plan, test.read_text())
+            plan, generated, selection = compile_plan(brief, plan, test.read_text(encoding='utf-8'))
     if validate_plan(brief, plan):
         raise ValueError('unaccounted source units: ' + ', '.join(sorted(validate_plan(brief, plan))))
     covered = {x for c in plan['checks'] for x in c['covers']}
@@ -145,10 +210,12 @@ def seal(task_path, plan_path, reason=None):
     (version / 'checks.py').write_bytes(test.read_bytes())
     snapshot = {'plan': digest(plan_path), 'test': digest(test), 'brief': digest(task['brief']),
                 'reason': reason or 'source-first acceptance'}
+    if task.get('support_files'):
+        snapshot['support_files'] = task['support_files']
     active_plan = plan_path
     if generated is not None:
         generated_path = version / 'generated-checks.py'
-        generated_path.write_text(generated)
+        generated_path.write_text(generated, encoding='utf-8')
         selection_path = version / 'selection.json'
         save(selection_path, selection)
         plan['test_file'] = str(generated_path)
@@ -174,12 +241,15 @@ def check(task_path, execute=False):
     task = read(task_path)
     if task.get('format') not in ('local-delivery-gate/1', 'local-delivery-gate/2'):
         raise ValueError('not a delivery task')
+    if not _support_current(task):
+        return {'status': 'BLOCKED', 'next_action': 'RESTART_WITH_CHANGED_SUPPORT_FILES'}
     if not task.get('plan'):
         return {'status': 'BLOCKED', 'next_action': 'SELECT_SOURCE_BUSINESS_SCENARIOS', 'brief': task['brief']}
     sealed = task['sealed']
     if any(digest(item['path']) != item for item in [sealed[k] for k in ('plan', 'test', 'brief', 'adapter', 'compiled', 'selection') if k in sealed]):
         return {'status': 'BLOCKED', 'next_action': 'RECONCILE_CHANGED_ACCEPTANCE_WITH_SOURCE'}
-    packet = challenge.candidate_packet(task['workspace'], task['inputs'], task['outputs'])
+    execution_inputs = task['inputs'] + [item['path'] for item in task.get('support_files', [])]
+    packet = challenge.candidate_packet(task['workspace'], execution_inputs, task['outputs'])
     if task['format'] == 'local-delivery-gate/2':
         packet['execution_scope'] = 'candidate-copy'
     binding = {'packet': packet, 'plan': sealed['plan'], 'test': sealed['test'], 'brief': sealed['brief']}
@@ -200,12 +270,14 @@ def check(task_path, execute=False):
         result = coverage_report(task['brief'], task['plan'], packet_path,
                                  discover_evidence([control]), 12800, challenge.status, challenge.current)
         result['executed_check_ids'] = []
-    sufficient = result['status'] == 'DECLARED_SCOPE_COVERED'
+    support_current = _support_current(task)
+    sufficient = result['status'] == 'DECLARED_SCOPE_COVERED' and support_current
     if execute:
         task.update(state='VERIFIED' if sufficient else 'CHECKING', last_report=str(report_path))
         save(task_path, task)
     return {'status': 'DELIVERABLE_WITHIN_DECLARED_SCOPE' if sufficient else 'BLOCKED',
-            'next_action': 'STOP' if sufficient else result['next_action'],
+            'next_action': ('RESTART_WITH_CHANGED_SUPPORT_FILES' if not support_current
+                            else 'STOP' if sufficient else result['next_action']),
             'missing_outcomes': result['missing_outcomes'], 'missing_checks': result['missing_required_checks'],
             'failed_outcomes': result['failed_outcomes'], 'related_outcomes_to_review': result['related_outcomes_to_review'],
             'executed_checks': result['executed_check_ids'], 'packet': str(packet_path),
@@ -244,6 +316,23 @@ def hook(payload, home):
     return {'decision': 'block', 'reason': 'Delivery is not verified. Resolve the smallest source/evidence gap below; do not claim completion. Run gate.py check --task ' + shlex.quote(str(task_path)) + ' --run after implementing/checking. If user input or external access is truly required, state that blocker without claiming delivery. ' + detail}
 
 
+def _windows_hook_command(executable, script):
+    """Expression for Codex's Windows PowerShell -NoProfile -Command host."""
+    def literal(value):
+        return "'" + str(value).replace("'", "''") + "'"
+
+    # Native failures must retain their status, including when the host enables
+    # PSNativeCommandUseErrorActionPreference. A missing executable must not turn
+    # an unset LASTEXITCODE into a successful `exit $null`.
+    return ("$ErrorActionPreference = 'Stop'; "
+            "$PSNativeCommandUseErrorActionPreference = $false; "
+            "$LASTEXITCODE = $null; try { & " + literal(executable) + ' '
+            + literal(script) + " hook; if ($null -eq $LASTEXITCODE) { "
+            "throw 'Delivery hook did not return an exit code.' }; "
+            "exit $LASTEXITCODE } catch { "
+            "[Console]::Error.WriteLine('Delivery hook failed: ' + $_.Exception.Message); exit 2 }")
+
+
 def install_hook(home):
     """Prepare hook definition; host trust remains the user's security decision."""
     target = Path(home) / 'hooks.json'
@@ -251,11 +340,24 @@ def install_hook(home):
     hooks = config.setdefault('hooks', {})
     groups = hooks.setdefault('Stop', [])
     command = 'python3 ' + shlex.quote(str(Path(__file__).resolve())) + ' hook'
-    if not any(h.get('command') == command for g in groups for h in g.get('hooks', [])):
-        groups.append({'hooks': [{'type': 'command', 'command': command, 'timeout': 10}]})
+    windows_command = _windows_hook_command(Path(sys.executable).resolve(), Path(__file__).resolve())
+    existing = [h for g in groups for h in g.get('hooks', [])
+                if h.get('type') == 'command' and h.get('command') == command]
+    changed = False
+    if not existing:
+        groups.append({'hooks': [{'type': 'command', 'command': command,
+                                  'commandWindows': windows_command, 'timeout': 10}]})
+        changed = True
+    else:
+        for handler in existing:
+            if handler.get('commandWindows') != windows_command:
+                handler['commandWindows'] = windows_command
+                changed = True
+    if changed:
         save(target, config)
     return {'status': 'HOOK_PREPARED_REQUIRES_HOST_TRUST', 'path': str(target),
-            'command': command, 'next': 'Review and trust this exact hook definition in Codex /hooks. Installation alone is not activation.'}
+            'command': command, 'commandWindows': windows_command,
+            'next': 'Review and trust this exact hook definition in Codex /hooks. Installation alone is not activation.'}
 
 
 def main():
@@ -264,6 +366,7 @@ def main():
     p = commands.add_parser('start')
     p.add_argument('--workspace', required=True, type=Path)
     p.add_argument('--input', required=True, action='append')
+    p.add_argument('--support-file', action='append', help='explicit read-only runtime/test dependency; copied into the candidate, not interpreted as a requirement')
     p.add_argument('--output', required=True, action='append')
     p.add_argument('--task', required=True, type=Path)
     p.add_argument('--session', default=os.environ.get('CODEX_THREAD_ID'))
@@ -283,11 +386,12 @@ def main():
     commands.add_parser('hook')
     args = parser.parse_args()
     if args.op == 'hook':
-        return hook(json.load(sys.stdin), os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
+        return hook(json.loads(sys.stdin.buffer.read().decode('utf-8')),
+                    os.environ.get('CODEX_HOME', str(Path.home() / '.codex')))
     if args.op == 'install-hook':
         return install_hook(args.home)
     if args.op == 'start':
-        return start(args.workspace, args.input, args.output, args.task, args.session)
+        return start(args.workspace, args.input, args.output, args.task, args.session, support_files=args.support_file)
     if args.op == 'seal':
         return seal(args.task, args.plan, args.reason)
     if args.op == 'blocked':
@@ -303,7 +407,8 @@ def main():
 if __name__ == '__main__':
     try:
         result = main()
-        print(json.dumps(result, ensure_ascii=False))
+        # ASCII escapes are UTF-8-valid JSON even on a legacy stdio locale.
+        print(json.dumps(result, ensure_ascii=True))
         sys.exit(0 if 'status' not in result or result['status'] in ('NEEDS_SOURCE_CHECKS', 'CHECKS_SEALED', 'DELIVERABLE_WITHIN_DECLARED_SCOPE', 'HOOK_PREPARED_REQUIRES_HOST_TRUST') else 1)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(json.dumps({'status': 'BLOCKED', 'error': str(exc)}))

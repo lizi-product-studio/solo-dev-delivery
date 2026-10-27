@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import stat
 import sys
+import tempfile
 
 NAME = "solo-dev-delivery"
 
@@ -101,13 +102,24 @@ def install(source, destination, *, dry_run=False, verify=False):
     if verify and not exists:
         raise ValueError("Installed Skill is missing: " + str(target))
     if not (verify or dry_run or exists):
-        target.mkdir(parents=True, exist_ok=False)
-        for relative, data in payload.items():
-            path = target / relative
-            reject_links(path)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open("xb") as output:
-                output.write(data)
+        destination.mkdir(parents=True, exist_ok=True)
+        # Keep an incomplete copy outside the host's discoverable Skill path.
+        # The staging directory shares the destination filesystem so publication
+        # is one rename; a write failure cleans up only this invocation's files.
+        with tempfile.TemporaryDirectory(prefix=".solo-install-", dir=str(destination)) as temporary:
+            staged = Path(temporary) / NAME
+            staged.mkdir()
+            for relative, data in payload.items():
+                path = staged / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                with path.open("xb") as output:
+                    output.write(data)
+            if snapshot(staged) != payload:
+                raise ValueError("Staged Skill differs from the verified source")
+            reject_links(target)
+            if target.exists():
+                raise ValueError("Installation target appeared during copy; preserve it and retry verification")
+            staged.rename(target)
     return {"status": "FILES_VERIFIED" if verify else ("DRY_RUN" if dry_run else "INSTALLED"),
             "destination": str(target), "files": len(payload), "changed": not (verify or dry_run or exists),
             "host_loading": "unverified", "automatic_routing": "unverified"}
@@ -124,7 +136,7 @@ def main():
     args = parser.parse_args()
     try:
         destination = args.destination if args.destination is not None else destination_for(args.host)
-        print(json.dumps(install(args.source, destination, dry_run=args.dry_run, verify=args.verify), ensure_ascii=False, indent=2))
+        print(json.dumps(install(args.source, destination, dry_run=args.dry_run, verify=args.verify), ensure_ascii=True, indent=2))
     except (OSError, ValueError, TypeError, IndexError) as error:
         parser.exit(2, str(error) + "\n")
 

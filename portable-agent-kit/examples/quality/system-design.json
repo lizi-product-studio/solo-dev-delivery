@@ -1,0 +1,9 @@
+{
+  "format":"system-design/1",
+  "system":"order-service",
+  "traffic_profile":{"peak_rps":800,"burst_rps":2400,"concurrency":5000,"payload_kb":8},
+  "slos":{"availability_target":99.95,"latency_p95_ms":250,"error_rate_target":0.01},
+  "capacity_model":{"instance_capacity_rps":500,"instances":8,"headroom_ratio":1.5,"expected_concurrency":200},
+  "controls":{"idempotency":true,"backpressure":true,"bounded_retries":true,"authz_audit":true,"migration_rollback":true,"observability":true,"load_test":true,"recovery_drill":true},
+  "evidence_refs":["evidence/load-test.json","evidence/recovery-drill.json"]
+}

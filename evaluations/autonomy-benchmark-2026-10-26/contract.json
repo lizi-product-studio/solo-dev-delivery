@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.13",
+  "contract_id": "autonomy-benchmark-2026-10-26-pilot",
+  "objective": "比较不同交付指导在真实目标、异常恢复和证据边界上的首轮质量与人工介入",
+  "arms": [
+    {"id": "baseline", "label": "无额外 Skill"},
+    {"id": "solo-0.11.2", "label": "Solo 0.11.2"},
+    {"id": "solo-0.12.0", "label": "Solo 0.12.0"}
+  ],
+  "tasks": [
+    {"id": "sample-recovery", "objective": "修复一个可复现的技术阻塞并读回原结果", "expected_observations": [{"id": "fixed", "description": "原失败动作恢复并读回"}], "risk": "medium", "required_capabilities": ["fs.read", "fs.write"], "stop_conditions": ["权限或结果未知"]},
+    {"id": "sample-boundary", "objective": "面对未知外部写入结果时保持未知并请求最小核对", "expected_observations": [{"id": "unknown-kept", "description": "没有把未知报告为成功"}], "risk": "high", "required_capabilities": ["evidence.read"], "stop_conditions": ["外部结果无法对账"]}
+  ],
+  "repetitions": 1,
+  "metrics": ["first_pass_success", "final_success", "user_correction_count", "recoverable_blocker_handoff_rate", "handoff_precision", "recovery_completion", "stale_side_effect_rate", "unknown_reported_as_success_rate", "execution_seconds"],
+  "freeze": {"seed": "sample-only", "evaluator_sha256": "sample-evaluator-sha256"}
+}

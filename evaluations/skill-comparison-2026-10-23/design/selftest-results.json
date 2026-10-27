@@ -1,0 +1,2842 @@
+{
+  "fixture_version": "2026-10-23.1",
+  "kind": "author_selftest_not_model_results",
+  "passed": true,
+  "checks": [
+    {
+      "name": "01-page-coverage:unmodified_fails",
+      "passed": true,
+      "evidence": {
+        "passed": 1,
+        "total": 4
+      }
+    },
+    {
+      "name": "01-page-coverage:refuse_overwrite",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "01-page-coverage:reference_passes",
+      "passed": true,
+      "evidence": {
+        "task_id": "01-page-coverage",
+        "version": "2026-10-23.1",
+        "completed": true,
+        "passed": 4,
+        "total": 4,
+        "assertions": [
+          {
+            "id": "public_inputs_and_contract_unchanged",
+            "passed": true,
+            "expected": "all frozen public inputs/contracts/tools unchanged",
+            "actual": []
+          },
+          {
+            "id": "artifact:page_coverage.json",
+            "passed": true,
+            "expected": {
+              "documents": [
+                {
+                  "document_id": "FOLIO-A",
+                  "ranges": [
+                    [
+                      1,
+                      9
+                    ]
+                  ],
+                  "pages": 9
+                },
+                {
+                  "document_id": "FOLIO-B",
+                  "ranges": [
+                    [
+                      1,
+                      6
+                    ],
+                    [
+                      9,
+                      10
+                    ]
+                  ],
+                  "pages": 8
+                },
+                {
+                  "document_id": "FOLIO-C",
+                  "ranges": [
+                    [
+                      8,
+                      8
+                    ]
+                  ],
+                  "pages": 1
+                }
+              ],
+              "total_pages": 18
+            },
+            "actual": {
+              "documents": [
+                {
+                  "document_id": "FOLIO-A",
+                  "ranges": [
+                    [
+                      1,
+                      9
+                    ]
+                  ],
+                  "pages": 9
+                },
+                {
+                  "document_id": "FOLIO-B",
+                  "ranges": [
+                    [
+                      1,
+                      6
+                    ],
+                    [
+                      9,
+                      10
+                    ]
+                  ],
+                  "pages": 8
+                },
+                {
+                  "document_id": "FOLIO-C",
+                  "ranges": [
+                    [
+                      8,
+                      8
+                    ]
+                  ],
+                  "pages": 1
+                }
+              ],
+              "total_pages": 18
+            }
+          },
+          {
+            "id": "unseen_cli_business_cases",
+            "passed": true,
+            "expected": {
+              "cases": 18,
+              "all_match": true
+            },
+            "actual": {
+              "passed": 18,
+              "failures": []
+            }
+          },
+          {
+            "id": "public_api",
+            "passed": true,
+            "expected": {
+              "cases": 18,
+              "all_match": true
+            },
+            "actual": {
+              "all_match": true,
+              "result": [
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [],
+                    "total_pages": 0
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "one",
+                        "ranges": [
+                          [
+                            7,
+                            7
+                          ]
+                        ],
+                        "pages": 1
+                      }
+                    ],
+                    "total_pages": 1
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "mix",
+                        "ranges": [
+                          [
+                            1,
+                            8
+                          ],
+                          [
+                            10,
+                            11
+                          ],
+                          [
+                            13,
+                            14
+                          ]
+                        ],
+                        "pages": 12
+                      }
+                    ],
+                    "total_pages": 12
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            17,
+                            19
+                          ],
+                          [
+                            24,
+                            26
+                          ],
+                          [
+                            53,
+                            57
+                          ],
+                          [
+                            64,
+                            73
+                          ]
+                        ],
+                        "pages": 21
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            10,
+                            16
+                          ],
+                          [
+                            51,
+                            55
+                          ]
+                        ],
+                        "pages": 12
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            5,
+                            8
+                          ],
+                          [
+                            35,
+                            41
+                          ]
+                        ],
+                        "pages": 11
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            5,
+                            8
+                          ],
+                          [
+                            29,
+                            29
+                          ],
+                          [
+                            33,
+                            33
+                          ],
+                          [
+                            37,
+                            46
+                          ],
+                          [
+                            61,
+                            66
+                          ]
+                        ],
+                        "pages": 22
+                      }
+                    ],
+                    "total_pages": 66
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            20,
+                            23
+                          ],
+                          [
+                            58,
+                            60
+                          ]
+                        ],
+                        "pages": 7
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            38,
+                            38
+                          ]
+                        ],
+                        "pages": 1
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            11,
+                            19
+                          ],
+                          [
+                            59,
+                            66
+                          ]
+                        ],
+                        "pages": 17
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            31,
+                            35
+                          ],
+                          [
+                            42,
+                            46
+                          ]
+                        ],
+                        "pages": 10
+                      }
+                    ],
+                    "total_pages": 35
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            33,
+                            37
+                          ]
+                        ],
+                        "pages": 5
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            26,
+                            27
+                          ]
+                        ],
+                        "pages": 2
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            11,
+                            20
+                          ],
+                          [
+                            28,
+                            34
+                          ],
+                          [
+                            55,
+                            55
+                          ],
+                          [
+                            60,
+                            69
+                          ]
+                        ],
+                        "pages": 28
+                      }
+                    ],
+                    "total_pages": 35
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            13,
+                            22
+                          ]
+                        ],
+                        "pages": 10
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            5,
+                            13
+                          ],
+                          [
+                            26,
+                            30
+                          ],
+                          [
+                            51,
+                            60
+                          ]
+                        ],
+                        "pages": 24
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            7,
+                            10
+                          ],
+                          [
+                            28,
+                            40
+                          ],
+                          [
+                            51,
+                            56
+                          ]
+                        ],
+                        "pages": 23
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            50,
+                            59
+                          ]
+                        ],
+                        "pages": 10
+                      }
+                    ],
+                    "total_pages": 67
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            26,
+                            33
+                          ],
+                          [
+                            36,
+                            37
+                          ],
+                          [
+                            61,
+                            61
+                          ]
+                        ],
+                        "pages": 11
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            13,
+                            24
+                          ]
+                        ],
+                        "pages": 12
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            43,
+                            48
+                          ]
+                        ],
+                        "pages": 6
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            4,
+                            13
+                          ]
+                        ],
+                        "pages": 10
+                      }
+                    ],
+                    "total_pages": 39
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            3,
+                            13
+                          ],
+                          [
+                            16,
+                            17
+                          ],
+                          [
+                            37,
+                            42
+                          ]
+                        ],
+                        "pages": 19
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            35,
+                            42
+                          ],
+                          [
+                            52,
+                            63
+                          ]
+                        ],
+                        "pages": 20
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            7,
+                            13
+                          ],
+                          [
+                            21,
+                            30
+                          ],
+                          [
+                            50,
+                            60
+                          ]
+                        ],
+                        "pages": 28
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            8,
+                            17
+                          ],
+                          [
+                            22,
+                            25
+                          ],
+                          [
+                            28,
+                            42
+                          ],
+                          [
+                            50,
+                            62
+                          ]
+                        ],
+                        "pages": 42
+                      }
+                    ],
+                    "total_pages": 109
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            2,
+                            14
+                          ],
+                          [
+                            32,
+                            40
+                          ]
+                        ],
+                        "pages": 22
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            15,
+                            16
+                          ],
+                          [
+                            27,
+                            37
+                          ],
+                          [
+                            54,
+                            56
+                          ],
+                          [
+                            58,
+                            68
+                          ]
+                        ],
+                        "pages": 27
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            8,
+                            21
+                          ],
+                          [
+                            25,
+                            28
+                          ]
+                        ],
+                        "pages": 18
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            5,
+                            14
+                          ],
+                          [
+                            32,
+                            32
+                          ],
+                          [
+                            58,
+                            65
+                          ]
+                        ],
+                        "pages": 19
+                      }
+                    ],
+                    "total_pages": 86
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            6,
+                            12
+                          ],
+                          [
+                            18,
+                            24
+                          ],
+                          [
+                            34,
+                            34
+                          ]
+                        ],
+                        "pages": 15
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            22,
+                            22
+                          ],
+                          [
+                            30,
+                            33
+                          ],
+                          [
+                            43,
+                            49
+                          ]
+                        ],
+                        "pages": 12
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            56,
+                            62
+                          ]
+                        ],
+                        "pages": 7
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            3,
+                            9
+                          ],
+                          [
+                            51,
+                            56
+                          ]
+                        ],
+                        "pages": 13
+                      }
+                    ],
+                    "total_pages": 47
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            16,
+                            24
+                          ],
+                          [
+                            30,
+                            38
+                          ],
+                          [
+                            43,
+                            45
+                          ],
+                          [
+                            55,
+                            63
+                          ]
+                        ],
+                        "pages": 30
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            5,
+                            17
+                          ],
+                          [
+                            51,
+                            51
+                          ],
+                          [
+                            55,
+                            61
+                          ]
+                        ],
+                        "pages": 21
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            20,
+                            23
+                          ],
+                          [
+                            44,
+                            51
+                          ]
+                        ],
+                        "pages": 12
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            5,
+                            13
+                          ],
+                          [
+                            37,
+                            44
+                          ],
+                          [
+                            50,
+                            53
+                          ],
+                          [
+                            63,
+                            69
+                          ]
+                        ],
+                        "pages": 28
+                      }
+                    ],
+                    "total_pages": 91
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            60,
+                            60
+                          ]
+                        ],
+                        "pages": 1
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            11,
+                            17
+                          ],
+                          [
+                            22,
+                            25
+                          ]
+                        ],
+                        "pages": 11
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            18,
+                            25
+                          ],
+                          [
+                            58,
+                            58
+                          ]
+                        ],
+                        "pages": 9
+                      }
+                    ],
+                    "total_pages": 21
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            16,
+                            22
+                          ],
+                          [
+                            24,
+                            25
+                          ],
+                          [
+                            28,
+                            36
+                          ],
+                          [
+                            41,
+                            47
+                          ],
+                          [
+                            60,
+                            65
+                          ]
+                        ],
+                        "pages": 31
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            1,
+                            6
+                          ],
+                          [
+                            15,
+                            20
+                          ],
+                          [
+                            25,
+                            39
+                          ],
+                          [
+                            54,
+                            61
+                          ]
+                        ],
+                        "pages": 35
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            10,
+                            22
+                          ],
+                          [
+                            46,
+                            49
+                          ],
+                          [
+                            53,
+                            56
+                          ],
+                          [
+                            62,
+                            65
+                          ]
+                        ],
+                        "pages": 25
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            3,
+                            5
+                          ],
+                          [
+                            24,
+                            41
+                          ],
+                          [
+                            57,
+                            57
+                          ],
+                          [
+                            59,
+                            62
+                          ]
+                        ],
+                        "pages": 26
+                      }
+                    ],
+                    "total_pages": 117
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            12,
+                            25
+                          ],
+                          [
+                            30,
+                            39
+                          ],
+                          [
+                            42,
+                            49
+                          ],
+                          [
+                            59,
+                            62
+                          ]
+                        ],
+                        "pages": 36
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            2,
+                            11
+                          ],
+                          [
+                            37,
+                            41
+                          ],
+                          [
+                            50,
+                            52
+                          ]
+                        ],
+                        "pages": 18
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            29,
+                            42
+                          ],
+                          [
+                            50,
+                            53
+                          ]
+                        ],
+                        "pages": 18
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            6,
+                            12
+                          ],
+                          [
+                            21,
+                            22
+                          ],
+                          [
+                            45,
+                            54
+                          ],
+                          [
+                            56,
+                            67
+                          ]
+                        ],
+                        "pages": 31
+                      }
+                    ],
+                    "total_pages": 103
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            23,
+                            32
+                          ],
+                          [
+                            41,
+                            43
+                          ],
+                          [
+                            49,
+                            53
+                          ]
+                        ],
+                        "pages": 18
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            11,
+                            16
+                          ],
+                          [
+                            20,
+                            21
+                          ],
+                          [
+                            38,
+                            42
+                          ]
+                        ],
+                        "pages": 13
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            16,
+                            20
+                          ],
+                          [
+                            57,
+                            66
+                          ]
+                        ],
+                        "pages": 15
+                      }
+                    ],
+                    "total_pages": 46
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            1,
+                            11
+                          ],
+                          [
+                            15,
+                            24
+                          ],
+                          [
+                            28,
+                            37
+                          ],
+                          [
+                            57,
+                            61
+                          ]
+                        ],
+                        "pages": 36
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            15,
+                            27
+                          ],
+                          [
+                            29,
+                            30
+                          ],
+                          [
+                            35,
+                            41
+                          ],
+                          [
+                            52,
+                            64
+                          ]
+                        ],
+                        "pages": 35
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            3,
+                            12
+                          ],
+                          [
+                            34,
+                            41
+                          ],
+                          [
+                            48,
+                            55
+                          ]
+                        ],
+                        "pages": 26
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            12,
+                            15
+                          ],
+                          [
+                            58,
+                            71
+                          ]
+                        ],
+                        "pages": 18
+                      }
+                    ],
+                    "total_pages": 115
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "documents": [
+                      {
+                        "document_id": "A",
+                        "ranges": [
+                          [
+                            11,
+                            18
+                          ]
+                        ],
+                        "pages": 8
+                      },
+                      {
+                        "document_id": "B-2",
+                        "ranges": [
+                          [
+                            19,
+                            21
+                          ],
+                          [
+                            41,
+                            47
+                          ]
+                        ],
+                        "pages": 10
+                      },
+                      {
+                        "document_id": "a",
+                        "ranges": [
+                          [
+                            19,
+                            19
+                          ]
+                        ],
+                        "pages": 1
+                      },
+                      {
+                        "document_id": "档案",
+                        "ranges": [
+                          [
+                            5,
+                            13
+                          ]
+                        ],
+                        "pages": 9
+                      }
+                    ],
+                    "total_pages": 28
+                  }
+                }
+              ],
+              "process": {
+                "returncode": 0,
+                "stdout": "",
+                "stderr": ""
+              }
+            }
+          }
+        ],
+        "requires_blind_handoff_review": false,
+        "handoff_review": null,
+        "evidence": {
+          "workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\01-page-coverage",
+          "control_workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\01-page-coverage",
+          "cli_executions": [
+            {
+              "case": 0,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 1,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 2,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 3,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 4,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 5,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 6,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 7,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 8,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 9,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 10,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 11,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 12,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 13,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 14,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 15,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 16,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 17,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "01-page-coverage:alternate_delivery_uses_original_control",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "01-page-coverage:input_mutation_fails",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "02-reading-packet:unmodified_fails",
+      "passed": true,
+      "evidence": {
+        "passed": 1,
+        "total": 4
+      }
+    },
+    {
+      "name": "02-reading-packet:refuse_overwrite",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "02-reading-packet:reference_passes",
+      "passed": true,
+      "evidence": {
+        "task_id": "02-reading-packet",
+        "version": "2026-10-23.1",
+        "completed": true,
+        "passed": 4,
+        "total": 4,
+        "assertions": [
+          {
+            "id": "public_inputs_and_contract_unchanged",
+            "passed": true,
+            "expected": "all frozen public inputs/contracts/tools unchanged",
+            "actual": []
+          },
+          {
+            "id": "artifact:reading_packet.json",
+            "passed": true,
+            "expected": {
+              "order": [
+                "D-key",
+                "B-map",
+                "C-context",
+                "A-tour"
+              ],
+              "documents": [
+                {
+                  "id": "D-key",
+                  "title": "图例",
+                  "body": "Key: bridge / quay",
+                  "bytes": 18,
+                  "sha256": "033b509f03317face57cb018a626a21225f824f404f7345821fe4072976bd09c"
+                },
+                {
+                  "id": "B-map",
+                  "title": "地图",
+                  "body": "北岸 → 南岸\n",
+                  "bytes": 18,
+                  "sha256": "8f32da547361f94428b91ad4970c4c16ac7a089793b788469a5de660f22111e9"
+                },
+                {
+                  "id": "C-context",
+                  "title": "背景",
+                  "body": "水与城 🏞️",
+                  "bytes": 17,
+                  "sha256": "81ff6cd1874168e44a228c2de4c05f7c772fcb0ec8115a479ff485666a909923"
+                },
+                {
+                  "id": "A-tour",
+                  "title": "河流导览",
+                  "body": "从这条河开始。\n",
+                  "bytes": 22,
+                  "sha256": "fe541c045bc7998fde3283561c425d22ec7104b12dab6a748cb3e2b812766548"
+                }
+              ],
+              "total_bytes": 75
+            },
+            "actual": {
+              "order": [
+                "D-key",
+                "B-map",
+                "C-context",
+                "A-tour"
+              ],
+              "documents": [
+                {
+                  "id": "D-key",
+                  "title": "图例",
+                  "body": "Key: bridge / quay",
+                  "bytes": 18,
+                  "sha256": "033b509f03317face57cb018a626a21225f824f404f7345821fe4072976bd09c"
+                },
+                {
+                  "id": "B-map",
+                  "title": "地图",
+                  "body": "北岸 → 南岸\n",
+                  "bytes": 18,
+                  "sha256": "8f32da547361f94428b91ad4970c4c16ac7a089793b788469a5de660f22111e9"
+                },
+                {
+                  "id": "C-context",
+                  "title": "背景",
+                  "body": "水与城 🏞️",
+                  "bytes": 17,
+                  "sha256": "81ff6cd1874168e44a228c2de4c05f7c772fcb0ec8115a479ff485666a909923"
+                },
+                {
+                  "id": "A-tour",
+                  "title": "河流导览",
+                  "body": "从这条河开始。\n",
+                  "bytes": 22,
+                  "sha256": "fe541c045bc7998fde3283561c425d22ec7104b12dab6a748cb3e2b812766548"
+                }
+              ],
+              "total_bytes": 75
+            }
+          },
+          {
+            "id": "unseen_cli_business_cases",
+            "passed": true,
+            "expected": {
+              "cases": 21,
+              "all_match": true
+            },
+            "actual": {
+              "passed": 21,
+              "failures": []
+            }
+          },
+          {
+            "id": "public_api",
+            "passed": true,
+            "expected": {
+              "cases": 21,
+              "all_match": true,
+              "invalid_cases_raise_ValueError": true
+            },
+            "actual": {
+              "all_match": true,
+              "result": [
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [],
+                    "documents": [],
+                    "total_bytes": 0
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "m",
+                      "z",
+                      "a"
+                    ],
+                    "documents": [
+                      {
+                        "id": "m",
+                        "title": "Title m",
+                        "body": "汉字 🌊\n",
+                        "bytes": 12,
+                        "sha256": "0bc4f47a40caa3793062327eb09337a6b2ae1c55d8e91648685298dcea7d4564"
+                      },
+                      {
+                        "id": "z",
+                        "title": "Title z",
+                        "body": "x",
+                        "bytes": 1,
+                        "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+                      },
+                      {
+                        "id": "a",
+                        "title": "Title a",
+                        "body": "x",
+                        "bytes": 1,
+                        "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+                      }
+                    ],
+                    "total_bytes": 14
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "p",
+                      "r"
+                    ],
+                    "documents": [
+                      {
+                        "id": "p",
+                        "title": "Title p",
+                        "body": "x",
+                        "bytes": 1,
+                        "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+                      },
+                      {
+                        "id": "r",
+                        "title": "Title r",
+                        "body": "x",
+                        "bytes": 1,
+                        "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+                      }
+                    ],
+                    "total_bytes": 2
+                  }
+                },
+                {
+                  "ok": false,
+                  "is_value_error": true
+                },
+                {
+                  "ok": false,
+                  "is_value_error": true
+                },
+                {
+                  "ok": false,
+                  "is_value_error": true
+                },
+                {
+                  "ok": false,
+                  "is_value_error": true
+                },
+                {
+                  "ok": false,
+                  "is_value_error": true
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [],
+                    "documents": [],
+                    "total_bytes": 0
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-00",
+                      "doc-04",
+                      "doc-05",
+                      "doc-07",
+                      "doc-11",
+                      "doc-10",
+                      "doc-12",
+                      "doc-03",
+                      "doc-02",
+                      "doc-08",
+                      "doc-09",
+                      "doc-06",
+                      "doc-13"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-07",
+                        "title": "Title doc-07",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-11",
+                        "title": "Title doc-11",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-10",
+                        "title": "Title doc-10",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-12",
+                        "title": "Title doc-12",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-08",
+                        "title": "Title doc-08",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-09",
+                        "title": "Title doc-09",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-13",
+                        "title": "Title doc-13",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 106
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-02",
+                      "doc-04",
+                      "doc-07",
+                      "doc-00",
+                      "doc-01",
+                      "doc-05",
+                      "doc-06",
+                      "doc-03",
+                      "doc-08"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-07",
+                        "title": "Title doc-07",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-08",
+                        "title": "Title doc-08",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      }
+                    ],
+                    "total_bytes": 78
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-01",
+                      "doc-02",
+                      "doc-03",
+                      "doc-05",
+                      "doc-00"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 35
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-03",
+                      "doc-04",
+                      "doc-06",
+                      "doc-02"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      }
+                    ],
+                    "total_bytes": 34
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-02",
+                      "doc-00",
+                      "doc-01",
+                      "doc-03"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 35
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-02",
+                      "doc-04",
+                      "doc-05",
+                      "doc-07",
+                      "doc-01",
+                      "doc-00",
+                      "doc-06",
+                      "doc-03"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-07",
+                        "title": "Title doc-07",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 97
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-01",
+                      "doc-03",
+                      "doc-04",
+                      "doc-05",
+                      "doc-02",
+                      "doc-00",
+                      "doc-06"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 72
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-04",
+                      "doc-01"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      }
+                    ],
+                    "total_bytes": 21
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [],
+                    "documents": [],
+                    "total_bytes": 0
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-00",
+                      "doc-01",
+                      "doc-02",
+                      "doc-04",
+                      "doc-05",
+                      "doc-03",
+                      "doc-08",
+                      "doc-10",
+                      "doc-11"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-01",
+                        "title": "Title doc-01",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-08",
+                        "title": "Title doc-08",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-10",
+                        "title": "Title doc-10",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-11",
+                        "title": "Title doc-11",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      }
+                    ],
+                    "total_bytes": 104
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-00",
+                      "doc-03",
+                      "doc-02"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-02",
+                        "title": "Title doc-02",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      }
+                    ],
+                    "total_bytes": 21
+                  }
+                },
+                {
+                  "ok": true,
+                  "value": {
+                    "order": [
+                      "doc-04",
+                      "doc-08",
+                      "doc-09",
+                      "doc-06",
+                      "doc-11",
+                      "doc-07",
+                      "doc-12",
+                      "doc-03",
+                      "doc-05",
+                      "doc-10",
+                      "doc-13",
+                      "doc-00"
+                    ],
+                    "documents": [
+                      {
+                        "id": "doc-04",
+                        "title": "Title doc-04",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-08",
+                        "title": "Title doc-08",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-09",
+                        "title": "Title doc-09",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-06",
+                        "title": "Title doc-06",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-11",
+                        "title": "Title doc-11",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-07",
+                        "title": "Title doc-07",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-12",
+                        "title": "Title doc-12",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      },
+                      {
+                        "id": "doc-03",
+                        "title": "Title doc-03",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-05",
+                        "title": "Title doc-05",
+                        "body": "🌉\n🌉\n🌉\n",
+                        "bytes": 15,
+                        "sha256": "3c8e419c74ffd7a190fd1b433f76b4ab6240d136f191052ba033cb13475523d1"
+                      },
+                      {
+                        "id": "doc-10",
+                        "title": "Title doc-10",
+                        "body": "",
+                        "bytes": 0,
+                        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                      },
+                      {
+                        "id": "doc-13",
+                        "title": "Title doc-13",
+                        "body": "ASCII\n",
+                        "bytes": 6,
+                        "sha256": "93595c7b51e3a3f60370b882224f5699522cc7d321c357aa2cf6227e2fbda41f"
+                      },
+                      {
+                        "id": "doc-00",
+                        "title": "Title doc-00",
+                        "body": "é é 中文\n",
+                        "bytes": 14,
+                        "sha256": "32651cb37c3645d20fff50ea0545e1fceb56bb668b72ccdae5bc46284fbe0d46"
+                      }
+                    ],
+                    "total_bytes": 105
+                  }
+                }
+              ],
+              "process": {
+                "returncode": 0,
+                "stdout": "",
+                "stderr": ""
+              }
+            }
+          }
+        ],
+        "requires_blind_handoff_review": false,
+        "handoff_review": null,
+        "evidence": {
+          "workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\02-reading-packet",
+          "control_workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\02-reading-packet",
+          "cli_executions": [
+            {
+              "case": 0,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 1,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 2,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 3,
+              "returncode": 2,
+              "stdout": "",
+              "stderr": "cycle\n"
+            },
+            {
+              "case": 4,
+              "returncode": 2,
+              "stdout": "",
+              "stderr": "unavailable\n"
+            },
+            {
+              "case": 5,
+              "returncode": 2,
+              "stdout": "",
+              "stderr": "unavailable\n"
+            },
+            {
+              "case": 6,
+              "returncode": 2,
+              "stdout": "",
+              "stderr": "unavailable\n"
+            },
+            {
+              "case": 7,
+              "returncode": 2,
+              "stdout": "",
+              "stderr": "cycle\n"
+            },
+            {
+              "case": 8,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 9,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 10,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 11,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 12,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 13,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 14,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 15,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 16,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 17,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 18,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 19,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            {
+              "case": 20,
+              "returncode": 0,
+              "stdout": "",
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "02-reading-packet:deleted_cli_output_is_business_failure",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "02-reading-packet:API_ValueError_contract_independent_of_CLI",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "02-reading-packet:output_only_fails",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:unmodified_fails",
+      "passed": true,
+      "evidence": {
+        "passed": 1,
+        "total": 8
+      }
+    },
+    {
+      "name": "03-exhibit-release:refuse_overwrite",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:default_entry_really_fails",
+      "passed": true,
+      "evidence": {
+        "returncode": 4,
+        "stdout": "",
+        "stderr": "{\"transport_error\": \"URLError\", \"detail\": \"<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>\"}\n"
+      }
+    },
+    {
+      "name": "03-exhibit-release:response_really_lost",
+      "passed": true,
+      "evidence": {
+        "returncode": 4,
+        "stdout": "",
+        "stderr": "{\"transport_error\": \"RemoteDisconnected\", \"detail\": \"Remote end closed connection without response\"}\n"
+      }
+    },
+    {
+      "name": "03-exhibit-release:actual_permission_denial",
+      "passed": true,
+      "evidence": {
+        "returncode": 3,
+        "stdout": "",
+        "stderr": "{\"error\":\"permission denied\",\"missing_capability\":\"exhibit:publish\",\"principal\":\"exhibition-preparer\"}\n"
+      }
+    },
+    {
+      "name": "03-exhibit-release:reference_passes",
+      "passed": true,
+      "evidence": {
+        "task_id": "03-exhibit-release",
+        "version": "2026-10-23.1",
+        "completed": true,
+        "passed": 8,
+        "total": 8,
+        "assertions": [
+          {
+            "id": "public_inputs_and_contract_unchanged",
+            "passed": true,
+            "expected": "all frozen public inputs/contracts/tools unchanged",
+            "actual": []
+          },
+          {
+            "id": "artifact:exhibit_bundle.json",
+            "passed": true,
+            "expected": {
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "exhibits": [
+                {
+                  "id": "R-10",
+                  "title": "河床记忆",
+                  "images": [
+                    {
+                      "path": "images/map.svg",
+                      "bytes": 70,
+                      "sha256": "cbd8f9001a20ae64a7325d8095add22e32ae6277bc41315208545453bb0ad3d6",
+                      "alt": "河流两岸步行路线图"
+                    },
+                    {
+                      "path": "images/stones.svg",
+                      "bytes": 77,
+                      "sha256": "3cbcc91319590dac49a4a8f4b05956f468735d41468c516ede50011caa8d2475",
+                      "alt": " "
+                    }
+                  ]
+                },
+                {
+                  "id": "R-30",
+                  "title": "渡口的光",
+                  "images": [
+                    {
+                      "path": "images/ferry.svg",
+                      "bytes": 72,
+                      "sha256": "c54e202ffb71faddfa4ba8b0b06cf276d99e54ce9e93b24852db205efcbd2d01",
+                      "alt": "黄昏渡口与沿岸灯光"
+                    }
+                  ]
+                }
+              ]
+            },
+            "actual": {
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "exhibits": [
+                {
+                  "id": "R-10",
+                  "title": "河床记忆",
+                  "images": [
+                    {
+                      "path": "images/map.svg",
+                      "bytes": 70,
+                      "sha256": "cbd8f9001a20ae64a7325d8095add22e32ae6277bc41315208545453bb0ad3d6",
+                      "alt": "河流两岸步行路线图"
+                    },
+                    {
+                      "path": "images/stones.svg",
+                      "bytes": 77,
+                      "sha256": "3cbcc91319590dac49a4a8f4b05956f468735d41468c516ede50011caa8d2475",
+                      "alt": " "
+                    }
+                  ]
+                },
+                {
+                  "id": "R-30",
+                  "title": "渡口的光",
+                  "images": [
+                    {
+                      "path": "images/ferry.svg",
+                      "bytes": 72,
+                      "sha256": "c54e202ffb71faddfa4ba8b0b06cf276d99e54ce9e93b24852db205efcbd2d01",
+                      "alt": "黄昏渡口与沿岸灯光"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "artifact:accessibility.json",
+            "passed": true,
+            "expected": {
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "images": [
+                {
+                  "exhibit_id": "R-10",
+                  "path": "images/map.svg",
+                  "alt": "河流两岸步行路线图",
+                  "has_alt": true
+                },
+                {
+                  "exhibit_id": "R-10",
+                  "path": "images/stones.svg",
+                  "alt": " ",
+                  "has_alt": false
+                },
+                {
+                  "exhibit_id": "R-30",
+                  "path": "images/ferry.svg",
+                  "alt": "黄昏渡口与沿岸灯光",
+                  "has_alt": true
+                }
+              ],
+              "missing_alt": 1
+            },
+            "actual": {
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "images": [
+                {
+                  "exhibit_id": "R-10",
+                  "path": "images/map.svg",
+                  "alt": "河流两岸步行路线图",
+                  "has_alt": true
+                },
+                {
+                  "exhibit_id": "R-10",
+                  "path": "images/stones.svg",
+                  "alt": " ",
+                  "has_alt": false
+                },
+                {
+                  "exhibit_id": "R-30",
+                  "path": "images/ferry.svg",
+                  "alt": "黄昏渡口与沿岸灯光",
+                  "has_alt": true
+                }
+              ],
+              "missing_alt": 1
+            }
+          },
+          {
+            "id": "exactly_one_remote_preview",
+            "passed": true,
+            "expected": {
+              "preview_count": 1,
+              "submission_count": 1,
+              "bundle_sha256": "ccba1743877ffa819605767ecc47106081efcc59423b1f9712c0a57a6453a2f1"
+            },
+            "actual": {
+              "preview_count": 1,
+              "submission_count": 1,
+              "previews": [
+                {
+                  "receipt": {
+                    "preview_id": "PV-0001",
+                    "operation_key": "EXH-20261023-RIVER",
+                    "exhibition_id": "RIVER-LIGHT-2026",
+                    "bundle_sha256": "ccba1743877ffa819605767ecc47106081efcc59423b1f9712c0a57a6453a2f1"
+                  },
+                  "bundle": {
+                    "exhibition_id": "RIVER-LIGHT-2026",
+                    "exhibits": [
+                      {
+                        "id": "R-10",
+                        "title": "河床记忆",
+                        "images": [
+                          {
+                            "path": "images/map.svg",
+                            "bytes": 70,
+                            "sha256": "cbd8f9001a20ae64a7325d8095add22e32ae6277bc41315208545453bb0ad3d6",
+                            "alt": "河流两岸步行路线图"
+                          },
+                          {
+                            "path": "images/stones.svg",
+                            "bytes": 77,
+                            "sha256": "3cbcc91319590dac49a4a8f4b05956f468735d41468c516ede50011caa8d2475",
+                            "alt": " "
+                          }
+                        ]
+                      },
+                      {
+                        "id": "R-30",
+                        "title": "渡口的光",
+                        "images": [
+                          {
+                            "path": "images/ferry.svg",
+                            "bytes": 72,
+                            "sha256": "c54e202ffb71faddfa4ba8b0b06cf276d99e54ce9e93b24852db205efcbd2d01",
+                            "alt": "黄昏渡口与沿岸灯光"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "authentic_saved_receipt",
+            "passed": true,
+            "expected": {
+              "preview_id": "PV-0001",
+              "operation_key": "EXH-20261023-RIVER",
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "bundle_sha256": "ccba1743877ffa819605767ecc47106081efcc59423b1f9712c0a57a6453a2f1"
+            },
+            "actual": {
+              "bundle_sha256": "ccba1743877ffa819605767ecc47106081efcc59423b1f9712c0a57a6453a2f1",
+              "exhibition_id": "RIVER-LIGHT-2026",
+              "operation_key": "EXH-20261023-RIVER",
+              "preview_id": "PV-0001"
+            }
+          },
+          {
+            "id": "unknown_result_reconciled",
+            "passed": true,
+            "expected": "lookup after dropped submission response returns the saved preview",
+            "actual": [
+              {
+                "seq": 1,
+                "action": "submit",
+                "operation_key": "EXH-20261023-RIVER",
+                "preview_id": "PV-0001",
+                "response_dropped": true
+              },
+              {
+                "seq": 2,
+                "action": "lookup",
+                "operation_key": "EXH-20261023-RIVER",
+                "preview_ids": [
+                  "PV-0001"
+                ]
+              },
+              {
+                "seq": 3,
+                "action": "publish_denied",
+                "preview_id": "PV-0001",
+                "missing_capability": "exhibit:publish"
+              }
+            ]
+          },
+          {
+            "id": "publication_permission_boundary",
+            "passed": true,
+            "expected": "actual permission observed, no fabricated authority or publication",
+            "actual": {
+              "permission_observed": true,
+              "principal": "exhibition-preparer",
+              "capabilities": [
+                "preview:create",
+                "preview:read"
+              ],
+              "published": []
+            }
+          },
+          {
+            "id": "handoff_reference_present",
+            "passed": true,
+            "expected": "readable nonempty handoff artifact referencing the real preview_id",
+            "actual": {
+              "handoff.md": "账户所有者取得 exhibit:publish 后，使用 POST /v1/publish，JSON body 为 {\"preview_id\":\"PV-0001\"}。资源包和预览已核对；权限获授后恢复发布并核实际结果。\n"
+            }
+          }
+        ],
+        "requires_blind_handoff_review": true,
+        "handoff_review": {
+          "automatic_semantics_assessed": false,
+          "artifacts": {
+            "handoff.md": "账户所有者取得 exhibit:publish 后，使用 POST /v1/publish，JSON body 为 {\"preview_id\":\"PV-0001\"}。资源包和预览已核对；权限获授后恢复发布并核实际结果。\n"
+          },
+          "criteria": [
+            "准确交代尚未完成的发布及其所缺权限或账户所有者上下文，不声称已发布",
+            "给账户所有者具体可执行的下一步，关联已核对的真实预览",
+            "说明满足什么权限或用户操作条件后可恢复剩余发布工作"
+          ],
+          "final_completion_rule": "automatic completed AND all three independently blind-reviewed business criteria pass"
+        },
+        "evidence": {
+          "workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\03-exhibit-release",
+          "control_workspace": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\design\\_selftest_temp\\controls-jfbbm8jn\\03-exhibit-release",
+          "cli_executions": []
+        }
+      }
+    },
+    {
+      "name": "03-exhibit-release:short_chinese_handoff_not_false_rejected",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:fake_capability_does_not_certify_semantics",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:missing_independent_delivery_fails",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:forged_receipt_fails",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "03-exhibit-release:duplicate_side_effect_fails",
+      "passed": true,
+      "evidence": null
+    }
+  ]
+}

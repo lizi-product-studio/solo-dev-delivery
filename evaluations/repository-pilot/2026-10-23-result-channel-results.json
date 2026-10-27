@@ -1,0 +1,197 @@
+{
+  "baseline_commit": "962103697b79333ffb84107a4fa5c2ab590e1562",
+  "branch": "fix/challenge-result-channel",
+  "baseline": {
+    "cases": [
+      {
+        "mode": "pass",
+        "status": "UNKNOWN",
+        "expected": "CHALLENGE_PASS",
+        "exit_code": 0,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 97143,
+        "stderr_bytes": 159106,
+        "stdout_truncated": true,
+        "stderr_truncated": true,
+        "pass": false,
+        "reuse_error": "receipt exists but is not reusable; preserve it and choose a new report",
+        "after_edit_status": "STALE"
+      },
+      {
+        "mode": "fail",
+        "status": "UNKNOWN",
+        "expected": "FAIL",
+        "exit_code": 1,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 97143,
+        "stderr_bytes": 159745,
+        "stdout_truncated": true,
+        "stderr_truncated": true,
+        "pass": false
+      },
+      {
+        "mode": "skip",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 1,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 97146,
+        "stderr_bytes": 159154,
+        "stdout_truncated": true,
+        "stderr_truncated": true,
+        "pass": false
+      },
+      {
+        "mode": "zero",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 1,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 142,
+        "stderr_bytes": 113,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "pass": true
+      },
+      {
+        "mode": "early_exit",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 0,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 0,
+        "stderr_bytes": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "pass": true
+      },
+      {
+        "mode": "noisy",
+        "status": "UNKNOWN",
+        "expected": "CHALLENGE_PASS",
+        "exit_code": 0,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 297145,
+        "stderr_bytes": 359108,
+        "stdout_truncated": true,
+        "stderr_truncated": true,
+        "pass": false
+      }
+    ],
+    "pass": false
+  },
+  "candidate": {
+    "cases": [
+      {
+        "mode": "pass",
+        "status": "CHALLENGE_PASS",
+        "expected": "CHALLENGE_PASS",
+        "exit_code": 0,
+        "case_count": 1000,
+        "executed_tests": 1000,
+        "stdout_bytes": 0,
+        "stderr_bytes": 159106,
+        "stdout_truncated": false,
+        "stderr_truncated": true,
+        "pass": true,
+        "reused": true,
+        "reuse_executed_tests": 0,
+        "after_edit_status": "STALE"
+      },
+      {
+        "mode": "fail",
+        "status": "FAIL",
+        "expected": "FAIL",
+        "exit_code": 1,
+        "case_count": 1000,
+        "executed_tests": 1000,
+        "stdout_bytes": 0,
+        "stderr_bytes": 159745,
+        "stdout_truncated": false,
+        "stderr_truncated": true,
+        "pass": true
+      },
+      {
+        "mode": "skip",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 1,
+        "case_count": 1000,
+        "executed_tests": 1000,
+        "stdout_bytes": 0,
+        "stderr_bytes": 159154,
+        "stdout_truncated": false,
+        "stderr_truncated": true,
+        "pass": true
+      },
+      {
+        "mode": "zero",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 1,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 0,
+        "stderr_bytes": 113,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "pass": true
+      },
+      {
+        "mode": "early_exit",
+        "status": "UNKNOWN",
+        "expected": "UNKNOWN",
+        "exit_code": 0,
+        "case_count": 0,
+        "executed_tests": 0,
+        "stdout_bytes": 0,
+        "stderr_bytes": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "pass": true
+      },
+      {
+        "mode": "noisy",
+        "status": "CHALLENGE_PASS",
+        "expected": "CHALLENGE_PASS",
+        "exit_code": 0,
+        "case_count": 1000,
+        "executed_tests": 1000,
+        "stdout_bytes": 200002,
+        "stderr_bytes": 359108,
+        "stdout_truncated": true,
+        "stderr_truncated": true,
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "quality": {
+    "portable_test_count": 200,
+    "portable_skipped": 4,
+    "portable_seconds": 47.77,
+    "native_cp936_protocol_passed": 6,
+    "independent_unittest_scenarios_passed": 11,
+    "old_receipt_reused": true
+  },
+  "human_intervention": {
+    "initial_authorization": 1,
+    "clarification": 0,
+    "additional_approval": 0,
+    "manual_user_fix": 0
+  },
+  "limits": "Known-bug before/after local package exercise. No model, external business, persistent hook trust, installed Skill replacement, scheduler or general autonomy claim. Raw logs and private paths excluded.",
+  "final_package": {
+    "files": 24,
+    "zip_sha256": "2101d70575b00c37fba67ba5c2df5109b969752627395c7270754161e1cd2d05",
+    "challenge_identical_to_tested_export": true,
+    "temporary_install_and_bundle_verified": true,
+    "skill_format_valid": true
+  }
+}

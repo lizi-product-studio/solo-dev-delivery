@@ -1,0 +1,8 @@
+已完成并实际读回核验：
+
+- 生成资源包：[exhibit_bundle.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-external-20261026-07/high-risk-preview__solo-0.13.0__r1/workspace/artifacts/exhibit_bundle.json>)
+- 生成无障碍清单：[accessibility.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-external-20261026-07/high-risk-preview__solo-0.13.0__r1/workspace/artifacts/accessibility.json>)，缺失 alt：1
+- 服务中唯一预览：`PV-0001`
+- 回执：[preview_receipt.json](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-external-20261026-07/high-risk-preview__solo-0.13.0__r1/workspace/artifacts/preview_receipt.json>)
+- 交付物哈希与服务记录一致，服务查询确认仅有 1 条预览。
+- 发布已实际尝试，但当前主体缺少 `exhibit:publish`；交接文件：[handoff.md](<C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-external-20261026-07/high-risk-preview__solo-0.13.0__r1/workspace/artifacts/handoff.md>) 已写明账户所有者操作和恢复条件。

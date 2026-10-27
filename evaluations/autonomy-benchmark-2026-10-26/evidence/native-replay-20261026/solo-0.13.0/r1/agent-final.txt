@@ -1,0 +1,8 @@
+已完成 TASK.md：
+
+- 修复 `summarize_ranges`：合并重叠/相邻闭区间，并正确计算页数。
+- 补充重叠、相邻区间测试。
+- 测试通过：2 项。
+- 已生成并读取交付物：[artifacts/page_coverage.json](C:/Users/Administrator/Desktop/终极通用Skill/outputs/autonomy-native-replay-20261026-03/software-quick-patch__solo-0.13.0__r1/workspace/artifacts/page_coverage.json)
+
+当前产物统计：3 个文档，`total_pages = 18`。

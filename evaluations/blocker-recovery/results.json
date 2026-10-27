@@ -1,0 +1,69 @@
+{
+  "baseline_commit": "ceb839aa7ceb6dbe0ae71e655b3db58e9b93887a",
+  "branch": "feat/blocker-recovery",
+  "baseline": {
+    "results": [
+      {
+        "scenario": "01_report_config",
+        "status": "PASS"
+      },
+      {
+        "scenario": "02_stale_build_cache",
+        "status": "PASS"
+      },
+      {
+        "scenario": "03_manual_identity",
+        "status": "PASS"
+      },
+      {
+        "scenario": "04_unknown_submission",
+        "status": "PASS"
+      }
+    ],
+    "passed": 4,
+    "total": 4
+  },
+  "candidate_first_freeze": {
+    "results": [
+      {
+        "scenario": "01_report_config",
+        "status": "PASS"
+      },
+      {
+        "scenario": "02_stale_build_cache",
+        "status": "PASS"
+      },
+      {
+        "scenario": "03_manual_identity",
+        "status": "PASS"
+      },
+      {
+        "scenario": "04_unknown_submission",
+        "status": "PASS"
+      }
+    ],
+    "passed": 4,
+    "total": 4
+  },
+  "local_policy": {
+    "status": "LOCAL_POLICY_UPDATED_AND_BUNDLE_VERIFIED",
+    "backup_saved": true,
+    "installed_files": 24,
+    "existing_runtime_and_other_files_unchanged": 21,
+    "new_reference_sha256": "00e7c4756f005fb2447367476d6beeaef3b29ea87e4da0fe5449012c07dcf09e",
+    "global_rules_updated": true,
+    "limits": "Instruction files verified; no claim that other already-active conversations hot-reloaded them. Runtime, hooks and scheduling not changed."
+  },
+  "limits": [
+    "Both groups passed; no demonstrated relative behavioral improvement or universal compliance.",
+    "Four local synthetic CLI tasks, no real network/site/account or adversarial isolation proof.",
+    "One handoff timing phrase corrected after frozen candidate run; final text reviewed but no repeated behavioral trial.",
+    "Existing installed runtime preserved, current chat received updated AGENTS; other active chats hot reload unverified."
+  ],
+  "human_intervention": {
+    "initial_user_correction": 1,
+    "clarification": 0,
+    "additional_approval": 0,
+    "manual_user_fix": 0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "seed": 10232026,
+  "checker": {
+    "frozen_sha256": "fb7d4c84258f26b5a51ff60fda5f40efb88caeaf92d28fbad32f4c3adf566e8a",
+    "executed_sha256": "098de782e13d42b306f195d6e6f786a380ffa0adfcc1180006b8214964ae5525",
+    "revision_applied": true,
+    "revision_record": "behavior/checker-revision-02.json"
+  },
+  "results": {
+    "01-invoice": {
+      "status": "PASS",
+      "independent_cases": 26,
+      "delivery": "complete"
+    },
+    "02-dispatch": {
+      "status": "PASS",
+      "independent_cases": 43,
+      "delivery": "needs_owner_only",
+      "real_service_records": 1,
+      "transport_failure_observed": true,
+      "authority_denials": 1,
+      "note": "handoff action ordering checked; human notification latency requires host transcript"
+    }
+  },
+  "passed": 2,
+  "total": 2,
+  "limits": [
+    "Trusted scoped executor, not an OS sandbox or adversarial filesystem security proof",
+    "No real website, identity, network, platform, or business-outcome claim",
+    "Host-only reads and actual user notification timing need separately captured host transcript"
+  ]
+}

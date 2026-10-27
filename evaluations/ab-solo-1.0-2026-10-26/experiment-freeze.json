@@ -1,0 +1,105 @@
+{
+  "schema_version": "ab-1.0-freeze",
+  "experiment_id": "ab-solo-1.0-2026-10-27",
+  "frozen_at": "2026-10-27T03:28:33.057325+00:00",
+  "protocol": {
+    "design": "10 matched task pairs, one fresh session and isolated copy per arm",
+    "planned_trials": 20,
+    "arms": [
+      "baseline",
+      "solo-1.0"
+    ],
+    "repeats_per_task_arm": 1,
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "timeout_seconds": 300,
+    "cli_version": "codex-cli 0.164.0-alpha.11.1",
+    "approval_policy": "never",
+    "sandbox": "dangerously-bypass-approvals-and-sandbox",
+    "service_tier": "default",
+    "memories": false,
+    "plugins": false,
+    "multi_agent": false,
+    "network": "not used by prompt; host sandbox controls access"
+  },
+  "frozen_acceptance": {
+    "task_success": "judge.py returns task_success=true and all frozen assertions pass",
+    "quality_score": "100 * passed / total; only completed trials are quality-comparable",
+    "public_inputs": "TASK.md, CONTRACT.md, and inputs.json hashes must remain unchanged",
+    "human_intervention": "count observable approval/user-input events; zero is reported as observed_zero_noninteractive",
+    "tokens": "extract latest thread_token_usage from disposable session JSONL; unavailable remains null",
+    "failure_semantics": {
+      "capacity_error": "censored; never count as success",
+      "timeout": "censored",
+      "codex_error": "censored",
+      "task_failed": "failed",
+      "harness_error": "excluded and replaced only after harness correction"
+    }
+  },
+  "tasks": {
+    "01_normalize_email": {
+      "tree_sha256": "98a82fbc54d5914b3991b58c668ceaa9cd4aaf54761aa1ffd2b2fde26b05bed2"
+    },
+    "02_sum_amounts": {
+      "tree_sha256": "d0a3eb3d863ded99b858ff7901f83a0a8c87aa1335bc2f288277b5c458f54f8e"
+    },
+    "03_merge_intervals": {
+      "tree_sha256": "f2b83de6dd64a973ca8d68e06a3e67e24209edf3017cc0c9217704ce6a9bedb6"
+    },
+    "04_parse_csv": {
+      "tree_sha256": "0967d66549aabc4bf3dca072e3222461eda4e916ff49905ac62dc6c573c449a3"
+    },
+    "05_inventory_reserve": {
+      "tree_sha256": "a148845f1a535b8c5d221c6161f9fc1afdaad71237c05ce59f56ce2a2150a918"
+    },
+    "06_expire_sessions": {
+      "tree_sha256": "a05a9703442d8d3d01dc05b10340d2fef90b3f57523e2f87c7a507b40734a8a8"
+    },
+    "07_json_patch": {
+      "tree_sha256": "81a637b57ba1dc4b18933fcf44ca21c505c9f3a53b204f6941cd126caa55821e"
+    },
+    "08_rate_limit": {
+      "tree_sha256": "c75fdb6fd5bd23dc9359b6cfb371f08a664a35f7f8d7fb02051ad7b1f90dfe03"
+    },
+    "09_topological_sort": {
+      "tree_sha256": "b45b4d424bb30825342480a1cc0086fa2070ce14efb593d51042ff26e1bb08d2"
+    },
+    "10_redact_secrets": {
+      "tree_sha256": "a131c9ae9cb0bb2e6f50e1d520c8f483ac322d5b0c9609d858ef715d11643553"
+    }
+  },
+  "artifacts": {
+    "judge_sha256": "06993caa01f155584903c5eb43559cd8ac97eb7cd268eaf70dfd8d57133870b3",
+    "runner_sha256": "63158995ec638ee10a46fdf86162f7f5202e3f468c5ed9fd4a6970d3e83d1bee",
+    "skill_sha256": "d1d2b5944b619ed77823c05a7aa94ce85e7d1817138baceb443ca7f30eaa242b",
+    "package_sha256": "6b2480a54e0485b6ed2607eb4c1b2fa62ece9cf4085e90b131b229aedd452cc2",
+    "raw_roots": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix",
+      "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair",
+      "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-raw-v3",
+      "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-raw-v4"
+    ]
+  },
+  "selected_trial_sources": {
+    "01_normalize_email__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__baseline__r1",
+    "01_normalize_email__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__solo-1.0__r1",
+    "02_sum_amounts__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__baseline__r1",
+    "02_sum_amounts__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__solo-1.0__r1",
+    "03_merge_intervals__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__baseline__r1",
+    "03_merge_intervals__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__solo-1.0__r1",
+    "04_parse_csv__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__baseline__r1",
+    "04_parse_csv__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__solo-1.0__r1",
+    "05_inventory_reserve__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__baseline__r1",
+    "05_inventory_reserve__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__solo-1.0__r1",
+    "06_expire_sessions__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__baseline__r1",
+    "06_expire_sessions__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__solo-1.0__r1",
+    "07_json_patch__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__baseline__r1",
+    "07_json_patch__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__solo-1.0__r1",
+    "08_rate_limit__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__baseline__r1",
+    "08_rate_limit__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__solo-1.0__r1",
+    "09_topological_sort__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__baseline__r1",
+    "09_topological_sort__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__solo-1.0__r1",
+    "10_redact_secrets__baseline__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__baseline__r1",
+    "10_redact_secrets__solo-1.0__r1": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__solo-1.0__r1"
+  }
+}

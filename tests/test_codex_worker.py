@@ -373,7 +373,9 @@ class CodexWorkerTests(unittest.TestCase):
         self.assertEqual('BLOCKED', result['status'])
         self.assertIn('could not persist', result['summary'])
         self.assertEqual([result['child_pid']], self.pids)
-        with self.assertRaises(ProcessLookupError):
+        # Windows raises OSError(WinError 87) for os.kill(pid, 0) after the
+        # process is gone; POSIX raises ProcessLookupError.
+        with self.assertRaises((ProcessLookupError, OSError)):
             os.kill(result['child_pid'], 0)
 
 

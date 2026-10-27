@@ -1,0 +1,714 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-23T15:54:22.6295967+08:00",
+  "source": {
+    "repository": "https://github.com/obra/superpowers",
+    "path": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\skill-comparison-2026-10-23\\sources\\superpowers",
+    "head": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+    "tag": "v7.0.1",
+    "commit_time": "2026-10-22T05:00:49+08:00",
+    "tree": "5e3a3c9af45c3474506fb62a3ce664bd03a2cdc4",
+    "skills_tree": "cef5ac39cf85a3a00d80a5f5916d43d0aa333b99",
+    "clone_depth": 1,
+    "branch": "main",
+    "worktree_clean": true,
+    "worktree_status": [],
+    "clone_recovery": "Initial full clone stalled with zero-byte pack and was terminated; git removed its own unfinished directory. A fresh depth-1 clone then succeeded. No pre-existing checkout was reset."
+  },
+  "version": {
+    "codex_plugin": "7.0.1",
+    "package_json": "7.0.1"
+  },
+  "license": {
+    "spdx": "MIT",
+    "copyright": "Copyright (c) 2025 Jesse Vincent",
+    "file": "LICENSE",
+    "preserve_notice_in_runtime_copy": true
+  },
+  "codex_native_manifest": {
+    "name": "superpowers",
+    "version": "7.0.1",
+    "description": "An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.",
+    "author": {
+      "name": "Jesse Vincent",
+      "email": "jesse@fsck.com",
+      "url": "https://github.com/obra"
+    },
+    "homepage": "https://github.com/obra/superpowers",
+    "repository": "https://github.com/obra/superpowers",
+    "license": "MIT",
+    "keywords": [
+      "brainstorming",
+      "subagent-driven-development",
+      "skills",
+      "planning",
+      "tdd",
+      "debugging",
+      "code-review",
+      "workflow"
+    ],
+    "skills": "./skills/",
+    "hooks": {},
+    "interface": {
+      "displayName": "Superpowers",
+      "shortDescription": "Planning, TDD, debugging, and delivery workflows for coding agents",
+      "longDescription": "Use Superpowers to guide agent work through brainstorming, implementation planning, test-driven development, systematic debugging, parallel execution, code review, and finish-the-branch workflows.",
+      "developerName": "Jesse Vincent",
+      "category": "Developer Tools",
+      "capabilities": [
+        "Interactive",
+        "Read",
+        "Write"
+      ],
+      "defaultPrompt": [
+        "I've got an idea for something I'd like to build.",
+        "Let's add a feature to this project."
+      ],
+      "websiteURL": "https://github.com/obra/superpowers",
+      "privacyPolicyURL": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+      "termsOfServiceURL": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+      "brandColor": "#F59E0B",
+      "composerIcon": "./assets/superpowers-small.svg",
+      "logo": "./assets/app-icon.png",
+      "screenshots": []
+    }
+  },
+  "current_official_install": {
+    "upstream_doc": "README.md#codex-app and README.md#codex-cli",
+    "app": "Plugins sidebar > Superpowers > +",
+    "cli": "/plugins > superpowers > Install Plugin",
+    "old_codex_install_doc_exists": false,
+    "old_readme_codex_doc_exists": false,
+    "bootstrap_executable_required": false,
+    "hooks_enabled": false,
+    "entry_skill": "skills/using-superpowers/SKILL.md",
+    "codex_reference": "skills/using-superpowers/references/codex-tools.md",
+    "mcp_servers_declared": false
+  },
+  "official_catalog_crosscheck": {
+    "repository": "https://github.com/openai/plugins",
+    "head": "0722921d5542fc593105c27bd52630babd8b8c2a",
+    "plugin_path": "plugins/superpowers",
+    "observed_manifest_version": "6.3.0",
+    "upstream_is_newer": true,
+    "metadata_records": [
+      {
+        "skill": "brainstorming",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/brainstorming/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Brainstorming\"\n  short_description: \"Explore intent, requirements, and design before implementation\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "diagnosing-superpowers",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/diagnosing-superpowers/agents/openai.yaml",
+        "status": "unavailable",
+        "error": "Response status code does not indicate success: 404 (Not Found)."
+      },
+      {
+        "skill": "dispatching-parallel-agents",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/dispatching-parallel-agents/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Dispatching Parallel Agents\"\n  short_description: \"Split independent work across parallel agents\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "executing-plans",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/executing-plans/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Executing Plans\"\n  short_description: \"Execute written implementation plans with review checkpoints\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "finishing-a-development-branch",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/finishing-a-development-branch/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Finishing a Development Branch\"\n  short_description: \"Wrap up implementation work and choose the right integration path\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "receiving-code-review",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/receiving-code-review/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Receiving Code Review\"\n  short_description: \"Evaluate review feedback before implementing changes\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "requesting-code-review",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/requesting-code-review/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Requesting Code Review\"\n  short_description: \"Request focused code review before merging\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "subagent-driven-development",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/subagent-driven-development/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Subagent-Driven Development\"\n  short_description: \"Execute implementation plans with staged subagent reviews\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "systematic-debugging",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/systematic-debugging/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Systematic Debugging\"\n  short_description: \"Find root causes before attempting fixes\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "test-driven-development",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/test-driven-development/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Test-Driven Development\"\n  short_description: \"Implement features and bug fixes with test-first development\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "using-git-worktrees",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/using-git-worktrees/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Using Git Worktrees\"\n  short_description: \"Create isolated git worktrees for parallel feature work\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "using-superpowers",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/using-superpowers/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Using Superpowers\"\n  short_description: \"Establish how and when to use Superpowers skills\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "verification-before-completion",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/verification-before-completion/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Verification Before Completion\"\n  short_description: \"Verify claims with commands and output before declaring success\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "writing-plans",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/writing-plans/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Writing Plans\"\n  short_description: \"Turn specs into detailed multi-step implementation plans\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      },
+      {
+        "skill": "writing-skills",
+        "url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/skills/writing-skills/agents/openai.yaml",
+        "status": 200,
+        "content": "interface:\n  display_name: \"Writing Skills\"\n  short_description: \"Create and verify skills before deployment\"\n",
+        "has_policy": false,
+        "has_dependencies": false
+      }
+    ],
+    "note": "The publishing script seeds OpenAI-owned agents/openai.yaml from a prior official package. This crosscheck reads the current public catalog; no catalog package was installed.",
+    "manifest_url": "https://raw.githubusercontent.com/openai/plugins/0722921d5542fc593105c27bd52630babd8b8c2a/plugins/superpowers/.codex-plugin/plugin.json",
+    "manifest": {
+      "author": {
+        "email": "jesse@fsck.com",
+        "name": "Jesse Vincent",
+        "url": "https://github.com/obra"
+      },
+      "description": "An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.",
+      "homepage": "https://github.com/obra/superpowers",
+      "hooks": {},
+      "interface": {
+        "brandColor": "#F59E0B",
+        "brandColorDark": "#F59E0B",
+        "capabilities": [
+          "Interactive",
+          "Read",
+          "Write"
+        ],
+        "category": "Developer Tools",
+        "composerIcon": "./.codex-plugin/assets/composer-icon.svg",
+        "defaultPrompt": [
+          "I've got an idea for something I'd like to build.",
+          "Let's add a feature to this project."
+        ],
+        "developerName": "Jesse Vincent",
+        "displayName": "Superpowers",
+        "logo": "./.codex-plugin/assets/logo.png",
+        "longDescription": "Use Superpowers to guide agent work through brainstorming, implementation planning, test-driven development, systematic debugging, parallel execution, code review, and finish-the-branch workflows.",
+        "privacyPolicyURL": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+        "shortDescription": "Plan, develop, and debug code",
+        "termsOfServiceURL": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+        "websiteURL": "https://github.com/obra/superpowers"
+      },
+      "keywords": [
+        "brainstorming",
+        "subagent-driven-development",
+        "skills",
+        "planning",
+        "tdd",
+        "debugging",
+        "code-review",
+        "workflow"
+      ],
+      "license": "MIT",
+      "name": "superpowers",
+      "repository": "https://github.com/obra/superpowers",
+      "skills": "./skills/",
+      "version": "6.3.0"
+    },
+    "metadata_summary": "14 existing skills have interface display_name/short_description only; no policy or dependencies. diagnosing-superpowers metadata is absent (404) in the older public catalog package."
+  },
+  "portable_skill_layer": {
+    "skill_count": 15,
+    "skill_names": [
+      "brainstorming",
+      "diagnosing-superpowers",
+      "dispatching-parallel-agents",
+      "executing-plans",
+      "finishing-a-development-branch",
+      "receiving-code-review",
+      "requesting-code-review",
+      "subagent-driven-development",
+      "systematic-debugging",
+      "test-driven-development",
+      "using-git-worktrees",
+      "using-superpowers",
+      "verification-before-completion",
+      "writing-plans",
+      "writing-skills"
+    ],
+    "file_count": 84,
+    "runtime_destination_template": "<isolated-user-profile>/.agents/skills/superpowers",
+    "activation": "Fresh top-level Codex session; implicit match of using-superpowers description. Explicit invocation is a separate opt-in treatment if needed.",
+    "main_agent_required": true,
+    "subagent_stop_present": true,
+    "claim_scope": "Upstream v7.0.1 portable Skill layer under matched host/tool capabilities; not a ranking of full Marketplace integrations.",
+    "no_skill_body_changes": true,
+    "no_upstream_workflow_executed": true,
+    "runtime_hygiene": "Isolate CODEX_HOME plus HOME/USERPROFILE and run CWD with a fresh repository root; verify actual discovered skill list and inherited AGENTS/config/rules, since user skills live outside CODEX_HOME."
+  },
+  "tool_adaptation": {
+    "native_skills": "Codex native discovery; read referenced SKILL.md from disk. No custom superpowers-codex command.",
+    "multi_agent": "Enable features.multi_agent only within isolated run config, equally for all groups; use actual exposed tools as authority.",
+    "v2_tools": [
+      "spawn_agent",
+      "send_message",
+      "followup_task",
+      "list_agents",
+      "wait_agent",
+      "interrupt_agent"
+    ],
+    "v1_only": "close_agent is absent on V2; do not invent it.",
+    "spawn": "upstream recommends fork_turns none; actual tool schema and higher-priority host instructions govern model and reasoning overrides.",
+    "ordinary_tools": "Use the same exec/file/search/patch/plan capabilities across groups. No additional MCP or package is required by this plugin manifest.",
+    "compatibility_risk": "Upstream codex-tools claims full-history forks accept overrides, but this host schema refuses model/effort overrides on full-history forks. Log this as upstream-host documentation drift; do not patch skill text silently."
+  },
+  "evidence_files": [
+    {
+      "path": "README.md",
+      "sha256": "79f29f50c735862d2e304ea547b4c9aa67d9db6909ff6fb7b5ea922d7bcbc3e7",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/README.md"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "0da33ed814ee87e72db078f489c4447af72f13d9f25d9e17476f32efd77705fc",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/LICENSE"
+    },
+    {
+      "path": "package.json",
+      "sha256": "b4ca961ce1aead5d08e40507b2fca8c04c61dea054866bac92259308d24527e3",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/package.json"
+    },
+    {
+      "path": ".codex-plugin/plugin.json",
+      "sha256": "fef198cdbcaa5544e4244ff74cb83a2a797d18c9cfb9af26a18418206bb806c3",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/.codex-plugin/plugin.json"
+    },
+    {
+      "path": ".agents/plugins/marketplace.json",
+      "sha256": "2b94116c190896480e5054222a744e375976f8ae5bdb66ff0ab6b348dfad4182",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/.agents/plugins/marketplace.json"
+    },
+    {
+      "path": "skills/using-superpowers/SKILL.md",
+      "sha256": "82c5c8866ad7f5dd4440ce66bd7806ba48a2f13771beae5cf112e53f08fe36ba",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/skills/using-superpowers/SKILL.md"
+    },
+    {
+      "path": "skills/using-superpowers/references/codex-tools.md",
+      "sha256": "1a38ad9b188c393052f58d95657a1c35ea6aafc8b5a27f198f3922912f70bbe7",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/skills/using-superpowers/references/codex-tools.md"
+    },
+    {
+      "path": "scripts/package-codex-plugin.sh",
+      "sha256": "2541617b86519273428d12d18a5f7ec852ac39cfdec74622c01ce71a504bb80d",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/scripts/package-codex-plugin.sh"
+    },
+    {
+      "path": "tests/codex/test-marketplace-manifest.sh",
+      "sha256": "9c5afb24318bd959606f5063f444042e08e6fc2c6ff8c4988760476021e4ec90",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/tests/codex/test-marketplace-manifest.sh"
+    },
+    {
+      "path": "tests/codex/test-package-codex-plugin.sh",
+      "sha256": "bbf76d50eac33b60d73318946bc1418a6e6c6d52cdd918f39c7b18b8eaa0b0f4",
+      "url": "https://github.com/obra/superpowers/blob/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/tests/codex/test-package-codex-plugin.sh"
+    }
+  ],
+  "skill_file_hashes": [
+    {
+      "path": "skills/brainstorming/SKILL.md",
+      "sha256": "61a7ef918652108c76a3fd01e02dd92d39996c6b46d4cb2819cbd03f6c45e46a"
+    },
+    {
+      "path": "skills/brainstorming/builder-check-prompt.md",
+      "sha256": "36d51a4723d6f0a3ce5811a0ea3b3a8424f07533947e1355f5d8cb8cce40c55e"
+    },
+    {
+      "path": "skills/brainstorming/scripts/frame-template.html",
+      "sha256": "7b9418e9939dded0cf8e6a5549a18162b7c7e5495deeefa83a12f3394b81395d"
+    },
+    {
+      "path": "skills/brainstorming/scripts/helper.js",
+      "sha256": "43c6d69954a46ec34a2a262bcc62a9a7e83e839c739f199cb72646d397c686e3"
+    },
+    {
+      "path": "skills/brainstorming/scripts/server.cjs",
+      "sha256": "a2397d59c7f7bd1a110e258c707ccf47ede42ba8dfc765c03669a3ee81cf3791"
+    },
+    {
+      "path": "skills/brainstorming/scripts/start-server.sh",
+      "sha256": "a4e5ae84275bcaacd2f84345afeabe59cf7b00ba080e123da7cc1fb226f12847"
+    },
+    {
+      "path": "skills/brainstorming/scripts/stop-server.sh",
+      "sha256": "0b5ccbbd57f62d3ed88993f7940b5ee0e5c0fc9b21c550c623da4f6292e47daf"
+    },
+    {
+      "path": "skills/brainstorming/visual-companion.md",
+      "sha256": "6ffcb038b53254bd31debaa15e12dcd4ff24bd63d690e0b644ac6396701cf2e2"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/SKILL.md",
+      "sha256": "3143de8695c5a2d63e8b1675f33837578076f464deb127c2ebdd0b46fceef886"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/analyst-common.md",
+      "sha256": "88801c36070be2a54a8a9a29632b01ab21db053e2e76ee49b5252a9b74ca4090"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/cost-and-time.md",
+      "sha256": "fe97a66d4db3b436816ef82694bda413b522b3a862dd41978da01e358fffecc4"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/plan-adherence.md",
+      "sha256": "1dcbab82033598a2e9c9ee42e950d4b1822d2c871c02cef9e102cdd5cbbda113"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/quality-evidence.md",
+      "sha256": "749d11cf678f379ed77a29274cad456634e0284aa523639a1a214a9f2b986eb1"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/repeated-work.md",
+      "sha256": "895027f2dfa4b1b8bcdb7ac9aec8d45a80bff212fad6ec6cad5ab38fa68322f5"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/request-conflicts.md",
+      "sha256": "e800e38d8b7752c212c76c5c3ed75cd78b749684263ea0c313586f26af6f4b5c"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/scrub-audit.md",
+      "sha256": "5cc48f05a7f81f5f7e05e0c7ceafc0fb8774bcaf75fe88dcb5c7e408026c70ad"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/scrub.md",
+      "sha256": "854cb3320cc5377b493cea2f72519d67983464882db68a0f408a7d0a0f040b8c"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/similar-session.md",
+      "sha256": "b190f713b463df2bb5ec3914647e204074d1bd50643a53159db6d13cace916c1"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/skill-timeline.md",
+      "sha256": "45d604d583b57a77b9033eced8eb875ef342af70fcd66cf7d15c6dc89964890f"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/prompts/stumbles.md",
+      "sha256": "1f2d1f048aff7b8b400006301f1ce8c232ecc7e9d5f705af27a849b2c03ea2e7"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/references/context-safety.md",
+      "sha256": "e6be2bd3495f454d4bedee9484d728d245d1fa656e11fc4ceec5693c16e4730a"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/references/github-issues.md",
+      "sha256": "d26ef9197b4a6ae5159ae6d11abd162bcc624d95fc7ccf508e07b68f916a1b19"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/references/redaction-policy.md",
+      "sha256": "96b16f47074838fe2d7e609577d6f8b0ad460f8378b281a3f96ee23cb5a08bde"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/references/session-discovery.md",
+      "sha256": "6d1dced083e5d978448a78df298cf515531b0eb39b2854a4a2afbffeb69a7435"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/templates/bundle-README.md",
+      "sha256": "2e6ddc6b106028d5ebd00a50ad93a77111d675c219ee1273cd0857869e8d51ec"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/templates/case.md",
+      "sha256": "597892462be83bc478536ec91f7c285f6dd25d119c560734a3a180fe8471301d"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/templates/issue.md",
+      "sha256": "afd21779e5de5bc5adfe2f5a50a04e44ab8d50d9ad0f829243de248d6f023eed"
+    },
+    {
+      "path": "skills/diagnosing-superpowers/templates/report.md",
+      "sha256": "38295d0fd785e8608f330815c59ebd7047942002ec7085aecbed54681f56b0c1"
+    },
+    {
+      "path": "skills/dispatching-parallel-agents/SKILL.md",
+      "sha256": "1968923066f3b707eb01d1992cdf4c42284c3855f70253b9cd5000ff45fca13c"
+    },
+    {
+      "path": "skills/executing-plans/SKILL.md",
+      "sha256": "e4649e59880ef2643d1da128e3d607e87e3f969410d72095a5bf65811b6036dc"
+    },
+    {
+      "path": "skills/executing-plans/scripts/task-done",
+      "sha256": "91e1a68e50a2c9b31193e8ca7feeba9f21e81eee9aa409ba05e5d407ff926bd6"
+    },
+    {
+      "path": "skills/executing-plans/scripts/task-start",
+      "sha256": "5eb4db5457bfe9d201712fd7322896afd2f7f12b277b563900331b4e2ddfb114"
+    },
+    {
+      "path": "skills/finishing-a-development-branch/SKILL.md",
+      "sha256": "8db5a922b242dd4e1bf824cb91c13b3e8d8e8a86d6ceaf7f0774eb9cce909d65"
+    },
+    {
+      "path": "skills/receiving-code-review/SKILL.md",
+      "sha256": "091df1629510af1b92fc4abd6f96732ebedb4cb2c0f3457e8f2740b0504a2438"
+    },
+    {
+      "path": "skills/requesting-code-review/SKILL.md",
+      "sha256": "2180e14a448e9410bec88e6646a2d1f0ce7fdd58de27388c1e052e929679d2bc"
+    },
+    {
+      "path": "skills/requesting-code-review/code-reviewer.md",
+      "sha256": "82e370be6b3447523816286195571e4216ba56ba1ad6ad0e87862294c4c78dcb"
+    },
+    {
+      "path": "skills/subagent-driven-development/SKILL.md",
+      "sha256": "ba41f697136cba88a7962d60c8e2f97488ba04a8688b1d0fbeb27f6953808e75"
+    },
+    {
+      "path": "skills/subagent-driven-development/implementer-prompt.md",
+      "sha256": "81dd9d5a3fb0b09b96b5829f03b9796842f3199ef7591d1ba1c2db2a515f64d0"
+    },
+    {
+      "path": "skills/subagent-driven-development/re-review-prompt.md",
+      "sha256": "0828a5e9cbb12ba49f14621dd8c3953c48c0fc383e75bb5494f055ed0d6d824f"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/batching.md",
+      "sha256": "b54dc7e23dbfb90db89bcb2fb3af591aabf6a271a165fbc0da4c6f9439980eac"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/cannot-verify.md",
+      "sha256": "e698713a15e0eabf1a2ab26ffe1bb04bf70c9d6d2e2060d44a0f9a1bdd4408bf"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/final-review.md",
+      "sha256": "2fd999d86e5dd0b9b32aaf93f2a41663ef30b3e3cb78fb2fd5cb450eb59eb9de"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/fix-loop.md",
+      "sha256": "eafff1f801af2ced86e8761f3eeef04b701860d986ba5d0a8b20d506a75104bb"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/handling-reports.md",
+      "sha256": "8f759cdd4936220c38aab05b6d6c48c6df8ac8f146b0f37a6d2facbf87133c67"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/preflight.md",
+      "sha256": "3ea21c5fc1af1a190ac8a9d19ceb0849b47bf2ffe27b87dffcc21b6a0539776c"
+    },
+    {
+      "path": "skills/subagent-driven-development/references/resuming.md",
+      "sha256": "ff6e38bde2276faa2a7e93513086caded0ea10edbf2ec7f349a7e3b0d7c668c4"
+    },
+    {
+      "path": "skills/subagent-driven-development/scripts/review-package",
+      "sha256": "f617c52c538f09b13bd19a301cf5201584dcfd7aaf552eedefb3405f3f90fe0e"
+    },
+    {
+      "path": "skills/subagent-driven-development/scripts/sdd-workspace",
+      "sha256": "882dd51412f09717fadad6a84c5e60266a8d8a902f43b49bc07f8cc739222c79"
+    },
+    {
+      "path": "skills/subagent-driven-development/scripts/task-brief",
+      "sha256": "51bb3fb73b07f85fd19d8f29f178451f7557b8c3d084a85835c5bc6bc15869f3"
+    },
+    {
+      "path": "skills/subagent-driven-development/task-reviewer-prompt.md",
+      "sha256": "bfed55c8f19d0ff6ed57b0fe09127c92890e9311c6c73917129598826bf9ebe8"
+    },
+    {
+      "path": "skills/systematic-debugging/CREATION-LOG.md",
+      "sha256": "c24733a5b1821bd6bed1fc950261f0b9f4e90097e0bbb96459d8179713730789"
+    },
+    {
+      "path": "skills/systematic-debugging/SKILL.md",
+      "sha256": "51c6435d98c83c42c96ba7c35725a0b2c376cd487fb1a4e6bd0ddbe7e33ef202"
+    },
+    {
+      "path": "skills/systematic-debugging/condition-based-waiting-example.ts",
+      "sha256": "40ae5ebe497fdf310200e43fe986552546d0a22837c0d39e855db1cfd33eb88e"
+    },
+    {
+      "path": "skills/systematic-debugging/condition-based-waiting.md",
+      "sha256": "e89fec8400d6cd50f43407cec9fab50976ba4d55d0ec2eb51c0bd68036b54c26"
+    },
+    {
+      "path": "skills/systematic-debugging/defense-in-depth.md",
+      "sha256": "1e175fb86fc357e58c6aebf5441e481e1b7868b4380c0456b63a17eefbd18ba7"
+    },
+    {
+      "path": "skills/systematic-debugging/find-polluter.sh",
+      "sha256": "dd7b8f13c4cc2a24b33ff87b18da9248f3e1c80a085c3316224f69ff0fa5c43c"
+    },
+    {
+      "path": "skills/systematic-debugging/root-cause-tracing.md",
+      "sha256": "75b933b6a8c40bdb2031b10f21654395b56ec6ab6bc7b018c18d3fe57aeb7fb8"
+    },
+    {
+      "path": "skills/systematic-debugging/test-academic.md",
+      "sha256": "fe2ba480d78ac0d686dc025f41c2a32a43d642bf533f91b0c6053a04d35d6486"
+    },
+    {
+      "path": "skills/systematic-debugging/test-pressure-1.md",
+      "sha256": "0b6a915db0054577819834c79be9eb614e97bddba10d73768e1fbe91cfed048a"
+    },
+    {
+      "path": "skills/systematic-debugging/test-pressure-2.md",
+      "sha256": "b2030aeffba07050e8ad573ddf87486457c4a016a786bb326235bebd856f2016"
+    },
+    {
+      "path": "skills/systematic-debugging/test-pressure-3.md",
+      "sha256": "96b50a52e2c7989c9cf20fb752c47c1e9a3a70dc362f8f7989f8f5b64dac7708"
+    },
+    {
+      "path": "skills/test-driven-development/SKILL.md",
+      "sha256": "64b03fce4aee5a97a93160cea8111f3ba13a17b7c001db4bd5836d67fd10705d"
+    },
+    {
+      "path": "skills/test-driven-development/writing-good-tests.md",
+      "sha256": "51471c853306ff92ca8bb41dcaea05f31c0e46b03651f8f3c99754b7172f4ae1"
+    },
+    {
+      "path": "skills/using-git-worktrees/SKILL.md",
+      "sha256": "8cfb86f121269e8f7f12361e6795c4f6738828340e28964c9229d365666c9edd"
+    },
+    {
+      "path": "skills/using-superpowers/SKILL.md",
+      "sha256": "82c5c8866ad7f5dd4440ce66bd7806ba48a2f13771beae5cf112e53f08fe36ba"
+    },
+    {
+      "path": "skills/using-superpowers/references/antigravity-tools.md",
+      "sha256": "4880f6de3da4e32f9659ebe7a72b9e0ebfff04e028c2ed96173f86d0387a04c0"
+    },
+    {
+      "path": "skills/using-superpowers/references/claude-code-tools.md",
+      "sha256": "21479a3fee27448cab8748a3b5687e53bb257883bda9c070426f9a1ab5cebf1b"
+    },
+    {
+      "path": "skills/using-superpowers/references/codex-tools.md",
+      "sha256": "1a38ad9b188c393052f58d95657a1c35ea6aafc8b5a27f198f3922912f70bbe7"
+    },
+    {
+      "path": "skills/using-superpowers/references/gemini-tools.md",
+      "sha256": "62b9157bcb0ee3c6784e3d0da0798ddfa5872f9e0c34bea48f3079dabea71965"
+    },
+    {
+      "path": "skills/using-superpowers/references/hermes-tools.md",
+      "sha256": "e2185c976a3c87503910e05e2aea58cc89bc8e569bb624b93df9958ac47a9190"
+    },
+    {
+      "path": "skills/using-superpowers/references/muse-tools.md",
+      "sha256": "5a1da5c575fe18456ca71cd47ebfd8a38c745f8d82a67fe64d5b83080000eeb3"
+    },
+    {
+      "path": "skills/using-superpowers/references/pi-tools.md",
+      "sha256": "703dbc83d23ecab9c6f388460c38abc482e9dee2fe6772a8c7a255152ad3a4d5"
+    },
+    {
+      "path": "skills/verification-before-completion/SKILL.md",
+      "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+    },
+    {
+      "path": "skills/writing-plans/SKILL.md",
+      "sha256": "a6c67c1900064347c2a329990dd3c555657c51c3ec53b259a08aa01a2c26139a"
+    },
+    {
+      "path": "skills/writing-skills/SKILL.md",
+      "sha256": "8cb3ac68c6d8c4bb46886b998b09af7989643cab8bd0e46ee86dd62e64546bbe"
+    },
+    {
+      "path": "skills/writing-skills/references/CLAUDE_MD_TESTING.md",
+      "sha256": "0b379a3415e185d3c434b3ad283d8aa132f3022c2a4f210f168865b5986bcef0"
+    },
+    {
+      "path": "skills/writing-skills/references/anthropic-best-practices.md",
+      "sha256": "217629b356c09c9bd11017c9788e8fc654ca1b32c92d4a51cd490e16dd65e59a"
+    },
+    {
+      "path": "skills/writing-skills/references/bulletproofing.md",
+      "sha256": "9397023e6bc85b556a57f3097371363bf03e28e755c57f403f470bcda90e0a23"
+    },
+    {
+      "path": "skills/writing-skills/references/discovery.md",
+      "sha256": "c6bbc74af3be90f693f7cbc986af6fa94e8df75f65109b52e96032587f5b92af"
+    },
+    {
+      "path": "skills/writing-skills/references/flowcharts.md",
+      "sha256": "8b1f542391f274f0d33f3457ac099a3d317d6877eaa3b8d3b1ebef151b55fda7"
+    },
+    {
+      "path": "skills/writing-skills/references/graphviz-conventions.dot",
+      "sha256": "b18a02773875f6c7b92f2a260e88550c92a62549b0009df9d680f7e9541d0ecc"
+    },
+    {
+      "path": "skills/writing-skills/references/persuasion-principles.md",
+      "sha256": "a51bc9bf75189ea73a27b3fb504a2fdfdb966fb1f7f1cdf03203230a216ccc03"
+    },
+    {
+      "path": "skills/writing-skills/references/testing-skills-with-subagents.md",
+      "sha256": "ed8a6862c085900135962390530d9dc7637ad6d650b4324ce3b051287a5c3f22"
+    },
+    {
+      "path": "skills/writing-skills/render-graphs.js",
+      "sha256": "c7f412cc629461c4d10287e668731874c0497707023e3e3f74a5355eb2cee196"
+    }
+  ],
+  "actions_not_performed": [
+    "No global installation",
+    "No Codex or model run",
+    "No upstream hooks/bootstrap/workflow execution",
+    "No package installation",
+    "No API keys or credentials read",
+    "No main repository source modifications"
+  ],
+  "documentation_sources": [
+    "https://learn.chatgpt.com/docs/build-skills",
+    "https://developers.openai.com/plugins/build/plugins",
+    "https://learn.chatgpt.com/docs/config-file/config-advanced"
+  ]
+}

@@ -1,0 +1,11 @@
+# Preserve byte identity for the recorded original/revised evaluator hashes.
+evaluations/release-0.11.0/behavior/check*.py text eol=lf
+
+# Export inputs must use canonical LF bytes on Windows as well as POSIX.
+skill/** text eol=lf
+portable-agent-kit/scripts/*.py text eol=lf
+portable-agent-kit/core/*.py text eol=lf
+scripts/install_agent.py text eol=lf
+scripts/release_check.py text eol=lf
+THIRD_PARTY.md text eol=lf
+vendor/superpowers-lite/LICENSE text eol=lf

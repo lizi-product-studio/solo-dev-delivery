@@ -1,0 +1,17 @@
+{
+  "status": "READY",
+  "required": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "supported": [
+    "fs.read",
+    "shell.exec"
+  ],
+  "unsupported": [],
+  "unknown": [],
+  "errors": [],
+  "advisory": true,
+  "tools_executed": false,
+  "authorization_granted": false
+}

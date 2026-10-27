@@ -1,0 +1,74 @@
+{
+  "started_at": "2026-10-23T03:01:22.750Z",
+  "cutoff": "2026-10-23T03:33:17.994Z",
+  "latest_usage_at": "2026-10-23T03:32:18.447Z",
+  "wall_seconds": 1915.244,
+  "groups": {
+    "root": {
+      "responses": 44,
+      "tool_calls": 45,
+      "latest_usage_at": "2026-10-23T03:32:18.447Z",
+      "usage": {
+        "input_tokens": 8505596,
+        "cached_input_tokens": 8447744,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 30767,
+        "reasoning_output_tokens": 12849,
+        "total_tokens": 8536363,
+        "uncached_input_tokens": 57852
+      }
+    },
+    "runtime_scan_and_implementation": {
+      "responses": 43,
+      "tool_calls": 39,
+      "latest_usage_at": "2026-10-23T03:28:26.651Z",
+      "usage": {
+        "input_tokens": 4393694,
+        "cached_input_tokens": 4225664,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 34367,
+        "reasoning_output_tokens": 16617,
+        "total_tokens": 4428061,
+        "uncached_input_tokens": 168030
+      }
+    },
+    "delivery_scan_and_review": {
+      "responses": 67,
+      "tool_calls": 62,
+      "latest_usage_at": "2026-10-23T03:26:49.988Z",
+      "usage": {
+        "input_tokens": 7176148,
+        "cached_input_tokens": 6997120,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 30439,
+        "reasoning_output_tokens": 13460,
+        "total_tokens": 7206587,
+        "uncached_input_tokens": 179028
+      }
+    },
+    "timeout_independent_review": {
+      "responses": 8,
+      "tool_calls": 7,
+      "latest_usage_at": "2026-10-23T03:22:41.753Z",
+      "usage": {
+        "input_tokens": 425059,
+        "cached_input_tokens": 385152,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3514,
+        "reasoning_output_tokens": 1669,
+        "total_tokens": 428573,
+        "uncached_input_tokens": 39907
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 20500497,
+    "cached_input_tokens": 20055680,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 99087,
+    "reasoning_output_tokens": 44595,
+    "total_tokens": 20599584,
+    "uncached_input_tokens": 444817
+  },
+  "limits": "Native token_usage_record only, deduplicated by thread/response. Cached input is inside input; reasoning is inside output. Tool calls count host-visible envelopes, not all nested operations. Running/final responses and log flush delay may be missing. No currency or quota conversion."
+}

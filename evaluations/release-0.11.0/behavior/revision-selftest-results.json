@@ -1,0 +1,25 @@
+{
+  "kind": "author-revision-selftest-not-candidate-evaluation",
+  "checker_sha256": "098de782e13d42b306f195d6e6f786a380ffa0adfcc1180006b8214964ae5525",
+  "all_controls_ok": true,
+  "controls": [
+    {
+      "control": "changed-checker-requires-explicit-revision",
+      "control_ok": true
+    },
+    {
+      "control": "matching-revision-accepts-reference-and-labels-output",
+      "control_ok": true,
+      "checker": {
+        "frozen_sha256": "fb7d4c84258f26b5a51ff60fda5f40efb88caeaf92d28fbad32f4c3adf566e8a",
+        "executed_sha256": "098de782e13d42b306f195d6e6f786a380ffa0adfcc1180006b8214964ae5525",
+        "revision_applied": true,
+        "revision_record": "checker-revision-02.json"
+      }
+    },
+    {
+      "control": "mismatched-revision-rejected",
+      "control_ok": true
+    }
+  ]
+}

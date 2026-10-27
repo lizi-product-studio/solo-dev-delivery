@@ -21,6 +21,27 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s portable-agent-kit/tests -v
+      - name: Verify current downloadable package against source
+        run: python -m unittest discover -s tests -p test_repository_package.py -v
+      - uses: actions/setup-node@v4
+        if: matrix.os == 'windows-latest'
+        with:
+          node-version: '22'
+      - name: Windows native delivery and review
+        if: matrix.os == 'windows-latest'
+        run: |
+          python -m unittest discover -s tests -p test_delivery.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_windows_delivery_path.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_review_engine.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Windows worker stop and ownership recovery
+        if: matrix.os == 'windows-latest'
+        run: |
+          python -m unittest discover -s tests -p test_worker_stop.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p test_resource_stop.py -v
   native-compatibility:
     runs-on: ubuntu-latest
     steps:
@@ -32,3 +53,28 @@ jobs:
         with:
           node-version: '22'
       - run: python -m unittest discover -s tests -v
+  package:
+    needs: [portable, native-compatibility]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Export and verify self-contained package
+        run: |
+          python scripts/export_skill.py "$RUNNER_TEMP/solo-export/solo-dev-delivery"
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills"
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills" --verify
+      - name: Verify downloadable package matches canonical source
+        run: |
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
+          cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" "packages/solo-dev-delivery-$version.zip"
+          (cd packages && sha256sum -c "solo-dev-delivery-$version.zip.sha256")
+      - name: Run release self-check
+        run: |
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
+          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/release_check.py" \
+            "$RUNNER_TEMP/solo-export/solo-dev-delivery" \
+            "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" \
+            --checksum "packages/solo-dev-delivery-$version.zip.sha256"

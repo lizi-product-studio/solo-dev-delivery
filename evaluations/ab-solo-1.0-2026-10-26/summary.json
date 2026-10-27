@@ -1,0 +1,367 @@
+{
+  "schema_version": "ab-1.0-summary",
+  "generated_at": "2026-10-27T03:28:33.056328+00:00",
+  "planned_trials": 20,
+  "selected_trials": 20,
+  "pairs": [
+    {
+      "task_id": "01_normalize_email",
+      "baseline": {
+        "status": "completed",
+        "failure_class": null,
+        "quality_score": 100.0,
+        "elapsed_seconds": 155.188,
+        "total_tokens": 216337,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "completed",
+        "failure_class": null,
+        "quality_score": 100.0,
+        "elapsed_seconds": 261.375,
+        "total_tokens": 157563,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\01_normalize_email__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "valid_completed_pair",
+      "comparison_eligible": true
+    },
+    {
+      "task_id": "02_sum_amounts",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 156.516,
+        "total_tokens": 65067,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 100.0,
+        "elapsed_seconds": 245.469,
+        "total_tokens": 164116,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\02_sum_amounts__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "03_merge_intervals",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 119.265,
+        "total_tokens": 48402,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 66.86,
+        "total_tokens": 15094,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\03_merge_intervals__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "04_parse_csv",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 112.875,
+        "total_tokens": 66324,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "completed",
+        "failure_class": null,
+        "quality_score": 100.0,
+        "elapsed_seconds": 179.078,
+        "total_tokens": 223763,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\04_parse_csv__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "05_inventory_reserve",
+      "baseline": {
+        "status": "failed",
+        "failure_class": "task_failed",
+        "quality_score": 80.0,
+        "elapsed_seconds": 172.031,
+        "total_tokens": 248327,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 40.938,
+        "total_tokens": 15070,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\05_inventory_reserve__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "06_expire_sessions",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 33.33,
+        "elapsed_seconds": 161.141,
+        "total_tokens": 67725,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 33.33,
+        "elapsed_seconds": 65.875,
+        "total_tokens": 15107,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\06_expire_sessions__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "07_json_patch",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 136.203,
+        "total_tokens": 68150,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "codex_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 18.234,
+        "total_tokens": null,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix-repair\\07_json_patch__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "08_rate_limit",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 100.0,
+        "elapsed_seconds": 206.344,
+        "total_tokens": 70586,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 25.0,
+        "elapsed_seconds": 105.593,
+        "total_tokens": 48985,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\08_rate_limit__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "09_topological_sort",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 85.062,
+        "total_tokens": 48487,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 20.0,
+        "elapsed_seconds": 81.984,
+        "total_tokens": 31054,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\09_topological_sort__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    },
+    {
+      "task_id": "10_redact_secrets",
+      "baseline": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 25.0,
+        "elapsed_seconds": 112.063,
+        "total_tokens": 61910,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__baseline__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__baseline__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__baseline__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__baseline__r1\\sessions"
+        }
+      },
+      "solo_1_0": {
+        "status": "censored",
+        "failure_class": "capacity_error",
+        "quality_score": 25.0,
+        "elapsed_seconds": 53.922,
+        "total_tokens": null,
+        "user_intervention_count": 0,
+        "raw": {
+          "events": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__solo-1.0__r1\\events.jsonl",
+          "stderr": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__solo-1.0__r1\\stderr.log",
+          "final": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__solo-1.0__r1\\final.txt",
+          "sessions": "C:\\Users\\Administrator\\Documents\\Codex\\ab-solo-1.0-2026-10-27-matrix\\10_redact_secrets__solo-1.0__r1\\sessions"
+        }
+      },
+      "pair_status": "censored",
+      "comparison_eligible": false
+    }
+  ],
+  "pair_counts": {
+    "censored": 9,
+    "valid_completed_pair": 1
+  },
+  "arms": {
+    "baseline": {
+      "n": 10,
+      "completed": 1,
+      "failed": 1,
+      "censored": 8,
+      "harness_error": 0,
+      "capacity_error": 8,
+      "user_intervention_total": 0,
+      "token_observed_n": 10,
+      "token_total_sum": 961315
+    },
+    "solo-1.0": {
+      "n": 10,
+      "completed": 2,
+      "failed": 0,
+      "censored": 8,
+      "harness_error": 0,
+      "capacity_error": 7,
+      "user_intervention_total": 0,
+      "token_observed_n": 8,
+      "token_total_sum": 670752
+    }
+  },
+  "interpretation": "Only valid_completed_pair rows are eligible for quality/time/token deltas. capacity_error, timeout, codex_error and harness_error are preserved as non-comparable outcomes; this run is a reliability/observability pilot, not a statistically powered superiority claim."
+}

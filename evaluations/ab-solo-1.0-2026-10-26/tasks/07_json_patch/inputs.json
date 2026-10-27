@@ -1,0 +1,15 @@
+{
+  "sample": {
+    "doc": {
+      "a": 1,
+      "b": 2
+    },
+    "ops": [
+      {
+        "op": "replace",
+        "path": "/a",
+        "value": 9
+      }
+    ]
+  }
+}

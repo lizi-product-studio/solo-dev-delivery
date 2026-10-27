@@ -2,7 +2,7 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**1.0.0 是当前可交付候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它沿用 0.13 的评测合同兼容层，补上可复现的发布自检、版本化导出和安装包校验；评测合同的 `schema_version: 0.13` 继续用于历史回执，不把未完成的真实回放写成质量证明。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心证据见 [VALIDATION.md](VALIDATION.md)、[发布自检](scripts/release_check.py) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
+**1.0.0 是当前可交付候选，位于 `feat/quality-maturity-2026-10-27`，尚未合并 main。** 它沿用 0.13 的评测合同兼容层，补上可复现的发布自检、版本化导出和安装包校验；评测合同的 `schema_version: 0.13` 继续用于历史回执，不把未完成的真实回放写成质量证明。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心证据见 [VALIDATION.md](VALIDATION.md)、[发布自检](scripts/release_check.py) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
 
 当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
 
@@ -25,12 +25,28 @@
 Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python。以下命令选择本候选分支：
 
 ```sh
-git clone --branch feat/evaluation-contract-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
+git clone --branch feat/quality-maturity-2026-10-27 https://github.com/lizi-product-studio/solo-dev-delivery.git
 cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
 ```
 
-生成自包含目录及 `solo-dev-delivery-1.0.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-1.0.0.zip)及[校验值](packages/solo-dev-delivery-1.0.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `solo-dev-delivery-1.0.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-1.0.0.zip)及[校验值](packages/solo-dev-delivery-1.0.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；当前目录只保留有效版本，旧版本通过 Git 提交履历复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+
+## 更新仓库下载包
+
+导出源码有变化时，在提交前重建完整包及校验值，再运行源码一致性回归：
+
+```sh
+python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+```
+
+将生成的当前版本 ZIP 放入 `packages/`，以该 ZIP 的 SHA256 更新同名 `.sha256`（格式为 `摘要  ZIP文件名`），验证后删除 `packages/` 中被替代的旧 ZIP 及校验文件；历史版本从 Git 履历取得。随后执行：
+
+```sh
+python -X utf8 -m unittest discover -s tests -p test_repository_package.py -v
+```
+
+该检查从当前源码重新导出，核对下载包的文件清单、内容、校验值和整包字节，并拒绝残留旧包；普通 native 测试与 CI 都会执行它。安装包内部自检不替代这项源码一致性检查。
 
 ## 安装到目标 Agent
 

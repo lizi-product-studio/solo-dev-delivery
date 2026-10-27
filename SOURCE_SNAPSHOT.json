@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scope": "Canonical Git source and versioned distribution blobs only; excludes this manifest, private runtime, customer project code, raw conversations and temporary exports. Working-tree newline conversion is not source identity.",
   "history": {
-    "previous_head": "b3c1e03a274bdcb33e852df5360d9d2ba421259a",
-    "previous_version": "0.13.0",
+    "previous_head": "c5311f15fb297ac1222fbdd29ca31272a5664607",
+    "previous_version": "1.0.0",
     "rewrite_history": false
   },
   "frozen_skill_source_commit": "cf712eb",
@@ -16,13 +16,13 @@
   "files": [
     {
       "path": ".gitattributes",
-      "sha256": "bc2a52c6f15eabd62ff478f1d60cbff602d0ee7e3cfe21395ae8af5cf3f036e2",
-      "bytes": 135
+      "sha256": "7c05652575ec48eabff913b825f9b4832d3e9522e1d652acaec3b5fa64480610",
+      "bytes": 460
     },
     {
       "path": ".github/workflows/validate.yml",
-      "sha256": "95305e795d40cfde43fbcd43d30973c498274d3716d67698ae7b7d063a92a642",
-      "bytes": 3413
+      "sha256": "11990667bfdec5aa33a65b3c6fb24a1d2a90002ba8b5162ff3f06d0cd8c5e0da",
+      "bytes": 3561
     },
     {
       "path": ".gitignore",
@@ -31,8 +31,8 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "ae61aac79d83a0fbcd0b9e9c997f088667cdb5e8615af16b94acc0e202615d53",
-      "bytes": 3278
+      "sha256": "ed7418d1ed3c4fb5e4d697c8bf18830bddd0a9c6114d0442597a9d2b9fa0e21c",
+      "bytes": 3263
     },
     {
       "path": "INTEGRATION.md",
@@ -41,8 +41,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "a3c6f42522d6dc5148dc7c47b0b68a864cf4c6fbcd4cc6acfa3c592e219512ed",
-      "bytes": 9467
+      "sha256": "5a07fa903d94ef41c102575996cefbcde21cf21ea1b0f8e7ea5dacb43bec2bd7",
+      "bytes": 10701
     },
     {
       "path": "ROADMAP.md",
@@ -491,8 +491,8 @@
     },
     {
       "path": "evaluations/release-0.11.0/README.md",
-      "sha256": "339216bd3d6f4717e0ec031fe2a2d921ff7bdf387fd0e8069910fd6aeef01ed7",
-      "bytes": 7707
+      "sha256": "498db841e18c04df20fb40f82db38d7cddccbd77fc380c7be88ef774dcd0388d",
+      "bytes": 7804
     },
     {
       "path": "evaluations/release-0.11.0/behavior-results.json",
@@ -835,63 +835,13 @@
       "bytes": 16884
     },
     {
-      "path": "packages/solo-dev-delivery-0.11.0.zip",
-      "sha256": "e8bbc8b74887427716e0ddf8578c83d85e63d56ab0d8574e96ac6dcbaefdb610",
-      "bytes": 78071
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.11.0.zip.sha256",
-      "sha256": "e23364b0c86ec49a63d74cd52cf5e07f3f9686f847502b9ff369928e467e0b68",
-      "bytes": 104
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.11.1.zip",
-      "sha256": "9ee6b3a2e32e9fcbca5945cb60d3d181bb095f2c6fca2aee4731da85d94a1be3",
-      "bytes": 81837
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.11.1.zip.sha256",
-      "sha256": "0f14fb5f837648122029da56c112e551504dcd79bd2a1baecc6cc94c7ad80bf7",
-      "bytes": 104
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.11.2.zip",
-      "sha256": "4532dc9877bb2f7d0ffdc353d27fc2e333ba5de51069ac381ff8d39b4dafd277",
-      "bytes": 84239
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.11.2.zip.sha256",
-      "sha256": "9d89118ca2f946bb44a2792672c31d286b81cb7b3e1ed02ec7f46c89a7fd79e5",
-      "bytes": 103
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.12.0.zip",
-      "sha256": "da34dd63f4cbf2aa9c3e19647e6e0efb758839b8b67da01b38c8e2d1c92e7b49",
-      "bytes": 83714
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.12.0.zip.sha256",
-      "sha256": "40cdc17c42e80d1619dc6f5b423667aa408b990366c8948974f632fbb6138803",
-      "bytes": 103
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.13.0.zip",
-      "sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866",
-      "bytes": 101428
-    },
-    {
-      "path": "packages/solo-dev-delivery-0.13.0.zip.sha256",
-      "sha256": "f234ef5a32b3e8a8df1e5c7b870e5f0ae73dc6aeb70e3ba3f8d0f6a6adf9733c",
-      "bytes": 95
-    },
-    {
       "path": "packages/solo-dev-delivery-1.0.0.zip",
-      "sha256": "6b2480a54e0485b6ed2607eb4c1b2fa62ece9cf4085e90b131b229aedd452cc2",
-      "bytes": 103831
+      "sha256": "0d53bac1cb165fcd6ec4725286724ccc16f118472530efb8c392a29998c7d8d9",
+      "bytes": 111776
     },
     {
       "path": "packages/solo-dev-delivery-1.0.0.zip.sha256",
-      "sha256": "81b3a2a39660b0273a6a8ed280bdf39d9a63e98a713b3bec64c53fea342ed4b2",
+      "sha256": "0a1238e540f808bf8487555444443eb0d000dd042d829954867bf2f9865e4c0d",
       "bytes": 94
     },
     {
@@ -995,6 +945,26 @@
       "bytes": 1203
     },
     {
+      "path": "portable-agent-kit/examples/quality/autonomy-cycle.json",
+      "sha256": "62aeb1186f21bbfdf4c4fd9db119df8368d696205977b140f052b5dbc983f10b",
+      "bytes": 733
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/host-adapter.json",
+      "sha256": "51d523a2d9cca515e416723e15370b8508b34e74d3ffc19f0afc2dd497b4fb05",
+      "bytes": 715
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/system-design.json",
+      "sha256": "e761351ef821b1dceb680f882261964cbee6ae762543cd535062f0d926a7070c",
+      "bytes": 609
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/ui-review.json",
+      "sha256": "0da0ee417996fca319a79058cd777a62ceb0a6198619a7338fdba40fdc7ed2a2",
+      "bytes": 576
+    },
+    {
       "path": "portable-agent-kit/examples/simple-run.jsonl",
       "sha256": "11d37a6463aae4d0850665d2a1915489b58e64e13d748a32ad90507470739852",
       "bytes": 833
@@ -1055,6 +1025,11 @@
       "bytes": 4467
     },
     {
+      "path": "portable-agent-kit/scripts/capacity_policy.py",
+      "sha256": "71b706c95f01f4cb3b1eecd0008bccd6cb81f260bab0f83ecc023726bfd2aeaf",
+      "bytes": 2633
+    },
+    {
       "path": "portable-agent-kit/scripts/challenge.py",
       "sha256": "578baeed05e0c1597b4d43a30c6991fe460bb64343febe0db095fe804e0c84ca",
       "bytes": 32266
@@ -1073,6 +1048,11 @@
       "path": "portable-agent-kit/scripts/host_replay.py",
       "sha256": "608c2da8defb7ce24332e174a45c87287fd742079a68931ea2e960349611f427",
       "bytes": 10830
+    },
+    {
+      "path": "portable-agent-kit/scripts/quality_contract.py",
+      "sha256": "f4949b80e8c683c22a8b7c931f0a3ad043db981ae980739237e76340d055b7c5",
+      "bytes": 12828
     },
     {
       "path": "portable-agent-kit/scripts/session.py",
@@ -1160,6 +1140,11 @@
       "bytes": 16344
     },
     {
+      "path": "portable-agent-kit/tests/test_quality_contract.py",
+      "sha256": "a1e29fe139b57f3db62fb6bece1382b0dc7338907c8e37f3975341453b27d797",
+      "bytes": 4595
+    },
+    {
       "path": "portable-agent-kit/tests/test_relations.py",
       "sha256": "0e71042c9317eb1a515df846dc70bce8e49a0edd533984b9965c4e7745dcf69f",
       "bytes": 15539
@@ -1196,8 +1181,8 @@
     },
     {
       "path": "scripts/export_skill.py",
-      "sha256": "28d63781628c9256baba18799d53016e504852dd92ba51f0e47f704a6e0cf259",
-      "bytes": 4439
+      "sha256": "e1cbd09cd20f0f707a74b340bc889a0eefe7de56aa41dba38d614bfd00fa3b23",
+      "bytes": 4484
     },
     {
       "path": "scripts/install_agent.py",
@@ -1231,8 +1216,8 @@
     },
     {
       "path": "skill/solo-dev-delivery/SKILL.md",
-      "sha256": "d1d2b5944b619ed77823c05a7aa94ce85e7d1817138baceb443ca7f30eaa242b",
-      "bytes": 2288
+      "sha256": "285d2515b760509bc36018b2854a7ef02654ff64d0cc8a0ed9633731fd399d39",
+      "bytes": 2450
     },
     {
       "path": "skill/solo-dev-delivery/agents/openai.yaml",
@@ -1298,6 +1283,11 @@
       "path": "skill/solo-dev-delivery/references/project-operation.md",
       "sha256": "06b366d9c6a21e3eb277d0ff6efd4ecdbae25ccb11fce4b556e9df6c13a1ef7e",
       "bytes": 5171
+    },
+    {
+      "path": "skill/solo-dev-delivery/references/quality-contracts.md",
+      "sha256": "35c9d711e0a9247e898644edeb4e67ec87b81126875dadca7738ca3496899f43",
+      "bytes": 4283
     },
     {
       "path": "skill/solo-dev-delivery/references/result-verification.md",
@@ -1410,6 +1400,11 @@
       "bytes": 3099
     },
     {
+      "path": "tests/test_repository_package.py",
+      "sha256": "0ed6a731f6a445b2cf6ee7af3ddd3270427e4f627ab97936e92fa418439f15b4",
+      "bytes": 1847
+    },
+    {
       "path": "tests/test_resource_engine.py",
       "sha256": "d88f45b5e82005c009feb8837d1e8919a0e54dcaca493223203897488e9394d6",
       "bytes": 46702
@@ -1485,5 +1480,8 @@
       "bytes": 18713
     }
   ],
-  "snapshot_commit": "48375dbaa243424c0e011e6aeb72c31c8ea089e5"
+  "snapshot_commit": "48375dbaa243424c0e011e6aeb72c31c8ea089e5",
+  "updated": "2026-10-27",
+  "package_source_commit": "c5311f15fb297ac1222fbdd29ca31272a5664607",
+  "package_sync_note": "Rebuilt current download from canonical source; superseded package files removed from this tree, retained in Git history."
 }

@@ -49,7 +49,7 @@
 
 本机原安装完整备份到搜索根目录外后，更新为0.11.0独立包，25个文件全部核对；全局AGENTS字节不变，未启用hooks/定时器、未发送其他聊天指令。当前主会话明确读取新入口；其他活动会话是否热加载保留未验证。完整系统源码仍是本独立分支，Skill包不包含旧队列运行时。
 
-初次Windows包SHA256为`3ce3c8b041deab9ed1660229f2da8b3c86db980e699178875327017fa520b2f8`，用于两题行为执行，保留不变。最终可下载包为[e8bbc8b...](../../packages/solo-dev-delivery-0.11.0.zip.sha256)，由规范Git源字节构建，本机安装25文件与该包完全一致。两包的指令/代码仅换行和ZIP/清单表示不同，未改行为规则，比较已实际执行；最终安装再次直接运行六类结果通道验证，全部符合预期。
+初次Windows包SHA256为`3ce3c8b041deab9ed1660229f2da8b3c86db980e699178875327017fa520b2f8`，用于两题行为执行，保留不变。最终可下载包为[e8bbc8b...](https://github.com/lizi-product-studio/solo-dev-delivery/blob/c5311f15fb297ac1222fbdd29ca31272a5664607/packages/solo-dev-delivery-0.11.0.zip.sha256)，由规范Git源字节构建，本机安装25文件与该包完全一致。两包的指令/代码仅换行和ZIP/清单表示不同，未改行为规则，比较已实际执行；最终安装再次直接运行六类结果通道验证，全部符合预期。
 
 首次[CI 39910795637](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/39910795637)七组测试成功，但package上传因Actions制品配额满而失败，不能记为8/8通过。恢复不清理无关制品、不增加费用或改权限：将当前ZIP及SHA256作为版本化分发文件，CI继续实际生成、安装核验，并cmp/sha256sum核对可下载包。Windows规范构建先发现git archive受autocrlf影响，再核WindowsPath排序与ZIP平台标记；两次不匹配的探针结果留本机。导出器现对生成控制文件使用UTF-8 LF、显式相对路径字典序和固定Unix ZIP元数据，输入源文件原字节保留。用`git -c core.autocrlf=false archive`取规范输入后，实际Windows构建与首次Linux CI字节完全相同；独立复核重建相同。恢复见[记录](packaging-recovery.json)，最终远端状态按对应新提交查证，不覆盖首次失败。
 

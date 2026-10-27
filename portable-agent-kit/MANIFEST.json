@@ -20,7 +20,8 @@
     "host_replay_receipt": "scripts/host_replay.py (evidence binding only; host loading remains unverified)",
     "blind_review": "scripts/blind_review.py (arm-blind evidence packet validation)",
     "pilot_replay": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py (real-receipt validation; not bundled)",
-    "skill_installer": "../scripts/install_agent.py (exported bundle only)"
+    "skill_installer": "../scripts/install_agent.py (exported bundle only)",
+    "quality_contract": "scripts/quality_contract.py (optional evidence contracts for host/UI/system/autonomy/A-B)"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",

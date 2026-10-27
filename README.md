@@ -70,6 +70,8 @@ ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destina
 - [自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)：统一任务分流、能力/授权边界、证据状态、停止条件和迭代选择。
 - [评测合同](skill/solo-dev-delivery/references/evaluation-contract.md)：统一任务、对照组、回执、指标和缺失证据处理。
 
+五个质量薄弱点的按需证据合同见 [质量合同](skill/solo-dev-delivery/references/quality-contracts.md)，可用 `portable-agent-kit/scripts/quality_contract.py` 机械核对宿主、UI、系统设计、自主循环和 A/B 收益；`capacity_policy.py` 只分类容量/配额/权限/传输错误并给出有界恢复建议；缺证据保持 `INCOMPLETE`，不增加默认流程。
+
 可选能力预检只检查任务实际依赖，不执行工具或创建 session：
 
 ```sh

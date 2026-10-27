@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import signal
+import sys
 import stat
 import subprocess
 import tempfile
@@ -66,6 +67,26 @@ def _json(data):
         return value
     return json.loads(data, object_pairs_hook=pairs,
                       parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Non-finite JSON')))
+
+
+def _executable_argv(executable):
+    """Return a Windows-safe argv prefix for native CLIs and shebang fixtures.
+
+    Real Codex installs normally resolve to .cmd/.exe. Test doubles and
+    portable adapters may be executable text files with a shebang; Windows
+    cannot launch those files directly, so use the current Python interpreter
+    only when the shebang explicitly names Python.
+    """
+    path = Path(executable)
+    if os.name != "nt" or path.suffix.lower() in {".exe", ".cmd", ".bat", ".com"}:
+        return [str(path)]
+    try:
+        first = path.read_bytes().splitlines()[0].decode("utf-8", "replace")
+    except (OSError, IndexError):
+        return [str(path)]
+    if first.startswith("#!") and "python" in first.lower():
+        return [sys.executable, str(path)]
+    return [str(path)]
 
 
 def _env():
@@ -379,7 +400,7 @@ def run_worker(*, executable, repository, candidate, role, model, effort, prompt
     try:
         receipt['snapshot_commit'] = _snapshot(Path(repository).resolve(), candidate, workspace, control)
         before = _fingerprint(workspace) if role != 'implement' else None
-        argv = [str(executable), 'exec', '--json', '--ephemeral', '--ignore-user-config',
+        argv = _executable_argv(executable) + ['exec', '--json', '--ephemeral', '--ignore-user-config',
                 '--output-schema', str(schema_path), '-m', model, '-c', 'model_reasoning_effort=' + json.dumps(effort),
                 '-c', 'agents.enabled=false', '-c', 'forced_login_method="chatgpt"', '-c', 'approval_policy="never"',
                 '-c', 'project_doc_max_bytes=0', '--cd', str(workspace), '--sandbox',

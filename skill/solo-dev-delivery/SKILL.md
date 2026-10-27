@@ -21,6 +21,7 @@ metadata:
 - 用户反馈驱动的主动发现：`delivery-self-review.md`；主要界面：`frontend-quality.md`。
 - 正式验收：`execution-gate.md`、`result-verification.md`；项目经营：`project-operation.md`。
 - 跨任务/版本/宿主比较：`evaluation-contract.md`，不要把小样本或单次成功写成普遍领先。
+- 五项质量薄弱点（宿主、前端、系统设计、自主循环、成本评估）：`quality-contracts.md`，按需验证，不把缺证据写成 PASS。
 - 跨宿主能力/安装：`host-integration.md`；完整本机队列：`software-delivery.md`；轻量跨业务检查：`portable-workflow.md`。
 
 Skill 只提供判断方法和可选工具，不增加账号、权限、后台运行、定时器或平台能力；其他宿主必须实际加载并验证它。

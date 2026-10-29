@@ -1,0 +1,1 @@
+Read settlement.json. Create report.json with net_amount equal to the sum of all signed_amounts, transaction_count equal to the number of signed_amounts, and currency copied exactly from settlement.json. Preserve settlement.json. This is a synthetic local settlement report; do not access or send to any external system.

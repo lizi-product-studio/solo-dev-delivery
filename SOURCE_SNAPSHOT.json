@@ -1,8 +1,8 @@
 {
   "format": "release-source-snapshot/1",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "created": "2026-10-29",
-  "base_revision": "ec3366c0e623d1141ef2d8fd29d4f796d9795456",
+  "base_revision": "074fc7555d94a1b6a068ac5007cf142bce038cae",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
@@ -17,13 +17,13 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "d759b9c6582e944397eeb570749b42c347b3400d155a86dd027907f4196853af",
+      "sha256": "06b9a0a88f847b5c27b13a2dd800663fa3c6c4bd02d6120cdab9d395c3410c37",
       "bytes": 3170
     },
     {
       "path": "README.md",
-      "sha256": "1430774810d7a01de47be6d03c4c15a6c305a56f4eb02926707cec95b3f79c9d",
-      "bytes": 10749
+      "sha256": "6e762d1ad29aee244c4d27cf08fbc0b3df2f885960530cdeb9b3f3748b2d00ef",
+      "bytes": 10810
     },
     {
       "path": "ROADMAP.md",
@@ -37,13 +37,53 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "7d267b1e761c068e63791d6d8d9561d0e6ae018b5ab17fa760dbca0dce68f3cf",
-      "bytes": 39633
+      "sha256": "a7c48526eef43602f762b16567bb9875c7ecf21778722784ee941519071d183d",
+      "bytes": 40057
     },
     {
       "path": "evaluations/RUNTIME_ACCEPTANCE_20261029.md",
       "sha256": "05cb72cf6ff399439b7c708a93ce0d17d3bbb9258d27ad0b9cda586f3202a8ec",
       "bytes": 8109
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/README.md",
+      "sha256": "496b100064eb52e06e77c9b3b54b0d7d9be9477d0e856453999be9f2c416ae3c",
+      "bytes": 1434
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/critique.json",
+      "sha256": "de7540dcea6f4b93029f6b67f4108512bccd466b108db1c65646e05a78e39d19",
+      "bytes": 438
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/goal.txt",
+      "sha256": "c23814e8320649e55ba7e64546d764b6480633a7d184bb14d252dc379284f532",
+      "bytes": 320
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/mutations.json",
+      "sha256": "d4fe2f967b29d320a28d4a5eceaa918a4f6e53d5a517c188c9a17bec4687a467",
+      "bytes": 465
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/report.json",
+      "sha256": "565c0e2c5aeaced8db781b060dd4f0091c64704b41c02a67fcad5f24fcb79fba",
+      "bytes": 72
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/result.json",
+      "sha256": "530c4adabebb09c52ae1291813e28583b4398fe5c6a9a58e0de9904a09346d5f",
+      "bytes": 782
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/settlement.json",
+      "sha256": "d89f7fe8abc563dc4510cb4c1d3bbff6f40d5b9122787b147803f8b06b9187d4",
+      "bytes": 103
+    },
+    {
+      "path": "evaluations/automatic-review-20261029/spec.json",
+      "sha256": "969b928aa5798edca10e46bf8aa94ddfb881e176fbe4ced1c1a090c0b359426f",
+      "bytes": 1266
     },
     {
       "path": "evaluations/failure-learning-20261029/README.md",
@@ -192,8 +232,8 @@
     },
     {
       "path": "portable-agent-kit/AGENT_RUNTIME.md",
-      "sha256": "21f58b2ec94501b8e51ee914e5d8a940286631373384b7fd52a6ae76f0d0b971",
-      "bytes": 19367
+      "sha256": "b6961af180a6307563a3e9905403d910280245f276d04a603a65478418d06f2a",
+      "bytes": 20275
     },
     {
       "path": "portable-agent-kit/CONTROL_PLANE.md",
@@ -202,7 +242,7 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "e2cdd20cc38ce9613363b3d9aaac01d1ed84f4361edb0a430dc37b8ce40d2391",
+      "sha256": "aa72d43c7e4064b18c57a058d169293542c6a538514275a1f1e8f4361983e193",
       "bytes": 4093
     },
     {
@@ -262,8 +302,8 @@
     },
     {
       "path": "portable-agent-kit/agent_runtime/intake.py",
-      "sha256": "13672c8c608d84ae25b03ab0778afa2752db6c3feb3f697f1547bddf2b67d686",
-      "bytes": 12819
+      "sha256": "db6bd24b6c8a029efdfc991da5ff47d33d13f7d9f0f75607b6d47422e610a241",
+      "bytes": 12854
     },
     {
       "path": "portable-agent-kit/agent_runtime/journal.py",
@@ -294,6 +334,11 @@
       "path": "portable-agent-kit/agent_runtime/regression.py",
       "sha256": "dbd1f4207f9c65417427c03317e30e5e73bee3634a911d2264f0a710f15773c3",
       "bytes": 2859
+    },
+    {
+      "path": "portable-agent-kit/agent_runtime/review_preparation.py",
+      "sha256": "80d68855ca740aa187abf68ff2cfca10bb03d4f859a8263a6cba4dc6974c4cc7",
+      "bytes": 11025
     },
     {
       "path": "portable-agent-kit/agent_runtime/runtime.py",
@@ -492,13 +537,13 @@
     },
     {
       "path": "portable-agent-kit/scripts/agent_task.py",
-      "sha256": "a4e2a70989225c9987532400b161e93c852b10fbbe4df69dfe127ca828f9ece2",
-      "bytes": 16243
+      "sha256": "dfbefd3dafff4f1deb461bec790f1da5d0b39251b4f070a5c755e4c658603a0c",
+      "bytes": 18218
     },
     {
       "path": "portable-agent-kit/scripts/agent_task_manage.py",
-      "sha256": "b448c9d95e1302fbff509afcb4d73d1922d9236663f7fbf41bac6c0b49b994a2",
-      "bytes": 6337
+      "sha256": "b82c9aab6782b86fefb900b4cc2139618d2e864b06f7652dcb82ab21faff62d4",
+      "bytes": 6378
     },
     {
       "path": "portable-agent-kit/scripts/blind_review.py",
@@ -837,8 +882,8 @@
     },
     {
       "path": "skill/agi-like/SKILL.md",
-      "sha256": "8f9c144db6567eaf7ac76c3b11ad4148f3cca944241920dd073d2451c4e5bd1f",
-      "bytes": 3995
+      "sha256": "9ba16f50564298583ec5f9ea0d07ac529c27d49676a76f7669c67adc0a7540aa",
+      "bytes": 4382
     },
     {
       "path": "skill/agi-like/agents/openai.yaml",
@@ -1119,6 +1164,11 @@
       "path": "tests/test_review_engine.py",
       "sha256": "7c1672254682fa99d92ada3a461b8e86f745c88412ccbd81cad7cebf9b434c13",
       "bytes": 23624
+    },
+    {
+      "path": "tests/test_review_preparation.py",
+      "sha256": "2c5c5f5c254c994fd3a5f0798dade1995537115c6733a14c88095beef2c461f7",
+      "bytes": 6334
     },
     {
       "path": "tests/test_run_journal.py",

@@ -1,0 +1,14 @@
+{
+  "format": "automatic-review-observation/1",
+  "status": "COMPLETED",
+  "model": "gpt-6-luna",
+  "planning_steps": 1,
+  "review_preparation_steps": 2,
+  "execution_steps": 2,
+  "total_decision_steps": 5,
+  "original_goal_sha256": "c23814e8320649e55ba7e64546d764b6480633a7d184bb14d252dc379284f532",
+  "runtime_receipt_sha256": "d8ebe0f8af082dfc1449b01d8ea26cc41031049e23ea584ef568b8335a349716",
+  "review_script_sha256": "f2567270c081c39e4fefdc8c7770d94400ab516e92b5bb27313290afaf52258f",
+  "initial_attempt": "NEEDS_VERIFIER before execution; author lacked declared host invariants. Original goal retained in the second attempt.",
+  "limits": "Synthetic local data task; fresh contexts share a provider. No arbitrary code, UI/platform acceptance, or universal learning claim."
+}

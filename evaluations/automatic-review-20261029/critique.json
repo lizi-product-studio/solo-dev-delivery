@@ -1,0 +1,5 @@
+{
+  "verdict": "PASS",
+  "missing": [],
+  "reason": "All three report fields have meaningful checks against settlement.json: sum of signed_amounts, its count, and exact currency identity. Preservation is enforced by the read-only, hash-bound input invariant and pre-completion recheck. External access is constrained by the absence of registered business-service or command tools, with unexpected host-tool activity stopping the task."
+}

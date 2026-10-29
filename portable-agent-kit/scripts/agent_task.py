@@ -80,6 +80,7 @@ def main(argv=None):
     parser.add_argument('--project-store', type=Path,
                         help='persistent state base outside workspace; memory/skills use a workspace-hash subdirectory (default ~/.agi-like/projects)')
     parser.add_argument('--review-script', type=Path, help='trusted host unittest source outside workspace')
+    parser.add_argument('--prepare-review',action='store_true',help='prepare data assertions in independent author/critic contexts before execution')
     parser.add_argument('--semantic-review',action='store_true',help='add fresh-context model review to mandatory independent tests')
     parser.add_argument('--max-semantic-reviews',type=int,default=3,help='reserved from the total model decision budget')
     parser.add_argument('--plan', type=Path, help='untrusted saved candidate; skips the one model planning decision')
@@ -93,6 +94,9 @@ def main(argv=None):
     parser.add_argument('--max-steps', type=int, default=16, help='total model decision budget, including planning')
     parser.add_argument('--steps-per-run',type=int,help='pause safely after this many execution decisions; total budget is unchanged')
     args = parser.parse_args(argv)
+    if args.prepare_review and args.review_script:parser.error('choose existing --review-script or --prepare-review')
+    if args.prepare_review and args.max_steps-(0 if args.plan else 1)-2-(args.max_semantic_reviews if args.semantic_review else 0)<1:
+        parser.error('total budget must include two review-preparation decisions and execution')
     if not 1<=args.max_semantic_reviews<=10:parser.error('--max-semantic-reviews must be 1..10')
     if args.semantic_review and args.max_steps-args.max_semantic_reviews-(0 if args.plan else 1)<1:
         parser.error('total model budget must include planner, execution and reserved semantic reviews')
@@ -182,17 +186,37 @@ def main(argv=None):
         save(directory / 'plan.json', plan)
         report['plan_sha256'] = hashlib.sha256((directory / 'plan.json').read_bytes()).hexdigest()
         report['planning']['elapsed_seconds'] = round(time.monotonic() - started, 3)
+        if not plan['unknowns'] and review_bytes is None and args.prepare_review:
+            from agent_runtime.review_preparation import prepare_review
+            report['review_preparation_steps']=0
+            def counted_review_decision():
+                report['review_preparation_steps']+=1
+                report['total_decision_steps']=report['planning']['decision_steps']+report['review_preparation_steps']
+                save(receipt_path,report)
+            def preparation_model(target):
+                return (CodexDecisionModel(target,model=args.model,reasoning_effort=args.effort,
+                    isolate_user_config=args.isolate_model_config,log_dir=target/'model-events')
+                    if args.provider=='codex' else OpenAICompatibleModel(model=args.model))
+            try:
+                prepared=prepare_review(context,plan,directory/'review-preparation',preparation_model,on_decision=counted_review_decision)
+                review_bytes=prepared.read_bytes()
+                (directory/'trusted-review.py').write_bytes(review_bytes)
+            except (ValueError,OSError) as exc:
+                report['review_preparation_error']=str(exc)
         if plan['unknowns']:
             report.update(status='NEEDS_INPUT', unknowns=plan['unknowns'])
         elif review_bytes is None:
             report.update(status='NEEDS_VERIFIER', reason='A trusted independent review script is required; no task execution started.')
         else:
             execution_context=dict(context)
+            execution_context['max_steps']-=report.get('review_preparation_steps',0)
             if args.semantic_review:execution_context['max_steps']-=args.max_semantic_reviews
             contract = compile_contract(execution_context, plan, task_id=task_id,
                 review_sha256=hashlib.sha256(review_bytes).hexdigest(), planner_steps=report['planning']['decision_steps'])
             contract_path = directory / 'contract.json'
             contract['budget']['max_seconds']=args.max_seconds
+            contract['intake']['total_decision_budget']=args.max_steps
+            contract['intake']['review_preparation_steps']=report.get('review_preparation_steps',0)
             if args.semantic_review:
                 contract['semantic_review']=True
                 contract['budget']['semantic_reviews']=args.max_semantic_reviews
@@ -236,7 +260,7 @@ def main(argv=None):
                 own_runtime.update(runtime)
                 report.update(status=runtime['status'],execution_steps=runtime['steps'],
                               semantic_review_attempts=runtime.get('semantic_review_attempts',0),
-                              total_decision_steps=report['planning']['decision_steps']+runtime['steps']+runtime.get('semantic_review_attempts',0),
+                              total_decision_steps=report['planning']['decision_steps']+report.get('review_preparation_steps',0)+runtime['steps']+runtime.get('semantic_review_attempts',0),
                               invocation_id=runtime['invocation_id'],invocation_receipt=runtime['invocation_receipt'])
                 return dict(report)
             captured = io.StringIO()

@@ -1,7 +1,7 @@
 """Compile an untrusted task plan within immutable host authority.
 
 Planning is not acceptance. The generated contract always requires a frozen,
-host-supplied review script in addition to mechanical artifact checks.
+host-frozen review script (supplied or independently prepared) in addition to mechanical artifact checks.
 """
 from __future__ import annotations
 

@@ -1,0 +1,21 @@
+{
+  "review_sha256": "f2567270c081c39e4fefdc8c7770d94400ab516e92b5bb27313290afaf52258f",
+  "cases": [
+    {
+      "field": "net_amount",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "field": "transaction_count",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "field": "currency",
+      "rejected": true,
+      "exit_code": 1
+    }
+  ],
+  "scope": "Counterexamples on a copied synthetic workspace; original evidence unchanged."
+}

@@ -37,7 +37,7 @@ def _execute(root, argv, operation):
         intake=json.loads((root/'intake-receipt.json').read_text(encoding='utf-8'))
         intake.update(status=runtime['status'],execution_steps=runtime['steps'],
                       semantic_review_attempts=runtime.get('semantic_review_attempts',0),
-                      total_decision_steps=intake['planning']['decision_steps']+runtime['steps']+runtime.get('semantic_review_attempts',0),
+                      total_decision_steps=intake['planning']['decision_steps']+intake.get('review_preparation_steps',0)+runtime['steps']+runtime.get('semantic_review_attempts',0),
                       last_operation_id=operation_id,invocation_id=runtime['invocation_id'],
                       invocation_receipt=runtime['invocation_receipt'])
         return intake

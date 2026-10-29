@@ -2,9 +2,9 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-1.7.0 增加真实失败归因后的模型候选提议、相同输入的旧新流程对照、通过后受控激活，以及技能内部工具调用的宿主验收。真实 gpt-6-luna 任务已在 4 次决策内调用改进技能并通过独立检查。范围和失败记录见 [本次证据](evaluations/failure-learning-20261029/README.md)。
+1.8.0 增加从原始目标自动准备本地数据验收：独立上下文编写声明式规则，另一上下文审查覆盖，固定解释器执行；无法覆盖时保持 NEEDS_VERIFIER。真实 gpt-6-luna 在无人工验收脚本的结算任务中，用5次总决策完成交付，三种错误产物均被生成的检查拒绝。见 [本次证据](evaluations/automatic-review-20261029/README.md)。
 
-**AGI-like 1.7.0 是当前 Agent Runtime 候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 自然语言目标形成受管任务后，可以通过同一入口查询、暂停、续接、取消和精确文件对账。停止请求持久化并在安全边界确认，旧运行者不能覆盖新运行者的完成回执；模型与工具预算不因续接重置。技能提炼、真实内容 holdout/变异回归、激活与撤回也有公共入口。规划不授予权限，未独立验收不写成功记忆；有潜在副作用的失败继续保持未知。真实证据及范围见 [受管 Runtime 验收](evaluations/managed-runtime-20261029/README.md)；使用方式见 [Agent Runtime](portable-agent-kit/AGENT_RUNTIME.md)。名称不构成 AGI/ASI 能力证明，完整剩余范围见[迭代计划](AGI_LIKE_ITERATION_PLAN.md)。
+**AGI-like 1.8.0 是当前 Agent Runtime 候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 自然语言目标形成受管任务后，可以通过同一入口查询、暂停、续接、取消和精确文件对账。停止请求持久化并在安全边界确认，旧运行者不能覆盖新运行者的完成回执；模型与工具预算不因续接重置。技能提炼、真实内容 holdout/变异回归、激活与撤回也有公共入口。规划不授予权限，未独立验收不写成功记忆；有潜在副作用的失败继续保持未知。真实证据及范围见 [受管 Runtime 验收](evaluations/managed-runtime-20261029/README.md)；使用方式见 [Agent Runtime](portable-agent-kit/AGENT_RUNTIME.md)。名称不构成 AGI/ASI 能力证明，完整剩余范围见[迭代计划](AGI_LIKE_ITERATION_PLAN.md)。
 
 当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
 
@@ -32,7 +32,7 @@ cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 ```
 
-生成自包含目录及 `agi-like-1.7.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.7.0.zip)及[校验值](packages/agi-like-1.7.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `agi-like-1.8.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.8.0.zip)及[校验值](packages/agi-like-1.8.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -63,8 +63,8 @@ python /absolute/export/agi-like/scripts/control_plane.py \
 ```sh
 python /absolute/source/scripts/release_check.py \
   /absolute/source/skill/agi-like \
-  /absolute/source/packages/agi-like-1.7.0.zip \
-  --checksum /absolute/source/packages/agi-like-1.7.0.zip.sha256
+  /absolute/source/packages/agi-like-1.8.0.zip \
+  --checksum /absolute/source/packages/agi-like-1.8.0.zip.sha256
 ```
 
 安装到该根目录下的 `agi-like/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。

@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "id": "net_amount_matches_sum",
+      "source": "goal",
+      "quote": "net_amount equal to the sum of all signed_amounts",
+      "left": {
+        "file": "report.json",
+        "mode": "json",
+        "pointer": "/net_amount"
+      },
+      "right": {
+        "file": "settlement.json",
+        "mode": "json",
+        "pointer": "/signed_amounts",
+        "reduce": "sum"
+      }
+    },
+    {
+      "id": "transaction_count_matches_length",
+      "source": "goal",
+      "quote": "transaction_count equal to the number of signed_amounts",
+      "left": {
+        "file": "report.json",
+        "mode": "json",
+        "pointer": "/transaction_count"
+      },
+      "right": {
+        "file": "settlement.json",
+        "mode": "json",
+        "pointer": "/signed_amounts",
+        "reduce": "count"
+      }
+    },
+    {
+      "id": "currency_copied_exactly",
+      "source": "goal",
+      "quote": "currency copied exactly from settlement.json",
+      "left": {
+        "file": "report.json",
+        "mode": "json",
+        "pointer": "/currency"
+      },
+      "right": {
+        "file": "settlement.json",
+        "mode": "json",
+        "pointer": "/currency",
+        "reduce": "identity"
+      }
+    }
+  ],
+  "unsupported": []
+}

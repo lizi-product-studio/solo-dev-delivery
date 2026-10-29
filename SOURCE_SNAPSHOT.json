@@ -2,7 +2,7 @@
   "format": "release-source-snapshot/1",
   "version": "1.9.0",
   "created": "2026-10-29",
-  "base_revision": "f4ccd6bd31a8e6722abca5aa7fd9bdefa4c3667b",
+  "base_revision": "31110fe0d3db20fdc70a62d50cb6a941c016d521",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
@@ -17,13 +17,18 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "3903952c4af8113e3fd3972eda1fcdb25b9777cb93db3e7ab6da815ab52050d0",
-      "bytes": 3170
+      "sha256": "4c6f6fa21ddc1e602af0845da1d04d0fa1682a1f7581309127a2588df946e6b3",
+      "bytes": 3434
+    },
+    {
+      "path": "NEXT_ITERATION.md",
+      "sha256": "d7ae7622d238f054a0722276ff302d22c6fd97716acdbbc5a41ec0e10cec80b2",
+      "bytes": 4689
     },
     {
       "path": "README.md",
-      "sha256": "238809b3a5562b22b982e509e9db61ff0e2c5ceb749d745eeac7eaf099248363",
-      "bytes": 10771
+      "sha256": "788bb69b3b731cb22230c4d1f42726a3b069a04730cf16985604101998bfaaff",
+      "bytes": 7641
     },
     {
       "path": "ROADMAP.md",
@@ -32,13 +37,18 @@
     },
     {
       "path": "STAGE_80_DELIVERY.md",
-      "sha256": "1fed69a895c3c605e2090264b591e754ec3eb183660263bc18ccb064e855560e",
-      "bytes": 2331
+      "sha256": "9464cb5dfd33b82cba32177e09281b5c4fbed02150e17a021a032ca10416eb17",
+      "bytes": 2498
     },
     {
       "path": "THIRD_PARTY.md",
       "sha256": "44599f7cfd763212a8ff379c0ddfe2c1c89361b1b17d256ebc2889952c994409",
       "bytes": 1619
+    },
+    {
+      "path": "USAGE.md",
+      "sha256": "d5429a011e0b215e4894aa4b073b0c20766ef2bbd8e147af3e3fa6923b3f503a",
+      "bytes": 9108
     },
     {
       "path": "VALIDATION.md",

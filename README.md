@@ -1,30 +1,44 @@
-# AGI-like
+# AGI-like Agent Runtime
 
-让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
+一套以 Skill 为入口的 Agent 运行系统：接收目标，让模型调用受限工具，保存项目记忆和任务状态，以独立证据验收，并受控积累、停用和恢复技能。
 
-1.9.0 按用户要求交付并停在 [80% 阶段版](STAGE_80_DELIVERY.md)。在目标执行、自动数据验收和受控学习之外，补齐受管技能的真实任务结果监控：已知独立失败可停用，旧版仅在曾通过任务且证据有效时恢复；未知结果不重试。80% 是阶段范围约定，不是 AGI 能力或统计成熟度评分。
+**当前版本：1.9.0 · 80% 阶段版。** 最新源码和安装包位于 [`feat/evaluation-contract-2026-10-26`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/feat/evaluation-contract-2026-10-26)，尚未合并 `main`。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。完整系统建设已按用户要求暂停；剩余工作保留在路线中。
 
-**AGI-like 1.9.0 是当前 Agent Runtime 候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 自然语言目标形成受管任务后，可以通过同一入口查询、暂停、续接、取消和精确文件对账。停止请求持久化并在安全边界确认，旧运行者不能覆盖新运行者的完成回执；模型与工具预算不因续接重置。技能提炼、真实内容 holdout/变异回归、激活与撤回也有公共入口。规划不授予权限，未独立验收不写成功记忆；有潜在副作用的失败继续保持未知。真实证据及范围见 [受管 Runtime 验收](evaluations/managed-runtime-20261029/README.md)；使用方式见 [Agent Runtime](portable-agent-kit/AGENT_RUNTIME.md)。名称不构成 AGI/ASI 能力证明，完整剩余范围见[迭代计划](AGI_LIKE_ITERATION_PLAN.md)。
+[下载安装包](packages/agi-like-1.9.0.zip) · [SHA256](packages/agi-like-1.9.0.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
 
-当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
+## 现在有什么功能
 
-用户反馈先转为可验证的问题，再决定补方法、修工具或删去无效要求；后续前端、后端／数据库、真实项目与跨平台验证的推进标准见 [迭代路线](ROADMAP.md)。本轮[前端研究与新任务试跑](evaluations/frontend-quality-2026-10-23/README.md)保留来源取舍、实际页面、首次中断和续接成本。
+| 能力 | 当前可以做什么 | 边界 |
+| --- | --- | --- |
+| Skill 入口 | 在支持的宿主中按任务读取方法，判断权限、证据和下一步 | 文件安装不等于客户端发现、自动选择或后台接管 |
+| 目标接收与模型循环 | 自然语言目标形成计划和合同，循环执行模型决策、工具和技能 | 宿主明确工作区、写入范围、预算和必要授权 |
+| 工具调用 | 工作区文件/JSON操作；宿主配置的固定命令和HTTP操作；Codex CLI或兼容模型API | 不开放任意模型命令；命令执行不是操作系统沙箱 |
+| 可恢复任务 | SQLite状态、租约、检查点、暂停、恢复、取消及部分精确文件对账 | 预算不因恢复重置；未知效果不自动重放 |
+| 独立验收 | 冻结可信测试脚本，读取实际产物，绑定候选与输入哈希；可追加独立上下文语义评审 | 语义评审是补充，不能替代业务/平台的真实验收 |
+| 自动准备数据验收 | 从原始目标和资料编写声明式规则，再独立审查覆盖，由固定解释器执行 | 仅有限JSON/文本比较和聚合；不支持则返回 NEEDS_VERIFIER |
+| 长期记忆 | 工作区隔离的持久经验、检索、来源、失效和撤回 | 是外部记忆，不是模型权重训练或通用语义记忆 |
+| 受控技能学习 | 从重复成功或真实失败提出参数化流程；留出、变异与旧新对照后激活 | 自动获得任意新算法、跨行业稳定迁移尚未证明 |
+| 激活后监控 | 独立任务失败可停用受管工作流；满足证据条件时恢复曾通过任务的旧版 | 通用辅助工具不因调用者参数错误自动停用；不重做失败任务 |
+| 有界任务队列 | 依赖排序、单次批量或显式 watch 等待新任务 | 没有安装长期无人值守服务，没有完成长时间稳定性验证 |
 
-## 适用方式
+Skill 是宿主读取的入口；Runtime 是实际运行模型/工具循环的代码；控制平面保存状态和证据。当前没有可视化控制面板，也不需要通过面板创建任务。
 
-| 任务 | 选择足够的方法 |
-| --- | --- |
-| 简单问答、一步低风险小改 | 直接完成与必要读回，不建立交付流程 |
-| 行为修复、软件或业务多步骤交付 | 按影响使用计划、定向验证和风险审查 |
-| 跨模块或高损失变化 | 按需要隔离、拆分、独立审查，复用已有有效控制 |
-| 用户授权的项目维护与持续改进 | 从真实失败、反馈和任务记录选下一项，交付后核项目结果 |
-| 工具错误、环境障碍或结果未知 | 核实际失败、尝试授权内恢复；未知副作用先对账，独立工作继续 |
+## 怎么开始
 
-入口是 [SKILL.md](skill/agi-like/SKILL.md)。方法按需读取，不默认执行固定角色链、TDD、工作树或持久队列。普通技术决定由 Agent 推进；确需本人身份、额外权限、必要业务决定或已证实无可行恢复路径时，及时请求最小用户动作。
+普通使用者安装后，在支持显式调用的宿主中提出目标，例如：
 
-## 克隆并导出
+```text
+$agi-like
+读取 C:/work/settlement-task/settlement.json，生成 report.json，
+计算净额和交易笔数，币种保持原值。只允许写 report.json，保留原资料。
+请实际调用受管 Runtime；数据任务优先准备独立验收，完成后给出产物和任务回执。
+```
 
-Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python。以下命令选择本候选分支：
+宿主需要实际加载此 Skill、提供工具和模型访问能力。只阅读 SKILL.md 不会自动创建受管任务；bridge 登记也不等于订阅 Codex 内部事件。命令行入口、可复制的小任务示例、API配置和管理命令见 [USAGE.md](USAGE.md)。
+
+首次安装可下载ZIP、解压整个 `agi-like/`，在确认宿主 Skill 搜索目录后执行包内安装器；不同版本先备份旧目录至搜索根目录外。当前这台机器已安装到 `C:/Users/Administrator/.agents/skills/agi-like`，其他环境不要直接套用该绝对路径。
+
+开发者可以从候选分支导出：
 
 ```sh
 git clone --branch feat/evaluation-contract-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
@@ -32,87 +46,35 @@ cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 ```
 
-生成自包含目录及 `agi-like-1.9.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.9.0.zip)及[校验值](packages/agi-like-1.9.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+Runtime和辅助工具使用Python标准库；模型访问、宿主工具和业务权限另行提供。目标导出目录与同名ZIP必须不存在。包内包含相对引用、运行时、控制平面、独立验收器、安装器和清单，不包含个人偏好、客户数据、原始聊天或本机旧任务状态。
 
-## 安装到目标 Agent
+## 已验证了什么
 
-先从宿主当前配置或官方说明确认实际 Skill 搜索根目录，再执行：
+| 观察 | 结果 | 不能据此推断什么 |
+| --- | --- | --- |
+| 真实模型任务恢复与管理 | 有同一任务暂停、跨进程恢复、取消等证据 | 所有宿主、所有崩溃和未知外部操作均可自动恢复 |
+| 失败改进后真实模型复用 | 两笔旧流程失败、新候选通过对照，真实模型调用候选交付 | 通用自主算法发现、跨行业稳定提升 |
+| 自动准备结算验收 | 无手写任务验收脚本，真实 gpt-6-luna 共5次决策完成；三种篡改均被拒绝 | 任意代码、UI或生产平台都能自动验收 |
+| 技能失败监控与恢复 | 实际Runtime/SQLite/独立测试拒绝新版本产物，恢复有合格证据的旧版 | 此项模型决策为脚本替身，不是新一笔真实模型学习收益 |
 
-```sh
-python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --dry-run
-python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills
-python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --verify
-```
+原始范围与失败记录见 [验证记录](VALIDATION.md)、[受管运行](evaluations/managed-runtime-20261029/README.md)、[失败改进](evaluations/failure-learning-20261029/README.md)、[自动验收准备](evaluations/automatic-review-20261029/README.md)、[监控恢复](evaluations/skill-health-20261029/README.md)。历史对照也保留：[三组18次比较](evaluations/skill-comparison-2026-10-23/REPORT.md)未证明成功率净收益且用量增加，不能把流程完整当作已证实的提效。
 
-需要持久交付状态时，使用控制平面而不是让模型自行维护长文本状态：
+## 还缺什么，下一步怎么做
 
-```sh
-python /absolute/export/agi-like/scripts/control_plane.py \
-  --db /absolute/control/task.sqlite3 create \
-  --contract /absolute/task.json --capabilities /absolute/host-capabilities.json
-python /absolute/export/agi-like/scripts/control_plane.py \
-  --db /absolute/control/task.sqlite3 --task-id TASK_ID plan
-```
+优先补齐通用代码/UI/平台验收、浏览器与外部副作用对账、长期运行监督及 token/金额硬预算；再用冻结任务集验证不同模型、行业的迁移收益。同时收敛一条发布命令和schema迁移注册。具体顺序、交付物和放行标准见 [NEXT_ITERATION.md](NEXT_ITERATION.md)，完整原计划见 [AGI_LIKE_ITERATION_PLAN.md](AGI_LIKE_ITERATION_PLAN.md)。这些工作仍是待办，本次只更新说明，没有恢复完整系统建设。
 
-控制平面每次只推进一个带租约、版本和幂等键的动作；宿主执行工具后提交结果，独立验收器重新读取证据并验证哈希和确定性断言。没有可信验收回调的宿主只能得到 `UNVERIFIED`，不会被当成完成。
-
-需要把当前 Codex/Skill 会话登记到 Agent Runtime 时，使用导出包内的 `scripts/bridge.py`；`agent_runtime/` 提供目标→模型→工具→记忆→技能→验收循环，Runtime 状态通过 SQLite 事件和验收回执持久化。
-
-发布包生成后可运行一次只读自检：
-
-```sh
-python /absolute/source/scripts/release_check.py \
-  /absolute/source/skill/agi-like \
-  /absolute/source/packages/agi-like-1.9.0.zip \
-  --checksum /absolute/source/packages/agi-like-1.9.0.zip.sha256
-```
-
-安装到该根目录下的 `agi-like/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。
-
-ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destination` 优先。DeepSeek Harness、自建 Agent 和其他 IDE/CLI 使用通用模式，不猜模型供应商对应的目录。仅支持提示词加载的宿主可显式读取 `SKILL.md` 并提供包位置。目录与调用方式见 [宿主接入](skill/agi-like/references/host-integration.md)。
-
-**文件安装、客户端发现、自动选择和真实交付是不同结论。** 自动选择需要宿主实际加载元数据与指令。Skill 不增加工具、账号、权限或后台能力，不承诺所有平台下载后立即自动生效。
-
-## 验证与遇阻恢复
-
-低风险任务复用现有检查。有候选绑定或正式验收需要时，再用包内 `scripts/gate.py` 或 `scripts/challenge.py`；完整源码入口在 `portable-agent-kit/scripts/`。失败、未知、缺项和证据过期不能当作通过，UI、外部服务和生产结果需要对应环境的实际观察。
-
-- [交付门禁](skill/agi-like/references/execution-gate.md)：原文、候选、验收与证据绑定，按业务决策选择检查。
-- [结果核验](skill/agi-like/references/result-verification.md)：独立本地检查、证据复用、失败优先和按需反例。
-- [恢复与最小交接](skill/agi-like/references/blocker-recovery.md)：技术排障、等价入口、未知副作用与必要用户动作。
-- [产品界面与前端设计](skill/agi-like/references/frontend-quality.md)：按任务选择文案、密度、视觉与交互检查；不统一模板、不用删重要提示换取简洁。
-- [项目巡检与接续](skill/agi-like/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
-- [交付前主动自审](skill/agi-like/references/delivery-self-review.md)：从反馈和失败生成按需反例，先恢复和读回，拆开证据边界。
-- [自主交付核心循环](skill/agi-like/references/autonomy-core.md)：统一任务分流、能力/授权边界、证据状态、停止条件和迭代选择。
-- [评测合同](skill/agi-like/references/evaluation-contract.md)：统一任务、对照组、回执、指标和缺失证据处理。
-
-可选能力预检只检查任务实际依赖，不执行工具或创建 session：
-
-```sh
-python portable-agent-kit/scripts/capability_probe.py --capabilities host.json --require fs.read --format text
-```
-
-`supported / unsupported / unknown` 保留三态，输出 `READY / BLOCKED / NEEDS_CONTEXT`；READY 不代表任务完成或获准外部操作。格式见宿主接入说明。
-
-Codex Stop 定义由 `gate.py install-hook` 准备，须经宿主审核、信任并加载才生效。移动包或解释器后需复核定义，不能把安装等同于自动拦截。更新 Skill 不启用 hooks、定时或后台任务，也不向其他聊天发送指令。
-
-## 完整系统与兼容
-
-源码保留 `scripts/delivery.py`、SQLite 队列、原生审查登记、旧 CLI worker、业务接手和 portable session；明确需要正式状态、锁、客户闭环或持久交接时才使用。已有任务继续原门禁和锁，不迁移活动运行，不以轻量流程绕过已知失败。见 [本机软件交付](skill/agi-like/references/software-delivery.md)和 [Portable Kit](portable-agent-kit/README.md)。
-
-本机偏好与授权属于所在实例，不随独立包传播；历史授权不扩展到新项目的发布、支付、通信或经营承诺。原生用量由宿主提供，没有数据时保留未知，不能填零或宣称节省成本。
-
-## 测试与证据
+## 开发与验证
 
 ```sh
 python -X utf8 -m unittest discover -s portable-agent-kit/tests -v
 python -X utf8 -m unittest discover -s tests -v
+python scripts/release_check.py skill/agi-like packages/agi-like-1.9.0.zip --checksum packages/agi-like-1.9.0.zip.sha256
 ```
 
-完整原生兼容套件含 POSIX CLI fixture；Windows 以 CI 明确执行的交付、停止和所有权用例为准。系统和 Python 版本范围见 [CI 定义](.github/workflows/validate.yml)。CLI 导入开项 JSON 另需 Node.js。
+不同平台的用例范围见 [CI定义](.github/workflows/validate.yml)。发布CI配置为测试后重新导出、安装和比对当前版本ZIP；是否实际通过以对应提交的运行结果为准。本次阶段版本使用定向检查，没有把历史全量结果当作当前全量通过。
 
-[验证记录](VALIDATION.md)保留首次失败、撤回候选、实际范围、行为样例及成本；[三组18次对照](evaluations/skill-comparison-2026-10-23/REPORT.md)、[0.11.0统一验收](evaluations/release-0.11.0/README.md)、[仓库试点](evaluations/repository-pilot/2026-10-23.md)与[遇阻评测](evaluations/blocker-recovery/README.md)提供复现资产。对照中三组质量均6/6；Solo相比无额外Skill未证明成功率收益且用量增加，不把流程完整当成净收益。下载后的独立说明见[INSTALL.md](INSTALL.md)。
+完整运行参数见 [AGENT_RUNTIME.md](portable-agent-kit/AGENT_RUNTIME.md)，历史兼容入口见 [Portable Kit](portable-agent-kit/README.md)。任务分流、恢复与证据规范从 [SKILL.md](skill/agi-like/SKILL.md) 按需读取；简单任务不强制建立队列、子Agent或固定测试流程。
 
-## 来源
+## 来源与许可
 
-整合 Superpowers Lite 的分流、系统调试和风险审查，保留 Solo 的候选绑定、验证、状态和授权边界。[整合说明](INTEGRATION.md)与[第三方许可](THIRD_PARTY.md)保留来源；`SOURCE_SNAPSHOT.json` 记录规范 Git 源文件与版本化分发摘要。
+融合 Superpowers Lite 的相关方法，来源与许可见 [整合说明](INTEGRATION.md)、[第三方声明](THIRD_PARTY.md)。`SOURCE_SNAPSHOT.json` 绑定当前说明、源码、测试等规范文件；ZIP内的 `BUNDLE.json` 绑定分发内容。哈希证明字节一致性，不认证业务效果或作者身份。

@@ -17,11 +17,12 @@ from core.state_machine import ProtocolError, apply, start
 
 
 FORMAT = "control-plane/1"
-# These operations record observations or move execution toward a safe stop.
-# Spending the action budget must never prevent checkpointing, cancellation,
-# pausing or reconciling a previously unknown side effect.
+# These operations record observations or manage an existing execution. They
+# still pass the same lease, authorization, unknown-state and evidence gates.
+# Resuming does not grant a new work budget, and committing verified completion
+# must remain possible after the last permitted tool action.
 NON_SPENDING_OPERATIONS = frozenset({
-    "observe", "checkpoint", "phase", "pause", "cancel", "reconcile", "evidence",
+    "observe", "checkpoint", "phase", "pause", "resume", "cancel", "reconcile", "evidence", "finish",
 })
 
 

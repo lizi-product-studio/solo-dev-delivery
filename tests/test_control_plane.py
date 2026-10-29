@@ -165,6 +165,61 @@ class ControlPlaneTests(unittest.TestCase):
                               {"tool_call_id": "call-1", "status": "SUCCEEDED"},
                               request_id="new-action")
 
+    def test_resume_and_verified_finish_do_not_spend_a_new_work_budget(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);evidence_root=root/'evidence';evidence_root.mkdir()
+            content=b'verified';(evidence_root/'result.txt').write_bytes(content)
+            digest=hashlib.sha256(content).hexdigest();contract=self.contract(digest)
+            contract['budget']={'max_steps':1,'max_retries':1}
+            runtime=DeliveryRuntime(root/'control.sqlite3',evidence_root=evidence_root)
+            state=runtime.create_task(contract,CAPABILITIES);task_id=state['task_id']
+            lease=runtime.claim(task_id,'runner')['lease_id']
+            runtime.apply(task_id,lease,'start',{'executor':'runner'})
+            for index in range(3):
+                token='resume-'+str(index)
+                runtime.apply(task_id,lease,'checkpoint',{'id':token,'resume_token':token})
+                runtime.apply(task_id,lease,'pause',{'executor_stopped':True})
+                state,_=runtime.apply(task_id,lease,'resume',{'resume_token':token,'executor_verified':True,'executor':'runner'})
+                self.assertEqual('RUNNING',state['status'])
+                self.assertEqual(1,state['control_plane']['steps_used'])
+            ref={'id':'proof','kind':'file','uri':'result.txt','sha256':digest,'claim':'verified',
+                 'verdict':'PASS','check_id':'AC1','environment':'isolated',
+                 **{key:state[key] for key in ('task_id','revision','contract_hash','candidate')}}
+            runtime.apply(task_id,lease,'evidence',ref,evidence_root=evidence_root,reviewer_id='reviewer')
+            final,_=runtime.apply(task_id,lease,'finish',{'executor_stopped':True},
+                                  evidence_root=evidence_root,reviewer_id='reviewer')
+            self.assertEqual('COMPLETED',final['status']);self.assertEqual(1,final['control_plane']['steps_used'])
+            with self.assertRaisesRegex(ControlPlaneError,'TERMINAL'):
+                runtime.apply(task_id,lease,'finish',{'executor_stopped':True},
+                              evidence_root=evidence_root,reviewer_id='reviewer')
+
+    def test_nonspending_management_keeps_unknown_and_stale_evidence_blocked(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);evidence_root=root/'evidence';evidence_root.mkdir()
+            content=b'verified';target=evidence_root/'result.txt';target.write_bytes(content)
+            digest=hashlib.sha256(content).hexdigest();contract=self.contract(digest)
+            contract['budget']={'max_steps':2,'max_retries':1}
+            runtime=DeliveryRuntime(root/'control.sqlite3',evidence_root=evidence_root)
+            state=runtime.create_task(contract,CAPABILITIES);task_id=state['task_id'];lease=runtime.claim(task_id,'runner')['lease_id']
+            runtime.apply(task_id,lease,'start',{'executor':'runner'})
+            state,_=runtime.apply(task_id,lease,'tool_result',{'tool_call_id':'unknown-1','status':'UNKNOWN'})
+            ref={'id':'proof','kind':'file','uri':'result.txt','sha256':digest,'claim':'verified',
+                 'verdict':'PASS','check_id':'AC1','environment':'isolated',
+                 **{key:state[key] for key in ('task_id','revision','contract_hash','candidate')}}
+            runtime.apply(task_id,lease,'evidence',ref,evidence_root=evidence_root,reviewer_id='reviewer')
+            runtime.apply(task_id,lease,'checkpoint',{'id':'p','resume_token':'p'})
+            runtime.apply(task_id,lease,'pause',{'executor_stopped':True})
+            resumed,_=runtime.apply(task_id,lease,'resume',{'resume_token':'p','executor_verified':True,'executor':'runner'})
+            self.assertEqual('UNKNOWN',resumed['status'])
+            blocked,_=runtime.apply(task_id,lease,'finish',{'executor_stopped':True},
+                                    evidence_root=evidence_root,reviewer_id='reviewer')
+            self.assertEqual('UNKNOWN',blocked['status']);self.assertEqual(['unknown-1'],blocked['unknown_tool_calls'])
+            target.write_bytes(b'changed after review')
+            stale,_=runtime.apply(task_id,lease,'finish',{'executor_stopped':True},
+                                  evidence_root=evidence_root,reviewer_id='reviewer')
+            self.assertEqual('UNKNOWN',stale['status']);self.assertFalse(stale['evidence'][0]['host_verified'])
+            self.assertEqual(2,stale['control_plane']['steps_used'])
+
     def test_independent_task_verification_reports_missing_and_owner(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

@@ -11,7 +11,8 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
-from .recipes import compile_traces, execute_recipe
+from .recipes import compile_traces, execute_recipe,SkillPreflightError
+from .tools import ToolError
 
 
 def spec_hash(spec):
@@ -39,6 +40,11 @@ class SkillLibrary:
             db.execute("CREATE TABLE IF NOT EXISTS skill_activations(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, version INTEGER NOT NULL, spec_sha256 TEXT NOT NULL, receipt_path TEXT NOT NULL, receipt_sha256 TEXT NOT NULL, reviewer_id TEXT NOT NULL)")
             db.execute('CREATE TABLE IF NOT EXISTS skill_status_events(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,version INTEGER NOT NULL,status TEXT NOT NULL,reason TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS skill_versions(name TEXT NOT NULL,version INTEGER NOT NULL,snapshot TEXT NOT NULL,PRIMARY KEY(name,version))')
+            db.execute('''CREATE TABLE IF NOT EXISTS skill_failures(
+                name TEXT NOT NULL,version INTEGER NOT NULL,task_id TEXT NOT NULL,
+                spec_sha256 TEXT NOT NULL,outcome TEXT NOT NULL,action_id TEXT NOT NULL,
+                receipt_path TEXT NOT NULL,receipt_sha256 TEXT NOT NULL,quarantined INTEGER NOT NULL,
+                PRIMARY KEY(name,version,task_id))''')
 
     def register(self, name, description, spec, *, status='CANDIDATE', owner='agent-runtime'):
         if status!='CANDIDATE':
@@ -141,24 +147,112 @@ class SkillLibrary:
         with self._db() as db:
             return [self._get(db,row[0]) for row in db.execute("SELECT name FROM skills WHERE status='ACTIVE' ORDER BY uses DESC").fetchall()]
 
+    def list_all(self):
+        with self._db() as db:
+            return [self._get(db,row[0]) for row in db.execute('SELECT name FROM skills ORDER BY name').fetchall()]
+
+    def record_failure(self,name,run_receipt,receipt_sha256,*,quarantine=False):
+        """Archive a trusted host receipt; prose from a model is not evidence.
+
+        Runtime must bind the invoked skill version in the event and record the
+        same failed/unknown action in control-plane events. The caller supplies
+        the previously observed file hash. This does not authenticate host identity.
+        """
+        if type(quarantine) is not bool:raise ValueError('quarantine must be boolean')
+        path=Path(run_receipt)
+        if path.is_symlink() or not path.is_file():raise ValueError('saved host receipt is required')
+        raw=path.read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=receipt_sha256:raise ValueError('failure receipt hash mismatch')
+        report=json.loads(raw.decode('utf-8-sig'))
+        if not isinstance(report,dict) or report.get('status') not in {'FAILED','CONTROL_BLOCKED','NEEDS_RECONCILIATION','BUDGET_EXHAUSTED'}:
+            raise ValueError('receipt is not a failed or unknown runtime run')
+        task_id=report.get('task_id');state=report.get('control_state',{})
+        if not isinstance(task_id,str) or not task_id or not isinstance(state,dict) or state.get('task_id')!=task_id:
+            raise ValueError('failure receipt needs a matching control task')
+        if (type(state.get('revision')) is not int or not isinstance(state.get('contract_hash'),str)
+                or not isinstance(state.get('candidate'),str)):
+            raise ValueError('failure receipt needs current control version bindings')
+        failures=[]
+        for event in report.get('events',[]):
+            if not isinstance(event,dict) or event.get('action')!='skill' or event.get('decision',{}).get('name')!=name:continue
+            outcome=event.get('result',{}).get('status') if isinstance(event.get('result'),dict) else None
+            binding=event.get('skill_binding',{})
+            if (outcome not in {'FAILED','UNKNOWN'} or binding.get('name')!=name or type(binding.get('version')) is not int
+                    or type(event.get('step')) is not int or event['step']<1):continue
+            action_id=task_id+'-step-'+str(event.get('step'))
+            if action_id not in state.get('unknown_tool_calls' if outcome=='UNKNOWN' else 'failed_tool_calls',[]):continue
+            matched=any(isinstance(row,dict) and row.get('operation')=='tool_result'
+                        and row.get('request',{}).get('task_id')==task_id
+                        and all(row.get('request',{}).get(key)==state[key] for key in ('revision','contract_hash','candidate'))
+                        and row.get('request',{}).get('payload',{}).get('tool_call_id')==action_id
+                        and row.get('request',{}).get('payload',{}).get('status')==outcome
+                        for row in report.get('control_events',[]))
+            if matched:failures.append((binding,outcome,action_id))
+        if not failures:raise ValueError('no version-bound skill failure with matching host control event')
+        binding,outcome,action_id=failures[-1];version=binding['version'];digest=binding.get('spec_sha256')
+        with self._db() as db:
+            db.execute('BEGIN IMMEDIATE')
+            current=self._get(db,name)
+            if current['version']==version:source=current
+            else:
+                archived=db.execute('SELECT snapshot FROM skill_versions WHERE name=? AND version=?',(name,version)).fetchone()
+                if not archived:raise ValueError('failure skill version is unknown')
+                source=json.loads(archived[0])
+            if source['spec_sha256']!=digest:raise ValueError('failure skill spec binding mismatch')
+            prior=db.execute('SELECT receipt_sha256,quarantined FROM skill_failures WHERE name=? AND version=? AND task_id=?',
+                             (name,version,task_id)).fetchone()
+            if prior:
+                if prior[0]!=receipt_sha256:raise ValueError('failure already recorded with different evidence')
+                return {'name':name,'version':version,'task_id':task_id,'outcome':outcome,'quarantined':bool(prior[1]),'reused':True}
+            disabled=quarantine and current['version']==version and current['spec_sha256']==digest and current['status']=='ACTIVE'
+            if disabled:
+                db.execute("UPDATE skills SET status='DISABLED' WHERE name=? AND version=?",(name,version))
+                db.execute('INSERT INTO skill_status_events(name,version,status,reason) VALUES(?,?,?,?)',
+                           (name,version,'DISABLED','host-observed skill failure in task '+task_id))
+            db.execute('INSERT INTO skill_failures VALUES(?,?,?,?,?,?,?,?,?)',
+                       (name,version,task_id,digest,outcome,action_id,str(path.resolve()),receipt_sha256,int(disabled)))
+            db.execute('INSERT OR IGNORE INTO skill_experiences VALUES(?,?,?,0)',
+                       (task_id,str(state.get('contract',{}).get('goal','failed skill invocation')),json.dumps(report['events'],ensure_ascii=False)))
+            return {'name':name,'version':version,'task_id':task_id,'outcome':outcome,'quarantined':disabled,'reused':False}
+
+    def failure_history(self,name=None):
+        with self._db() as db:
+            db.row_factory=sqlite3.Row
+            rows=db.execute('SELECT * FROM skill_failures'+(' WHERE name=?' if name is not None else '')+' ORDER BY task_id',
+                            (name,) if name is not None else ()).fetchall()
+            return [dict(row) for row in rows]
+
     def record_experience(self,task_id,goal,events,*,success):
         with self._db() as db:
             db.execute('INSERT OR REPLACE INTO skill_experiences(task_id,goal,events,success) VALUES(?,?,?,?)',
                        (task_id,str(goal),json.dumps(events,ensure_ascii=False),int(bool(success))))
 
-    def execute(self,name,arguments,tools):
-        row=self.get(name)
-        if row['status']!='ACTIVE':
-            raise ValueError('skill is not ACTIVE')
-        self._check_activation(row)
+    def execute(self,name,arguments,tools,*,expected_version=None,expected_spec_sha256=None):
+        # Only this pure lookup/evidence phase may be translated wholesale.
+        # Execution and use-count bookkeeping below may follow real effects.
+        try:
+            row=self.get(name)
+            if ((expected_version is not None and (type(expected_version) is not int or row['version']!=expected_version))
+                    or (expected_spec_sha256 is not None and row['spec_sha256']!=expected_spec_sha256)):
+                raise ValueError('skill invocation version/spec changed before execution')
+            if row['status']!='ACTIVE':raise ValueError('skill is not ACTIVE')
+            if not isinstance(arguments,dict):raise ValueError('skill arguments must be an object')
+            if not isinstance(row['spec'],dict):raise ValueError('skill spec must be an object')
+            self._check_activation(row)
+        except (ValueError,OSError,sqlite3.Error,TypeError,KeyError) as exc:
+            raise SkillPreflightError(str(exc)) from exc
         spec=row['spec']
         if spec.get('format') == 'tool-recipe/1':
             result=execute_recipe(spec,arguments,tools)
         else:
             if not isinstance(spec.get('tool'),str):
-                raise ValueError('skill has no executable tool recipe; review candidate first')
-            merged=dict(spec.get('arguments',{}));merged.update(arguments)
-            result=tools.call(spec['tool'],merged)
+                raise SkillPreflightError('skill has no executable tool recipe; review candidate first')
+            try:
+                merged=dict(spec.get('arguments',{}));merged.update(arguments)
+                tools.validate(spec['tool'],merged)
+            except (ToolError,ValueError,TypeError) as exc:raise SkillPreflightError(str(exc)) from exc
+            try:result=tools.call(spec['tool'],merged)
+            except ToolError as exc:raise SkillPreflightError(str(exc)) from exc
         with self._db() as db:
             db.execute('UPDATE skills SET uses=uses+1 WHERE name=? AND version=?',(name,row['version']))
         return result

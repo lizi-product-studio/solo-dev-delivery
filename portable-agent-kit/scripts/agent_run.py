@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 from dataclasses import asdict
 import hashlib
 import json
@@ -17,6 +18,7 @@ from agent_runtime.models import CodexDecisionModel
 from agent_runtime.journal import RunJournal
 from agent_runtime.tools import ToolError
 from agent_runtime.file_tools import register_file_tools
+from agent_runtime.publication import immutable_receipt_path,write_immutable_report,publish_report
 from control_plane.runtime import DeliveryRuntime
 from control_plane.contracts import normalize_contract,canonical_hash
 from control_plane.evaluator import verify_evidence,make_verifier
@@ -33,7 +35,7 @@ def safe_path(root,value):
     return target
 
 
-def main(argv=None):
+def main(argv=None,*,report_callback=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--goal',required=True)
     parser.add_argument('--workspace',type=Path,required=True)
@@ -93,7 +95,8 @@ def main(argv=None):
     skills={}
     if library:
         for row in library.list_active():
-            skills[row['name']]=lambda arguments,name=row['name']: library.execute(name,arguments,tools)
+            skills[row['name']]=lambda arguments,name=row['name'],version=row['version'],digest=row['spec_sha256']: library.execute(
+                name,arguments,tools,expected_version=version,expected_spec_sha256=digest)
     control=None;lease=None;verifier=None;review_results=[]
     task_id=args.task_id or 'agent-'+uuid.uuid4().hex[:12]
     review_sha256=hashlib.sha256(args.review_script.read_bytes()).hexdigest() if args.review_script else None
@@ -238,10 +241,11 @@ def main(argv=None):
     model=(CodexDecisionModel(workspace,model=args.model,log_dir=logs,reasoning_effort=args.effort,isolate_user_config=args.isolate_model_config) if args.provider=='codex'
            else OpenAICompatibleModel(model=args.model))
     journal=RunJournal(state_db)
+    invocation_id=uuid.uuid4().hex
     result=AgentRuntime(model,tools,memory,skills,max_steps=args.max_steps,skill_library=library).run(
         args.goal,task_id=task_id,control=control,lease_id=lease,evidence_root=workspace,
         reviewer_id='host-deterministic-verifier',verifier=verifier,journal=journal,resume=args.resume,
-        steps_per_run=args.steps_per_run,auto_verify=args.auto_verify,run_context={'workspace':str(workspace),'provider':args.provider,'model':args.model,'effort':args.effort,'isolated_model_config':args.isolate_model_config,
+        steps_per_run=args.steps_per_run,auto_verify=args.auto_verify,invocation_id=invocation_id,run_context={'workspace':str(workspace),'provider':args.provider,'model':args.model,'effort':args.effort,'isolated_model_config':args.isolate_model_config,
             'review_sha256':review_sha256,
             'inputs':pinned_inputs})
     report=asdict(result)
@@ -250,12 +254,34 @@ def main(argv=None):
     if control:
         report['control_state']=control.get(task_id)
         report['control_events']=control.events(task_id)
-        if report['control_state']['active_executor'] is None:
-            control.release(task_id,lease)
     args.receipt.parent.mkdir(parents=True,exist_ok=True)
-    args.receipt.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    immutable=immutable_receipt_path(args.receipt,invocation_id)
+    report['invocation_receipt']=str(immutable)
+    try:
+        write_immutable_report(args.receipt,report)
+        intake=report_callback(deepcopy(report)) if callable(report_callback) else None
+        publication=publish_report(args.receipt,report,state_db=state_db,control_db=args.db,intake=intake,lease_id=lease)
+    finally:
+        # Publish the owned generation before releasing it. Callers publish no
+        # later shared views; immutable receipts identify each invocation.
+        if control and report['control_state']['active_executor'] is None:
+            control.release(task_id,lease)
+    if library and result.status!='COMPLETED':
+        names={event['decision']['name'] for event in result.events if event.get('action')=='skill'
+               and isinstance(event.get('result'),dict) and event['result'].get('status') in {'FAILED','UNKNOWN'}}
+        if names:
+            raw=immutable.read_bytes();digest=hashlib.sha256(raw).hexdigest()
+            archive=args.receipt.parent/'learning-events'/task_id/(digest+'.json')
+            archive.parent.mkdir(parents=True,exist_ok=True)
+            if not archive.exists():archive.write_bytes(raw)
+            learning={'format':'runtime-skill-failure-archive/1','task_id':task_id,'receipt':str(archive),'sha256':digest,'records':[]}
+            for name in sorted(names):
+                try:learning['records'].append(library.record_failure(name,archive,digest,quarantine=False))
+                except ValueError as exc:learning['records'].append({'name':name,'status':'NEEDS_EVIDENCE','error':str(exc)})
+            args.receipt.with_suffix('.learning.json').write_text(json.dumps(learning,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'status':result.status,'task_id':task_id,'steps':result.steps,
-                      'answer':result.answer,'receipt':str(args.receipt.resolve())},ensure_ascii=False),flush=True)
+                      'answer':result.answer,'receipt':str(args.receipt.resolve()),
+                      'invocation_receipt':str(immutable),'publication':publication['status']},ensure_ascii=False),flush=True)
     return 0 if result.status=='COMPLETED' else 2
 
 

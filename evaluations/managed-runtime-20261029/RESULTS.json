@@ -1,0 +1,97 @@
+{
+  "format": "managed-runtime-evidence-index/1",
+  "requested_model": "gpt-6-luna",
+  "date": "2026-10-29",
+  "runs": [
+    {
+      "run": "managed-recovery-luna-20261029-r1",
+      "result_sha256": "e44cdbe8dddbe870dcb9703bee0cb7177409126b637db0503b5c8e88f32c0dc8",
+      "protocol_sha256": "0a5afee513a0c65345aaa6598733e92308d145558e4eb46b5ac5896fa0d9872b",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\managed-recovery-luna-20261029-r1",
+      "result": {
+        "status": "INCOMPLETE",
+        "resume_pass": false,
+        "cancel_pass": false,
+        "source_unchanged": true,
+        "same_resume_task_id": false,
+        "execution_steps": null,
+        "planning_steps": 1,
+        "cancel_additional_model_calls": 0,
+        "limits": "Real requested model on synthetic data. Graceful cross-process recovery, not an unattended soak or arbitrary crash proof."
+      }
+    },
+    {
+      "run": "managed-recovery-luna-20261029-r2",
+      "result_sha256": "bd48c09c7b616bec6b242d6c5c4c9d29a8405149855c501d0541c69d23ce29df",
+      "protocol_sha256": "5aefc803eeae27a25b54fa07d02b90291c52aabed14c732166386fa892582ac4",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\managed-recovery-luna-20261029-r2",
+      "result": {
+        "status": "PASS",
+        "resume_pass": true,
+        "cancel_pass": true,
+        "source_unchanged": true,
+        "same_resume_task_id": true,
+        "execution_steps": 5,
+        "planning_steps": 1,
+        "cancel_additional_model_calls": 0,
+        "limits": "Real requested model on synthetic data. Graceful cross-process recovery, not an unattended soak or arbitrary crash proof."
+      }
+    },
+    {
+      "run": "managed-recovery-luna-20261029-r3",
+      "result_sha256": "bd48c09c7b616bec6b242d6c5c4c9d29a8405149855c501d0541c69d23ce29df",
+      "protocol_sha256": "c3a6e8b025160c3f85c6fc327ffeebf15a2f833055c7dbdd8692a3720cb9b343",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\managed-recovery-luna-20261029-r3",
+      "result": {
+        "status": "PASS",
+        "resume_pass": true,
+        "cancel_pass": true,
+        "source_unchanged": true,
+        "same_resume_task_id": true,
+        "execution_steps": 5,
+        "planning_steps": 1,
+        "cancel_additional_model_calls": 0,
+        "limits": "Real requested model on synthetic data. Graceful cross-process recovery, not an unattended soak or arbitrary crash proof."
+      }
+    },
+    {
+      "run": "managed-learning-luna-20261029-r1",
+      "result_sha256": "d14d8da266dcd459c4b185b226464efe0c525cef57c9113f62ac5bc7fb081ba2",
+      "protocol_sha256": "2254cdc817375274965fbdbb7fdfa59cb0d380e0938aed3d5c88f01e8a219154",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\managed-learning-luna-20261029-r1",
+      "result": {
+        "status": "INCOMPLETE",
+        "training_decisions": "scripted",
+        "holdout_cases": 2,
+        "review_status": "PASS",
+        "skill": "candidate-write-the-provided-verified-total",
+        "active_version": 1,
+        "real_runtime_status": "NEEDS_RECONCILIATION",
+        "real_skill_calls": 1,
+        "execution_steps": 2,
+        "source_unchanged": true,
+        "limits": "Parameterized procedure reuse only; not autonomous algorithm discovery or cross-industry intelligence."
+      }
+    },
+    {
+      "run": "managed-learning-luna-20261029-r2",
+      "result_sha256": "34b854c6b78261a25495096624748ed0645143f6a0c7ddf804146859a2057b7b",
+      "protocol_sha256": "0f05e55e289d6d6d8d54577d166f7d8018707fb5e74e091c0899425a6b3d6feb",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\managed-learning-luna-20261029-r2",
+      "result": {
+        "status": "PASS",
+        "training_decisions": "scripted",
+        "holdout_cases": 2,
+        "review_status": "PASS",
+        "skill": "candidate-write-the-provided-verified-total",
+        "active_version": 1,
+        "real_runtime_status": "COMPLETED",
+        "real_skill_calls": 1,
+        "execution_steps": 4,
+        "source_unchanged": true,
+        "limits": "Parameterized procedure reuse only; not autonomous algorithm discovery or cross-industry intelligence."
+      }
+    }
+  ],
+  "limits": "Frozen synthetic cases; training decisions are scripted and holdouts are host-authored. Actual model used for recovery and final learned-skill invocation. No general AGI, multi-industry improvement or unattended-soak proof."
+}

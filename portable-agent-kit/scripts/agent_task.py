@@ -25,7 +25,9 @@ from agent_run import main as run_agent
 
 
 def save(path, value):
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+    temporary=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+    temporary.write_bytes((json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n').encode('utf-8'))
+    os.replace(temporary,path)
 
 
 def project_storage(workspace, base=None):
@@ -63,7 +65,12 @@ def main(argv=None):
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8')
-    parser = argparse.ArgumentParser(description=__doc__)
+    argv=list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in {'status','resume','pause','cancel','reconcile'}:
+        from agent_task_manage import main as manage_task
+        return manage_task(argv)
+    if argv and argv[0]=='start':argv=argv[1:]
+    parser = argparse.ArgumentParser(description=__doc__,epilog='Manage the same task: agent_task.py status|resume|pause|cancel|reconcile --control-root DIR. Use COMMAND --help for options.')
     parser.add_argument('--goal', required=True)
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--allow-write', action='append', required=True,
@@ -78,11 +85,14 @@ def main(argv=None):
     parser.add_argument('--effort', choices=('low', 'medium', 'high', 'xhigh', 'max', 'ultra'))
     parser.add_argument('--isolate-model-config', action='store_true')
     parser.add_argument('--max-steps', type=int, default=16, help='total model decision budget, including planning')
+    parser.add_argument('--steps-per-run',type=int,help='pause safely after this many execution decisions; total budget is unchanged')
     args = parser.parse_args(argv)
     if args.isolate_model_config and not args.model:
         parser.error('--isolate-model-config requires an explicit --model')
     if not args.plan and args.max_steps < 2:
         parser.error('model planning needs at least 2 total decision steps')
+    if args.steps_per_run is not None and args.steps_per_run<1:
+        parser.error('--steps-per-run must be positive')
     try:
         context = build_context(args.goal, args.workspace, args.allow_write, args.authorization_ref, max_steps=args.max_steps)
         workspace = Path(context['workspace'])
@@ -128,6 +138,8 @@ def main(argv=None):
     if review_bytes is not None:
         (directory / 'trusted-review.py').write_bytes(review_bytes)
     started = time.monotonic()
+    runtime_started=False
+    own_runtime={}
     try:
         if args.plan:
             proposal = supplied_plan
@@ -174,21 +186,36 @@ def main(argv=None):
                 command += ['--effort', args.effort]
             if args.isolate_model_config:
                 command += ['--isolate-model-config']
+            if args.steps_per_run is not None:
+                command += ['--steps-per-run',str(args.steps_per_run)]
             save(directory / 'runtime-arguments.json', command)
-            report.update(status='RUNNING', contract=str(contract_path), runtime_receipt=str(runtime_receipt))
+            report.update(status='PREPARED', contract=str(contract_path), runtime_receipt=str(runtime_receipt))
             save(receipt_path, report)
+            from agent_runtime.task_lifecycle import seal_task
+            seal_task(directory,command)
+            report['status']='RUNNING'
+            save(receipt_path,report)
+            def own_report(runtime):
+                own_runtime.update(runtime)
+                report.update(status=runtime['status'],execution_steps=runtime['steps'],
+                              total_decision_steps=report['planning']['decision_steps']+runtime['steps'],
+                              invocation_id=runtime['invocation_id'],invocation_receipt=runtime['invocation_receipt'])
+                return dict(report)
             captured = io.StringIO()
+            runtime_started=True
             with redirect_stdout(captured):
-                run_agent(command)
+                run_agent(command,report_callback=own_report)
             (directory / 'runtime.stdout.log').write_text(captured.getvalue(), encoding='utf-8')
-            runtime = json.loads(runtime_receipt.read_text(encoding='utf-8'))
-            report.update(status=runtime['status'], execution_steps=runtime['steps'],
-                          total_decision_steps=report['planning']['decision_steps'] + runtime['steps'])
     except Exception as exc:
-        report.update(status='NEEDS_RECONCILIATION' if getattr(exc, 'outcome_unknown', False) or report['status'] == 'RUNNING'
-                      else 'PLAN_REJECTED', error=type(exc).__name__ + ': ' + str(exc)[:2000])
+        if own_runtime:
+            report['publication_error']=type(exc).__name__+': '+str(exc)[:2000]
+        else:
+            report.update(status='NEEDS_RECONCILIATION' if getattr(exc,'outcome_unknown',False) or runtime_started
+                          else 'PLAN_REJECTED',error=type(exc).__name__+': '+str(exc)[:2000])
         report['planning']['elapsed_seconds'] = round(time.monotonic() - started, 3)
-    save(receipt_path, report)
+    # Once execution begins, only the generation-bound publisher may update the
+    # shared intake view. The local report remains this invocation's response.
+    if not runtime_started:save(receipt_path,report)
     print(json.dumps({**report, 'intake_receipt': str(receipt_path)}, ensure_ascii=False), flush=True)
     return 0 if report['status'] == 'COMPLETED' else 2
 

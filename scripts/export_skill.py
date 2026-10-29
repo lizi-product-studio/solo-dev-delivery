@@ -35,7 +35,7 @@ def export(destination):
     # in the complete system and is tested there.
     mappings += [(kit / "scripts" / name, "scripts/" + name) for name in (
         "challenge.py", "gate.py", "eval_contract.py", "host_replay.py", "blind_review.py",
-        "agent_task.py", "agent_queue.py", "agent_run.py", "bridge.py", "control_plane.py", "independent_verify.py", "runtime_event.py", "self_improvement.py",
+        "agent_task.py", "agent_task_manage.py", "skill_manage.py", "agent_queue.py", "agent_run.py", "bridge.py", "control_plane.py", "independent_verify.py", "runtime_event.py", "self_improvement.py",
         "capacity_policy.py", "checkpoint_receipt.py", "db_inspect.py",
         "load_report.py", "quality_contract.py")]
     mappings += [(kit / "scripts/capability_probe.py", "scripts/capability_probe.py"),

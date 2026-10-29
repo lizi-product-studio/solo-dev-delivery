@@ -54,6 +54,24 @@ python portable-agent-kit/scripts/agent_run.py --provider codex `
 
 `workspace_write` 明确授予本地文件写入能力；`shell_required: false` 表示当前文件工具流程不需要任意 shell。旧合同省略 `shell_required` 时保留原先依赖 shell 的行为。CLI 没有 shell 工具；未授权写入或依赖不可用能力时会阻断。工具范围检查仍不等价于操作系统安全沙箱。
 
+## 管理同一任务
+
+```powershell
+python scripts/agent_task.py status --control-root C:/work/control/new-task
+python scripts/agent_task.py pause --control-root C:/work/control/new-task --reason "等待安全暂停"
+python scripts/agent_task.py resume --control-root C:/work/control/new-task
+python scripts/agent_task.py cancel --control-root C:/work/control/new-task --reason "用户取消"
+python scripts/agent_task.py reconcile --control-root C:/work/control/new-task --action-id <status中的pending.id>
+```
+
+`--steps-per-run 1` 可在启动时分块暂停，也可用于 resume 的单次执行块；总模型预算不变。status 只读 SQLite，不建立新任务。请求响应 `PAUSE_REQUESTED/CANCEL_REQUESTED` 表示意图已持久化；只有 `ACKNOWLEDGED` 才表示执行循环已在安全边界停止。调用在途时等待返回，原子动作派发门保证更早的停止请求优先；不会靠外部声称进程停止而清掉未知。
+
+resume 从冻结的原目标、合同、模型、学习路径和验收器恢复，不重做规划。已完成、取消、未知、审查预算耗尽或仍有租约的任务不能靠普通 resume 绕过。已知模型错误可安全暂停并释放执行者；模型步骤和工具工作预算均保留。管理性 resume/finish 不挤占工具动作预算，工具调用前另核预算，不能先产生副作用再发现超限。
+
+reconcile 默认直接读取原始动作意图与当前文件，仅支持能推导原始精确字节的 write_file/write_json；核对全部绑定后，在同一事务内更新控制面与 Journal，再安全暂停。重复同一读回幂等。技能、未受管工具、缺失 before-image 的局部修改、未确认执行器停止或过期租约仍需要相应宿主适配器，不会用无关文件存在洗掉未知。待取消请求在结果对账后才确认取消。
+
+每次运行保留独立不可变回执；共享 receipt/intake 按 checkpoint generation 和 invocation 身份发布，旧暂停运行者不能覆盖新续接的完成结果。operations 目录保存管理动作与此前回执。当前入口管理是显式调用；没有安装守护进程、后台定时器或桌面事件订阅。
+
 ## 结果与边界
 
 - `COMPLETED`：合同当前版本的全部产物断言通过控制平面复核。
@@ -73,6 +91,22 @@ python portable-agent-kit/scripts/agent_run.py --provider codex `
 `regress_recipe()` 使用宿主提供的至少两个未出现在训练任务中的参数用例和预期结果实际执行工具，保存逐用例证据及 `skill-regression/1`。模型不接收这些用例。`activate()` 重新校验证据、版本和规格哈希；无门禁的 `promote()` 已禁用。
 
 `execute()` 会再次核对激活证据，并在第一次副作用前验证全部工具名、参数和签名。文件写入仍受当前任务合同 scope 限制，技能本身不能扩大权限。失败灰度可 `disable(name, reason=...)`；恢复仍核证据。`rollback(name, version, reason=...)` 只能恢复曾通过激活门且证据仍有效的归档版本，并保留状态事件；下一版本号继续递增。
+
+公共管理入口复用上述实现：
+
+```powershell
+python scripts/skill_manage.py --library C:/work/project/skills.sqlite3 propose --goal "重复目标"
+python scripts/skill_manage.py --library C:/work/project/skills.sqlite3 review --name <candidate> --suite C:/work/review/suite.json --output C:/work/review/new-result --reviewer independent-host
+python scripts/skill_manage.py --library C:/work/project/skills.sqlite3 activate --name <candidate> --receipt C:/work/review/new-result/receipt.json
+```
+
+可信宿主套件格式为 `skill-artifact-suite/1`，cases 至少两个且不能只改 id 复制。每个 case 有 id、只读 inputs、输出 scope、技能 arguments 和内容 assertions；编辑已有产物时可用 initial_outputs 初始化已授权目标文件。支持文件哈希、UTF-8 片段和 JSON Pointer 内容断言，每个输出都必须覆盖；仅存在文件或返回 written=true 不足以激活。
+
+review 实际执行隔离文件工具，读回产物，再生成有效内容变异（例如保持 JSON 结构而把 42 改成 43）检查对应 oracle 能拒绝。套件、实际结果、原始/变异产物都绑定哈希。activate 是单独动作，重新核对当前候选版本和全部证据；disable/restore/rollback 需要明确原因。调用时另核 expected_version/spec，防止运行中升级导致绑定与执行版本不同。
+
+实际失败的技能调用带可信版本和控制面动作后，Runtime 将其不可变回执归档并记录到失败账本；不会凭模型自述或单纯整笔任务未通过就认定某技能有错。`record-failure --name ... --run-receipt ... --sha256 ...` 可显式归档，`--quarantine` 仅能停用仍匹配的 ACTIVE 版本。默认未知归档保留原对账义务。该学习环节验证的是参数化流程的受控复用，自主算法学习仍未验证。
+
+技能清单会展示工具步骤与参数绑定，使模型能分清输入和写入目标。宿主为工具声明 read/write/unknown 效果；自定义工具默认保守 unknown。纯前置校验、或仅完成只读步骤后的可信拒绝可反馈给模型纠正；已经完成任何可能写入的步骤后再失败，仍须对账。模型声明的效果或自报失败原因不参与这项安全判断。
 
 ## 项目记忆
 

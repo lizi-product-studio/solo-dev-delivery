@@ -10,7 +10,7 @@ from pathlib import Path
 from .recipes import execute_recipe
 
 
-def regress_recipe(library, name, cases, tool_factory, output, *, reviewer_id):
+def regress_recipe(library, name, cases, tool_factory, output, *, reviewer_id, verify_case=None):
     skill=library.get(name)
     if not reviewer_id or reviewer_id==skill['owner']:
         raise ValueError('holdout reviewer must differ from skill owner')
@@ -24,19 +24,22 @@ def regress_recipe(library, name, cases, tool_factory, output, *, reviewer_id):
     root.mkdir(parents=True,exist_ok=False)
     checks=[]
     for index,case in enumerate(cases):
-        actual=None
+        actual=None; acceptance=None
         try:
             tools=tool_factory(case)
             actual=execute_recipe(skill['spec'],case['arguments'],tools)
             # Canonical JSON compares type as well as value (True != 1).
-            expected=case['expected']
+            expected=case.get('expected') if callable(verify_case) else case['expected']
             dump=lambda x:json.dumps(x,sort_keys=True,allow_nan=False,ensure_ascii=False)
-            status='PASS' if dump(actual)==dump(expected) else 'FAIL'
+            status='PASS' if ('expected' not in case and callable(verify_case)) or dump(actual)==dump(expected) else 'FAIL'
+            if callable(verify_case):
+                acceptance=verify_case(case,actual)
+                if not isinstance(acceptance,dict) or acceptance.get('status')!='PASS':status='FAIL'
             message=None
         except Exception as exc:
             status='FAIL';message=type(exc).__name__+': '+str(exc)
         result={'id':case['id'],'status':status,'arguments':case.get('arguments'),
-                'expected':case.get('expected'),'actual':actual,'error':message}
+                'expected':case.get('expected'),'actual':actual,'acceptance':acceptance,'error':message}
         path=root/('case-%03d.json'%index)
         path.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
         checks.append({'id':case['id'],'status':status,'evidence_refs':[{

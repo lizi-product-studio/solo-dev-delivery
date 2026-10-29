@@ -86,7 +86,8 @@ class ChallengeTimeoutTests(unittest.TestCase):
             result = challenge.run(self.packet, self.test, self.receipt, 1)
             self.assertLess(time.monotonic() - started, 7)
             self.assertEqual((result['status'], result['timed_out']), ('UNKNOWN', True))
-            self.assertEqual(result['process_cleanup']['status'], 'COMPLETE')
+            self.assertEqual(result['process_cleanup']['status'], 'COMPLETE',
+                             json.dumps(result['process_cleanup'], ensure_ascii=False, sort_keys=True))
             self.assertEqual(challenge.status(self.receipt)['status'], 'UNKNOWN')
             self.assertTrue(self.pids.exists(), 'real test and child must have started')
             for pid in json.loads(self.pids.read_text(encoding='utf-8')):

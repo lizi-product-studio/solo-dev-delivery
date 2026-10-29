@@ -176,7 +176,7 @@ def review_skill(library, name, suite_path, output, *, reviewer_id):
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(str(text).encode('utf-8'))
             return {'path': normalized, 'written': True}
-        tools = ToolRegistry(); register_file_tools(tools, workspace, write_file)
+        tools = ToolRegistry(); register_file_tools(tools, workspace, write_file,policy_inputs=list(case['inputs']))
         return tools
 
     def verify(case, actual):
@@ -247,7 +247,7 @@ def review_skill(library, name, suite_path, output, *, reviewer_id):
     return receipt_path
 
 
-def activate_reviewed(library, name, receipt_path):
+def activate_reviewed(library, name, receipt_path,*,canary_receipt=None):
     path = Path(receipt_path)
     value = json.loads(path.read_text(encoding='utf-8-sig'))
     if value.get('suite_kind') != 'file-artifact-holdout/1' or value.get('status') != 'PASS':
@@ -272,4 +272,4 @@ def activate_reviewed(library, name, receipt_path):
         fingerprints.append(acceptance.get('case_fingerprint'))
     if len(set(cases))<2 or None in fingerprints or len(set(fingerprints))!=len(fingerprints):
         raise ValueError('managed activation requires distinct holdout IDs and content')
-    return library.activate(name, path)
+    return library.activate(name, path,canary_receipt=canary_receipt)

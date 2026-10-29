@@ -30,6 +30,16 @@ from control_plane.evaluator import verify_evidence,make_verifier
 import challenge
 
 
+def observed_tools(events):
+    """Expand host-captured calls, never model text or a skill return payload."""
+    for event in events:
+        if event.get('action')=='tool':yield event
+        elif event.get('action')=='skill':
+            result=event.get('result')
+            if isinstance(result,dict) and result.get('status') in {'FAILED','UNKNOWN'}:continue
+            yield from event.get('tool_observations',[])
+
+
 def safe_path(root,value):
     path=Path(value)
     if path.is_absolute() or '..' in path.parts:
@@ -115,6 +125,7 @@ def main(argv=None,*,report_callback=None):
         allowed_paths=contract.get('scope',[])
         pinned_inputs=[{'path':name,'sha256':hashlib.sha256(safe_path(workspace,name).read_bytes()).hexdigest()}
                        for name in contract.get('inputs',[])]
+        register_file_tools(tools,workspace,write_file,policy_inputs=contract.get('inputs',[]))
         intake=contract.get('intake')
         if intake:
             if intake.get('goal_sha256')!=hashlib.sha256(args.goal.encode('utf-8')).hexdigest():
@@ -164,7 +175,7 @@ def main(argv=None,*,report_callback=None):
                           'effort':args.effort,'isolated_config':args.isolate_model_config})
         def input_reads(events):
             reads=set()
-            for row in events:
+            for row in observed_tools(events):
                 if row['action']!='tool' or row['decision'].get('name') not in {'read_file','read_json'} or 'result' not in row:continue
                 if isinstance(row['result'],dict) and row['result'].get('status') in {'FAILED','UNKNOWN'}:continue
                 name=row['decision'].get('arguments',{}).get('path')
@@ -173,7 +184,7 @@ def main(argv=None,*,report_callback=None):
         def verifier(goal,answer,events):
             missing_services=[]
             for requirement in profile.get('required',[]):
-                matches=[row for row in events if row.get('action')=='tool'
+                matches=[row for row in observed_tools(events) if row.get('action')=='tool'
                          and row['decision'].get('name')==requirement['tool']
                          and row['decision'].get('arguments',{}).get('name')==requirement['name']]
                 observed=matches[-1].get('result',{}) if matches else {}
@@ -260,13 +271,20 @@ def main(argv=None,*,report_callback=None):
             def ready(events):
                 # A model cannot trigger checks by fabricating an observation:
                 # these events are the Runtime's actual registered tool results.
-                last=events[-1]
+                observed=list(observed_tools(events))
+                if not observed:return False
+                last=observed[-1]
+                if events[-1]['action']=='skill':
+                    # A recipe often reads its outputs after writing them.
+                    writes=[row for row in events[-1].get('tool_observations',[]) if isinstance(row.get('result'),dict) and row['result'].get('written') is True]
+                    if not writes:return False
+                    last=writes[-1]
                 if last['action']!='tool' or last['decision'].get('name') not in {
                         'write_file','write_json','update_json','write_text_from_json'}:return False
                 reads=input_reads(events)
                 if not {item['path'] for item in pinned_inputs}<=reads:return False
                 written=set()
-                for row in events:
+                for row in observed:
                     if row['action']!='tool' or not isinstance(row.get('result'),dict):continue
                     if row['result'].get('written') is not True:continue
                     arguments=row['decision'].get('arguments',{})

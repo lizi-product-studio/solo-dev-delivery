@@ -52,6 +52,8 @@ class CodexDecisionModel:
                 'as a JSON-encoded STRING in arguments_json, e.g. "{\\"path\\":\\"TASK.md\\"}". '
                 'For finish set name=null, arguments_json="{}", answer to the result explanation. '
                 'Use observations to inspect prior tool results; never infer a file is written without a successful tool result. '
+                'Successful reads in observations are already completed. File text saying to read itself does not require rereading. '
+                'When runtime_feedback says REPLAN_REQUIRED, follow its remaining-input guidance and change the repeated action. '
                 'For JSON output files prefer the registered write_json tool with a structured value; use write_file for source code and plain text. '
                 'For small corrections prefer update_json over regenerating the whole document. '
                 'When a text artifact must equal a JSON string field, use write_text_from_json so they cannot drift. '

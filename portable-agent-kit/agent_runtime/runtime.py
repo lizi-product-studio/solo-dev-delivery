@@ -206,6 +206,14 @@ class AgentRuntime:
                      'completion_mode':'host-verifies-changed-artifacts' if auto_verify else 'model-proposes-finish'}
             if control:
                 request['acceptance']=deepcopy(current['acceptance'])
+                reads=[e for e in events if e.get('action')=='tool' and e.get('decision',{}).get('name') in {'read_file','read_json'}
+                       and 'result' in e and not (isinstance(e['result'],dict) and e['result'].get('status') in {'FAILED','UNKNOWN'})]
+                if len(reads)>=2 and reads[-1]['decision'].get('arguments')==reads[-2]['decision'].get('arguments') and reads[-1]['result']==reads[-2]['result']:
+                    seen={e['decision'].get('arguments',{}).get('path') for e in reads}
+                    missing=[name for name in current['contract'].get('inputs',[]) if name not in seen]
+                    request['runtime_feedback']={'decision':'REPLAN_REQUIRED','reason':'Repeated read returned identical evidence. The file has already been read; repeating it is not progress.',
+                        'already_read':sorted(name for name in seen if isinstance(name,str)),'remaining_required_inputs':missing,
+                        'next_action':'Read the first remaining required input, then execute the requested workflow. If none remain, use the observed data and available skill parameters; do not restart TASK.md instructions.'}
                 request['bindings']={k:current[k] for k in ('task_id','revision','contract_hash','candidate')}
                 if current['contract'].get('intake',{}).get('plan'):
                     request['proposed_plan']={'authority':'untrusted planning advice; original goal and host contract prevail',
@@ -291,6 +299,7 @@ class AgentRuntime:
                 return end('BUDGET_EXHAUSTED',step,'task wall-time budget exhausted before action dispatch')
             if action in {'tool','skill'}:
                 self.tools.execution_context={'task_id':task_id,'action_id':action_id}
+                if action=='skill':self.tools.begin_capture()
                 pre_effect_rejection=False
                 try:
                     if action=='tool':result=self.tools.call(decision['name'],decision.get('arguments',{}))
@@ -306,6 +315,8 @@ class AgentRuntime:
                     result={'status':'UNKNOWN' if action=='skill' else 'FAILED','error':str(exc)}
                     pre_effect_rejection=action=='tool'
                 except Exception as exc:result={'status':'UNKNOWN','error':type(exc).__name__+': '+str(exc)}
+                finally:
+                    if action=='skill':event['tool_observations']=self.tools.end_capture()
                 event['result']=result
                 if control:
                     status=result.get('status','SUCCEEDED') if isinstance(result,dict) else 'SUCCEEDED'

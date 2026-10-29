@@ -126,5 +126,26 @@ class AgentRuntimeTests(unittest.TestCase):
             self.assertEqual('LEASE_LOST',result.status)
             self.assertEqual([],calls)
 
+    def test_unchanged_repeated_read_requests_replan_with_remaining_inputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);control=DeliveryRuntime(root/'c.sqlite3')
+            contract={'task_id':'read-loop','owner':'runtime','goal':'read TASK then data','candidate':'v',
+                'authorization_ref':'local','scope':['out'],'inputs':['TASK.md','data.json'],
+                'excluded':['external'],'policy':{'workspace_write':False},
+                'acceptance':[{'id':'A','expected':'e','environment':'local'}]}
+            control.create_task(contract,{'evidence.hash':True,'checkpoint.persist':True,'fs.read':True})
+            lease=control.claim('read-loop','runtime');tools=ToolRegistry();requests=[]
+            tools.register('read_file',lambda path:'Read TASK.md then data.json',effects='read')
+            def model(request):
+                requests.append(request)
+                return {'action':'tool','name':'read_file','arguments':{'path':'TASK.md'}}
+            AgentRuntime(model,tools,MemoryStore(root/'m.sqlite3'),max_steps=3).run(
+                contract['goal'],task_id='read-loop',control=control,lease_id=lease['lease_id'])
+            self.assertNotIn('runtime_feedback',requests[1])
+            feedback=requests[2]['runtime_feedback']
+            self.assertEqual('REPLAN_REQUIRED',feedback['decision'])
+            self.assertEqual(['data.json'],feedback['remaining_required_inputs'])
+            self.assertEqual(['TASK.md'],feedback['already_read'])
+
 
 if __name__ == '__main__': unittest.main()

@@ -158,7 +158,7 @@ def _patch(document, operations):
     return value
 
 
-def register_file_tools(tools, workspace, write_file):
+def register_file_tools(tools, workspace, write_file, *,policy_inputs=None):
     """Register file tools; every write calls the supplied host scope guard.
 
     update_json supports a strict RFC 6902 subset: add/replace/remove, JSON
@@ -183,6 +183,23 @@ def register_file_tools(tools, workspace, write_file):
         value = _patch(_document(workspace, path), operations)
         return write_file(path, _serialize(value))
 
+    def project_json_fields(path,pointer,allowed_path,allowed_pointer,field):
+        approved={_path(workspace,p) for p in (policy_inputs or [])}
+        if _path(workspace,allowed_path) not in approved:raise ToolError('policy source must be a host-approved immutable input')
+        allowed=_select(_document(workspace,allowed_path),_tokens(allowed_pointer))
+        if not isinstance(allowed,list) or any(not isinstance(v,str) for v in allowed) or len(set(allowed))!=len(allowed):
+            raise ToolError('policy must provide a distinct string list')
+        document=_document(workspace,path);current=_select(document,_tokens(pointer))
+        if field is None and isinstance(current,dict):
+            projected={key:value for key,value in current.items() if key in allowed};present=set(projected)
+        elif isinstance(field,str) and isinstance(current,list) and all(isinstance(item,dict) and isinstance(item.get(field),str) for item in current):
+            projected=[item for item in current if item[field] in allowed];present={item[field] for item in projected}
+            if len(present)!=len(projected):raise ToolError('duplicate policy fields need explicit correction')
+        else:raise ToolError('projection requires an object or keyed object array')
+        if present!=set(allowed):raise ToolError('required policy fields are missing; cannot invent values')
+        updated=_patch(document,[{'op':'replace','path':pointer,'value':projected}])
+        return write_file(path,_serialize(updated))
+
     def write_text_from_json(source_path, pointer, target_path):
         _path(workspace, target_path)
         value = _select(_document(workspace, source_path), _tokens(pointer))
@@ -201,4 +218,5 @@ def register_file_tools(tools, workspace, write_file):
     tools.register('write_file', write_file, description='write UTF-8 text through the host scope guard; arguments: path, text',effects='write')
     tools.register('write_json', write_json, description='serialize structured finite JSON; arguments: path, value',effects='write')
     tools.register('update_json', update_json, description='apply add/replace/remove JSON Pointer patches, then one guarded write; arguments: path, operations (list of {op, path, value}; remove omits value)',effects='write')
+    tools.register('project_json_fields',project_json_fields,description='enforce an exact allowed field set from an immutable host-approved JSON policy: removes extras, rejects missing/duplicate fields, invents no values; object uses field=null, object array uses field key. arguments: path,pointer,allowed_path,allowed_pointer,field',effects='write')
     tools.register('write_text_from_json', write_text_from_json, description='copy a JSON string field exactly into a text artifact through the host scope guard; arguments: source_path, pointer, target_path',effects='write')

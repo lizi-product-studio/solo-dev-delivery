@@ -37,6 +37,7 @@ class SkillLibrary:
                 db.execute("UPDATE skills SET spec_sha256=?,status='CANDIDATE' WHERE name=?",
                            (spec_hash(json.loads(raw)),name))
             db.execute("CREATE TABLE IF NOT EXISTS skill_experiences(task_id TEXT PRIMARY KEY, goal TEXT NOT NULL, events TEXT NOT NULL, success INTEGER NOT NULL)")
+            db.execute('CREATE TABLE IF NOT EXISTS skill_canary_activations(name TEXT NOT NULL,version INTEGER NOT NULL,spec_sha256 TEXT NOT NULL,path TEXT NOT NULL,sha256 TEXT NOT NULL,PRIMARY KEY(name,version,spec_sha256))')
             db.execute("CREATE TABLE IF NOT EXISTS skill_activations(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, version INTEGER NOT NULL, spec_sha256 TEXT NOT NULL, receipt_path TEXT NOT NULL, receipt_sha256 TEXT NOT NULL, reviewer_id TEXT NOT NULL)")
             db.execute('CREATE TABLE IF NOT EXISTS skill_status_events(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,version INTEGER NOT NULL,status TEXT NOT NULL,reason TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS skill_versions(name TEXT NOT NULL,version INTEGER NOT NULL,snapshot TEXT NOT NULL,PRIMARY KEY(name,version))')
@@ -46,7 +47,7 @@ class SkillLibrary:
                 receipt_path TEXT NOT NULL,receipt_sha256 TEXT NOT NULL,quarantined INTEGER NOT NULL,
                 PRIMARY KEY(name,version,task_id))''')
 
-    def register(self, name, description, spec, *, status='CANDIDATE', owner='agent-runtime'):
+    def register(self, name, description, spec, *, status='CANDIDATE', owner='agent-runtime',if_absent=False):
         if status!='CANDIDATE':
             raise ValueError('register only accepts CANDIDATE; use activate with evidence')
         if not isinstance(name,str) or not name.strip() or not isinstance(owner,str) or not owner.strip():
@@ -57,6 +58,7 @@ class SkillLibrary:
         with self._db() as db:
             db.execute('BEGIN IMMEDIATE')
             row=db.execute('SELECT version,spec_sha256,owner FROM skills WHERE name=?',(name,)).fetchone()
+            if row and if_absent:return self._get(db,name)
             if row and row[1]==digest and row[2]==owner:
                 return self._get(db,name)
             if row:
@@ -107,7 +109,7 @@ class SkillLibrary:
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=ref.get('sha256'):
                 raise ValueError('regression evidence hash mismatch')
 
-    def activate(self,name,regression_receipt):
+    def activate(self,name,regression_receipt,*,canary_receipt=None):
         if not isinstance(regression_receipt,(str,Path)):
             raise ValueError('activation requires a saved regression receipt file')
         path=Path(regression_receipt)
@@ -120,7 +122,14 @@ class SkillLibrary:
         with self._db() as db:
             db.execute('BEGIN IMMEDIATE')
             skill=self._get(db,name)
-            if skill['status']!='CANDIDATE':
+            if skill['spec'].get('failure_fingerprint'):
+                if canary_receipt is None:raise ValueError('failure-derived improvement requires an observed gain canary')
+                from .improvement_canary import verify_canary
+                verified_canary=verify_canary(canary_receipt,skill,path)
+                baseline=self._get(db,verified_canary['baseline']['name'])
+                if any(baseline[key]!=verified_canary['baseline'][key] for key in ('version','spec_sha256')):
+                    raise ValueError('canary baseline changed before activation')
+            if skill['status']!='CANDIDATE' and not (skill['status']=='ACTIVE' and skill['spec'].get('failure_fingerprint') and canary_receipt is not None):
                 raise ValueError('only candidate skills can be activated')
             for field,expected in (('skill',name),('version',skill['version']),('spec_sha256',skill['spec_sha256']),('owner',skill['owner'])):
                 if receipt.get(field)!=expected:
@@ -138,6 +147,10 @@ class SkillLibrary:
                 seen.add(check['id'])
                 self._verify_evidence(check.get('evidence_refs'),path.parent)
             db.execute("UPDATE skills SET status='ACTIVE' WHERE name=?",(name,))
+            if canary_receipt is not None and skill['spec'].get('failure_fingerprint'):
+                canary_path=Path(canary_receipt).resolve()
+                db.execute('INSERT OR REPLACE INTO skill_canary_activations VALUES(?,?,?,?,?)',
+                    (name,skill['version'],skill['spec_sha256'],str(canary_path),hashlib.sha256(canary_path.read_bytes()).hexdigest()))
             db.execute('INSERT INTO skill_activations(name,version,spec_sha256,receipt_path,receipt_sha256,reviewer_id) VALUES(?,?,?,?,?,?)',
                        (name,skill['version'],skill['spec_sha256'],str(path.resolve()),hashlib.sha256(raw).hexdigest(),reviewer))
             self._archive(db,self._get(db,name))
@@ -261,11 +274,17 @@ class SkillLibrary:
         if spec_hash(row['spec'])!=row['spec_sha256']:
             raise ValueError('skill spec was modified outside version control')
         with self._db() as db:
+            canary=db.execute('SELECT path,sha256 FROM skill_canary_activations WHERE name=? AND version=? AND spec_sha256=?',
+                              (row['name'],row['version'],row['spec_sha256'])).fetchone()
             activation=db.execute('SELECT receipt_path,receipt_sha256 FROM skill_activations WHERE name=? AND version=? AND spec_sha256=? ORDER BY id DESC LIMIT 1',
                                   (row['name'],row['version'],row['spec_sha256'])).fetchone()
         if activation is None:
             raise ValueError('activation evidence missing')
         path=Path(activation[0])
+        if row['spec'].get('failure_fingerprint'):
+            if canary is None or hashlib.sha256(Path(canary[0]).read_bytes()).hexdigest()!=canary[1]:raise ValueError('improvement canary evidence missing or stale')
+            from .improvement_canary import verify_canary
+            verify_canary(canary[0],row,path)
         raw=path.read_bytes()
         if hashlib.sha256(raw).hexdigest()!=activation[1]:
             raise ValueError('activation receipt became stale')

@@ -1,8 +1,8 @@
 {
   "format": "release-source-snapshot/1",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "created": "2026-10-29",
-  "base_revision": "26000cc0b9c61fcdbfab23973dac5c37844fa722",
+  "base_revision": "ec3366c0e623d1141ef2d8fd29d4f796d9795456",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
@@ -17,13 +17,13 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "26465406be50a6ecd93bef4dd47127dab1ecf53ad5dbf6fbdf8a6d228f94999b",
+      "sha256": "d759b9c6582e944397eeb570749b42c347b3400d155a86dd027907f4196853af",
       "bytes": 3170
     },
     {
       "path": "README.md",
-      "sha256": "eec7cca8a1875f09d34ec7661d590757ce9f839b4735754d09122aa4af3bd401",
-      "bytes": 10764
+      "sha256": "1430774810d7a01de47be6d03c4c15a6c305a56f4eb02926707cec95b3f79c9d",
+      "bytes": 10749
     },
     {
       "path": "ROADMAP.md",
@@ -37,13 +37,23 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "9d0c16d569c4eda2fc5bde513e391691b57e13dee672e069bdef26e86de91387",
-      "bytes": 39211
+      "sha256": "7d267b1e761c068e63791d6d8d9561d0e6ae018b5ab17fa760dbca0dce68f3cf",
+      "bytes": 39633
     },
     {
       "path": "evaluations/RUNTIME_ACCEPTANCE_20261029.md",
       "sha256": "05cb72cf6ff399439b7c708a93ce0d17d3bbb9258d27ad0b9cda586f3202a8ec",
       "bytes": 8109
+    },
+    {
+      "path": "evaluations/failure-learning-20261029/README.md",
+      "sha256": "42f78ecb740e602eb401b2d069289899bd1bc74bcfe2e6ce951ac3a296b7e6af",
+      "bytes": 1318
+    },
+    {
+      "path": "evaluations/failure-learning-20261029/result.json",
+      "sha256": "fee494e6255f32b86cc36f9dc1f50a44fb79812f04a98629a9f020051b66146a",
+      "bytes": 996
     },
     {
       "path": "evaluations/feedback-ablation-20261029/README.md",
@@ -182,8 +192,8 @@
     },
     {
       "path": "portable-agent-kit/AGENT_RUNTIME.md",
-      "sha256": "083e19429e67bc63fae6b720f94f8e2bbb00a0f7d8f3b53b8db1a275dcbf6252",
-      "bytes": 18244
+      "sha256": "21f58b2ec94501b8e51ee914e5d8a940286631373384b7fd52a6ae76f0d0b971",
+      "bytes": 19367
     },
     {
       "path": "portable-agent-kit/CONTROL_PLANE.md",
@@ -192,7 +202,7 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "b13e2b041b494ccc92a8424527047c6f7004eb5bc376d33ea75b56672d6e7e37",
+      "sha256": "e2cdd20cc38ce9613363b3d9aaac01d1ed84f4361edb0a430dc37b8ce40d2391",
       "bytes": 4093
     },
     {
@@ -236,9 +246,19 @@
       "bytes": 7419
     },
     {
+      "path": "portable-agent-kit/agent_runtime/failure_learning.py",
+      "sha256": "e9d68237afb5cd2babf9cf75a32973c50dd57368b6d4c30f16c723056efaeeef",
+      "bytes": 6593
+    },
+    {
       "path": "portable-agent-kit/agent_runtime/file_tools.py",
-      "sha256": "a170f3101021c645b5439a6a37d71ac7d6f93ef6e12be4388e4f7996f5e7945e",
-      "bytes": 8644
+      "sha256": "810445501728c9fda7124aff7c2f857dadd97cb2c6d0cdfd5b6f26d7abb8fe31",
+      "bytes": 10540
+    },
+    {
+      "path": "portable-agent-kit/agent_runtime/improvement_canary.py",
+      "sha256": "65a7410ded5d15d68a4673c86c8e86e584fd83b9a0972b2f0133e0ad4cc271e8",
+      "bytes": 6158
     },
     {
       "path": "portable-agent-kit/agent_runtime/intake.py",
@@ -257,8 +277,8 @@
     },
     {
       "path": "portable-agent-kit/agent_runtime/models.py",
-      "sha256": "ebab8c71840eb876fd379f07a32429bb4697047b940b90f3d74183bcba6ed2b7",
-      "bytes": 8306
+      "sha256": "4a5b0036db20aec83e7dd9d045f2b449b7544bb406935f9737a1bfca9c671c16",
+      "bytes": 8572
     },
     {
       "path": "portable-agent-kit/agent_runtime/publication.py",
@@ -277,8 +297,8 @@
     },
     {
       "path": "portable-agent-kit/agent_runtime/runtime.py",
-      "sha256": "c8e74da189fdc233a5a96f3f4544eec786d5dd5bcfffc40de097d69fd844152f",
-      "bytes": 27132
+      "sha256": "6fef738c672b723beb86e377b5c4dc5f54d343f1059e1a51f49254ab17b04c08",
+      "bytes": 28484
     },
     {
       "path": "portable-agent-kit/agent_runtime/scheduler.py",
@@ -302,13 +322,13 @@
     },
     {
       "path": "portable-agent-kit/agent_runtime/skill_management.py",
-      "sha256": "3c3120bfefef48a81b065af2c6761f7c4fe5e88364116b6f0c80d6688c9d0f2d",
-      "bytes": 16515
+      "sha256": "0a567218bbd8d68fcb3c972f70c955055a5a50169480a1f492f59d0a58cfbde8",
+      "bytes": 16602
     },
     {
       "path": "portable-agent-kit/agent_runtime/skills.py",
-      "sha256": "66536a3214f839ebbfb8745f76480d9196a6bb2948f921fa36e5db7276ddbce5",
-      "bytes": 21633
+      "sha256": "006eadb29ab6057028d17c3d43722ca2a99dea29a508c9f769f3a1a87caf67db",
+      "bytes": 23568
     },
     {
       "path": "portable-agent-kit/agent_runtime/task_lifecycle.py",
@@ -317,8 +337,8 @@
     },
     {
       "path": "portable-agent-kit/agent_runtime/tools.py",
-      "sha256": "3f6314b19eb4b2f2142f71810fdb9ac73157ea556661d4cdac01ac28fe72ae54",
-      "bytes": 1677
+      "sha256": "4cab7d8e6b17a81608ef129d643e64a8e8e15bc0b407c43f3c47a0fe9c5ab959",
+      "bytes": 2074
     },
     {
       "path": "portable-agent-kit/control_plane/__init__.py",
@@ -467,8 +487,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/agent_run.py",
-      "sha256": "1a74864fa2da9e0550535066e8571314bbd43e0025ef6bc6c07fd0f900f5dfb3",
-      "bytes": 22197
+      "sha256": "92966060b718208cc007eb32790971b42a2b8637f742e35761d7590aa067b39f",
+      "bytes": 23222
     },
     {
       "path": "portable-agent-kit/scripts/agent_task.py",
@@ -572,8 +592,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/skill_manage.py",
-      "sha256": "9d54a9ff66c666a51621708ec13809b82fb12751454a038bc5aa5f4820d18760",
-      "bytes": 3566
+      "sha256": "61c3e0e41c2e0465d62a25c6813ffb65fce15f43462742c1293587f496d41a4e",
+      "bytes": 5578
     },
     {
       "path": "portable-agent-kit/tests/test_adapter.py",
@@ -817,7 +837,7 @@
     },
     {
       "path": "skill/agi-like/SKILL.md",
-      "sha256": "384aa84399eea84e6f61bed8aedf8ae76befbacc961b82980821c3e89214f82f",
+      "sha256": "8f9c144db6567eaf7ac76c3b11ad4148f3cca944241920dd073d2451c4e5bd1f",
       "bytes": 3995
     },
     {
@@ -952,8 +972,8 @@
     },
     {
       "path": "tests/test_agent_runtime.py",
-      "sha256": "ffe270d133150501b6dea5510fa737a8416e1e358010a76561d588649bb23b90",
-      "bytes": 8538
+      "sha256": "090b420d962cbaaa81b68043aff4a5d90e4748c29fde05687af09ed95773cf0b",
+      "bytes": 10070
     },
     {
       "path": "tests/test_api_model.py",
@@ -996,6 +1016,11 @@
       "bytes": 1790
     },
     {
+      "path": "tests/test_failure_learning.py",
+      "sha256": "3a4179b1f6abe16f653cc3a8fab97bd59b1b18a7ad58be179ac46e4bbea678cd",
+      "bytes": 2412
+    },
+    {
       "path": "tests/test_feedback_ablation.py",
       "sha256": "d6b1ab1222ffa343e8a58f5a01206e8f192af53ad187b2043a5b8e9782ff7b0f",
       "bytes": 4665
@@ -1021,6 +1046,11 @@
       "bytes": 15265
     },
     {
+      "path": "tests/test_improvement_canary.py",
+      "sha256": "c8036b2d89908ebc6975df36a902034111c128c51b80687b73914a9f76a15db6",
+      "bytes": 3134
+    },
+    {
       "path": "tests/test_json_tools.py",
       "sha256": "a290da9718745832086659e187e1bbe4903164710eede32199808e4b6e2f66ef",
       "bytes": 2947
@@ -1044,6 +1074,11 @@
       "path": "tests/test_native_review.py",
       "sha256": "74f66af5b2e987f8b39f53bb5b67cd25dedbee349dadfb60b1b2d171e17d1393",
       "bytes": 8019
+    },
+    {
+      "path": "tests/test_policy_projection.py",
+      "sha256": "17c6b128f176a7c73d481255a3fecea270d441ad0747e15f44eb5aecad4baa0b",
+      "bytes": 1794
     },
     {
       "path": "tests/test_publication.py",
@@ -1137,8 +1172,8 @@
     },
     {
       "path": "tests/test_skill_preflight_recovery.py",
-      "sha256": "16e881a342a38e174c743efdbed00b8812335b9c8e5f99bf37df1a4443224b0d",
-      "bytes": 15570
+      "sha256": "4ab792f01ab183abc19f8ebcacc8d19445dd0e8d9c96c4d2411ea7645edf287a",
+      "bytes": 15775
     },
     {
       "path": "tests/test_task_lifecycle.py",

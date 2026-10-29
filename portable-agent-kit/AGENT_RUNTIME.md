@@ -108,6 +108,10 @@ reconcile 默认直接读取原始动作意图与当前文件，仅支持能推�
 
 公共管理入口复用上述实现：
 
+源码开发中的 `skill_manage.py --library DB improve --run receipt-a.json --run receipt-b.json --output NEWDIR --model MODEL` 可从至少两笔不同任务的实际独立测试失败提出新工作流候选；API 模型可加 `--provider api`。先核对真实控制事件、失败测试、候选 packet 和 reviewer 字节，不接受模型文字自述或尚未对账的 UNKNOWN。失败必须共享实际失败检查；重复同一任务或已处理的同组证据不会累加成新候选。
+
+提出者只可组合已注册工具和显式参数，不能复制训练值、运行代码、改预算/权限或直接激活。来源哈希与诊断假说记录在候选中。候选仍需下面的独立产物 holdout/内容变异审查；这条连接本身不证明故障已修复，也不等于新算法学习。
+
 ```powershell
 python scripts/skill_manage.py --library C:/work/project/skills.sqlite3 propose --goal "重复目标"
 python scripts/skill_manage.py --library C:/work/project/skills.sqlite3 review --name <candidate> --suite C:/work/review/suite.json --output C:/work/review/new-result --reviewer independent-host
@@ -147,3 +151,5 @@ review 实际执行隔离文件工具，读回产物，再生成有效内容变�
 `scripts/agent_queue.py --queue queue.sqlite3 work --worker local-1 --control-root C:/work/control --max-tasks 2` 同步执行最多两笔任务；每笔通过公共 `agent_run` 入口和合同验收，留下独立回执及哈希。只有前置任务 COMPLETED 才能领取后续任务；失败、未知、进程消失不会自动重试或夺取运行中任务。任务暂停目前在批次队列中按非完成处理，需宿主显式接续，不能把有限批次 worker 描述为长期无人值守调度器。
 
 新增显式 `work --watch --max-tasks 10 --max-seconds 3600 --idle-seconds 1` 可等待新任务；`stop --control-root ...` 请求在当前任务后停止，重新启动需 `--clear-stop` 明确清除旧请求。worker-state.json 记录运行/空闲/停止，worker.lock 防止同控制根重复启动；未知结果使 watch 停止。总 watch 时间在任务之间检查，各任务另受自己的执行时间预算，不强杀在途动作。此模式没有安装 OS 自启动服务，也没有完成长期稳定性观察。
+
+技能内部注册工具调用由宿主单独记录为 tool_observations，纳入必须输入读取、服务调用及完整产物验收；不采信技能返回值中自述的调用记录。重复相同成功读取时给模型剩余输入与重新规划提示，此提示不保证所有模型都会遵守。

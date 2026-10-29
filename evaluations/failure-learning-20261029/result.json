@@ -1,0 +1,33 @@
+{
+  "format": "bounded-learning-observation/1",
+  "model": "gpt-6-luna",
+  "baseline_failed_cases": 2,
+  "candidate_failed_cases": 0,
+  "real_runs": [
+    {
+      "run": "real-use",
+      "status": "BUDGET_EXHAUSTED",
+      "steps": 12,
+      "receipt_sha256": "fe0c2f68c0769c063ac058030db7fcbf9bfa1ead9873023583f810045ddb58ca",
+      "skill_calls": 0,
+      "independent_reviews": 0
+    },
+    {
+      "run": "real-use2",
+      "status": "COMPLETED",
+      "steps": 8,
+      "receipt_sha256": "973b555185b8ac0fdc50573e8dc2886015aa87d67e7997927567843cd9d54f86",
+      "skill_calls": 1,
+      "independent_reviews": 3
+    },
+    {
+      "run": "real-use3",
+      "status": "COMPLETED",
+      "steps": 4,
+      "receipt_sha256": "5049c01ce8cd545e6217652586a9f4eb9c8f629bf701bc885397a792ab737639",
+      "skill_calls": 1,
+      "independent_reviews": 1
+    }
+  ],
+  "scope": "Synthetic procurement-policy task; host-authored holdouts and reviewer; no universal or cross-domain improvement claim."
+}

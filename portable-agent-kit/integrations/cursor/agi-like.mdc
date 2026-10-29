@@ -1,10 +1,10 @@
 ---
-description: "Apply solo-dev-delivery on demand for implementation, debugging, and evidence-based delivery"
+description: "Apply agi-like on demand for implementation, debugging, and evidence-based delivery"
 globs:
 alwaysApply: false
 ---
 
-Load the installed solo-dev-delivery SKILL.md when relevant. Provide its actual path for optional references.
+Load the installed agi-like SKILL.md when relevant. Provide its actual path for optional references.
 
 Use the smallest workflow that protects the requested outcome. A small reversible edit needs a focused check; uncertainty and consequence determine planning, debugging, isolation and review depth. Do not require a contract, persistent session, independent agent or fixed test loop merely because this rule exists.
 

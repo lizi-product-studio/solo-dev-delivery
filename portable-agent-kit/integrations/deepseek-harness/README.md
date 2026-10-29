@@ -5,9 +5,9 @@
 默认按[通用安装](../generic/README.md)导出自包含Skill，再指定Harness真实的Skill搜索根目录：
 
 ```sh
-python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills --dry-run
-python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills
-python /absolute/package/solo-dev-delivery/scripts/install_agent.py --destination /absolute/harness/skills --verify
+python /absolute/package/agi-like/scripts/install_agent.py --destination /absolute/harness/skills --dry-run
+python /absolute/package/agi-like/scripts/install_agent.py --destination /absolute/harness/skills
+python /absolute/package/agi-like/scripts/install_agent.py --destination /absolute/harness/skills --verify
 ```
 
 上述路径是占位符，不是DeepSeek统一默认路径。Harness只有规则/提示词入口时，显式加载包内SKILL.md，并把实际包路径提供给模型以读取按需引用；本地脚本只在Harness可用文件与Python工具时运行。单纯聊天也可复用判断方法，但执行保持未验证。

@@ -1,4 +1,6 @@
-# 0.7.0：solo-dev-delivery 与 Superpowers Lite 的整合
+# 历史整合说明（0.7.0）：AGI-like 的前身与 Superpowers Lite
+
+本文记录 0.7.0 的历史整合，不定义当前 AGI-like 1.1.0 接口；当前入口和运行时以 `skill/agi-like/`、`portable-agent-kit/` 和 `README.md` 为准。
 
 比较基线：solo-dev-delivery `63a42486907b744f445da4e61b804511c23a6dd5`（0.6.0）和Superpowers Lite `e753ab13097b9f987f6f3ec4dadaea2656b887b2`（候选0.6.0）。以solo为交付与证据实现，不合并Git仓库历史，也不向其他聊天发送指令。
 
@@ -12,7 +14,7 @@
 | 任意Agent安装 | 改造Lite安装器，使其安装一个自包含solo包；generic显式目录适用于各种Harness，ZCode/Kimi仅作为目录快捷方式 |
 | 自包含与隐私边界 | 只导出白名单Skill、引用与标准库工具，附许可；不包装个人knowledge、runtime、客户事实、原状态机或session |
 
-关键入口：[Skill](skill/solo-dev-delivery/SKILL.md)、[工程方法](skill/solo-dev-delivery/references/engineering-practice.md)、[通用安装/预检](skill/solo-dev-delivery/references/host-integration.md)、[DeepSeek Harness](portable-agent-kit/integrations/deepseek-harness/README.md)。其他宿主可使用generic入口或显式注入Markdown；模型名称不决定宿主能力。
+关键入口：[AGI-like Skill](skill/agi-like/SKILL.md)、[工程方法](skill/agi-like/references/engineering-practice.md)、[通用安装/预检](skill/agi-like/references/host-integration.md)、[DeepSeek Harness](portable-agent-kit/integrations/deepseek-harness/README.md)。其他宿主可使用generic入口或显式注入Markdown；模型名称不决定宿主能力。
 
 ## 验证范围
 
@@ -37,7 +39,7 @@ python -m unittest discover -s tests -v
 
 ## 项目自主改进候选（2026-10-23）
 
-分支 `iterate/project-operations` 从 `b79ad64` 继续，包含尚未合并的Windows修复；不修改main，也不以此发布新版本。新增一个按需引用 [project-operation.md](skill/solo-dev-delivery/references/project-operation.md)，只在用户明确要求项目主动维护、持续改进或经营时读取。
+分支 `iterate/project-operations` 从 `b79ad64` 继续，包含尚未合并的Windows修复；不修改main，也不以此发布新版本。新增一个按需引用 [project-operation.md](skill/agi-like/references/project-operation.md)，只在用户明确要求项目主动维护、持续改进或经营时读取。
 
 对照来源为Anthropic autonomous-coding `9ec32b91df50b0d4906cae64b13c6298055ff40d`、Anthropic skill-creator `dbd4588f9e1033efb41dad4bef2f7947c8993d44` 和Superpowers `2ce8aa15d05bd57213e6f746f953aafb7ded7a8b`。原文链接及取舍随引用一起导出；此次独立表述方法，没有复制这些项目的代码或整段指令。
 

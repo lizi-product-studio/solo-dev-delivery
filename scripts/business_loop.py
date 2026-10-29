@@ -8,6 +8,7 @@ from pathlib import Path, PurePosixPath
 import re
 import shutil
 import sqlite3
+import subprocess
 
 from review_engine import require, proof, valid_proof, digest, dumped, clean_commit, git
 from task_mode import normalize_signals
@@ -49,7 +50,13 @@ class Business:
         services=data.get('services',{})
         require(isinstance(services,dict) and services,'需已授权服务范围')
         repo=str(Path(data['repository']).resolve())
-        require(git(repo,'rev-parse','--show-toplevel')==repo,'repository需Git工作树根目录')
+        try:
+            git_root = Path(git(repo, 'rev-parse', '--show-toplevel')).resolve()
+            repo_root = Path(repo).resolve()
+            same_root = git_root.samefile(repo_root)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            same_root = False
+        require(same_root, 'repository需Git工作树根目录')
         for sid,s in services.items():
             require(re.fullmatch(r'[a-zA-Z0-9_-]{1,50}',sid) and s.get('label') and s.get('excluded'),'服务需标识、名称及排除项')
             require(type(s.get('ux_required')) is bool and s.get('environment'),'服务需真实验收环境')
@@ -227,7 +234,7 @@ class Business:
             if busy:
                 s['waiting_task_id']=busy['id'];self.save(s);return self.view(cid)
             directory=self.q.root/'business-artifacts'/cid;directory.mkdir(parents=True,exist_ok=True)
-            brief=directory/(s['proposal']['id']+'.md');brief.write_text(dumped({'case':cid,'proposal':s['proposal'],'policy_ref':p['authorization_ref']}))
+            brief=directory/(s['proposal']['id']+'.md');brief.write_text(dumped({'case':cid,'proposal':s['proposal'],'policy_ref':p['authorization_ref']}), encoding='utf-8')
             task=self.q.ingest(brief)
             c={'goal':s['proposal']['goal'],'repository':p['repository'],'owner':p['owner'],'approval_ref':p['authorization_ref'],
                'autonomy':'local_until_delivery','rollback':'保留当前版本，以独立提交回退本次范围内的修改',

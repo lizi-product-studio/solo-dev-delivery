@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://local.invalid/solo-delivery/aap-0.1.json",
-  "title": "AAP-0.1 request envelope with Solo Delivery state gates 0.2",
+  "title": "AAP-0.1 request envelope with AGI-like state gates 0.2",
   "description": "The wire envelope remains aap/0.1. State version 2, host-verified evidence, reconcile, and resolve_finding are 0.2 gate semantics; this schema does not prove platform support.",
   "type": "object",
   "required": ["protocol", "request_id", "op", "task_id", "revision", "contract_hash", "candidate", "idempotency_key"],

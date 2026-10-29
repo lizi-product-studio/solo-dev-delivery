@@ -10,6 +10,7 @@ import shutil
 import signal
 import stat
 import subprocess
+import sys
 import tempfile
 import time
 
@@ -379,7 +380,17 @@ def run_worker(*, executable, repository, candidate, role, model, effort, prompt
     try:
         receipt['snapshot_commit'] = _snapshot(Path(repository).resolve(), candidate, workspace, control)
         before = _fingerprint(workspace) if role != 'implement' else None
-        argv = [str(executable), 'exec', '--json', '--ephemeral', '--ignore-user-config',
+        executable_path = Path(str(executable))
+        # Windows CreateProcess cannot execute a shebang-only synthetic or
+        # adapter script directly (WinError 193).  Preserve the host-provided
+        # executable for real binaries, but run a plain script through the
+        # current Python interpreter so test doubles and local adapters behave
+        # the same way on POSIX and Windows.
+        launcher = [sys.executable, str(executable_path)] if (
+            os.name == 'nt' and executable_path.is_file()
+            and executable_path.suffix.lower() not in ('.exe', '.com', '.bat', '.cmd')
+        ) else [str(executable)]
+        argv = launcher + ['exec', '--json', '--ephemeral', '--ignore-user-config',
                 '--output-schema', str(schema_path), '-m', model, '-c', 'model_reasoning_effort=' + json.dumps(effort),
                 '-c', 'agents.enabled=false', '-c', 'forced_login_method="chatgpt"', '-c', 'approval_policy="never"',
                 '-c', 'project_doc_max_bytes=0', '--cd', str(workspace), '--sandbox',

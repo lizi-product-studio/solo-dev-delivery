@@ -209,13 +209,13 @@ class ExportColdStartTests(unittest.TestCase):
     def test_export_runs_after_unzip_under_unrelated_path_without_personal_knowledge(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            proc = subprocess.run([sys.executable, str(SYSTEM / "scripts/export_skill.py"), str(root / "build/solo-dev-delivery")], capture_output=True, text=True)
+            proc = subprocess.run([sys.executable, str(SYSTEM / "scripts/export_skill.py"), str(root / "build/agi-like")], capture_output=True, text=True)
             self.assertEqual(0, proc.returncode, proc.stderr)
             result = json.loads(proc.stdout)
             with zipfile.ZipFile(result["archive"]) as bundle:
                 self.assertTrue(all("/Users/" not in name and ".." not in Path(name).parts for name in bundle.namelist()))
                 bundle.extractall(root / "new-machine")
-            skill = root / "new-machine/solo-dev-delivery"
+            skill = root / "new-machine/agi-like"
             self.assertFalse((skill / "knowledge/preferences.json").exists())
             for p in skill.rglob("*"):
                 if p.is_file():
@@ -224,7 +224,9 @@ class ExportColdStartTests(unittest.TestCase):
             workspace.mkdir()
             cli = skill / "scripts/challenge.py"
             self.assertFalse((skill / "scripts/session.py").exists())
-            self.assertFalse((skill / "scripts/core/state_machine.py").exists())
+            self.assertTrue((skill / "scripts/core/state_machine.py").exists())
+            self.assertTrue((skill / "scripts/control_plane.py").exists())
+            self.assertTrue((skill / "control_plane/runtime.py").exists())
             self.assertFalse((skill / "assets/contracts").exists())
             control = root / "control"
             control.mkdir()

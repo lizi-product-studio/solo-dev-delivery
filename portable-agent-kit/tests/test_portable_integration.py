@@ -61,7 +61,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix="solo-host-")
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name).resolve()
-        self.source = self.base / "export/solo-dev-delivery"
+        self.source = self.base / "export/agi-like"
         self.env = dict(os.environ, PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1",
                         USERPROFILE=str(self.base / "home"), HOME=str(self.base / "home"),
                         CODEX_HOME=str(self.base / "home/.codex"))
@@ -80,7 +80,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         return self.call(self.source / "scripts/install_agent.py", *args, **kwargs)
 
     def test_archive_order_and_generated_protocol_are_platform_independent(self):
-        archive = next(self.source.parent.glob("solo-dev-delivery-*.zip"))
+        archive = next(self.source.parent.glob("agi-like-*.zip"))
         with zipfile.ZipFile(archive) as packed:
             self.assertEqual(sorted(packed.namelist()), packed.namelist())
             self.assertTrue(all(member.create_system == 3 for member in packed.infolist()))
@@ -91,7 +91,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         self.assertEqual(sorted(paths), paths)
         for generated in ("BUNDLE.json", "scripts/core/__init__.py"):
             self.assertNotIn(b"\r\n", (self.source / generated).read_bytes())
-        self.assertEqual((ROOT / "skill/solo-dev-delivery/SKILL.md").read_bytes(),
+        self.assertEqual((ROOT / "skill/agi-like/SKILL.md").read_bytes(),
                          (self.source / "SKILL.md").read_bytes())
 
     def test_all_hosts_install_self_contained_payload_without_configuration(self):
@@ -106,12 +106,14 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
                 again = json.loads(self.installer(*args).stdout)
                 self.assertFalse(again["changed"])
                 self.assertEqual("unverified", again["host_loading"])
-                installed = destination / "solo-dev-delivery"
+                installed = destination / "agi-like"
                 bundle = json.loads((installed / "BUNDLE.json").read_text(encoding="utf-8"))
                 for row in bundle["files"]:
                     self.assertEqual(row["sha256"], hashlib.sha256((installed / row["path"]).read_bytes()).hexdigest())
                 self.assertFalse((installed / "knowledge").exists())
-                self.assertFalse((installed / "scripts/core/state_machine.py").exists())
+                self.assertTrue((installed / "scripts/core/state_machine.py").exists())
+                self.assertTrue((installed / "scripts/control_plane.py").exists())
+                self.assertTrue((installed / "control_plane/runtime.py").exists())
                 self.assertFalse((installed / "scripts/session.py").exists())
                 self.assertTrue((installed / "licenses/superpowers-lite-MIT.txt").is_file())
                 for row in bundle["files"]:
@@ -130,17 +132,17 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         for host, destination in (("zcode", self.base / "home/.zcode/skills"),
                                   ("kimi", self.base / "home/.kimi-code/skills")):
             self.installer("--host", host)
-            self.assertTrue((destination / "solo-dev-delivery/BUNDLE.json").exists())
+            self.assertTrue((destination / "agi-like/BUNDLE.json").exists())
         env = dict(self.env, KIMI_CODE_HOME=str(self.base / "custom-kimi"))
         self.installer("--host", "kimi", env=env)
-        self.assertTrue((self.base / "custom-kimi/skills/solo-dev-delivery").is_dir())
+        self.assertTrue((self.base / "custom-kimi/skills/agi-like").is_dir())
         self.installer(code=2)
 
     def test_conflict_verify_and_tampered_source_never_overwrite(self):
         destination = self.base / "skills"
         args = ("--destination", destination)
         self.installer(*args)
-        target = destination / "solo-dev-delivery/SKILL.md"
+        target = destination / "agi-like/SKILL.md"
         target.write_bytes(b"user edits")
         self.installer(*args, code=2)
         self.installer(*args, "--verify", code=2)
@@ -162,7 +164,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
     def test_generated_python_caches_do_not_break_installed_verification(self):
         destination = self.base / "skills"
         self.installer("--destination", destination)
-        cache = destination / "solo-dev-delivery/scripts/__pycache__"
+        cache = destination / "agi-like/scripts/__pycache__"
         cache.mkdir()
         (cache / "example.pyc").write_bytes(b"generated cache")
         self.installer("--destination", destination, "--verify")
@@ -171,7 +173,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         # A successful file operation must not become a failed CLI response just
         # because a host's pipe encoding cannot represent a path character.
         env = dict(self.env, PYTHONUTF8="0", PYTHONIOENCODING="cp936")
-        source = self.base / "export-\U0001f9ea/solo-dev-delivery"
+        source = self.base / "export-\U0001f9ea/agi-like"
         exported = self.call(ROOT / "scripts/export_skill.py", source, env=env)
         self.assertEqual(str(source), json.loads(exported.stdout)["skill"])
         destination = self.base / "host-\U0001f680/skills"
@@ -184,7 +186,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         installer = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(installer)
         destination = self.base / "interrupted/skills"
-        target = destination / "solo-dev-delivery"
+        target = destination / "agi-like"
         original_open = Path.open
         writes = []
 
@@ -206,13 +208,13 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         self.assertEqual("FILES_VERIFIED", installer.install(self.source, destination, verify=True)["status"])
 
     def test_moved_bundle_runs_real_gate_and_challenge_without_the_checkout(self):
-        moved = self.base / "moved package/solo-dev-delivery"
+        moved = self.base / "moved package/agi-like"
         moved.parent.mkdir()
         self.source.rename(moved)
         self.assertFalse(self.source.exists())
         destination = self.base / "unrelated host/skills"
         self.call(moved / "scripts/install_agent.py", "--destination", destination)
-        installed = destination / "solo-dev-delivery/scripts"
+        installed = destination / "agi-like/scripts"
         workspace = self.base / "project"
         workspace.mkdir()
         (workspace / "request.md").write_text(

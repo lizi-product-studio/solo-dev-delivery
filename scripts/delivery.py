@@ -158,7 +158,7 @@ class Queue:
         need(path.is_file() and path.stat().st_size <= 2_000_000, '来源不存在或超过2MB')
         if path.suffix.lower() == '.json':
             proc = subprocess.run([node_bin(), str(ROOT/'scripts/kickoff-import.mjs'), str(path)],
-                capture_output=True, text=True, timeout=20)
+                capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=20)
             need(proc.returncode == 0, proc.stderr.strip() or '开项导入失败')
             source = json.loads(proc.stdout)
         elif path.suffix.lower() in ('.md', '.txt'):

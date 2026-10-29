@@ -12,7 +12,7 @@ from review_engine import digest
 class BusinessTests(unittest.TestCase):
     def setUp(self):
         fixtures.DeliveryTests.setUp(self)
-        (self.repo/'test_probe.py').write_text("import unittest\nfrom pathlib import Path\nclass Probe(unittest.TestCase):\n def test_customer_copy(self): self.assertEqual(Path('app.txt').read_text(), '欢迎回来')\n")
+        (self.repo/'test_probe.py').write_text("import unittest\nfrom pathlib import Path\nclass Probe(unittest.TestCase):\n def test_customer_copy(self): self.assertEqual(Path('app.txt').read_text(encoding='utf-8'), '欢迎回来')\n", encoding='utf-8')
         self.git('add','test_probe.py');self.git('commit','-qm','Define fixture customer acceptance before implementation')
         self.policy={'id':'demo-project','owner':'fixture-owner','authorization_ref':'SYNTHETIC_LOCAL_DEMO_ONLY',
             'authorization_evidence':str(self.log),'repository':str(self.repo),'exclusive_repository':True,
@@ -52,7 +52,7 @@ class BusinessTests(unittest.TestCase):
 
     def finish_local(self, s):
         t=self.q.task(s['task_id']);assess(self.q,t,'impl',self.log);self.q.claim(t['id'],'impl')
-        (self.repo/'app.txt').write_text('欢迎回来');self.git('add','app.txt');self.git('commit','-qm','Apply fixture customer request')
+        (self.repo/'app.txt').write_text('欢迎回来', encoding='utf-8');self.git('add','app.txt');self.git('commit','-qm','Apply fixture customer request')
         bind_all(self.q,t,'impl');p=self.q.reviews.run(t['id'],'impl')
         self.assertFalse(any(x.startswith('CHECK_REQUIRED:') for x in p['blockers']))
         commit=fixtures.d.frozen_commit(self.repo)
@@ -142,7 +142,7 @@ class BusinessTests(unittest.TestCase):
 
     def test_later_source_changes_do_not_invalidate_archived_delivery(self):
         s=self.finish_local(self.handed_off())
-        (self.repo/'app.txt').write_text('另一轮开发内容');self.git('add','app.txt');self.git('commit','-qm','Later separate work')
+        (self.repo/'app.txt').write_text('另一轮开发内容', encoding='utf-8');self.git('add','app.txt');self.git('commit','-qm','Later separate work')
         s=self.q.business.receive(self.event('accept','验收旧交付包通过',delivery_id=s['delivery']['id']))
         self.assertEqual('CLOSED',s['status'])
 

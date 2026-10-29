@@ -1,8 +1,8 @@
-# Solo Dev Delivery
+# AGI-like
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**0.13.0 是评测合同候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它在0.12.0核心循环上增加跨任务、版本和宿主可复用的评测合同、回执校验和描述性汇总，开始用真实指标证明是否减少人工介入和返工。前端质量、遇阻恢复、正式门禁和平台能力边界继续按需读取；不宣称逻辑永远正确、其他宿主自动加载或长期无人经营已经得到证明。核心和评测证据见 [VALIDATION.md](VALIDATION.md)、[评测合同](skill/solo-dev-delivery/references/evaluation-contract.md) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
+**AGI-like 1.1.0 是当前重构候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它保留 0.13/1.0 的评测与发布兼容层，并增加结构化任务合同、SQLite 控制平面、租约与检查点、独立证据验收和证据绑定的自升级候选门禁。评测合同的 `schema_version: 0.13` 继续用于历史回执，不把未完成的真实回放写成 AGI 质量证明。控制平面能约束状态和证据，但不提供账号、权限、宿主工具或后台调度。核心证据见 [VALIDATION.md](VALIDATION.md)、[控制平面](portable-agent-kit/README.md)、[发布自检](scripts/release_check.py) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
 
 当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
 
@@ -18,7 +18,7 @@
 | 用户授权的项目维护与持续改进 | 从真实失败、反馈和任务记录选下一项，交付后核项目结果 |
 | 工具错误、环境障碍或结果未知 | 核实际失败、尝试授权内恢复；未知副作用先对账，独立工作继续 |
 
-入口是 [SKILL.md](skill/solo-dev-delivery/SKILL.md)。方法按需读取，不默认执行固定角色链、TDD、工作树或持久队列。普通技术决定由 Agent 推进；确需本人身份、额外权限、必要业务决定或已证实无可行恢复路径时，及时请求最小用户动作。
+入口是 [SKILL.md](skill/agi-like/SKILL.md)。方法按需读取，不默认执行固定角色链、TDD、工作树或持久队列。普通技术决定由 Agent 推进；确需本人身份、额外权限、必要业务决定或已证实无可行恢复路径时，及时请求最小用户动作。
 
 ## 克隆并导出
 
@@ -27,24 +27,45 @@ Python 3.9+，辅助工具仅用标准库；只加载 Markdown 不要求 Python�
 ```sh
 git clone --branch feat/evaluation-contract-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
 cd solo-dev-delivery
-python -X utf8 scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 ```
 
-生成自包含目录及 `solo-dev-delivery-0.13.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、验证脚本、安装器、清单及许可；不包含个人偏好、客户数据、原始聊天、runtime、调度器或旧队列状态。也可直接下载[版本化安装包](packages/solo-dev-delivery-0.13.0.zip)及[校验值](packages/solo-dev-delivery-0.13.0.zip.sha256)。CI在全部测试成功后重建、安装核验并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `agi-like-1.1.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.1.0.zip)及[校验值](packages/agi-like-1.1.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
 先从宿主当前配置或官方说明确认实际 Skill 搜索根目录，再执行：
 
 ```sh
-python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --dry-run
-python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills
-python /absolute/export/solo-dev-delivery/scripts/install_agent.py --destination /absolute/host/skills --verify
+python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --dry-run
+python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills
+python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --verify
 ```
 
-安装到该根目录下的 `solo-dev-delivery/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。
+需要持久交付状态时，使用控制平面而不是让模型自行维护长文本状态：
 
-ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destination` 优先。DeepSeek Harness、自建 Agent 和其他 IDE/CLI 使用通用模式，不猜模型供应商对应的目录。仅支持提示词加载的宿主可显式读取 `SKILL.md` 并提供包位置。目录与调用方式见 [宿主接入](skill/solo-dev-delivery/references/host-integration.md)。
+```sh
+python /absolute/export/agi-like/scripts/control_plane.py \
+  --db /absolute/control/task.sqlite3 create \
+  --contract /absolute/task.json --capabilities /absolute/host-capabilities.json
+python /absolute/export/agi-like/scripts/control_plane.py \
+  --db /absolute/control/task.sqlite3 --task-id TASK_ID plan
+```
+
+控制平面每次只推进一个带租约、版本和幂等键的动作；宿主执行工具后提交结果，独立验收器重新读取证据并验证哈希和确定性断言。没有可信验收回调的宿主只能得到 `UNVERIFIED`，不会被当成完成。
+
+发布包生成后可运行一次只读自检：
+
+```sh
+python /absolute/source/scripts/release_check.py \
+  /absolute/source/skill/agi-like \
+  /absolute/source/packages/agi-like-1.1.0.zip \
+  --checksum /absolute/source/packages/agi-like-1.1.0.zip.sha256
+```
+
+安装到该根目录下的 `agi-like/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。
+
+ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destination` 优先。DeepSeek Harness、自建 Agent 和其他 IDE/CLI 使用通用模式，不猜模型供应商对应的目录。仅支持提示词加载的宿主可显式读取 `SKILL.md` 并提供包位置。目录与调用方式见 [宿主接入](skill/agi-like/references/host-integration.md)。
 
 **文件安装、客户端发现、自动选择和真实交付是不同结论。** 自动选择需要宿主实际加载元数据与指令。Skill 不增加工具、账号、权限或后台能力，不承诺所有平台下载后立即自动生效。
 
@@ -52,14 +73,14 @@ ZCode、Kimi CLI 可分别用 `--host zcode`、`--host kimi`；显式 `--destina
 
 低风险任务复用现有检查。有候选绑定或正式验收需要时，再用包内 `scripts/gate.py` 或 `scripts/challenge.py`；完整源码入口在 `portable-agent-kit/scripts/`。失败、未知、缺项和证据过期不能当作通过，UI、外部服务和生产结果需要对应环境的实际观察。
 
-- [交付门禁](skill/solo-dev-delivery/references/execution-gate.md)：原文、候选、验收与证据绑定，按业务决策选择检查。
-- [结果核验](skill/solo-dev-delivery/references/result-verification.md)：独立本地检查、证据复用、失败优先和按需反例。
-- [恢复与最小交接](skill/solo-dev-delivery/references/blocker-recovery.md)：技术排障、等价入口、未知副作用与必要用户动作。
-- [产品界面与前端设计](skill/solo-dev-delivery/references/frontend-quality.md)：按任务选择文案、密度、视觉与交互检查；不统一模板、不用删重要提示换取简洁。
-- [项目巡检与接续](skill/solo-dev-delivery/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
-- [交付前主动自审](skill/solo-dev-delivery/references/delivery-self-review.md)：从反馈和失败生成按需反例，先恢复和读回，拆开证据边界。
-- [自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)：统一任务分流、能力/授权边界、证据状态、停止条件和迭代选择。
-- [评测合同](skill/solo-dev-delivery/references/evaluation-contract.md)：统一任务、对照组、回执、指标和缺失证据处理。
+- [交付门禁](skill/agi-like/references/execution-gate.md)：原文、候选、验收与证据绑定，按业务决策选择检查。
+- [结果核验](skill/agi-like/references/result-verification.md)：独立本地检查、证据复用、失败优先和按需反例。
+- [恢复与最小交接](skill/agi-like/references/blocker-recovery.md)：技术排障、等价入口、未知副作用与必要用户动作。
+- [产品界面与前端设计](skill/agi-like/references/frontend-quality.md)：按任务选择文案、密度、视觉与交互检查；不统一模板、不用删重要提示换取简洁。
+- [项目巡检与接续](skill/agi-like/references/project-operation.md)：选任务、避免重复开工、投入边界和跨会话恢复。
+- [交付前主动自审](skill/agi-like/references/delivery-self-review.md)：从反馈和失败生成按需反例，先恢复和读回，拆开证据边界。
+- [自主交付核心循环](skill/agi-like/references/autonomy-core.md)：统一任务分流、能力/授权边界、证据状态、停止条件和迭代选择。
+- [评测合同](skill/agi-like/references/evaluation-contract.md)：统一任务、对照组、回执、指标和缺失证据处理。
 
 可选能力预检只检查任务实际依赖，不执行工具或创建 session：
 
@@ -73,7 +94,7 @@ Codex Stop 定义由 `gate.py install-hook` 准备，须经宿主审核、信任
 
 ## 完整系统与兼容
 
-源码保留 `scripts/delivery.py`、SQLite 队列、原生审查登记、旧 CLI worker、业务接手和 portable session；明确需要正式状态、锁、客户闭环或持久交接时才使用。已有任务继续原门禁和锁，不迁移活动运行，不以轻量流程绕过已知失败。见 [本机软件交付](skill/solo-dev-delivery/references/software-delivery.md)和 [Portable Kit](portable-agent-kit/README.md)。
+源码保留 `scripts/delivery.py`、SQLite 队列、原生审查登记、旧 CLI worker、业务接手和 portable session；明确需要正式状态、锁、客户闭环或持久交接时才使用。已有任务继续原门禁和锁，不迁移活动运行，不以轻量流程绕过已知失败。见 [本机软件交付](skill/agi-like/references/software-delivery.md)和 [Portable Kit](portable-agent-kit/README.md)。
 
 本机偏好与授权属于所在实例，不随独立包传播；历史授权不扩展到新项目的发布、支付、通信或经营承诺。原生用量由宿主提供，没有数据时保留未知，不能填零或宣称节省成本。
 

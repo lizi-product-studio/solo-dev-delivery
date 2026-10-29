@@ -1,6 +1,6 @@
-# Portable Solo Delivery for Cursor
+# Portable AGI-like for Cursor
 
-按当前目标仓库的真实规则，按需加载自包含 solo-dev-delivery Skill；把实际安装路径提供给Agent用于读取引用。原始目标和本次具体授权决定范围。
+按当前目标仓库的真实规则，按需加载自包含 agi-like Skill；把实际安装路径提供给Agent用于读取引用。原始目标和本次具体授权决定范围。
 
 - 局部小改直接处理并定向读回；不自动创建契约、session或覆盖表。
 - 行为和高风险变化按需读Skill的 references/engineering-practice.md，选择计划、隔离、调试与审查深度。

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install a self-contained solo-dev-delivery bundle into an Agent Skill root.
+"""Install a self-contained agi-like bundle into an Agent Skill root.
 
 File preflight and link checks adapted from Superpowers Lite e753ab1 (MIT).
 See THIRD_PARTY.md. Does not edit host settings or execute host tools.
@@ -13,7 +13,7 @@ import stat
 import sys
 import tempfile
 
-NAME = "solo-dev-delivery"
+NAME = "agi-like"
 
 
 def absolute(path):
@@ -129,7 +129,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", choices=("generic", "zcode", "kimi"), default="generic")
     parser.add_argument("--source", type=Path, default=Path(__file__).resolve().parents[1], help="Exported Skill root")
-    parser.add_argument("--destination", type=Path, help="Host Skill search root, not the final solo-dev-delivery directory")
+    parser.add_argument("--destination", type=Path, help="Host Skill search root, not the final agi-like directory")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--verify", action="store_true")

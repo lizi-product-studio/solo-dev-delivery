@@ -27,7 +27,7 @@ class DeliveryTests(unittest.TestCase):
         (self.repo/'.gitignore').write_text('__pycache__/\n')
         git('add','.');git('commit','-m','fixture baseline')
         self.q=d.Queue(self.root/'runtime')
-        self.brief=self.root/'brief.md';self.brief.write_text('只修改当前示例文案，无业务数据。')
+        self.brief=self.root/'brief.md';self.brief.write_text('只修改当前示例文案，无业务数据。', encoding='utf-8')
         self.t=self.q.ingest(self.brief)
         self.contract={'goal':'修改示例文案','repository':str(self.repo),'owner':'fixture',
             'approval_ref':'SYNTHETIC_TEST_ONLY','autonomy':'local_until_delivery',

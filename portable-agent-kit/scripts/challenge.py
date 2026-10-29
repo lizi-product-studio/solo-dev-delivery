@@ -174,7 +174,11 @@ def _terminate_test_tree(proc):
                                      stderr=subprocess.PIPE, timeout=5,
                                      creationflags=subprocess.CREATE_NO_WINDOW)
             result['tool_exit_code'] = stopped.returncode
-            if stopped.returncode:
+            # A timeout can race with the disposable leader exiting on its
+            # own.  taskkill returns 128 when the PID has already vanished;
+            # after proc.wait below that is a successful cleanup observation,
+            # while access-denied/invalid-command errors remain blocking.
+            if stopped.returncode and stopped.returncode != 128:
                 result['errors'].append('taskkill exited ' + str(stopped.returncode) + ': '
                                         + (stopped.stdout + stopped.stderr).decode('utf-8', errors='replace')[-2000:])
         else:

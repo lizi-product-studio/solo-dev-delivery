@@ -1,0 +1,7 @@
+interface:
+  display_name: "AGI-like 自主交付控制层"
+  short_description: "让不同能力的 Agent 按目标、边界、执行、验收和学习闭环推进任务"
+  default_prompt: "使用 $agi-like 推进这项任务，核对目标和授权；按风险选择轻量路径或控制平面，使用独立证据验收，并交付有证据的结果。"
+
+policy:
+  allow_implicit_invocation: true

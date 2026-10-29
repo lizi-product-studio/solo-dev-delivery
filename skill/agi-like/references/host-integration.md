@@ -1,16 +1,16 @@
 # 在不同 Agent 上安装和核对能力
 
-一个平台无关的 `solo-dev-delivery` Skill，按宿主自己的 Agent Skills/规则机制加载。模型供应商不决定工具和权限；DeepSeek Harness、自建Agent、CLI或IDE需要由其实际宿主提供文件、终端、浏览器与身份能力。没有统一可验证的“所有平台一键生效”承诺。
+一个平台无关的 `agi-like` Skill，按宿主自己的 Agent Skills/规则机制加载。模型供应商不决定工具和权限；DeepSeek Harness、自建Agent、CLI或IDE需要由其实际宿主提供文件、终端、浏览器与身份能力。没有统一可验证的“所有平台一键生效”承诺。
 
 ## 先取自包含包
 
 从完整源码目录运行（Python 3.9+，按系统使用 python 或 python3）：
 
 ```sh
-python scripts/export_skill.py /absolute/new-parent/solo-dev-delivery
+python scripts/export_skill.py /absolute/new-parent/agi-like
 ```
 
-导出文件夹及zip包含Skill、按需引用、challenge、无状态能力预检、通用安装器和第三方许可。没有个人偏好、客户事实、runtime、持久session或状态机。解压后目录可移动；下文 S 表示这个目录的 scripts。普通纯Markdown加载不需要Python，辅助脚本需要。
+导出文件夹及zip包含Skill、按需引用、控制平面、独立验收器、challenge、能力预检、通用安装器和第三方许可。它不包含个人偏好、客户事实、账号或后台调度器；控制平面只在宿主明确调用时持久化任务状态。解压后目录可移动；下文 S 表示这个目录的 scripts。普通纯Markdown加载不需要Python，辅助脚本需要。
 
 ## 通用安装：DeepSeek Harness、自建Agent及其他宿主
 
@@ -22,7 +22,7 @@ python S/install_agent.py --destination /absolute/host/skills
 python S/install_agent.py --destination /absolute/host/skills --verify
 ```
 
-generic 是默认模式，必须指定目录；最终安装到其下的 `solo-dev-delivery/`。不猜 DeepSeek Harness 的路径、SDK或命令。使用不同模型的Harness可以复用同一包，工具调用与权限由Harness决定。宿主只支持提示词注入时，显式加载SKILL.md并提供实际目录供按需引用；只能聊天的宿主可讨论方案，执行结果保持未验证。
+generic 是默认模式，必须指定目录；最终安装到其下的 `agi-like/`。不猜 DeepSeek Harness 的路径、SDK或命令。使用不同模型的Harness可以复用同一包，工具调用与权限由Harness决定。宿主只支持提示词注入时，显式加载SKILL.md并提供实际目录供按需引用；只能聊天的宿主可讨论方案，执行结果保持未验证。
 
 ZCode/Kimi Code CLI有目录快捷入口：
 
@@ -37,7 +37,7 @@ python S/install_agent.py --host kimi --verify
 
 安装器读取BUNDLE.json并校验全部已列文件哈希，拒绝额外文件、源/目标重叠及符号链接/junction。复制在同文件系统临时目录完成并核对字节，再发布到最终Skill目录；普通写入失败清理本次暂存，可重新安装，机器/进程突然退出可能留下隐藏暂存目录。哈希只证明包内一致性，不认证来源；从可信仓库获取包。同字节重复安装不重写；已有不同文件时停止，先把旧Skill备份到搜索根目录外再替换。Python运行生成的__pycache__/pyc不属于安装内容，校验时忽略。--verify只读安装文件，不代表客户端发现或模型行为。
 
-ZCode在Settings → Skills刷新并启用，使用 `$solo-dev-delivery`；Kimi新会话用 `/skill:solo-dev-delivery`。其他Agent用自己的注册/调用方式。以当前版本真实菜单为准；不要同时安装重复Skill副本。
+ZCode在Settings → Skills刷新并启用，使用 `$agi-like`；Kimi新会话用 `/skill:agi-like`。其他Agent用自己的注册/调用方式。以当前版本真实菜单为准；不要同时安装重复Skill副本。
 
 ## 可选无状态能力预检
 

@@ -152,9 +152,9 @@ class ChallengeTests(unittest.TestCase):
         challenge.render(self.work, 'rows.json', ['rows'], columns, 'work', 'handoff.md')
         probe={'probe':{'type':'json.table','path':'handoff.md','source':'rows.json','rows':['rows'],'columns':columns,'block':'work'}}
         self.assertEqual('PASS',run_check(self.work,probe,['rows.json','handoff.md'])['verdict'])
-        self.assertIn('未知',(self.work/'handoff.md').read_text())
+        self.assertIn('未知',(self.work/'handoff.md').read_text(encoding='utf-8'))
         path=self.work/'handoff.md'
-        path.write_text(path.read_text().replace('Lin','Chen'))
+        path.write_text(path.read_text(encoding='utf-8').replace('Lin','Chen'), encoding='utf-8')
         self.assertEqual('FAIL',run_check(self.work,probe,['rows.json','handoff.md'])['verdict'])
 
     def test_one_shot_relations_rejects_unknown_total_and_stales_on_source_change(self):

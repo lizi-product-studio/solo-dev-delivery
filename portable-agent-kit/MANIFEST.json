@@ -1,11 +1,15 @@
 {
-  "package": "portable-solo-delivery-kit",
-  "version": "0.8.0",
+  "package": "portable-agi-like-kit",
+  "version": "1.1.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
   "entrypoints": {
     "core": "core/state_machine.py",
+    "control_plane": "control_plane/runtime.py (SQLite persistence, leases and event history)",
+    "contract": "control_plane/contracts.py (delivery-contract/1)",
+    "independent_evaluator": "control_plane/evaluator.py and scripts/independent_verify.py",
+    "self_improvement": "control_plane/learning.py and scripts/self_improvement.py (self-improvement/2)",
     "local_session_cli": "scripts/session.py",
     "local_challenge_cli": "scripts/challenge.py",
     "artifact_relations": "core/json_relations.py",
@@ -29,9 +33,9 @@
     "generic": "explicit Skill-root install and file verification; host loading unverified",
     "zcode": "Skill directory install and file verification; host loading unverified"
   },
-  "local_runtime_status": "Readback and declared relation checks are local-only. Challenge CLI runs trusted reviewer unittest code on temporary candidate files; this is not a security sandbox or identity/production acceptance proof.",
+  "local_runtime_status": "SQLite state, leases and event history are local-only. Evidence checks are deterministic and root-scoped; semantic, UX, identity, production and external-action acceptance remain host-owned.",
   "model_provider": "agnostic",
   "codex_default_execution": true,
   "scheduler": "none",
-  "export_status": "Self-contained Skill includes challenge with sensitivity probes, relation checks, optional stateless capability preflight, generic installer and third-party license. Personal knowledge, runtime, persistent session/state-machine/contracts remain excluded. Host loading and automatic routing require host evidence."
+  "export_status": "Self-contained Skill includes the control-plane contract/runtime/evaluator, bounded self-improvement coordinator, challenge with sensitivity probes, relation checks, capability preflight, generic installer and third-party license. It does not include a scheduler, account credentials or arbitrary tool execution. Host loading and automatic routing require host evidence."
 }

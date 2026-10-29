@@ -1,3 +1,18 @@
+# AGI-like 1.1.0：控制平面与正式改名（2026-10-28）
+
+本轮正式将 Skill 入口从 `solo-dev-delivery` 改名为 `agi-like`。入口、导出目录、安装目录、BUNDLE、ZIP 和校验器使用同一名称；旧用户级目录已移动到 `outputs/agi-like-refactor-20261028/legacy-installed-solo-dev-delivery/` 作为可恢复备份，当前用户级安装为 `C:\Users\Administrator\.agents\skills\agi-like`。
+
+新增 `delivery-contract/1` 合同规范化、SQLite 控制平面、任务事件日志、租约、心跳、安全接管、预算硬门禁、语义/UI/业务/平台验收回执、独立证据验收和 `self-improvement/2` 受控升级候选。`scripts/release_check.py --installed` 已对导出包和用户级安装逐文件比对通过；1.1.0 包 SHA256 为 `dc3aee8ccdfe842c4e9191e124b5331b67a15b5e9cb22b8caf9460aaafe1a50e`。
+
+重命名后的便携套件和发布自检为 **236 passed、1 skipped、99 个子测试通过**；本轮冗余清理后的受影响测试为 **45 passed、3 个子测试通过**；第二、第三阶段新增控制平面、语义/UI/业务/平台回执和恢复测试为 **11 passed**。此前完整回归为 **436 passed、1 skipped、152 个子测试通过**。该版本仍是 AGI-like 控制层，不把 Skill、机械门禁或单次回放描述成已经实现 AGI。
+
+# 1.0.0：公开发布候选（2026-10-26）
+
+`feat/evaluation-contract-2026-10-26` 当前包含 1.0.0 发布候选，仍未合并 `main`。本轮把 Skill 元数据、规范导出、ZIP、校验值和安装验证统一到同一只读发布检查器；它证明“包可复现、自包含、可安装”，不把未完成的真实质量评测包装成 1.0 质量结论。
+
+已通过：1.0.0 规范导出 35 个文件；`scripts/release_check.py` 对源 Skill、ZIP、BUNDLE 文件集、逐文件哈希和 `.sha256` 校验全部通过；临时通用宿主 dry-run、实际安装和 `--verify` 均通过；发布包 SHA256 为 `d49cf2498dc7d36f630caac485645bea33c3c2bb2010f303b8c92fb83aefdba4`。便携套件和根目录测试会在本轮提交前重新运行，CI 已增加同一发布自检步骤，避免“能导出但下载包不一致”。
+
+证据边界：历史 0.13 评测合同仍按原 schema 读取；当前真实回放在本地保存 8 条（其中 1 条为模型容量错误后的 `unknown`/`NEEDS_EVIDENCE`），计划总数 72，独立盲审尚未完成，因此评测总状态仍为 `INCOMPLETE`。1.0.0 也不宣称所有宿主自动加载、生产高并发、长期无人经营或整体成本下降；宿主与业务质量继续用真实环境回放补证。
 # 0.13.0：评测合同候选（2026-10-26）
 
 `feat/evaluation-contract-2026-10-26` 从 0.12.0 候选 `c57659e7d1722edd08fbfcd15426ea7c79c32087b9` 分叉，未合并 `main`。本轮新增评测合同、JSONL 运行回执校验、描述性指标汇总和脱敏试点合同，统一跨任务/版本/宿主的证据字段；现有 gate/challenge/队列仍是交付门禁，不重建第二套门禁。当前先验证合同和工具本身，尚未宣称 0.13 对真实 Agent 质量有提升。
@@ -5,12 +20,12 @@
 已通过：Skill Creator quick validation、评测合同 4 项自测、示例合同 CLI 校验、盲审包结构校验与盲审绑定流程 8 项自测、234 项本机便携测试（4 项按平台跳过）、34 文件临时安装/校验，以及[远端 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40259720082) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本包逐字节校验。盲审工具现在先验证不含试次身份的包和评分，再由密封映射执行解盲绑定；这项工具链通过不等于已经完成独立审查。包 `packages/solo-dev-delivery-0.13.0.zip` SHA256 为 `10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866`。另有一条真实 Codex CLI 五阶段宿主回放通过，能力快照为 `READY`，记录见[host-replay-20261026](evaluations/host-replay-20261026/codex-cli/)。尚未完成的是评测合同剩余真实回放和独立盲审；指标缺失必须保留 `unknown`，小样本只做描述性结论。
 
 # 0.12.0：自主化核心重构候选（2026-10-26）
-`feat/autonomy-core-2026-10-26` 从 0.11.2 候选 `85b52a18350ded72fddf2f0365f3942b98b2380f` 分叉，未合并 `main`。本轮把任务识别、自动边界判断、实际验收和下一轮迭代计划抽成[自主交付核心循环](skill/solo-dev-delivery/references/autonomy-core.md)，并收缩 `SKILL.md` 与主动自审引用的重复内容；正式门禁、结果核验、宿主接入、本机队列和前端专项仍保留为按需细节。核心抽象与重复审计见[autonomy-core-review-2026-10-26](evaluations/autonomy-core-review-2026-10-26/README.md)。
+`feat/autonomy-core-2026-10-26` 从 0.11.2 候选 `85b52a18350ded72fddf2f0365f3942b98b2380f` 分叉，未合并 `main`。本轮把任务识别、自动边界判断、实际验收和下一轮迭代计划抽成[自主交付核心循环](skill/agi-like/references/autonomy-core.md)，并收缩 `SKILL.md` 与主动自审引用的重复内容；正式门禁、结果核验、宿主接入、本机队列和前端专项仍保留为按需细节。核心抽象与重复审计见[autonomy-core-review-2026-10-26](evaluations/autonomy-core-review-2026-10-26/README.md)。
 
 0.12.0 已完成本机 Skill Creator 校验、204 项便携测试（4 项按平台跳过）、28 文件临时安装/校验，以及[远端 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40255539964) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本包逐字节校验。包 `packages/solo-dev-delivery-0.12.0.zip` SHA256 为 `da34dd63f4cbf2aa9c3e19647e6e0efb758839b8b67da01b38c8e2d1c92e7b49`。0.12.0 目标是减少入口和引用的重复，而不是增加默认流程；当前本机用户级安装仍为0.11.0，其他宿主加载和自动分流仍需宿主实机验证。
 
 # 0.11.2：交付前主动自审候选（2026-10-26）
-`feat/customer-retro-self-review-2026-10-26` 从 `feat/frontend-quality` 的 `eed59ba80b7bef7b8bd065b7e053afac4611eb79` 分叉，未合并 `main`。本轮读取实际聊天“智能客服Agent”和只读核查“查找客服Agent中的终极Skill用法”，把用户先指出的技术阻塞、异常恢复、可见界面/话术和能力边界问题归纳为按需的[交付前主动自审](skill/solo-dev-delivery/references/delivery-self-review.md)，并加入脱敏回放矩阵。入口只增加条件式引用，不增加默认计划、子Agent、审批或固定全量清单。
+`feat/customer-retro-self-review-2026-10-26` 从 `feat/frontend-quality` 的 `eed59ba80b7bef7b8bd065b7e053afac4611eb79` 分叉，未合并 `main`。本轮读取实际聊天“智能客服Agent”和只读核查“查找客服Agent中的终极Skill用法”，把用户先指出的技术阻塞、异常恢复、可见界面/话术和能力边界问题归纳为按需的[交付前主动自审](skill/agi-like/references/delivery-self-review.md)，并加入脱敏回放矩阵。入口只增加条件式引用，不增加默认计划、子Agent、审批或固定全量清单。
 
 代码与文档检查：Skill 入口版本为0.11.2；新引用与回放矩阵在规范导出和临时安装中存在且内容一致。本机便携套件 **204 项通过、4 项按平台跳过**；远端[第二轮 CI](https://github.com/lizi-product-studio/solo-dev-delivery/actions/runs/40253561749) 的原生兼容、Ubuntu/macOS/Windows × Python 3.9/3.12 便携任务和版本化包校验全部成功。第一轮 CI 的包比较失败由 Windows 工作树 CRLF 与 Linux 规范导出 LF 造成，已用原始 Git 字节重建并复验；不是 Skill 内容失败。包 `packages/solo-dev-delivery-0.11.2.zip` SHA256 为 `4532dc9877bb2f7d0ffdc353d27fc2e333ba5de51069ac381ff8d39b4dafd277`。客服项目报告的13轮真实模型回合、22次模型调用、模拟平台状态和4个平台待联调只作为复盘来源，不作为本 Skill 的新通过证据。用户反馈“耗时更短、返工更少”暂没有同口径基线，收益保留为待测假设。
 
@@ -108,7 +123,7 @@ Native token_usage_record按response ID去重求和。缓存输入包含在总�
 
 分支`iterate/project-operations`基于`b79ad64`，包含上面的Windows修复，尚未合并main或发布新版本。先落实“发现有依据的下一项并完成一次本地迭代”，不声称已经能无人经营项目。
 
-新增按需的项目巡检引用：复用项目目标与当前授权，从实际故障、反馈和指标找候选，核已完成/活动任务，再选择可执行动作；交付后读回目标结果，按预算、依赖和恢复条件继续或停止。普通明确任务不因此另开经营循环，不增加默认角色、隔离、台账或调度器。固定版本来源与取舍见[INTEGRATION.md](INTEGRATION.md)及[项目巡检引用](skill/solo-dev-delivery/references/project-operation.md)。
+新增按需的项目巡检引用：复用项目目标与当前授权，从实际故障、反馈和指标找候选，核已完成/活动任务，再选择可执行动作；交付后读回目标结果，按预算、依赖和恢复条件继续或停止。普通明确任务不因此另开经营循环，不增加默认角色、隔离、台账或调度器。固定版本来源与取舍见[INTEGRATION.md](INTEGRATION.md)及[项目巡检引用](skill/agi-like/references/project-operation.md)。
 
 ### 同题对照和真实卡点
 

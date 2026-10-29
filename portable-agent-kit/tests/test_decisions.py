@@ -190,7 +190,7 @@ class DecisionGateTests(unittest.TestCase):
 
     def test_distinct_source_statements_cannot_hide_priority_inside_same_paragraph(self):
         from core.coverage import source_brief
-        (self.work / 'request.md').write_text('允许符合条件者分配；容量最小者优先。同容量按ID排序。命令为 `a;b`。\n')
+        (self.work / 'request.md').write_text('允许符合条件者分配；容量最小者优先。同容量按ID排序。命令为 `a;b`。\n', encoding='utf-8')
         brief = source_brief(self.work, ['request.md'], split_items=True, split_statements=True)
         self.assertEqual(len(brief['units']), 4)
         self.assertIn('同容量按ID排序', brief['units'][2]['text'])

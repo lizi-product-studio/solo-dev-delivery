@@ -9,20 +9,21 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+NAME = "agi-like"
 
 
 def export(destination):
     destination = Path(destination).resolve()
-    if destination.name != "solo-dev-delivery":
-        raise ValueError("destination folder must be named solo-dev-delivery")
+    if destination.name != NAME:
+        raise ValueError("destination folder must be named " + NAME)
     if destination.exists():
         raise ValueError("destination exists; preserve it and choose a new parent")
-    source = ROOT / "skill/solo-dev-delivery"
+    source = ROOT / "skill" / NAME
     match = re.search(r'^  version: "([0-9]+\.[0-9]+\.[0-9]+)"$', (source / 'SKILL.md').read_text(encoding='utf-8'), re.M)
     if not match:
         raise ValueError('Skill metadata must contain a semantic version')
     version = match.group(1)
-    archive = destination.parent / ("solo-dev-delivery-" + version + ".zip")
+    archive = destination.parent / (NAME + "-" + version + ".zip")
     if archive.exists():
         raise ValueError("archive exists; choose a new parent")
     mappings = [(source / "SKILL.md", "SKILL.md"),
@@ -32,14 +33,23 @@ def export(destination):
     # A standalone Skill needs the lightweight verification tool, not the full
     # persistent protocol or old contract examples. Native compatibility stays
     # in the complete system and is tested there.
-    mappings += [(kit / "scripts" / name, "scripts/" + name) for name in ("challenge.py", "gate.py", "eval_contract.py", "host_replay.py", "blind_review.py")]
+    mappings += [(kit / "scripts" / name, "scripts/" + name) for name in (
+        "challenge.py", "gate.py", "eval_contract.py", "host_replay.py", "blind_review.py",
+        "control_plane.py", "independent_verify.py", "self_improvement.py",
+        "capacity_policy.py", "checkpoint_receipt.py", "db_inspect.py",
+        "load_report.py", "quality_contract.py")]
     mappings += [(kit / "scripts/capability_probe.py", "scripts/capability_probe.py"),
                  (kit / "scripts/capability_receipt.py", "scripts/capability_receipt.py"),
+                 (kit / "CONTROL_PLANE.md", "CONTROL_PLANE.md"),
+                 (kit / "MANIFEST.json", "MANIFEST.json"),
+                 (ROOT / "scripts/release_check.py", "scripts/release_check.py"),
                  (ROOT / "scripts/install_agent.py", "scripts/install_agent.py"),
                  (ROOT / "THIRD_PARTY.md", "THIRD_PARTY.md"),
                  (ROOT / "vendor/superpowers-lite/LICENSE", "licenses/superpowers-lite-MIT.txt")]
     mappings += [(kit / "core" / name, "scripts/core/" + name)
-                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py", "decisions.py")]
+                 for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py", "decisions.py", "state_machine.py")]
+    mappings += [(p, "control_plane/" + p.relative_to(kit / "control_plane").as_posix())
+                 for p in (kit / "control_plane").rglob("*.py")]
     destination.mkdir(parents=True)
     for src, rel in mappings:
         target = destination / rel
@@ -52,7 +62,7 @@ def export(destination):
               "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
              for p in sorted(destination.rglob("*"), key=lambda item: item.relative_to(destination).as_posix()) if p.is_file()]
     (destination / "BUNDLE.json").write_bytes((json.dumps({
-        "version": version, "format": "Agent Skills", "python": "3.9+", "files": files,
+        "name": NAME, "version": version, "format": "Agent Skills", "python": "3.9+", "files": files,
         "personal_data_included": False, "scheduler": "none",
         "platform_status": "format-and-local-runtime-verified; platform loading must be checked by its host",
     }, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))

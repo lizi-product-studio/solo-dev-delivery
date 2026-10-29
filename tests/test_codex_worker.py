@@ -373,8 +373,16 @@ class CodexWorkerTests(unittest.TestCase):
         self.assertEqual('BLOCKED', result['status'])
         self.assertIn('could not persist', result['summary'])
         self.assertEqual([result['child_pid']], self.pids)
-        with self.assertRaises(ProcessLookupError):
+        try:
             os.kill(result['child_pid'], 0)
+        except ProcessLookupError:
+            pass
+        except OSError as exc:
+            # Windows reports a dead PID as ERROR_INVALID_PARAMETER (87)
+            # instead of raising ProcessLookupError.
+            self.assertEqual(87, getattr(exc, 'winerror', None))
+        else:
+            self.fail('worker child is still alive')
 
 
 if __name__ == '__main__':

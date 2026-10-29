@@ -1,10 +1,14 @@
-# Portable Solo Delivery Kit
+# Portable AGI-like Kit
 
-AAP-0.1是完整系统的兼容请求信封；0.11.0候选保留version 2状态门禁并提供有来源的场景选择、逐方法执行覆盖、候选反例重放和跨产物关系核验。独立Skill导出gate、challenge、本地关系检查、无状态能力预检和通用安装器，不携带旧session/状态机/契约示例；以下持久入口仅供完整系统在真正需要恢复/交接时使用。包装层不会自动增加模型判断、业务知识、账号权限或真实平台能力。
+AAP-0.1是兼容请求信封；1.1.0候选保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
 
 ## 文件与入口
 
 - `core/state_machine.py`：无模型、无网络依赖的 0.2 状态机；逐项验收要求宿主 `verify_evidence` 回调确认实际证据。旧 `state_version` 状态会以 `STATE_UPGRADE_REQUIRED` 拒绝，不自动迁移。
+- `control_plane/`：`delivery-contract/1` 合同规范化、SQLite 任务/事件/租约持久化、独立验收回调和 `self-improvement/2` 升级候选协调器。
+- `CONTROL_PLANE.md`：控制平面、宿主契约和最小生命周期说明。
+- `scripts/control_plane.py`：创建任务、领取租约、查看计划、提交状态事件、恢复对账和读取事件历史；不执行任意 shell 或外部动作。
+- `scripts/independent_verify.py`：由不同于任务 owner 的 reviewer 重新读取证据，校验路径、哈希和确定性断言。
 - `scripts/session.py`：仅做受限本地产物检查的 CLI，不调用模型、任意 shell、浏览器或外部服务。用 `init`、`next`、`check --check ID`、`finish` 推进；仅支持契约内的文本、JSON、CSV 检查，其他验收必须交给真实宿主验证。
 - `core/local_checks.py`：上述 CLI 的只读检查器；只证明明确声明的机械属性，不证明语义、体验、授权或平台状态。
 - `scripts/challenge.py`：不新建队列即可冻结候选、在临时副本运行审查者unittest、精确核对汇总及生成表格；改动依赖使旧结果失效。它运行受信Python代码，不是安全沙箱或独立身份认证。`--help`与Skill的`references/result-verification.md`给出范围和调用。
@@ -17,6 +21,8 @@ AAP-0.1是完整系统的兼容请求信封；0.11.0候选保留version 2状态�
 - `scripts/host_replay.py`：校验宿主安装、加载、调用、分流和读回回执是否绑定当前候选版本，并重算原始证据哈希；不执行宿主、不解释截图，也不把模型自报当作兼容性证明。
 - `scripts/blind_review.py`：为冻结评测生成不泄露臂信息的证据包，并校验独立判分回执、候选版本和证据绑定；未知保持未知。
 - `scripts/eval_contract.py`：校验冻结的0.13评测合同和JSONL运行回执，并输出保留unknown的描述性指标；不调用模型、不授予权限、不替代交付门禁。
+- `scripts/self_improvement.py`：记录带哈希证据的经验，按不同 run/task 聚类重复根因，读取独立审核/回归/灰度/回滚计划回执生成候选；不改源码、不发布、不调度。
+- `scripts/release_check.py`：只读核对1.1.0版本元数据、导出ZIP、BUNDLE文件哈希和发布校验值；不调用模型、不验证宿主加载或业务质量。
 - `../scripts/install_agent.py`：安装已导出的Skill目录；generic模式显式指定任意宿主的真实Skill根目录，ZCode/Kimi CLI支持目录快捷方式。
 
 普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：
@@ -27,16 +33,16 @@ python3 portable-agent-kit/scripts/session.py next --session /tmp/demo-session
 python3 portable-agent-kit/scripts/session.py check --session /tmp/demo-session --check AC1
 python3 portable-agent-kit/scripts/session.py check --session /tmp/demo-session --check AC2
 python3 portable-agent-kit/scripts/session.py finish --session /tmp/demo-session
-python3 scripts/export_skill.py /path/to/new-parent/solo-dev-delivery
+python3 scripts/export_skill.py /path/to/new-parent/agi-like
 ```
 
-导出目录须为尚不存在的 `solo-dev-delivery` 目录。运行器将 session 保存在工作区外；不要删除或覆盖已有 session。Python 3.9+，仅标准库。
+导出目录须为尚不存在的 `agi-like` 目录。运行器将 session 保存在工作区外；不要删除或覆盖已有 session。Python 3.9+，仅标准库。
 
 ## 宿主接入
 
-通用安装入口适用于任何提供兼容Skill目录的宿主，包括DeepSeek Harness、自建Agent及各种CLI/IDE；实际目录和注册机制由宿主文档/配置确认。ZCode/Kimi有已核对目录的快捷方式。安装后脚本和引用自包含，不需要额外安装Lite或带入个人系统。详见[宿主安装](../skill/solo-dev-delivery/references/host-integration.md)。
+通用安装入口适用于任何提供兼容Skill目录的宿主，包括DeepSeek Harness、自建Agent及各种CLI/IDE；实际目录和注册机制由宿主文档/配置确认。ZCode/Kimi有已核对目录的快捷方式。安装后脚本和引用自包含，不需要额外安装Lite或带入个人系统。详见[宿主安装](../skill/agi-like/references/host-integration.md)。
 
-**没有完成这些平台的实机加载或自动分流验证**。宿主提供真实工具、权限和证据；需要持久恢复时才额外实现存储和AAP验证回调。文件安装通过不代表客户端加载，能力清单只是声明，参考适配器只是内存演示。
+**没有完成这些平台的实机加载或自动分流验证**。宿主提供真实工具、权限和证据；控制平面可以保存任务和事件，但真实工具执行、身份和证据回调仍由宿主提供。文件安装通过不代表客户端加载，能力清单只是声明，参考适配器只是内存演示。
 
 完整系统的本机兼容入口默认使用Codex；独立包可由用户选择的兼容宿主加载。外部写入、身份操作、付款、发布和不可逆操作仍需具体授权及真实宿主能力。非软件业务只复用目标澄清、证据判断、验证与失败恢复方法；不得无端套用软件队列或软件验收清单。
 

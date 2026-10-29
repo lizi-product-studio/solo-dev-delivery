@@ -1,4 +1,4 @@
-name: Validate solo-dev-delivery
+name: Validate agi-like
 
 on:
   push:
@@ -61,11 +61,18 @@ jobs:
           python-version: '3.12'
       - name: Export and verify self-contained package
         run: |
-          python scripts/export_skill.py "$RUNNER_TEMP/solo-export/solo-dev-delivery"
-          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills"
-          python "$RUNNER_TEMP/solo-export/solo-dev-delivery/scripts/install_agent.py" --destination "$RUNNER_TEMP/solo-host/skills" --verify
+          python scripts/export_skill.py "$RUNNER_TEMP/agi-export/agi-like"
+          python "$RUNNER_TEMP/agi-export/agi-like/scripts/install_agent.py" --destination "$RUNNER_TEMP/agi-host/skills"
+          python "$RUNNER_TEMP/agi-export/agi-like/scripts/install_agent.py" --destination "$RUNNER_TEMP/agi-host/skills" --verify
       - name: Verify downloadable package matches canonical source
         run: |
-          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "solo-export/solo-dev-delivery/BUNDLE.json").read_text())["version"])')
-          cmp "$RUNNER_TEMP/solo-export/solo-dev-delivery-$version.zip" "packages/solo-dev-delivery-$version.zip"
-          sha256sum -c "packages/solo-dev-delivery-$version.zip.sha256"
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "agi-export/agi-like/BUNDLE.json").read_text())["version"])')
+          cmp "$RUNNER_TEMP/agi-export/agi-like-$version.zip" "packages/agi-like-$version.zip"
+          sha256sum -c "packages/agi-like-$version.zip.sha256"
+      - name: Run release self-check
+        run: |
+          version=$(python -c 'import json, os; from pathlib import Path; print(json.loads((Path(os.environ["RUNNER_TEMP"]) / "agi-export/agi-like/BUNDLE.json").read_text())["version"])')
+          python "$RUNNER_TEMP/agi-export/agi-like/scripts/release_check.py" \
+            "$RUNNER_TEMP/agi-export/agi-like" \
+            "$RUNNER_TEMP/agi-export/agi-like-$version.zip" \
+            --checksum "packages/agi-like-$version.zip.sha256"

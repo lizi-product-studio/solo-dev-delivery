@@ -181,7 +181,7 @@ class RelationTests(unittest.TestCase):
         body = self.write_table()
         self.assertIn("| J6 | Chen | 未知 |", body)
         self.assertEqual("PASS", self.result(self.table())["verdict"])
-        original = (self.workspace / "plan.md").read_text()
+        original = (self.workspace / "plan.md").read_text(encoding="utf-8")
         self.write("plan.md", original.replace("| J6 | Chen |", "| J6 | Wu |"))
         self.assertEqual("FAIL", self.result(self.table())["verdict"])
         self.write("plan.md", original.replace(body, "\n".join(body.splitlines()[:2] + list(reversed(body.splitlines()[2:])))))
@@ -197,13 +197,13 @@ class RelationTests(unittest.TestCase):
         evidence = self.evidence(check)
         verify = verifier(self.workspace, {"acceptance": [check], "scope": self.scope}, [])
         self.assertTrue(verify(evidence))
-        self.write("plan.md", "Extra prose\n" + (self.workspace / "plan.md").read_text())
+        self.write("plan.md", "Extra prose\n" + (self.workspace / "plan.md").read_text(encoding="utf-8"))
         result = self.result(check)
         self.assertEqual("PASS", result["verdict"])
         self.assertIn("free-text semantics are not verified", result["observed"])
         self.assertFalse(verify(evidence))
         # Editors may normalize line endings; identical cell content still passes.
-        self.write("plan.md", (self.workspace / "plan.md").read_text().replace("\n", "\r\n"))
+        self.write("plan.md", (self.workspace / "plan.md").read_text(encoding="utf-8").replace("\n", "\r\n"))
         self.assertEqual("PASS", self.result(check)["verdict"])
 
     def test_table_escaping_is_deterministic_and_cannot_inject_rows_or_markers(self):

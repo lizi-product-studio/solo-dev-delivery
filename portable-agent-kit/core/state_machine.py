@@ -76,7 +76,7 @@ def validate_contract(contract):
         ids.add(row["id"])
     policy = contract.get("policy", {})
     _require(isinstance(policy, dict), "policy must be an object")
-    for key in ("external_actions", "workspace_write", "ux_required"):
+    for key in ("external_actions", "workspace_write", "ux_required", "shell_required"):
         if key in policy:
             _require(isinstance(policy[key], bool), "policy." + key + " must be boolean")
     required = contract.get("required_capabilities", [])
@@ -98,7 +98,9 @@ def probe(capabilities):
 def _required_capabilities(contract):
     required = ["evidence.hash", "checkpoint.persist", *contract.get("required_capabilities", [])]
     if contract.get("policy", {}).get("workspace_write", True):
-        required.extend(["fs.read", "fs.write", "shell.exec"])
+        required.extend(["fs.read", "fs.write"])
+        if contract.get('policy',{}).get('shell_required',True):
+            required.append('shell.exec')
     if contract.get("policy", {}).get("ux_required"):
         required.extend(["browser.open", "browser.control"])
     if contract.get("policy", {}).get("external_actions"):

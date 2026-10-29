@@ -1,0 +1,48 @@
+{
+  "format": "runtime-domain-acceptance/1",
+  "status": "PASS",
+  "synthetic_tasks": true,
+  "results": [
+    {
+      "id": "software",
+      "domain": "software",
+      "status": "PASS",
+      "runtime_status": "COMPLETED",
+      "steps": 5,
+      "first_review_pass": true,
+      "review_attempts": 1,
+      "source_unchanged": true,
+      "required_input_reads": true,
+      "elapsed_seconds": 170.703,
+      "evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\runtime-domains-20261029-r1\\software\\result.json"
+    },
+    {
+      "id": "data",
+      "domain": "data",
+      "status": "PASS",
+      "runtime_status": "COMPLETED",
+      "steps": 5,
+      "first_review_pass": true,
+      "review_attempts": 1,
+      "source_unchanged": true,
+      "required_input_reads": true,
+      "elapsed_seconds": 108.203,
+      "evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\runtime-domains-20261029-r1\\data\\result.json"
+    },
+    {
+      "id": "procurement",
+      "domain": "procurement",
+      "status": "PASS",
+      "runtime_status": "COMPLETED",
+      "steps": 11,
+      "first_review_pass": false,
+      "review_attempts": 2,
+      "source_unchanged": true,
+      "oracle_unchanged": true,
+      "required_input_reads": true,
+      "elapsed_seconds": 249.688,
+      "evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\runtime-domains-20261029-r2\\procurement\\result.json"
+    }
+  ],
+  "limits": "Three representative synthetic acceptance cases with host-default Codex. No weak/strong comparison, no production or general AGI claim. Procurement r1 excluded due evaluator drift; r2 freezes reviewer."
+}

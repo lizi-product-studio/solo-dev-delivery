@@ -1,14 +1,22 @@
 # Portable AGI-like Kit
 
-AAP-0.1是兼容请求信封；1.1.0候选保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
+AAP-0.1是兼容请求信封；1.2.0候选保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
 
 ## 文件与入口
 
 - `core/state_machine.py`：无模型、无网络依赖的 0.2 状态机；逐项验收要求宿主 `verify_evidence` 回调确认实际证据。旧 `state_version` 状态会以 `STATE_UPGRADE_REQUIRED` 拒绝，不自动迁移。
 - `control_plane/`：`delivery-contract/1` 合同规范化、SQLite 任务/事件/租约持久化、独立验收回调和 `self-improvement/2` 升级候选协调器。
+- `agent_runtime/`：模型适配器、显式工具注册、长期记忆、技能调用和跨任务经验循环。
+- `agent_runtime/models.py`：OpenAI-compatible 模型适配器；通过 `AGI_LIKE_MODEL_URL`、`AGI_LIKE_MODEL`、`AGI_LIKE_API_KEY` 接入真实模型。
+- `agent_runtime/skills.py`：候选技能、激活技能和跨任务使用次数的持久库。
+- `scripts/agent_run.py`：真实模型入口，提供受限文件工具、长期记忆和技能库；没有模型配置时明确失败，不伪造模型结果。
+- `AGENT_RUNTIME.md`：受管执行、可信审查脚本、项目记忆、技能回归、暂停续接和有界 worker 的使用说明。
+- `scripts/agent_queue.py`：依赖任务的有限批次 worker，通过同一 agent_run 合同验收，不自动重试未知任务。
 - `CONTROL_PLANE.md`：控制平面、宿主契约和最小生命周期说明。
 - `scripts/control_plane.py`：创建任务、领取租约、查看计划、提交状态事件、恢复对账和读取事件历史；不执行任意 shell 或外部动作。
 - `scripts/independent_verify.py`：由不同于任务 owner 的 reviewer 重新读取证据，校验路径、哈希和确定性断言。
+- `scripts/bridge.py`：由 Agent/Skill 会话登记真实目标、授权范围和 session_id，让 Agent Runtime 跟踪实际会话，而不是手工测试任务。
+- `scripts/runtime_event.py`：宿主钩子提交单个 Runtime 事件，把工具调用、证据、暂停、恢复、取消、对账和完成写回同一任务。
 - `scripts/session.py`：仅做受限本地产物检查的 CLI，不调用模型、任意 shell、浏览器或外部服务。用 `init`、`next`、`check --check ID`、`finish` 推进；仅支持契约内的文本、JSON、CSV 检查，其他验收必须交给真实宿主验证。
 - `core/local_checks.py`：上述 CLI 的只读检查器；只证明明确声明的机械属性，不证明语义、体验、授权或平台状态。
 - `scripts/challenge.py`：不新建队列即可冻结候选、在临时副本运行审查者unittest、精确核对汇总及生成表格；改动依赖使旧结果失效。它运行受信Python代码，不是安全沙箱或独立身份认证。`--help`与Skill的`references/result-verification.md`给出范围和调用。
@@ -22,7 +30,7 @@ AAP-0.1是兼容请求信封；1.1.0候选保留version 2状态门禁并增加 `
 - `scripts/blind_review.py`：为冻结评测生成不泄露臂信息的证据包，并校验独立判分回执、候选版本和证据绑定；未知保持未知。
 - `scripts/eval_contract.py`：校验冻结的0.13评测合同和JSONL运行回执，并输出保留unknown的描述性指标；不调用模型、不授予权限、不替代交付门禁。
 - `scripts/self_improvement.py`：记录带哈希证据的经验，按不同 run/task 聚类重复根因，读取独立审核/回归/灰度/回滚计划回执生成候选；不改源码、不发布、不调度。
-- `scripts/release_check.py`：只读核对1.1.0版本元数据、导出ZIP、BUNDLE文件哈希和发布校验值；不调用模型、不验证宿主加载或业务质量。
+- `scripts/release_check.py`：只读核对1.2.0版本元数据、导出ZIP、BUNDLE文件哈希和发布校验值；不调用模型、不验证宿主加载或业务质量。
 - `../scripts/install_agent.py`：安装已导出的Skill目录；generic模式显式指定任意宿主的真实Skill根目录，ZCode/Kimi CLI支持目录快捷方式。
 
 普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：
@@ -46,4 +54,4 @@ python3 scripts/export_skill.py /path/to/new-parent/agi-like
 
 完整系统的本机兼容入口默认使用Codex；独立包可由用户选择的兼容宿主加载。外部写入、身份操作、付款、发布和不可逆操作仍需具体授权及真实宿主能力。非软件业务只复用目标澄清、证据判断、验证与失败恢复方法；不得无端套用软件队列或软件验收清单。
 
-此包提供本地Skill目录安装与校验，不提供HTTP服务、消息队列、后台scheduler或自动授权。实际交付范围以当前项目验收和目标宿主的真实证据为准。
+此包提供本地安装与有界同步任务队列；不启动HTTP服务、后台调度器或自动授权。实际交付范围以当前项目验收和目标宿主的真实证据为准。

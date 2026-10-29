@@ -1,3 +1,17 @@
+# AGI-like 1.2.0：Agent Runtime 候选（2026-10-29）
+
+本版本以 Agent Runtime 为主线：目标、模型决策、注册工具、项目记忆、参数化技能、独立审查反馈、跨进程检查点、未知动作对账和有界批次队列。控制面板已从活跃源码和分发入口移除；不安装后台服务或桌面事件订阅。
+
+三类合成任务经过真实 Codex 决策和公共 Runtime CLI：软件修复 5 轮、数据统计 5 轮、采购草稿 11 轮，均完成实际产物及独立 unittest 验收。采购首次未过，有限修复后第二次通过；其 r1 因判分器变化不计最终固定回放，r2 已冻结判分器。三题不证明相对无 Skill 或弱模型基线有收益。原始轨迹范围和剩余要求见 [Runtime 验收记录](evaluations/RUNTIME_ACCEPTANCE_20261029.md) 与 [领域任务结果](evaluations/runtime-domains-20261029/RESULTS.json)。
+
+全量基线回归 505 passed、1 skipped、180 个子测试通过；后续独立审查修复后的关键路径定向回归 65 passed、34 个子测试通过，另有针对副作用异常与验收类型/路径绑定的反例回归。真实跨进程暂停/恢复、崩溃后不重复副作用、参数化技能新任务调用已分别保存证据。历史版本测试数字不代表后来修改自动通过。
+
+1.2.0 两次独立构建完全相同，文本按 UTF-8/LF 规范化；71 文件的用户级安装与包逐字节一致。ZIP SHA256：`58548b68d0ff58c2b1cec5a3abcffadd130441bc6f20511f2cbceccf66e30407`。当前用户级入口为 `.agents/skills/agi-like`，旧安装已备份到工作区 release 目录。当前 `SOURCE_SNAPSHOT.json` 记录 release 输入的规范哈希；旧 1.0 快照保存在 evaluations/source-snapshots。
+
+这是可运行的工程候选。弱/强模型同条件对照、长周期无人值守、当前桌面活动聊天的自动事件订阅、真实外部系统和生产环境验收仍未完成；不将这个候选写成完整 AGI/ASI 系统。
+
+# 以下为历史开发记录
+
 # AGI-like 1.1.0：控制平面与正式改名（2026-10-28）
 
 本轮正式将 Skill 入口从 `solo-dev-delivery` 改名为 `agi-like`。入口、导出目录、安装目录、BUNDLE、ZIP 和校验器使用同一名称；旧用户级目录已移动到 `outputs/agi-like-refactor-20261028/legacy-installed-solo-dev-delivery/` 作为可恢复备份，当前用户级安装为 `C:\Users\Administrator\.agents\skills\agi-like`。

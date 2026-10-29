@@ -1,0 +1,12 @@
+{
+  "included_count": 6,
+  "cancelled_count": 1,
+  "unknown_amount_rows": 2,
+  "sale_units": 7,
+  "return_units": 3,
+  "net_units": 4,
+  "gross_known_amount": "4.81",
+  "return_known_amount": "1.25",
+  "known_amount_subtotal": "3.56",
+  "net_amount": null
+}

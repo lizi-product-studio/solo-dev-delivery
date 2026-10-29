@@ -2,7 +2,7 @@
 name: agi-like
 description: 面向通用任务的 AGI-like 自主交付控制层：按事实判断边界和能力，编排执行、独立验收、恢复失败并受控积累新技能；简单问答与普通闲聊不启动流程。
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # AGI-like 自主交付控制层
@@ -19,4 +19,6 @@ metadata:
 - 宿主与本机系统：[`host-integration.md`](references/host-integration.md)、[`software-delivery.md`](references/software-delivery.md)、[`portable-workflow.md`](references/portable-workflow.md)。
 - 质量合同与受控变强：[`quality-contracts.md`](references/quality-contracts.md)、[`self-improvement.md`](references/self-improvement.md)。
 
-需要持久状态、租约、独立验收或升级候选时，使用导出包内的 `scripts/control_plane.py`、`scripts/independent_verify.py` 和 `scripts/self_improvement.py`。这些工具约束状态和证据，但不增加账号、权限、宿主工具、后台运行或定时器；其他宿主必须实际加载并验证本 Skill。
+先选择一种执行模式，避免同一目标重复开工：当前 Codex 会话直接执行时使用宿主原生工具，`scripts/bridge.py` 只可登记会话和目标，不代表已订阅内部事件；由外部运行时负责执行时，直接调用 `scripts/agent_run.py`（合同、工作区、记忆和回执），由它创建并驱动同一任务，不再提前用 bridge 创建另一笔记录。执行、暂停与续接见独立包根目录 `AGENT_RUNTIME.md`，源码中的同一文件为 `portable-agent-kit/AGENT_RUNTIME.md`。
+
+`agent_runtime/` 提供模型、工具、项目记忆和技能循环，控制平面保留状态与独立证据，`scripts/agent_queue.py` 提供有界批次。桥接失败时标记 `UNREGISTERED`；没有实际事件回写时不声称控制平面已接管。宿主必须实际加载并验证本 Skill；这些工具不增加账号、权限或自动后台运行。

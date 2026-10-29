@@ -35,12 +35,13 @@ def export(destination):
     # in the complete system and is tested there.
     mappings += [(kit / "scripts" / name, "scripts/" + name) for name in (
         "challenge.py", "gate.py", "eval_contract.py", "host_replay.py", "blind_review.py",
-        "control_plane.py", "independent_verify.py", "self_improvement.py",
+        "agent_queue.py", "agent_run.py", "bridge.py", "control_plane.py", "independent_verify.py", "runtime_event.py", "self_improvement.py",
         "capacity_policy.py", "checkpoint_receipt.py", "db_inspect.py",
         "load_report.py", "quality_contract.py")]
     mappings += [(kit / "scripts/capability_probe.py", "scripts/capability_probe.py"),
                  (kit / "scripts/capability_receipt.py", "scripts/capability_receipt.py"),
                  (kit / "CONTROL_PLANE.md", "CONTROL_PLANE.md"),
+                 (kit / "AGENT_RUNTIME.md", "AGENT_RUNTIME.md"),
                  (kit / "MANIFEST.json", "MANIFEST.json"),
                  (ROOT / "scripts/release_check.py", "scripts/release_check.py"),
                  (ROOT / "scripts/install_agent.py", "scripts/install_agent.py"),
@@ -50,11 +51,18 @@ def export(destination):
                  for name in ("local_checks.py", "json_relations.py", "coverage.py", "sensitivity.py", "capabilities.py", "decisions.py", "state_machine.py")]
     mappings += [(p, "control_plane/" + p.relative_to(kit / "control_plane").as_posix())
                  for p in (kit / "control_plane").rglob("*.py")]
+    mappings += [(p, "agent_runtime/" + p.relative_to(kit / "agent_runtime").as_posix())
+                 for p in (kit / "agent_runtime").rglob("*.py")]
     destination.mkdir(parents=True)
     for src, rel in mappings:
         target = destination / rel
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(src, target)
+        # Git checks out text with different line endings on Windows/Linux.
+        # Release identity uses canonical UTF-8/LF, not checkout conversion.
+        payload=src.read_bytes()
+        if src.suffix.lower() in {'.md','.py','.json','.yaml','.yml','.txt'}:
+            payload=payload.replace(b'\r\n',b'\n')
+        target.write_bytes(payload)
     # The native core initializer imports the persistent protocol. The thin
     # export intentionally exposes only local verification modules.
     (destination / 'scripts/core/__init__.py').write_bytes(b'"""Bounded local verification helpers."""\n')
@@ -63,6 +71,7 @@ def export(destination):
              for p in sorted(destination.rglob("*"), key=lambda item: item.relative_to(destination).as_posix()) if p.is_file()]
     (destination / "BUNDLE.json").write_bytes((json.dumps({
         "name": NAME, "version": version, "format": "Agent Skills", "python": "3.9+", "files": files,
+        "source_text_normalization": "UTF-8 text with LF line endings",
         "personal_data_included": False, "scheduler": "none",
         "platform_status": "format-and-local-runtime-verified; platform loading must be checked by its host",
     }, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))

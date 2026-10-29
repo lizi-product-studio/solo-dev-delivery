@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "buyer": "明川试验采购部",
+  "required_questions": ["unit_price", "stock", "lead_time", "shipping_cost", "tax_terms"],
+  "human_review_required": true,
+  "external_send_authorized": false,
+  "unknown_facts": ["price", "stock", "lead_time"]
+}

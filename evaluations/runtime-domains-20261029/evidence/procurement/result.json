@@ -1,0 +1,54 @@
+{
+  "result": {
+    "id": "procurement",
+    "domain": "procurement",
+    "status": "PASS",
+    "runtime_status": "COMPLETED",
+    "steps": 11,
+    "first_review_pass": false,
+    "review_attempts": 2,
+    "source_unchanged": true,
+    "oracle_unchanged": true,
+    "required_input_reads": true,
+    "elapsed_seconds": 249.688
+  },
+  "artifact_refs": [
+    {
+      "path": "evidence/procurement/candidate/draft.json",
+      "sha256": "c3083d4301d1df1a5d870a3cb3196af251dc32fe1f21fc51e805a259bd729d48"
+    },
+    {
+      "path": "evidence/procurement/candidate/draft.txt",
+      "sha256": "875d3311733e28ab5bc7b27253c8547439eb03927dab2bf75fe0c9dc3984974e"
+    }
+  ],
+  "observed_actions": [
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "finish",
+    "tool",
+    "tool",
+    "finish"
+  ],
+  "control_status": "COMPLETED",
+  "reviews": [
+    {
+      "status": "FAIL",
+      "executed_tests": 8,
+      "failed_tests": [
+        "ProcurementDraft.test_complete_nonempty_question_set"
+      ]
+    },
+    {
+      "status": "CHALLENGE_PASS",
+      "executed_tests": 8,
+      "failed_tests": []
+    }
+  ],
+  "provenance": "Real Codex decision loop; full original logs retained in local acceptance directory named in RESULTS.json. Public artifacts are synthetic."
+}

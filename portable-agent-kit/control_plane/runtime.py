@@ -17,6 +17,12 @@ from core.state_machine import ProtocolError, apply, start
 
 
 FORMAT = "control-plane/1"
+# These operations record observations or move execution toward a safe stop.
+# Spending the action budget must never prevent checkpointing, cancellation,
+# pausing or reconciling a previously unknown side effect.
+NON_SPENDING_OPERATIONS = frozenset({
+    "observe", "checkpoint", "phase", "pause", "cancel", "reconcile", "evidence",
+})
 
 
 class ControlPlaneError(ValueError):
@@ -161,21 +167,28 @@ class DeliveryRuntime:
             raise ControlPlaneError("LEASE_EXPIRED; reconcile before continuing")
         return row
 
-    def claim(self, task_id, owner, *, ttl_seconds=300):
+    @staticmethod
+    def _validate_claim(owner, ttl_seconds):
         if not isinstance(owner, str) or not owner.strip():
             raise ControlPlaneError("owner must be a non-empty string")
         if isinstance(ttl_seconds, bool) or not isinstance(ttl_seconds, int) or ttl_seconds < 1:
             raise ControlPlaneError("ttl_seconds must be a positive integer")
+        return owner.strip()
+
+    def claim(self, task_id, owner, *, ttl_seconds=300):
+        owner = self._validate_claim(owner, ttl_seconds)
         with self._db() as db:
             db.execute("BEGIN IMMEDIATE")
             self._row(db, task_id)
             current = db.execute("SELECT * FROM leases WHERE task_id = ?", (task_id,)).fetchone()
-            if current and float(current["expires_at"]) > time.time():
-                raise ControlPlaneError("TASK_ALREADY_LEASED")
+            if current:
+                if float(current["expires_at"]) > time.time():
+                    raise ControlPlaneError("TASK_ALREADY_LEASED")
+                raise ControlPlaneError("LEASE_EXPIRED_RECLAIM_REQUIRED")
             lease_id = "lease-" + uuid.uuid4().hex
             now = time.time()
-            db.execute("INSERT OR REPLACE INTO leases(task_id, lease_id, owner, acquired_at, expires_at) VALUES (?, ?, ?, ?, ?)",
-                       (task_id, lease_id, owner.strip(), _now(), now + ttl_seconds))
+            db.execute("INSERT INTO leases(task_id, lease_id, owner, acquired_at, expires_at) VALUES (?, ?, ?, ?, ?)",
+                       (task_id, lease_id, owner, _now(), now + ttl_seconds))
         return {"format": FORMAT, "status": "CLAIMED", "task_id": task_id,
                 "lease_id": lease_id, "owner": owner.strip(),
                 "expires_at": now + ttl_seconds}
@@ -184,6 +197,9 @@ class DeliveryRuntime:
         with self._db() as db:
             db.execute("BEGIN IMMEDIATE")
             self._require_lease(db, task_id, lease_id)
+            state = self._state(self._row(db, task_id))
+            if state.get("active_executor"):
+                raise ControlPlaneError("RELEASE_REQUIRES_EXECUTOR_STOP")
             db.execute("DELETE FROM leases WHERE task_id = ?", (task_id,))
         return {"format": FORMAT, "status": "RELEASED", "task_id": task_id,
                 "lease_id": lease_id}
@@ -202,21 +218,40 @@ class DeliveryRuntime:
                 "lease_id": lease_id, "expires_at": expires_at}
 
     def reclaim(self, task_id, owner, *, stop_proof, ttl_seconds=300):
-        """Reclaim an expired lease only after the host proves the writer stopped."""
+        """Atomically reclaim an expired, specifically identified writer lease.
+
+        The proof is a trusted-host attestation, not independent identity or
+        process authentication. It must name this task and the old lease so a
+        stop observation for another writer cannot release this writer's lock.
+        """
+        owner = self._validate_claim(owner, ttl_seconds)
         if not isinstance(stop_proof, dict) or stop_proof.get("process_stopped") is not True:
             raise ControlPlaneError("RECLAIM_REQUIRES_PROCESS_STOP_PROOF")
         with self._db() as db:
             db.execute("BEGIN IMMEDIATE")
-            row = self._row(db, task_id)
+            self._row(db, task_id)
             lease = db.execute("SELECT * FROM leases WHERE task_id = ?", (task_id,)).fetchone()
             if lease is None:
                 raise ControlPlaneError("NO_EXPIRED_LEASE")
             if float(lease["expires_at"]) > time.time():
                 raise ControlPlaneError("LEASE_STILL_ACTIVE")
-            db.execute("DELETE FROM leases WHERE task_id = ?", (task_id,))
-        result = self.claim(task_id, owner, ttl_seconds=ttl_seconds)
-        result["reclaimed_from"] = lease["owner"]
-        result["stop_proof"] = deepcopy(stop_proof)
+            if (stop_proof.get("task_id") != task_id
+                    or stop_proof.get("lease_id") != lease["lease_id"]):
+                raise ControlPlaneError("RECLAIM_STOP_PROOF_BINDING_MISMATCH")
+            lease_id = "lease-" + uuid.uuid4().hex
+            now = time.time()
+            expires_at = now + ttl_seconds
+            db.execute("UPDATE leases SET lease_id=?,owner=?,acquired_at=?,expires_at=? WHERE task_id=?",
+                       (lease_id, owner, _now(), expires_at, task_id))
+            result = {"format": FORMAT, "status": "CLAIMED", "task_id": task_id,
+                      "lease_id": lease_id, "owner": owner, "expires_at": expires_at,
+                      "reclaimed_from": lease["owner"], "previous_lease_id": lease["lease_id"],
+                      "stop_proof": deepcopy(stop_proof)}
+            db.execute("""INSERT INTO events
+                (task_id, lease_id, operation, request_json, response_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)""",
+                       (task_id, lease_id, "reclaim", _dump({"owner": owner, "stop_proof": stop_proof}),
+                        _dump(result), _now()))
         return result
 
     def recover(self, task_id):
@@ -288,7 +323,7 @@ class DeliveryRuntime:
                 "max_steps": contract.get("budget", {}).get("max_steps", 20),
                 "max_retries": contract.get("budget", {}).get("max_retries", 2),
             })
-            if operation not in {"observe", "checkpoint", "phase"} and not is_replay:
+            if operation not in NON_SPENDING_OPERATIONS and not is_replay:
                 if control["steps_used"] >= control["max_steps"]:
                     raise ControlPlaneError("BUDGET_EXHAUSTED")
             request = {"protocol": state["protocol"], "request_id": request_id,
@@ -305,7 +340,7 @@ class DeliveryRuntime:
             except (ProtocolError, ValueError) as exc:
                 raise ControlPlaneError(str(exc)) from None
             now = _now()
-            if operation not in {"observe", "checkpoint", "phase"} and not is_replay:
+            if operation not in NON_SPENDING_OPERATIONS and not is_replay:
                 new_state.setdefault("control_plane", control)["steps_used"] = control["steps_used"] + 1
             db.execute("UPDATE tasks SET state_json = ?, status = ?, revision = ?, updated_at = ? WHERE task_id = ?",
                        (_dump(new_state), new_state["status"], new_state["revision"], now, task_id))

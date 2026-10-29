@@ -1,0 +1,38 @@
+{
+  "format": "delivery-contract/1",
+  "owner": "agent-runtime",
+  "candidate": "synthetic-software-v1",
+  "authorization_ref": "user-requested-local-domain-evaluation",
+  "scope": [
+    "pricing.py"
+  ],
+  "excluded": [
+    "external writes",
+    "production operations"
+  ],
+  "inputs": [
+    "TASK.md"
+  ],
+  "policy": {
+    "workspace_write": true,
+    "shell_required": false,
+    "external_actions": false,
+    "ux_required": false
+  },
+  "budget": {
+    "max_steps": 30,
+    "max_retries": 2
+  },
+  "acceptance": [
+    {
+      "id": "pricing-entry",
+      "expected": "pricing entry point remains present; behavioral oracle is separate",
+      "environment": "local",
+      "assertion": {
+        "type": "text_contains",
+        "path": "pricing.py",
+        "text": "def quote_total"
+      }
+    }
+  ]
+}

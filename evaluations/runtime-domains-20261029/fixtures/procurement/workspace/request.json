@@ -1,0 +1,5 @@
+{
+  "request_id": "REQ-SYN-029",
+  "items": [{"sku":"BOLT-M6-304","description":"304不锈钢M6六角螺栓","quantity":2500,"unit":"件"}],
+  "required_documents": ["材质证明"]
+}

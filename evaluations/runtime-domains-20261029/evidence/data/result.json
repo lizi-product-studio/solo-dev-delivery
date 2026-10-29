@@ -1,0 +1,36 @@
+{
+  "result": {
+    "id": "data",
+    "domain": "data",
+    "status": "PASS",
+    "runtime_status": "COMPLETED",
+    "steps": 5,
+    "first_review_pass": true,
+    "review_attempts": 1,
+    "source_unchanged": true,
+    "required_input_reads": true,
+    "elapsed_seconds": 108.203
+  },
+  "artifact_refs": [
+    {
+      "path": "evidence/data/candidate/summary.json",
+      "sha256": "2187122c85a1747cb7e25a36de6c0405c269166cedd6aae0275536d8201af0ee"
+    }
+  ],
+  "observed_actions": [
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "finish"
+  ],
+  "control_status": "COMPLETED",
+  "reviews": [
+    {
+      "status": "CHALLENGE_PASS",
+      "executed_tests": 7,
+      "failed_tests": []
+    }
+  ],
+  "provenance": "Real Codex decision loop; full original logs retained in local acceptance directory named in RESULTS.json. Public artifacts are synthetic."
+}

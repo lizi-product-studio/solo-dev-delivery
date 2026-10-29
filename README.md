@@ -2,7 +2,7 @@
 
 让 Agent 在有效授权内持续推进交付：按任务选择方法，遇阻自行诊断恢复，用实际结果验收，并在需要时保留可接续的项目状态。
 
-**AGI-like 1.1.0 是当前重构候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** 它保留 0.13/1.0 的评测与发布兼容层，并增加结构化任务合同、SQLite 控制平面、租约与检查点、独立证据验收和证据绑定的自升级候选门禁。评测合同的 `schema_version: 0.13` 继续用于历史回执，不把未完成的真实回放写成 AGI 质量证明。控制平面能约束状态和证据，但不提供账号、权限、宿主工具或后台调度。核心证据见 [VALIDATION.md](VALIDATION.md)、[控制平面](portable-agent-kit/README.md)、[发布自检](scripts/release_check.py) 和[评测合同试点](evaluations/autonomy-benchmark-2026-10-26/README.md)。
+**AGI-like 1.2.0 是当前 Agent Runtime 候选，位于 `feat/evaluation-contract-2026-10-26`，尚未合并 main。** Skill 是入口；Runtime 驱动模型决策、注册工具、项目记忆和参数化技能，控制平面负责状态和证据。新增独立 unittest 验收反馈、跨进程检查点、未知动作读回、绑定租约回收及有界批次 worker。未经过验收的 finish 不能写入成功记忆。真实任务、测试范围和剩余缺口见 [Runtime 验收](evaluations/RUNTIME_ACCEPTANCE_20261029.md)；使用方式见 [Agent Runtime](portable-agent-kit/AGENT_RUNTIME.md)。这是工程运行时，名称不构成 AGI/ASI 能力证明。
 
 当前候选分支已追加 0.14 宿主能力闭环试点：能力快照与宿主回放绑定，未知能力不会被当成支持；真实 Codex CLI 的五阶段安装、加载、调用、路由和验证记录见 [宿主回放](evaluations/host-replay-20261026/codex-cli/)。该能力按需触发，简单任务仍走短路径。
 
@@ -30,7 +30,7 @@ cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 ```
 
-生成自包含目录及 `agi-like-1.1.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.1.0.zip)及[校验值](packages/agi-like-1.1.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
+生成自包含目录及 `agi-like-1.2.0.zip`。目标目录和同名 ZIP 必须不存在，以保护已有产物。包内含相对引用、控制平面、独立验收器、升级协调器、验证脚本、安装器、发布自检、清单及许可；不包含个人偏好、客户数据、原始聊天、scheduler 或旧队列状态。也可直接下载[版本化安装包](packages/agi-like-1.2.0.zip)及[校验值](packages/agi-like-1.2.0.zip.sha256)。CI在全部测试成功后重建、安装核验、运行发布自检并逐字节比对当前版本；旧版本文件保留用于复现。下载不依赖Actions制品配额，不创建GitHub Release或合并分支。
 
 ## 安装到目标 Agent
 
@@ -54,13 +54,15 @@ python /absolute/export/agi-like/scripts/control_plane.py \
 
 控制平面每次只推进一个带租约、版本和幂等键的动作；宿主执行工具后提交结果，独立验收器重新读取证据并验证哈希和确定性断言。没有可信验收回调的宿主只能得到 `UNVERIFIED`，不会被当成完成。
 
+需要把当前 Codex/Skill 会话登记到 Agent Runtime 时，使用导出包内的 `scripts/bridge.py`；`agent_runtime/` 提供目标→模型→工具→记忆→技能→验收循环，Runtime 状态通过 SQLite 事件和验收回执持久化。
+
 发布包生成后可运行一次只读自检：
 
 ```sh
 python /absolute/source/scripts/release_check.py \
   /absolute/source/skill/agi-like \
-  /absolute/source/packages/agi-like-1.1.0.zip \
-  --checksum /absolute/source/packages/agi-like-1.1.0.zip.sha256
+  /absolute/source/packages/agi-like-1.2.0.zip \
+  --checksum /absolute/source/packages/agi-like-1.2.0.zip.sha256
 ```
 
 安装到该根目录下的 `agi-like/`。相同字节重复安装不重写；不同版本先备份到搜索根目录外，再安装，不覆盖用户修改。安装失败不会把未完成的包发布成可发现的 Skill。哈希核对包内一致性，不认证下载来源。

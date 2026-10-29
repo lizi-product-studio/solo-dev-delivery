@@ -141,7 +141,9 @@ class ControlPlaneTests(unittest.TestCase):
             import time
             time.sleep(2.1)
             reclaimed = runtime.reclaim(state["task_id"], "two",
-                                        stop_proof={"process_stopped": True, "source": "host"})
+                                        stop_proof={"process_stopped": True, "source": "host",
+                                                    "task_id": state["task_id"],
+                                                    "lease_id": lease["lease_id"]})
             self.assertEqual("CLAIMED", reclaimed["status"])
             self.assertEqual("one", reclaimed["reclaimed_from"])
 

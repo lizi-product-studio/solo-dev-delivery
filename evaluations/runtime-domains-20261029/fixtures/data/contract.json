@@ -1,0 +1,51 @@
+{
+  "format": "delivery-contract/1",
+  "owner": "agent-runtime",
+  "candidate": "synthetic-data-v1",
+  "authorization_ref": "user-requested-local-domain-evaluation",
+  "scope": [
+    "summary.json"
+  ],
+  "excluded": [
+    "external writes",
+    "production operations"
+  ],
+  "inputs": [
+    "TASK.md",
+    "orders.json"
+  ],
+  "policy": {
+    "workspace_write": true,
+    "shell_required": false,
+    "external_actions": false,
+    "ux_required": false
+  },
+  "budget": {
+    "max_steps": 30,
+    "max_retries": 2
+  },
+  "acceptance": [
+    {
+      "id": "unknown-net",
+      "expected": "complete net stays unknown while amounts are missing",
+      "environment": "local",
+      "assertion": {
+        "type": "json_pointer_equals",
+        "path": "summary.json",
+        "pointer": "/net_amount",
+        "value": null
+      }
+    },
+    {
+      "id": "known-subtotal",
+      "expected": "known subtotal is rounded from exact decimal total",
+      "environment": "local",
+      "assertion": {
+        "type": "json_pointer_equals",
+        "path": "summary.json",
+        "pointer": "/known_amount_subtotal",
+        "value": "3.56"
+      }
+    }
+  ]
+}

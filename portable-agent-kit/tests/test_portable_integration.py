@@ -91,7 +91,7 @@ class ExportedAgentIntegrationTests(unittest.TestCase):
         self.assertEqual(sorted(paths), paths)
         for generated in ("BUNDLE.json", "scripts/core/__init__.py"):
             self.assertNotIn(b"\r\n", (self.source / generated).read_bytes())
-        self.assertEqual((ROOT / "skill/agi-like/SKILL.md").read_bytes(),
+        self.assertEqual((ROOT / "skill/agi-like/SKILL.md").read_bytes().replace(b'\r\n',b'\n'),
                          (self.source / "SKILL.md").read_bytes())
 
     def test_all_hosts_install_self_contained_payload_without_configuration(self):

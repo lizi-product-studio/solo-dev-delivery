@@ -1,0 +1,56 @@
+{
+  "format": "runtime-domain-fixtures/1",
+  "synthetic": true,
+  "limits": "Three small representative cases; not evidence of AGI, cross-domain superiority or production readiness.",
+  "tasks": [
+    {
+      "id": "software",
+      "domain": "software",
+      "workspace": "software/workspace",
+      "goal": "Repair the Decimal pricing helper to the TASK.md contract.",
+      "goal_path": "software/TASK.md",
+      "review": "software/review.py",
+      "contract": "software/contract.json",
+      "inputs": [
+        "TASK.md"
+      ],
+      "outputs": [
+        "pricing.py"
+      ]
+    },
+    {
+      "id": "data",
+      "domain": "data",
+      "workspace": "data/workspace",
+      "goal": "Reconcile order sales, returns, cancellations and unknown amounts using TASK.md.",
+      "goal_path": "data/TASK.md",
+      "review": "data/review.py",
+      "contract": "data/contract.json",
+      "inputs": [
+        "TASK.md",
+        "orders.json"
+      ],
+      "outputs": [
+        "summary.json"
+      ]
+    },
+    {
+      "id": "procurement",
+      "domain": "procurement",
+      "workspace": "procurement/workspace",
+      "goal": "Prepare the human-reviewed procurement inquiry draft from policy and request, without sending.",
+      "goal_path": "procurement/TASK.md",
+      "review": "procurement/review.py",
+      "contract": "procurement/contract.json",
+      "inputs": [
+        "TASK.md",
+        "policy.json",
+        "request.json"
+      ],
+      "outputs": [
+        "draft.json",
+        "draft.txt"
+      ]
+    }
+  ]
+}

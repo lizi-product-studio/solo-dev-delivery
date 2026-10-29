@@ -1,0 +1,36 @@
+{
+  "result": {
+    "id": "software",
+    "domain": "software",
+    "status": "PASS",
+    "runtime_status": "COMPLETED",
+    "steps": 5,
+    "first_review_pass": true,
+    "review_attempts": 1,
+    "source_unchanged": true,
+    "required_input_reads": true,
+    "elapsed_seconds": 170.703
+  },
+  "artifact_refs": [
+    {
+      "path": "evidence/software/candidate/pricing.py",
+      "sha256": "afdfb350b94ca48526e849be07c069b0b48c2b3629f2da79e580ec2a855b17e2"
+    }
+  ],
+  "observed_actions": [
+    "tool",
+    "tool",
+    "tool",
+    "tool",
+    "finish"
+  ],
+  "control_status": "COMPLETED",
+  "reviews": [
+    {
+      "status": "CHALLENGE_PASS",
+      "executed_tests": 9,
+      "failed_tests": []
+    }
+  ],
+  "provenance": "Real Codex decision loop; full original logs retained in local acceptance directory named in RESULTS.json. Public artifacts are synthetic."
+}

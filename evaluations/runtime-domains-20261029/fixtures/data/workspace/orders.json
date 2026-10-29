@@ -1,0 +1,11 @@
+{
+  "orders": [
+    {"id":"S1","kind":"sale","quantity":3,"unit_price":"0.10","status":"paid"},
+    {"id":"S2","kind":"sale","quantity":2,"unit_price":"1.25","status":"paid"},
+    {"id":"R1","kind":"return","quantity":1,"unit_price":"1.25","status":"settled"},
+    {"id":"C1","kind":"sale","quantity":9,"unit_price":"100.00","status":"cancelled"},
+    {"id":"U1","kind":"sale","quantity":1,"unit_price":null,"status":"paid"},
+    {"id":"R2","kind":"return","quantity":2,"unit_price":null,"status":"settled"},
+    {"id":"S3","kind":"sale","quantity":1,"unit_price":"2.005","status":"paid"}
+  ]
+}

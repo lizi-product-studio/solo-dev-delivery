@@ -1,0 +1,28 @@
+{
+  "status": "DRAFT_REQUIRES_REVIEW",
+  "request_id": "REQ-SYN-029",
+  "recipient": null,
+  "human_review_required": true,
+  "sent": false,
+  "items": [
+    {
+      "sku": "BOLT-M6-304",
+      "description": "304不锈钢M6六角螺栓",
+      "quantity": 2500,
+      "unit": "件"
+    }
+  ],
+  "questions": [
+    {"field": "unit_price", "text": "请问该产品的单价是多少？"},
+    {"field": "stock", "text": "请问该产品目前的库存及可供数量是多少，能否满足2500件的需求？"},
+    {"field": "lead_time", "text": "请问预计交期及其起算条件是什么？"},
+    {"field": "shipping_cost", "text": "请问运费如何计算，核算费用需要哪些收货信息？"},
+    {"field": "tax_terms", "text": "请问报价是否含税，适用税率及可提供的发票类型是什么？"}
+  ],
+  "commitments": {
+    "price": null,
+    "stock": null,
+    "lead_time": null
+  },
+  "text": "采购询价草稿（待人工审核）\n\n采购方：明川试验采购部\n需求编号：REQ-SYN-029\n产品：304不锈钢M6六角螺栓\nSKU：BOLT-M6-304\n需求数量：2500件\n\n拟询问事项：\n1. 请问该产品的单价是多少？\n2. 请问该产品目前的库存及可供数量是多少，能否满足2500件的需求？\n3. 请问预计交期及其起算条件是什么？\n4. 请问运费如何计算，核算费用需要哪些收货信息？\n5. 请问报价是否含税，适用税率及可提供的发票类型是什么？\n6. 请问能否提供该产品的材质证明？\n\n本草稿中的资料与名称均为合成案例，仅供人工审核，尚未对外发送，不代表已联系供应商，不构成生产采购单。价格、库存、交期及费用均待询问确认，本草稿不作承诺。"
+}

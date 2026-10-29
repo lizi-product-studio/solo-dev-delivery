@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import math
 from copy import deepcopy
 from pathlib import Path
 
@@ -90,7 +91,7 @@ def _assertion(path, assertion):
         pointer = _text(assertion.get("pointer"), "assertion.pointer")
         expected = assertion.get("value")
         value = json.loads(path.read_text(encoding="utf-8"))
-        if _json_pointer(value, pointer) != expected:
+        if 'value' not in assertion or not _same_json(_json_pointer(value, pointer),expected):
             raise EvaluationError("assertion JSON value mismatch")
         return True
     if assertion_type == "receipt_pass":
@@ -99,6 +100,20 @@ def _assertion(path, assertion):
             raise EvaluationError("bound receipt is not PASS")
         return True
     raise EvaluationError("unsupported deterministic assertion")
+
+
+def _same_json(actual,expected):
+    if isinstance(actual,bool) or isinstance(expected,bool):
+        return type(actual) is type(expected) and actual==expected
+    if isinstance(actual,(int,float)) and isinstance(expected,(int,float)):
+        return ((not isinstance(actual,float) or math.isfinite(actual))
+                and (not isinstance(expected,float) or math.isfinite(expected)) and actual==expected)
+    if type(actual) is not type(expected):return False
+    if isinstance(actual,list):
+        return len(actual)==len(expected) and all(_same_json(a,b) for a,b in zip(actual,expected))
+    if isinstance(actual,dict):
+        return set(actual)==set(expected) and all(_same_json(actual[k],expected[k]) for k in actual)
+    return actual==expected
 
 
 def verify_evidence(ref, acceptance, evidence_root, *, reviewer_id, owner):
@@ -122,6 +137,8 @@ def verify_evidence(ref, acceptance, evidence_root, *, reviewer_id, owner):
     check = checks.get(ref["check_id"])
     if check is None:
         raise EvaluationError("evidence check_id is not in the contract")
+    if ref.get('environment')!=check['environment']:
+        raise EvaluationError('evidence environment mismatch')
     path = _safe_path(evidence_root, ref["uri"])
     if not path.is_file():
         raise EvaluationError("evidence file does not exist")
@@ -131,6 +148,8 @@ def verify_evidence(ref, acceptance, evidence_root, *, reviewer_id, owner):
     assertion = check.get("assertion")
     if assertion is None:
         raise EvaluationError("acceptance has no independent deterministic assertion")
+    if assertion.get('path') and _safe_path(evidence_root,assertion['path'])!=path:
+        raise EvaluationError('evidence artifact path differs from contract')
     _assertion(path, assertion)
     return {
         "status": "PASS",
@@ -188,6 +207,8 @@ def verify_task(state, contract, evidence_root, *, reviewer_id):
                            "reason": "missing current evidence"})
             continue
         try:
+            if any(ref.get(k)!=state.get(k) for k in ('task_id','revision','contract_hash','candidate')):
+                raise EvaluationError('evidence state binding mismatch')
             checks.append(verify_evidence(ref, contract["acceptance"], evidence_root,
                                           reviewer_id=reviewer_id, owner=owner))
         except (EvaluationError, OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:

@@ -1,6 +1,6 @@
 {
   "package": "portable-agi-like-kit",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -36,7 +36,8 @@
     "skill_installer": "../scripts/install_agent.py (exported bundle only)",
     "agent_cli": "scripts/agent_run.py (managed Codex/API decision loop with host acceptance)",
     "runtime_guide": "AGENT_RUNTIME.md",
-    "semantic_review": "agent_runtime/semantic_review.py (fresh-context, evidence-bound supplementary model assessment)"
+    "semantic_review": "agent_runtime/semantic_review.py (fresh-context, evidence-bound supplementary model assessment)",
+    "skill_health_monitor": "agent_runtime/skill_monitor.py and scripts/skill_manage.py monitor|health (independent candidate observation, managed quarantine and verified previous-version restore)"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",

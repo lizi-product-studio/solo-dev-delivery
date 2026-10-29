@@ -1,0 +1,15 @@
+{
+  "format": "skill-health-runtime-observation/1",
+  "model": "scripted-local-decision-double",
+  "previous_task_status": "COMPLETED",
+  "failed_task_status": "CONTROL_BLOCKED",
+  "failed_task_steps": 1,
+  "quarantined_version": 2,
+  "restored_version": 1,
+  "failed_artifact_unchanged": {
+    "total": 41
+  },
+  "passed_receipt_sha256": "cd51fa8a4f5d037e9139f9e766acb5fa7d30195894a689ebace45b056adb646b",
+  "failed_receipt_sha256": "e5d1787c17b9cc2a29568e2fd211730aea9cc5323c7439ab99efff30977085f3",
+  "limits": "Real Runtime, SQLite, filesystem and independent unittest; model decisions scripted. No production or autonomous root-cause claim."
+}

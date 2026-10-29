@@ -46,6 +46,11 @@ class SkillLibrary:
                 spec_sha256 TEXT NOT NULL,outcome TEXT NOT NULL,action_id TEXT NOT NULL,
                 receipt_path TEXT NOT NULL,receipt_sha256 TEXT NOT NULL,quarantined INTEGER NOT NULL,
                 PRIMARY KEY(name,version,task_id))''')
+            db.execute('''CREATE TABLE IF NOT EXISTS skill_health_observations(
+                name TEXT NOT NULL,version INTEGER NOT NULL,task_id TEXT NOT NULL,
+                spec_sha256 TEXT NOT NULL,outcome TEXT NOT NULL,receipt_path TEXT NOT NULL,
+                receipt_sha256 TEXT NOT NULL,decision TEXT NOT NULL,
+                PRIMARY KEY(name,version,task_id))''')
 
     def register(self, name, description, spec, *, status='CANDIDATE', owner='agent-runtime',if_absent=False):
         if status!='CANDIDATE':
@@ -234,6 +239,72 @@ class SkillLibrary:
             rows=db.execute('SELECT * FROM skill_failures'+(' WHERE name=?' if name is not None else '')+' ORDER BY task_id',
                             (name,) if name is not None else ()).fetchall()
             return [dict(row) for row in rows]
+
+    def monitor_run(self,receipt):
+        """Quarantine only an attributable, independently observed final failure.
+
+        Restore only an archived activation with an earlier observed task PASS,
+        no observed failures, and unchanged regression/observation evidence.
+        No task action is retried by this operation.
+        """
+        from .skill_monitor import observe_health
+        observed=observe_health(receipt)
+        name=observed['name'];version=observed['version']
+        with self._db() as db:
+            db.execute('BEGIN IMMEDIATE')
+            current=self._get(db,name)
+            if current['version']==version:source=current
+            else:
+                saved=db.execute('SELECT snapshot FROM skill_versions WHERE name=? AND version=?',(name,version)).fetchone()
+                if saved is None:raise ValueError('observed skill version is unknown')
+                source=json.loads(saved[0])
+            if source['spec_sha256']!=observed['spec_sha256']:raise ValueError('health observation has another skill specification')
+            prior=db.execute('SELECT receipt_sha256,decision FROM skill_health_observations WHERE name=? AND version=? AND task_id=?',
+                (name,version,observed['task_id'])).fetchone()
+            if prior:
+                if prior[0]!=observed['receipt_sha256']:raise ValueError('health observation already has different evidence')
+                return {**json.loads(prior[1]),'reused':True}
+            result={**observed,'status':'RECORDED','quarantined':False,'rolled_back_to':None,'reused':False}
+            managed=bool(source['spec'].get('failure_fingerprint')) or source['spec'].get('health_policy')=='quarantine-on-independent-candidate-failure'
+            result['managed_policy']=managed
+            if observed['outcome']=='FAIL' and managed and current['version']==version and current['status']=='ACTIVE':
+                db.execute("UPDATE skills SET status='DISABLED' WHERE name=? AND version=?",(name,version))
+                db.execute('INSERT INTO skill_status_events(name,version,status,reason) VALUES(?,?,?,?)',
+                    (name,version,'DISABLED','independent candidate failure in task '+observed['task_id']))
+                result['quarantined']=True
+                candidates=db.execute('''SELECT h.version,h.receipt_path,h.receipt_sha256,v.snapshot
+                    FROM skill_health_observations h JOIN skill_versions v ON h.name=v.name AND h.version=v.version
+                    WHERE h.name=? AND h.version<>? AND h.outcome='PASS'
+                    AND NOT EXISTS(SELECT 1 FROM skill_health_observations f WHERE f.name=h.name AND f.version=h.version AND f.outcome='FAIL')
+                    ORDER BY h.version DESC''',(name,version)).fetchall()
+                for old_version,path,digest,snapshot in candidates:
+                    target=json.loads(snapshot)
+                    if target['status']!='ACTIVE':continue
+                    if not (target['spec'].get('failure_fingerprint') or target['spec'].get('health_policy')=='quarantine-on-independent-candidate-failure'):continue
+                    try:
+                        if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:continue
+                        previous=observe_health(path)
+                        if previous['outcome']!='PASS' or previous['version']!=old_version or previous['spec_sha256']!=target['spec_sha256']:continue
+                        self._check_activation(target)
+                    except (ValueError,OSError,KeyError,TypeError,sqlite3.Error):continue
+                    self._archive(db,self._get(db,name))
+                    db.execute("UPDATE skills SET description=?,spec=?,status='ACTIVE',uses=?,version=?,spec_sha256=?,owner=? WHERE name=?",
+                        (target['description'],json.dumps(target['spec'],ensure_ascii=False),target['uses'],
+                         target['version'],target['spec_sha256'],target['owner'],name))
+                    db.execute('INSERT INTO skill_status_events(name,version,status,reason) VALUES(?,?,?,?)',
+                        (name,old_version,'ROLLED_BACK','automatic restore after independently observed v%d failure'%version))
+                    result['rolled_back_to']=old_version
+                    break
+            db.execute('INSERT INTO skill_health_observations VALUES(?,?,?,?,?,?,?,?)',
+                (name,version,observed['task_id'],observed['spec_sha256'],observed['outcome'],
+                 observed['receipt_path'],observed['receipt_sha256'],json.dumps(result,ensure_ascii=False)))
+            return result
+
+    def health_history(self,name=None):
+        with self._db() as db:
+            rows=db.execute('SELECT decision FROM skill_health_observations'+(' WHERE name=?' if name else '')+' ORDER BY rowid',
+                (name,) if name else ()).fetchall()
+            return [json.loads(row[0]) for row in rows]
 
     def record_experience(self,task_id,goal,events,*,success):
         with self._db() as db:

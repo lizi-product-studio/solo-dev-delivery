@@ -102,7 +102,7 @@ def main(argv=None,*,report_callback=None):
             raise ToolError('write is outside the contract scope')
         target.parent.mkdir(parents=True,exist_ok=True)
         target.write_bytes(str(text).encode('utf-8'))
-        return {'path':str(target.relative_to(workspace)),'written':True}
+        return {'path':str(target.relative_to(workspace)),'written':True,'sha256':hashlib.sha256(target.read_bytes()).hexdigest()}
     register_file_tools(tools,workspace,write_file)
     project_id=args.project_id or 'workspace-'+hashlib.sha256(str(workspace).encode('utf-8')).hexdigest()[:24]
     memory=MemoryStore(args.memory,scope=project_id)
@@ -217,6 +217,10 @@ def main(argv=None,*,report_callback=None):
                 summary=challenge.verify(workspace,control.contract(task_id).get('inputs',[]),
                     control.contract(task_id)['scope'],args.review_script,
                     review_directory/('attempt-'+uuid.uuid4().hex+'.json'))
+                effect_events=[event for event in events if event.get('action') in {'tool','skill'}]
+                summary['runtime_effect_count']=len(effect_events)
+                summary['runtime_effect_sha256']=canonical_hash(effect_events)
+                summary['trusted_review_sha256']=review_sha256
                 review_results.append(summary)
                 if summary['status']!='CHALLENGE_PASS':
                     verifier.last_error=summary
@@ -344,6 +348,10 @@ def main(argv=None,*,report_callback=None):
                 try:learning['records'].append(library.record_failure(name,archive,digest,quarantine=False))
                 except ValueError as exc:learning['records'].append({'name':name,'status':'NEEDS_EVIDENCE','error':str(exc)})
             args.receipt.with_suffix('.learning.json').write_text(json.dumps(learning,ensure_ascii=False,indent=2),encoding='utf-8')
+    if library:
+        try:health=library.monitor_run(immutable)
+        except (ValueError,OSError,KeyError,TypeError,sqlite3.Error) as exc:health={'status':'NEEDS_EVIDENCE','error':str(exc)}
+        immutable.with_suffix('.skill-health.json').write_text(json.dumps(health,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'status':result.status,'task_id':task_id,'steps':result.steps,
                       'answer':result.answer,'receipt':str(args.receipt.resolve()),
                       'invocation_receipt':str(immutable),'publication':publication['status']},ensure_ascii=False),flush=True)

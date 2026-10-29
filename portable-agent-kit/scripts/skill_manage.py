@@ -42,6 +42,8 @@ def main(argv=None):
     failure.add_argument('--run-receipt','--receipt',dest='receipt',type=Path,required=True); failure.add_argument('--sha256', required=True)
     failure.add_argument('--quarantine', action='store_true')
     history = sub.add_parser('failures'); history.add_argument('--name')
+    monitor=sub.add_parser('monitor');monitor.add_argument('--run',type=Path,required=True)
+    health=sub.add_parser('health');health.add_argument('--name')
     args = parser.parse_args(argv)
     try:
         if not args.library.is_file(): raise ValueError('existing project skill library is required')
@@ -71,6 +73,8 @@ def main(argv=None):
         elif args.command == 'rollback': result = library.rollback(args.name, args.version, reason=args.reason)
         elif args.command == 'record-failure':
             result = library.record_failure(args.name, args.receipt, args.sha256, quarantine=args.quarantine)
+        elif args.command=='monitor':result=library.monitor_run(args.run)
+        elif args.command=='health':result={'observations':library.health_history(args.name)}
         else: result = {'failures': library.failure_history(args.name)}
     except (ValueError, OSError, KeyError, TypeError,ModelAdapterError,CodexHostError) as exc:
         print(json.dumps({'status': 'NEEDS_RECONCILIATION' if getattr(exc,'outcome_unknown',False) else 'REJECTED', 'error': type(exc).__name__ + ': ' + str(exc)}, ensure_ascii=True))

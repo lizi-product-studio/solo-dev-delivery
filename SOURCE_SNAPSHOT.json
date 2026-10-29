@@ -1,8 +1,8 @@
 {
   "format": "release-source-snapshot/1",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "created": "2026-10-29",
-  "base_revision": "074fc7555d94a1b6a068ac5007cf142bce038cae",
+  "base_revision": "f4ccd6bd31a8e6722abca5aa7fd9bdefa4c3667b",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
@@ -12,23 +12,28 @@
     },
     {
       "path": "AGI_LIKE_ITERATION_PLAN.md",
-      "sha256": "94dffb4b06b21cb8e600cde961c49c192a4cc3e22f4287bcf1c53fdf4a2ec617",
-      "bytes": 10687
+      "sha256": "f1e846cf0157bca3de79f6aa84173656593d2cbdd41a66e8446a031b50965984",
+      "bytes": 10879
     },
     {
       "path": "INSTALL.md",
-      "sha256": "06b9a0a88f847b5c27b13a2dd800663fa3c6c4bd02d6120cdab9d395c3410c37",
+      "sha256": "3903952c4af8113e3fd3972eda1fcdb25b9777cb93db3e7ab6da815ab52050d0",
       "bytes": 3170
     },
     {
       "path": "README.md",
-      "sha256": "6e762d1ad29aee244c4d27cf08fbc0b3df2f885960530cdeb9b3f3748b2d00ef",
-      "bytes": 10810
+      "sha256": "238809b3a5562b22b982e509e9db61ff0e2c5ceb749d745eeac7eaf099248363",
+      "bytes": 10771
     },
     {
       "path": "ROADMAP.md",
       "sha256": "f870e0e5b1b747914be9cd77a83c05d9b4be55d1370e96d67485d349f4913d7a",
       "bytes": 6209
+    },
+    {
+      "path": "STAGE_80_DELIVERY.md",
+      "sha256": "1fed69a895c3c605e2090264b591e754ec3eb183660263bc18ccb064e855560e",
+      "bytes": 2331
     },
     {
       "path": "THIRD_PARTY.md",
@@ -37,8 +42,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "a7c48526eef43602f762b16567bb9875c7ecf21778722784ee941519071d183d",
-      "bytes": 40057
+      "sha256": "ac8168ce2dadeaabef9ea2612a8a4b6c6fbfd70117b08e8a3a80ed91f640deeb",
+      "bytes": 40540
     },
     {
       "path": "evaluations/RUNTIME_ACCEPTANCE_20261029.md",
@@ -231,9 +236,19 @@
       "bytes": 979
     },
     {
+      "path": "evaluations/skill-health-20261029/README.md",
+      "sha256": "71892226177b18076c6de22a184548bd47ff835ca091297b8b7dc1cda010e6d8",
+      "bytes": 891
+    },
+    {
+      "path": "evaluations/skill-health-20261029/result.json",
+      "sha256": "d8af90aa0ca9cf0e8eec2f5173895063c44a29cc1e7fdd500ce085573132a536",
+      "bytes": 649
+    },
+    {
       "path": "portable-agent-kit/AGENT_RUNTIME.md",
-      "sha256": "b6961af180a6307563a3e9905403d910280245f276d04a603a65478418d06f2a",
-      "bytes": 20275
+      "sha256": "e1a7ade9aa8fefa6960548d2b9c437c94f7647234808ea424cb02fb0a26221c1",
+      "bytes": 21599
     },
     {
       "path": "portable-agent-kit/CONTROL_PLANE.md",
@@ -242,8 +257,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "aa72d43c7e4064b18c57a058d169293542c6a538514275a1f1e8f4361983e193",
-      "bytes": 4093
+      "sha256": "6d3029a0bd80479d08051379dffe1e6214e7791b4dd17a158c1649754687be4c",
+      "bytes": 4292
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -371,9 +386,14 @@
       "bytes": 16602
     },
     {
+      "path": "portable-agent-kit/agent_runtime/skill_monitor.py",
+      "sha256": "eab5ac96b0534d6402f3269f5260658009949fe0c5e5d1f6e681f73aabd96a17",
+      "bytes": 5526
+    },
+    {
       "path": "portable-agent-kit/agent_runtime/skills.py",
-      "sha256": "006eadb29ab6057028d17c3d43722ca2a99dea29a508c9f769f3a1a87caf67db",
-      "bytes": 23568
+      "sha256": "8c599dc663509ac7b4c0d6fcb0453ad10e210aa818cff2f9e4368d5b73060c01",
+      "bytes": 28876
     },
     {
       "path": "portable-agent-kit/agent_runtime/task_lifecycle.py",
@@ -532,8 +552,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/agent_run.py",
-      "sha256": "92966060b718208cc007eb32790971b42a2b8637f742e35761d7590aa067b39f",
-      "bytes": 23222
+      "sha256": "98066107d92cd954f84ec299cd79adb42bc2d71e316090219afe31ea70e93487",
+      "bytes": 23911
     },
     {
       "path": "portable-agent-kit/scripts/agent_task.py",
@@ -637,8 +657,8 @@
     },
     {
       "path": "portable-agent-kit/scripts/skill_manage.py",
-      "sha256": "61c3e0e41c2e0465d62a25c6813ffb65fce15f43462742c1293587f496d41a4e",
-      "bytes": 5578
+      "sha256": "ca8364b3a2cc18ed56b5956f69e10138199a541923d228a8b03c982b45bf421a",
+      "bytes": 5904
     },
     {
       "path": "portable-agent-kit/tests/test_adapter.py",
@@ -882,7 +902,7 @@
     },
     {
       "path": "skill/agi-like/SKILL.md",
-      "sha256": "9ba16f50564298583ec5f9ea0d07ac529c27d49676a76f7669c67adc0a7540aa",
+      "sha256": "b00efbe775a4b21debf23d846459709020d956704e5df92dbd404a57dd05f1ee",
       "bytes": 4382
     },
     {
@@ -1214,6 +1234,11 @@
       "path": "tests/test_skill_activation.py",
       "sha256": "99946225dc6c8a9ed5ee4545a3e0a746a08a5d57e26ac2e1d8fbde982d6107e8",
       "bytes": 5017
+    },
+    {
+      "path": "tests/test_skill_health_monitor.py",
+      "sha256": "168680a19e5d64be0c17f71195e05ffed2458ca1a1f9f9be92b893497034cc4c",
+      "bytes": 5885
     },
     {
       "path": "tests/test_skill_management.py",

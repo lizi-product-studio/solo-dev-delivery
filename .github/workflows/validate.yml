@@ -21,6 +21,8 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s portable-agent-kit/tests -v
+      - name: Verify current downloadable package against source
+        run: python -m unittest discover -s tests -p test_repository_package.py -v
       - uses: actions/setup-node@v4
         if: matrix.os == 'windows-latest'
         with:

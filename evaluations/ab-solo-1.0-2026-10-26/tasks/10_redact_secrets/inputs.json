@@ -1,0 +1,11 @@
+{
+  "sample": {
+    "password": "x",
+    "nested": [
+      {
+        "token": "y",
+        "ok": 1
+      }
+    ]
+  }
+}

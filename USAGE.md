@@ -4,7 +4,7 @@
 
 ## 1. 安装
 
-从[当前候选分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/feat/evaluation-contract-2026-10-26)下载 [1.9.0 ZIP](packages/agi-like-1.9.0.zip) 和[校验文件](packages/agi-like-1.9.0.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
+从[当前主分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)下载 [1.9.0 ZIP](packages/agi-like-1.9.0.zip) 和[校验文件](packages/agi-like-1.9.0.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
 
 ```sh
 python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --dry-run

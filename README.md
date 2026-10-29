@@ -2,7 +2,7 @@
 
 一套以 Skill 为入口的 Agent 运行系统：接收目标，让模型调用受限工具，保存项目记忆和任务状态，以独立证据验收，并受控积累、停用和恢复技能。
 
-**当前版本：1.9.0 · 80% 阶段版。** 最新源码和安装包位于 [`feat/evaluation-contract-2026-10-26`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/feat/evaluation-contract-2026-10-26)，尚未合并 `main`。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。完整系统建设已按用户要求暂停；剩余工作保留在路线中。
+**当前版本：1.9.0 · 80% 阶段版。** 最新源码、功能说明和安装包均位于默认分支 [`main`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。完整系统建设已按用户要求暂停；剩余工作保留在路线中。
 
 [下载安装包](packages/agi-like-1.9.0.zip) · [SHA256](packages/agi-like-1.9.0.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
 
@@ -38,10 +38,10 @@ $agi-like
 
 首次安装可下载ZIP、解压整个 `agi-like/`，在确认宿主 Skill 搜索目录后执行包内安装器；不同版本先备份旧目录至搜索根目录外。当前这台机器已安装到 `C:/Users/Administrator/.agents/skills/agi-like`，其他环境不要直接套用该绝对路径。
 
-开发者可以从候选分支导出：
+开发者可以从main分支导出：
 
 ```sh
-git clone --branch feat/evaluation-contract-2026-10-26 https://github.com/lizi-product-studio/solo-dev-delivery.git
+git clone --branch main https://github.com/lizi-product-studio/solo-dev-delivery.git
 cd solo-dev-delivery
 python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 ```

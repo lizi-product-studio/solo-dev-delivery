@@ -2,13 +2,13 @@
   "format": "release-source-snapshot/1",
   "version": "1.9.0",
   "created": "2026-10-29",
-  "base_revision": "31110fe0d3db20fdc70a62d50cb6a941c016d521",
+  "base_revision": "364c4e2c0488c59c11ba8e0507640c509e44f409",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
       "path": ".github/workflows/validate.yml",
-      "sha256": "efb0ccedfba90a179067f4cc1aa8d42ac1df41447316c0eba50dfe327c27db97",
-      "bytes": 3277
+      "sha256": "ec4e07a07609fe35574e6c2eec0902f75b858e2063868f73c0b37af8a21779bc",
+      "bytes": 3425
     },
     {
       "path": "AGI_LIKE_ITERATION_PLAN.md",
@@ -17,8 +17,8 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "4c6f6fa21ddc1e602af0845da1d04d0fa1682a1f7581309127a2588df946e6b3",
-      "bytes": 3434
+      "sha256": "30f34d314d6caf3e7ccc29ad5683e0665c4dec80c2384bcaa029aab963da312f",
+      "bytes": 3276
     },
     {
       "path": "NEXT_ITERATION.md",
@@ -26,9 +26,14 @@
       "bytes": 4689
     },
     {
+      "path": "QUALITY_MATURITY.md",
+      "sha256": "d9b3d3e82b05c6cda7e28a52e463a094a28cd64dfc39052fcb0234bfbef308a7",
+      "bytes": 2148
+    },
+    {
       "path": "README.md",
-      "sha256": "788bb69b3b731cb22230c4d1f42726a3b069a04730cf16985604101998bfaaff",
-      "bytes": 7641
+      "sha256": "5a8dcc0da51d7aad8b5e5a7deee942c7d44aaddc07941f334eeee2d8c51aff84",
+      "bytes": 7554
     },
     {
       "path": "ROADMAP.md",
@@ -47,18 +52,263 @@
     },
     {
       "path": "USAGE.md",
-      "sha256": "d5429a011e0b215e4894aa4b073b0c20766ef2bbd8e147af3e3fa6923b3f503a",
-      "bytes": 9108
+      "sha256": "d4f84e9072b7e22faf2c2573488c746668141b82b1a18d45b67dd9c4ec775675",
+      "bytes": 9074
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "ac8168ce2dadeaabef9ea2612a8a4b6c6fbfd70117b08e8a3a80ed91f640deeb",
-      "bytes": 40540
+      "sha256": "1d9d36ab730f64d9e9c9aaf5a49d6d2d87767839b8933eefbaa47b7bde5e8d7a",
+      "bytes": 41079
     },
     {
       "path": "evaluations/RUNTIME_ACCEPTANCE_20261029.md",
       "sha256": "05cb72cf6ff399439b7c708a93ce0d17d3bbb9258d27ad0b9cda586f3202a8ec",
       "bytes": 8109
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/README.md",
+      "sha256": "e3a8ba5d02f244aad7f8237ce10f6bc5bc0d8f09b357b3357677650a30ecbaf2",
+      "bytes": 2926
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/experiment-freeze.json",
+      "sha256": "e436c09216789659b7266183ede557dc7547408038a0ae86e764ee1018a6091f",
+      "bytes": 6527
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/judge.py",
+      "sha256": "3a538dae79e8aa56799c046aaedb7b2e375685e5a5d69252cfd13bf300f6c320",
+      "bytes": 5655
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/judge_selftest.py",
+      "sha256": "dd4a3be69be912065ac628e5125a51b40d336f8a1f6d31de2a34dfe9b98c9129",
+      "bytes": 1022
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/results.jsonl",
+      "sha256": "aad7b841ceae9965f10250f8a9c423bdda47ae6a1b58147c9303bac747144b5d",
+      "bytes": 59892
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/summary.json",
+      "sha256": "a089ef76c4376381a996c1e9f4ce0736957bcef72809c99eda2560ea8f5f707b",
+      "bytes": 18886
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/01_normalize_email/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/01_normalize_email/TASK.md",
+      "sha256": "d1cf2bdeb1fefa54f9336977c2ef75cbb084f3f2508360de1ab5b785c95864c8",
+      "bytes": 225
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/01_normalize_email/inputs.json",
+      "sha256": "053c028dd6cc120143585c815aac15c3f32e7e6e4cd6beb5732b224773b1dec0",
+      "bytes": 74
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/01_normalize_email/src.py",
+      "sha256": "d2cc2863e1e6bc7b628e6dd1d68593a493b9d98507ddf5b29d781bbc487a9a6e",
+      "bytes": 199
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/02_sum_amounts/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/02_sum_amounts/TASK.md",
+      "sha256": "89c665dcaa6749af86a0370129182fea8e13d94a573a69c3472c26fcbbe08404",
+      "bytes": 240
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/02_sum_amounts/inputs.json",
+      "sha256": "a3561c3db5ba155efdf76946dec3150411519301efd9d19a557e7d4943087e81",
+      "bytes": 116
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/02_sum_amounts/src.py",
+      "sha256": "13db8b3187959a43e2bb766443214dad0fdb81777ca7d89b9499f4430474213d",
+      "bytes": 225
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/03_merge_intervals/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/03_merge_intervals/TASK.md",
+      "sha256": "35e1fff20f60f5ccb0f92750516d0479146db3c509abbc506685c6f7aaf7592b",
+      "bytes": 210
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/03_merge_intervals/inputs.json",
+      "sha256": "8101bf25640a1cef2eb8d0f91560a6dbd6e175160f39d8d78852de41c340ca67",
+      "bytes": 140
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/03_merge_intervals/src.py",
+      "sha256": "041cd2348991d1e21b0725eccb04700aaf6da9a37177f5abb64091f480c36bbb",
+      "bytes": 203
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/04_parse_csv/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/04_parse_csv/TASK.md",
+      "sha256": "42d76042ae843f187ffe687a4c07851df05cc884d127491060e6d62b56faa071",
+      "bytes": 223
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/04_parse_csv/inputs.json",
+      "sha256": "9f5abf730f63191bd422f35c0b03aec852429f8554d6ca5990120b7057289f2f",
+      "bytes": 45
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/04_parse_csv/src.py",
+      "sha256": "97270256848d278b7853899a8cbfd2d1810ab5380dd420cc6852dea65b2f8f8a",
+      "bytes": 250
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/05_inventory_reserve/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/05_inventory_reserve/TASK.md",
+      "sha256": "1a8f33a1a899605c5624141dee7f9ed5e71064e56cf0dee06cce4ce45b0f5f49",
+      "bytes": 253
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/05_inventory_reserve/inputs.json",
+      "sha256": "c2e136cd7cd2c8b2eeb2b844451eb6e7dc0905b96ab72364862528a47375cbbc",
+      "bytes": 100
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/05_inventory_reserve/src.py",
+      "sha256": "a577a6b4356b1464425e0022b6c11f47da47a2d29cd5a351d9e36d6203e56da8",
+      "bytes": 197
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/06_expire_sessions/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/06_expire_sessions/TASK.md",
+      "sha256": "6e12e015e5a858cb39145384a73d71f4d36b8cf23e9f553177c6b855d8fddad1",
+      "bytes": 221
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/06_expire_sessions/inputs.json",
+      "sha256": "854325ed8e945fbfc1ce004423130225521023d1b262a0ff2e9c19888f9a00de",
+      "bytes": 211
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/06_expire_sessions/src.py",
+      "sha256": "6c3db23b72ffaaa2e6c1bc88dda6c48fa450f548f587e9e9e17f27f3155ccd51",
+      "bytes": 221
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/07_json_patch/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/07_json_patch/TASK.md",
+      "sha256": "8231a530a7a9edad04209b852fa0d46ff2a853b0cb51adda1e5d383fe57670e7",
+      "bytes": 239
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/07_json_patch/inputs.json",
+      "sha256": "7561797a9b2a6ceb635603655742de231a27f5b17c0f8160b98f247ffe4fe540",
+      "bytes": 169
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/07_json_patch/src.py",
+      "sha256": "ec52c41c0f9b58f9de455048e23c77dfbf8ed27a0e7cf07ff796ab1bfa12a912",
+      "bytes": 197
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/08_rate_limit/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/08_rate_limit/TASK.md",
+      "sha256": "7106e9e3c8295d91aaa1a193a9e462d1095baf618a4a11d2afcbe31418084e4d",
+      "bytes": 216
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/08_rate_limit/inputs.json",
+      "sha256": "7778eba2cf5207e35224dd6d40d05e2ab0ea64af3e4d3da43e8dd6d067f37853",
+      "bytes": 140
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/08_rate_limit/src.py",
+      "sha256": "ed8d5f714daeb5336e301786a10da52885cfadc03bb011d8fc52b2b2ce91dd12",
+      "bytes": 203
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/09_topological_sort/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/09_topological_sort/TASK.md",
+      "sha256": "10fe9f4c446b53233aeb0fe1f97f95120fed9e2d69844fd131f796aa07714bca",
+      "bytes": 214
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/09_topological_sort/inputs.json",
+      "sha256": "1acdb38e3b21fdeefc48821b1ccb2efe496f40fc8bdf56246da86c2f569debaf",
+      "bytes": 179
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/09_topological_sort/src.py",
+      "sha256": "acf7ffc019d5e7272f95a4f3a958adad8f0af776e549818c42c191750127de17",
+      "bytes": 207
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/10_redact_secrets/CONTRACT.md",
+      "sha256": "89a00cda9855163701d3e193811ce9673dd128efa7d68c945414e7cf69dda36b",
+      "bytes": 268
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/10_redact_secrets/TASK.md",
+      "sha256": "36439348d6301a40304e95162de382bef3b8a84a2c1c46eeb6a345acd4671f6c",
+      "bytes": 235
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/10_redact_secrets/inputs.json",
+      "sha256": "6b0fb48716a417ef750146a3622811fdd1f778fa2f33961f7b164750c7077260",
+      "bytes": 118
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/tasks/10_redact_secrets/src.py",
+      "sha256": "856a535db1163bb0b514379bac34d546253ca64148c9ec96c0df44fe65b2b02b",
+      "bytes": 189
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-26/validate_experiment.py",
+      "sha256": "6208ab8b37fa92e3a340645f5d69cdd5be8d5a31d942ad7fc63f26e8c63d6f19",
+      "bytes": 2132
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-27-ab_runner.py",
+      "sha256": "ec616958a2d95ebcc9220665607418463ec7ba2254c04ee5f9112458d666f8aa",
+      "bytes": 12216
+    },
+    {
+      "path": "evaluations/ab-solo-1.0-2026-10-27-run_matrix.py",
+      "sha256": "1d5c658eba7f031067e1bc9ae4197378abb8e9387e01c42eec5101549c8bb86d",
+      "bytes": 3722
     },
     {
       "path": "evaluations/automatic-review-20261029/README.md",
@@ -119,6 +369,11 @@
       "path": "evaluations/feedback-ablation-20261029/RESULTS.json",
       "sha256": "013c02987ec58a07b92dfa7a006f7abb5178093c4599f15a6f3b156440993f74",
       "bytes": 11644
+    },
+    {
+      "path": "evaluations/finalize_ab_experiment.py",
+      "sha256": "11f80ffd4b73e64a377e356cc40469cce0f5428f680b0e0c4efe205ba4ac6211",
+      "bytes": 6604
     },
     {
       "path": "evaluations/goal-runtime-20261029/README.md",
@@ -277,8 +532,8 @@
     },
     {
       "path": "portable-agent-kit/README.md",
-      "sha256": "131105811c97ee86113d057cca0c5a14645dae98f32a0fef7e8326b696485730",
-      "bytes": 7459
+      "sha256": "97f5b4608f197edaec1a3e82f56bde2b15e801e1d5ae310bb14ab374a14dcec9",
+      "bytes": 7759
     },
     {
       "path": "portable-agent-kit/SYSTEM_PROMPT.md",
@@ -509,6 +764,26 @@
       "path": "portable-agent-kit/examples/demo.py",
       "sha256": "f942cef2075f5f6aea249067b502408bd25dd046d40028440d496877abc84547",
       "bytes": 1203
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/autonomy-cycle.json",
+      "sha256": "62aeb1186f21bbfdf4c4fd9db119df8368d696205977b140f052b5dbc983f10b",
+      "bytes": 733
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/host-adapter.json",
+      "sha256": "51d523a2d9cca515e416723e15370b8508b34e74d3ffc19f0afc2dd497b4fb05",
+      "bytes": 715
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/system-design.json",
+      "sha256": "e761351ef821b1dceb680f882261964cbee6ae762543cd535062f0d926a7070c",
+      "bytes": 609
+    },
+    {
+      "path": "portable-agent-kit/examples/quality/ui-review.json",
+      "sha256": "0da0ee417996fca319a79058cd777a62ceb0a6198619a7338fdba40fdc7ed2a2",
+      "bytes": 576
     },
     {
       "path": "portable-agent-kit/examples/simple-run.jsonl",
@@ -756,6 +1031,11 @@
       "bytes": 16424
     },
     {
+      "path": "portable-agent-kit/tests/test_quality_contract.py",
+      "sha256": "a1e29fe139b57f3db62fb6bece1382b0dc7338907c8e37f3975341453b27d797",
+      "bytes": 4595
+    },
+    {
       "path": "portable-agent-kit/tests/test_relations.py",
       "sha256": "3745c385d126676bf1c55ae4c41df217d78f5581259781c8372fa6db99eb6357",
       "bytes": 15587
@@ -792,8 +1072,8 @@
     },
     {
       "path": "scripts/codex_worker.py",
-      "sha256": "88268c70e0d6e3559be5d752ea28c9a69d0a97eaa084bbd6a2ae72a1150ca49f",
-      "bytes": 28619
+      "sha256": "3dcac9b4f4d1f825efe3f6745b362c9fa98c6d496acac385222cee063dc2d04f",
+      "bytes": 28810
     },
     {
       "path": "scripts/control_plane.py",
@@ -1169,6 +1449,11 @@
       "path": "tests/test_release_check.py",
       "sha256": "3cedbc85eef520154518b32a5e11c445f7892936e3fbfd472821b59bdeb8fecf",
       "bytes": 3404
+    },
+    {
+      "path": "tests/test_repository_package.py",
+      "sha256": "2d4fc9afe5c5e93be0681b768833c86057ffae3e7b28b708636ae99a236ac86a",
+      "bytes": 1666
     },
     {
       "path": "tests/test_resource_engine.py",

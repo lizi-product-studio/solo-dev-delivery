@@ -1,0 +1,12 @@
+{
+  "format": "ui-quality/1",
+  "task": "客服工作台处理退款",
+  "target_users": "客服坐席",
+  "viewports": [
+    {"name":"desktop","width":1440,"height":900,"evidence":"evidence/desktop.png"},
+    {"name":"narrow","width":1280,"height":800,"evidence":"evidence/narrow.png"}
+  ],
+  "paths": [{"id":"refund","functional":"PASS","visual":"PASS","accessibility":"PASS","evidence_refs":["evidence/refund.json"]}],
+  "content_checks": {"real_content":true,"no_explanation_overload":true,"states_covered":["empty","error","success"]},
+  "explanatory_copy_ratio": 0.18
+}

@@ -1,6 +1,6 @@
 # Portable AGI-like Kit
 
-AAP-0.1是兼容请求信封；1.2.0候选保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
+AAP-0.1是兼容请求信封；1.9.0阶段版保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
 
 ## 文件与入口
 
@@ -29,8 +29,10 @@ AAP-0.1是兼容请求信封；1.2.0候选保留version 2状态门禁并增加 `
 - `scripts/host_replay.py`：校验宿主安装、加载、调用、分流和读回回执是否绑定当前候选版本，并重算原始证据哈希；不执行宿主、不解释截图，也不把模型自报当作兼容性证明。
 - `scripts/blind_review.py`：为冻结评测生成不泄露臂信息的证据包，并校验独立判分回执、候选版本和证据绑定；未知保持未知。
 - `scripts/eval_contract.py`：校验冻结的0.13评测合同和JSONL运行回执，并输出保留unknown的描述性指标；不调用模型、不授予权限、不替代交付门禁。
+- `scripts/quality_contract.py`：按需核对宿主、UI、系统设计、自主循环和A/B合同；未知与缺项不替代真实业务验收。
+- `scripts/capacity_policy.py`：分类容量、配额、权限和传输故障，提出有界恢复建议；不自动修改账号或切换模型。
 - `scripts/self_improvement.py`：记录带哈希证据的经验，按不同 run/task 聚类重复根因，读取独立审核/回归/灰度/回滚计划回执生成候选；不改源码、不发布、不调度。
-- `scripts/release_check.py`：只读核对1.2.0版本元数据、导出ZIP、BUNDLE文件哈希和发布校验值；不调用模型、不验证宿主加载或业务质量。
+- `scripts/release_check.py`：只读核对当前版本元数据、导出ZIP、BUNDLE文件哈希和发布校验值；不调用模型、不验证宿主加载或业务质量。
 - `../scripts/install_agent.py`：安装已导出的Skill目录；generic模式显式指定任意宿主的真实Skill根目录，ZCode/Kimi CLI支持目录快捷方式。
 
 普通任务的核验入口是`python3 portable-agent-kit/scripts/challenge.py --help`。本机完整系统确需持久恢复时的兼容示例：

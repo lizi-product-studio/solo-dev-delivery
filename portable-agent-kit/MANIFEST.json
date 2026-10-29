@@ -1,6 +1,6 @@
 {
   "package": "portable-agi-like-kit",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -35,7 +35,8 @@
     "pilot_replay": "evaluations/autonomy-benchmark-2026-10-26/replay_runner.py (real-receipt validation; not bundled)",
     "skill_installer": "../scripts/install_agent.py (exported bundle only)",
     "agent_cli": "scripts/agent_run.py (managed Codex/API decision loop with host acceptance)",
-    "runtime_guide": "AGENT_RUNTIME.md"
+    "runtime_guide": "AGENT_RUNTIME.md",
+    "semantic_review": "agent_runtime/semantic_review.py (fresh-context, evidence-bound supplementary model assessment)"
   },
   "platform_integrations": {
     "cursor": "instructions only; host loading unverified",

@@ -1,8 +1,8 @@
 {
   "format": "release-source-snapshot/1",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "created": "2026-10-29",
-  "base_revision": "f101d51c5af2da272801958f52c80805f4da929e",
+  "base_revision": "26000cc0b9c61fcdbfab23973dac5c37844fa722",
   "scope": "Current release source, tests, domain fixtures and validation docs; canonical LF. Excludes this manifest, run data, credentials, personal preferences and generated caches. base_revision is the checkout base, not a claim these working-tree bytes are committed.",
   "files": [
     {
@@ -17,12 +17,12 @@
     },
     {
       "path": "INSTALL.md",
-      "sha256": "b14fb91befbb4f4cbee1d37c85a42400b0e6f2c5bd25333c0941118874a58079",
+      "sha256": "26465406be50a6ecd93bef4dd47127dab1ecf53ad5dbf6fbdf8a6d228f94999b",
       "bytes": 3170
     },
     {
       "path": "README.md",
-      "sha256": "42e5e68177ef88089feb7afae5a1d0af8445cc3203bf31fc0af5bcc3d9110357",
+      "sha256": "eec7cca8a1875f09d34ec7661d590757ce9f839b4735754d09122aa4af3bd401",
       "bytes": 10764
     },
     {
@@ -37,8 +37,8 @@
     },
     {
       "path": "VALIDATION.md",
-      "sha256": "a340dc09a6f01e6e519e6f1ac829417af5e49f40a9d84985230990679ef97b66",
-      "bytes": 38511
+      "sha256": "9d0c16d569c4eda2fc5bde513e391691b57e13dee672e069bdef26e86de91387",
+      "bytes": 39211
     },
     {
       "path": "evaluations/RUNTIME_ACCEPTANCE_20261029.md",
@@ -182,8 +182,8 @@
     },
     {
       "path": "portable-agent-kit/AGENT_RUNTIME.md",
-      "sha256": "1361c745a41a05e9729ddaab9380eea46322a3ecac9331a3de9cb48d4b8b2204",
-      "bytes": 17407
+      "sha256": "083e19429e67bc63fae6b720f94f8e2bbb00a0f7d8f3b53b8db1a275dcbf6252",
+      "bytes": 18244
     },
     {
       "path": "portable-agent-kit/CONTROL_PLANE.md",
@@ -192,8 +192,8 @@
     },
     {
       "path": "portable-agent-kit/MANIFEST.json",
-      "sha256": "c88f1a5747a1f0308928c75a4ae2ecd4f8241230bf16610c76bc2849238936a2",
-      "bytes": 3971
+      "sha256": "b13e2b041b494ccc92a8424527047c6f7004eb5bc376d33ea75b56672d6e7e37",
+      "bytes": 4093
     },
     {
       "path": "portable-agent-kit/PROTOCOL.md",
@@ -284,6 +284,11 @@
       "path": "portable-agent-kit/agent_runtime/scheduler.py",
       "sha256": "9d0cdc00ee23e35075fca5eeae8a96f51a42d6b191f69bd0237f26ca706c70a7",
       "bytes": 12106
+    },
+    {
+      "path": "portable-agent-kit/agent_runtime/semantic_review.py",
+      "sha256": "5cb7da9669ae18d20d8d720d28e1cf50e6401db3afece5218c259abb7471bc8d",
+      "bytes": 6053
     },
     {
       "path": "portable-agent-kit/agent_runtime/service_tools.py",
@@ -462,18 +467,18 @@
     },
     {
       "path": "portable-agent-kit/scripts/agent_run.py",
-      "sha256": "d4f1ee517c1545770ff409a304c91ead77f15bc47da05f70a39bcf23580add95",
-      "bytes": 20439
+      "sha256": "1a74864fa2da9e0550535066e8571314bbd43e0025ef6bc6c07fd0f900f5dfb3",
+      "bytes": 22197
     },
     {
       "path": "portable-agent-kit/scripts/agent_task.py",
-      "sha256": "1808842501ec74cffdf361abdf6016800e2cb40eeb154fcf24c0e1fc2409332b",
-      "bytes": 15084
+      "sha256": "a4e2a70989225c9987532400b161e93c852b10fbbe4df69dfe127ca828f9ece2",
+      "bytes": 16243
     },
     {
       "path": "portable-agent-kit/scripts/agent_task_manage.py",
-      "sha256": "5776127b555ba7bb4a96c9de6faae43c7a47f96eeae2d979f7e306f47a943d58",
-      "bytes": 6205
+      "sha256": "b448c9d95e1302fbff509afcb4d73d1922d9236663f7fbf41bac6c0b49b994a2",
+      "bytes": 6337
     },
     {
       "path": "portable-agent-kit/scripts/blind_review.py",
@@ -812,7 +817,7 @@
     },
     {
       "path": "skill/agi-like/SKILL.md",
-      "sha256": "8302d432c7f204e89f1cb5623f0fe5412b60d10fca7b138048ed1130d24d88fc",
+      "sha256": "384aa84399eea84e6f61bed8aedf8ae76befbacc961b82980821c3e89214f82f",
       "bytes": 3995
     },
     {
@@ -1002,8 +1007,8 @@
     },
     {
       "path": "tests/test_goal_api.py",
-      "sha256": "6b0e79b29cf87e456cdadafc33889d48c6a32d9f001dd5bbb8f55719447a340f",
-      "bytes": 3193
+      "sha256": "4f7d8aa01442cbebf1f5e89f16f86beb0a23000dd4a7b9ab0ef61383ecdad087",
+      "bytes": 3720
     },
     {
       "path": "tests/test_goal_intake.py",
@@ -1109,6 +1114,11 @@
       "path": "tests/test_runtime_skill_failure_archive.py",
       "sha256": "1b53835ec6ca29c3615fb5bef67d5b2b076ca9a0e0a70b137d4155bc027d98f5",
       "bytes": 4912
+    },
+    {
+      "path": "tests/test_semantic_review.py",
+      "sha256": "1a2f343af0042731bd3c34e536a3a15bd77e9327dd0c13960e1ddc0b33d0d36b",
+      "bytes": 2534
     },
     {
       "path": "tests/test_service_tools.py",

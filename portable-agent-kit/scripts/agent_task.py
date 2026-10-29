@@ -80,6 +80,8 @@ def main(argv=None):
     parser.add_argument('--project-store', type=Path,
                         help='persistent state base outside workspace; memory/skills use a workspace-hash subdirectory (default ~/.agi-like/projects)')
     parser.add_argument('--review-script', type=Path, help='trusted host unittest source outside workspace')
+    parser.add_argument('--semantic-review',action='store_true',help='add fresh-context model review to mandatory independent tests')
+    parser.add_argument('--max-semantic-reviews',type=int,default=3,help='reserved from the total model decision budget')
     parser.add_argument('--plan', type=Path, help='untrusted saved candidate; skips the one model planning decision')
     parser.add_argument('--tool-profile',type=Path,help='trusted named command/HTTP operations; frozen into the contract')
     parser.add_argument('--allow-external-writes',action='store_true',help='host confirms explicit authorization for profile HTTP writes')
@@ -91,6 +93,9 @@ def main(argv=None):
     parser.add_argument('--max-steps', type=int, default=16, help='total model decision budget, including planning')
     parser.add_argument('--steps-per-run',type=int,help='pause safely after this many execution decisions; total budget is unchanged')
     args = parser.parse_args(argv)
+    if not 1<=args.max_semantic_reviews<=10:parser.error('--max-semantic-reviews must be 1..10')
+    if args.semantic_review and args.max_steps-args.max_semantic_reviews-(0 if args.plan else 1)<1:
+        parser.error('total model budget must include planner, execution and reserved semantic reviews')
     if args.provider=='api' and (args.effort is not None or args.isolate_model_config):
         parser.error('API provider does not accept Codex effort/config options')
     if args.max_seconds<1:parser.error('--max-seconds must be positive')
@@ -182,10 +187,17 @@ def main(argv=None):
         elif review_bytes is None:
             report.update(status='NEEDS_VERIFIER', reason='A trusted independent review script is required; no task execution started.')
         else:
-            contract = compile_contract(context, plan, task_id=task_id,
+            execution_context=dict(context)
+            if args.semantic_review:execution_context['max_steps']-=args.max_semantic_reviews
+            contract = compile_contract(execution_context, plan, task_id=task_id,
                 review_sha256=hashlib.sha256(review_bytes).hexdigest(), planner_steps=report['planning']['decision_steps'])
             contract_path = directory / 'contract.json'
             contract['budget']['max_seconds']=args.max_seconds
+            if args.semantic_review:
+                contract['semantic_review']=True
+                contract['budget']['semantic_reviews']=args.max_semantic_reviews
+                contract['budget']['total_model_steps']=args.max_steps
+                contract['intake']['total_decision_budget']=args.max_steps
             if profile:
                 contract['tool_profile']=profile
                 contract['policy']['external_actions']=args.allow_external_writes
@@ -223,7 +235,8 @@ def main(argv=None):
             def own_report(runtime):
                 own_runtime.update(runtime)
                 report.update(status=runtime['status'],execution_steps=runtime['steps'],
-                              total_decision_steps=report['planning']['decision_steps']+runtime['steps'],
+                              semantic_review_attempts=runtime.get('semantic_review_attempts',0),
+                              total_decision_steps=report['planning']['decision_steps']+runtime['steps']+runtime.get('semantic_review_attempts',0),
                               invocation_id=runtime['invocation_id'],invocation_receipt=runtime['invocation_receipt'])
                 return dict(report)
             captured = io.StringIO()

@@ -17,6 +17,11 @@ class GoalApiTests(unittest.TestCase):
                 if 'submit_plan' in request['tools']:
                     decision={'action':'tool','name':'submit_plan','arguments':{'inputs':['TASK.md'],
                         'outputs':['report.json'],'steps':['read task','write total'],'unknowns':[]}}
+                elif 'submit_review' in request['tools']:
+                    evidence=request['review_evidence']
+                    decision={'action':'tool','name':'submit_review','arguments':{'verdict':'PASS','findings':[],
+                        'checks':[{'check_id':c['id'],'status':'PASS','reason':'fixture content checked'} for c in evidence['acceptance']],
+                        'citations':[{'path':f['path'],'sha256':f['sha256'],'reason':'actual fixture bytes'} for f in evidence['files']]}}
                 elif not request['observations']:decision={'action':'tool','name':'read_file','arguments':{'path':'TASK.md'}}
                 else:decision={'action':'tool','name':'write_json','arguments':{'path':'report.json','value':{'total':42}}}
                 response=json.dumps({'choices':[{'message':{'content':json.dumps(decision)}}]}).encode()
@@ -29,14 +34,14 @@ class GoalApiTests(unittest.TestCase):
                 process=subprocess.run([sys.executable,'-X','utf8',str(ROOT/'portable-agent-kit/scripts/agent_task.py'),
                     '--provider','api','--goal','Write total42.','--workspace',str(work),'--allow-write','report.json',
                     '--control-root',str(root/'control'),'--project-store',str(root/'learning'),
-                    '--authorization-ref','local-api-fixture','--review-script',str(root/'review.py')],
+                    '--authorization-ref','local-api-fixture','--review-script',str(root/'review.py'),'--semantic-review'],
                     env={**os.environ,'AGI_LIKE_MODEL_URL':'http://127.0.0.1:'+str(server.server_port),
                          'AGI_LIKE_MODEL':'local-double','AGI_LIKE_API_KEY':'synthetic-key',
                          'NO_PROXY':'127.0.0.1,localhost','CODEX_CLI_PATH':'not-a-real-codex'},
                     capture_output=True,encoding='utf-8',timeout=20)
                 self.assertEqual(0,process.returncode,process.stderr+process.stdout)
                 result=json.loads(process.stdout);self.assertEqual('COMPLETED',result['status'])
-                self.assertEqual(3,result['total_decision_steps']);self.assertEqual(3,len(requests))
+                self.assertEqual(4,result['total_decision_steps']);self.assertEqual(4,len(requests))
         finally:server.shutdown();server.server_close();thread.join()
 
 

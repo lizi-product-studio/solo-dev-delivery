@@ -12,6 +12,7 @@ import sys
 import uuid
 import time
 import sqlite3
+import os
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -21,6 +22,7 @@ from agent_runtime.journal import RunJournal
 from agent_runtime.tools import ToolError
 from agent_runtime.file_tools import register_file_tools
 from agent_runtime.service_tools import register_service_tools
+from agent_runtime.semantic_review import SemanticReviewer
 from agent_runtime.publication import immutable_receipt_path,write_immutable_report,publish_report
 from control_plane.runtime import DeliveryRuntime
 from control_plane.contracts import normalize_contract,canonical_hash
@@ -100,7 +102,7 @@ def main(argv=None,*,report_callback=None):
         for row in library.list_active():
             skills[row['name']]=lambda arguments,name=row['name'],version=row['version'],digest=row['spec_sha256']: library.execute(
                 name,arguments,tools,expected_version=version,expected_spec_sha256=digest)
-    control=None;lease=None;verifier=None;review_results=[]
+    control=None;lease=None;verifier=None;review_results=[];semantic=None
     task_id=args.task_id or 'agent-'+uuid.uuid4().hex[:12]
     review_sha256=hashlib.sha256(args.review_script.read_bytes()).hexdigest() if args.review_script else None
     if args.resume and not args.task_id:parser.error('--resume requires --task-id')
@@ -147,7 +149,19 @@ def main(argv=None,*,report_callback=None):
                                             'evidence.hash':True,'checkpoint.persist':True},
                                   adapter_id='agent-runtime',host_id=args.provider)
         lease=control.claim(task_id,'agent-runtime',ttl_seconds=3600)['lease_id']
-        active_review={'receipt':None}
+        active_review={'receipt':None,'semantic':None}
+        semantic=None
+        if contract.get('semantic_review'):
+            if not args.review_script:raise ValueError('semantic review supplements a mandatory independent review script')
+            def review_model(directory):
+                return (CodexDecisionModel(directory,model=args.model,log_dir=directory/'events',
+                    reasoning_effort=args.effort,isolate_user_config=args.isolate_model_config)
+                    if args.provider=='codex' else OpenAICompatibleModel(model=args.model))
+            semantic=SemanticReviewer(review_model,args.receipt.parent/'semantic-reviews'/task_id,
+                max_reviews=contract['budget'].get('semantic_reviews',3),
+                identity={'provider':args.provider,'model':args.model or (os.environ.get('AGI_LIKE_MODEL') if args.provider=='api' else 'host-default'),
+                          'endpoint_sha256':hashlib.sha256(os.environ.get('AGI_LIKE_MODEL_URL','codex-cli').encode()).hexdigest(),
+                          'effort':args.effort,'isolated_config':args.isolate_model_config})
         def input_reads(events):
             reads=set()
             for row in events:
@@ -200,6 +214,12 @@ def main(argv=None,*,report_callback=None):
                     verifier.last_error={'bindings':[{'error':'STALE_REVIEW_CANDIDATE'}]}
                     return False
                 active_review['receipt']=summary['receipt']
+            if semantic:
+                assessment=semantic.review(goal,workspace,control.get(task_id),contract.get('inputs',[]),contract['scope'],remaining_seconds=service_remaining())
+                active_review['semantic']=assessment
+                if assessment['status']!='PASS':
+                    verifier.last_error={'semantic_review':assessment['assessment']}
+                    return False
             reviewed_hashes={item['path']:item['sha256'] for item in reviewed_packet['outputs']} if reviewed_packet else None
             validation_errors=[]
             trusted_contract=control.contract(task_id)
@@ -229,6 +249,7 @@ def main(argv=None,*,report_callback=None):
             return not validation_errors
         def finish_verify(reference):
             try:
+                if semantic and not semantic.fresh(active_review['semantic'] or {},workspace):return False
                 if any(hashlib.sha256(safe_path(workspace,row['path']).read_bytes()).hexdigest()!=row['sha256'] for row in pinned_inputs):return False
                 if args.review_script and (not active_review['receipt'] or challenge.status(active_review['receipt'])['status']!='CHALLENGE_PASS'):return False
                 return make_verifier(control.contract(task_id),workspace,reviewer_id='host-deterministic-verifier')(reference)
@@ -274,6 +295,7 @@ def main(argv=None,*,report_callback=None):
             'review_sha256':review_sha256,
             'inputs':pinned_inputs})
     report=asdict(result)
+    report['semantic_review_attempts']=semantic.attempts() if semantic else 0
     report['memory_scope']=project_id
     report['independent_reviews']=review_results
     if control:

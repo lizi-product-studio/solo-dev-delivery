@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.13",
+  "contract_id": "autonomy-benchmark-2026-10-26-pilot-12x2",
+  "contract_sha256": "ab0a50a759ec143b87f5bb4595894d1990cc0ebfded6e3f8db15b695c229e015",
+  "trial_id": "software-quick-patch__solo-0.13.0__r2",
+  "task_id": "software-quick-patch",
+  "arm_id": "solo-0.13.0",
+  "repeat": 2,
+  "status": "unknown",
+  "source_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+  "candidate_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866",
+  "evidence_status": "NEEDS_EVIDENCE",
+  "route": "BOUNDED",
+  "boundary": "AUTO",
+  "first_pass_success": null,
+  "final_success": true,
+  "user_correction_count": null,
+  "recoverable_blocker": null,
+  "handoff_required": null,
+  "handoff_justified": null,
+  "recovery_completed": null,
+  "independent_progress": true,
+  "stale_side_effect": false,
+  "unknown_reported_as_success": null,
+  "execution_seconds": 169.609,
+  "input_tokens": null,
+  "cached_input_tokens": null,
+  "output_tokens": null,
+  "execution_errors": [
+    {
+      "type": "error",
+      "message": "Selected model is at capacity. Please try a different model."
+    },
+    {
+      "type": "turn.failed",
+      "error": {
+        "message": "Selected model is at capacity. Please try a different model."
+      }
+    }
+  ],
+  "evidence_refs": [
+    {
+      "id": "independent-evaluation",
+      "path": "evidence/native-replay-20261026/solo-0.13.0/r2/independent-evaluation.json",
+      "sha256": "b6279b35f32f2c2e7e82d9c8ce7298bef0c30adeed4f91ac20b0a8682276b79e",
+      "trial_id": "software-quick-patch__solo-0.13.0__r2",
+      "contract_id": "autonomy-benchmark-2026-10-26-pilot-12x2",
+      "source_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+      "candidate_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    },
+    {
+      "id": "agent-final",
+      "path": "evidence/native-replay-20261026/solo-0.13.0/r2/agent-final.txt",
+      "sha256": "d024c86f773f678906c9194cc450c9dd0f69ead576b07d0043ff2b2feb686e3d",
+      "trial_id": "software-quick-patch__solo-0.13.0__r2",
+      "contract_id": "autonomy-benchmark-2026-10-26-pilot-12x2",
+      "source_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+      "candidate_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+    }
+  ],
+  "observations": {
+    "changed": {
+      "status": "observed",
+      "evidence_refs": [
+        {
+          "id": "independent-evaluation",
+          "path": "evidence/native-replay-20261026/solo-0.13.0/r2/independent-evaluation.json",
+          "sha256": "b6279b35f32f2c2e7e82d9c8ce7298bef0c30adeed4f91ac20b0a8682276b79e",
+          "trial_id": "software-quick-patch__solo-0.13.0__r2",
+          "contract_id": "autonomy-benchmark-2026-10-26-pilot-12x2",
+          "source_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+          "candidate_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+        }
+      ]
+    },
+    "readback": {
+      "status": "observed",
+      "evidence_refs": [
+        {
+          "id": "independent-evaluation",
+          "path": "evidence/native-replay-20261026/solo-0.13.0/r2/independent-evaluation.json",
+          "sha256": "b6279b35f32f2c2e7e82d9c8ce7298bef0c30adeed4f91ac20b0a8682276b79e",
+          "trial_id": "software-quick-patch__solo-0.13.0__r2",
+          "contract_id": "autonomy-benchmark-2026-10-26-pilot-12x2",
+          "source_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+          "candidate_sha256": "10dcdc10ab1f37590a2acbb281021163773b527a2f80bbf11282cbaf25234866"
+        }
+      ]
+    }
+  },
+  "provenance": {
+    "mode": "native_agent",
+    "host": "codex-cli",
+    "skill_revision": "git:b3c1e03a274bdcb33e852df5360d9d2ba421259a",
+    "started_at": "2026-10-26T07:27:11.704636+00:00",
+    "ended_at": "2026-10-26T07:30:01.304197+00:00",
+    "run_id": "software-quick-patch__solo-0.13.0__r2",
+    "task_objective": "完成一个明确、可回退的小修改并读回结果",
+    "evidence_sha256": {
+      "evidence/native-replay-20261026/solo-0.13.0/r2/independent-evaluation.json": "b6279b35f32f2c2e7e82d9c8ce7298bef0c30adeed4f91ac20b0a8682276b79e",
+      "evidence/native-replay-20261026/solo-0.13.0/r2/agent-final.txt": "d024c86f773f678906c9194cc450c9dd0f69ead576b07d0043ff2b2feb686e3d"
+    }
+  }
+}

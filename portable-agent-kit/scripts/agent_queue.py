@@ -5,6 +5,9 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import time
+import os
+import uuid
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from agent_runtime.scheduler import TaskScheduler
@@ -101,6 +104,11 @@ def main(argv=None):
     add.add_argument('--depends-on',action='append',default=[])
     work=sub.add_parser('work');work.add_argument('--worker',required=True);work.add_argument('--control-root',type=Path,required=True)
     work.add_argument('--max-tasks',type=int,default=1)
+    work.add_argument('--watch',action='store_true',help='wait for newly queued tasks between jobs')
+    work.add_argument('--max-seconds',type=float,default=3600)
+    work.add_argument('--idle-seconds',type=float,default=1)
+    work.add_argument('--clear-stop',action='store_true',help='explicitly clear a previous worker stop request')
+    stop=sub.add_parser('stop');stop.add_argument('--control-root',type=Path,required=True)
     sub.add_parser('list')
     args=parser.parse_args(argv);queue=TaskScheduler(args.queue)
     if args.command=='enqueue':
@@ -110,7 +118,39 @@ def main(argv=None):
         job={**job,'workspace':str(Path(job['workspace']).resolve()),'contract':str(Path(job['contract']).resolve())}
         if job.get('review_script'):job['review_script']=str(Path(job['review_script']).resolve())
         result=queue.enqueue(args.task_id,job,args.depends_on)
-    elif args.command=='work':result=queue.run_batch(args.worker,worker_handler(args.control_root),max_tasks=args.max_tasks)
+    elif args.command=='stop':
+        directory=args.control_root.resolve();directory.mkdir(parents=True,exist_ok=True)
+        (directory/'worker.stop').write_text('stop requested\n',encoding='utf-8')
+        result={'status':'STOP_REQUESTED','effect':'worker exits between jobs; current task retains its own controls'}
+    elif args.command=='work':
+        if not 1<=args.max_tasks<=1000 or not 0<args.max_seconds<=86400 or not 0<args.idle_seconds<=60:
+            parser.error('worker limits are out of bounds')
+        if not args.watch:result=queue.run_batch(args.worker,worker_handler(args.control_root),max_tasks=args.max_tasks)
+        else:
+            directory=args.control_root.resolve();directory.mkdir(parents=True,exist_ok=True)
+            state_path=directory/'worker-state.json';stop_path=directory/'worker.stop'
+            lock_path=directory/'worker.lock';identity=uuid.uuid4().hex
+            try:
+                with lock_path.open('x',encoding='utf-8') as lock:lock.write(identity)
+            except FileExistsError:parser.error('watch worker already registered; inspect the existing worker before recovery')
+            if args.clear_stop and stop_path.is_file():stop_path.unlink()
+            started=time.monotonic();results=[];handler=worker_handler(directory)
+            def publish(status):
+                temporary=state_path.with_name(state_path.name+'.'+uuid.uuid4().hex+'.tmp')
+                temporary.write_text(json.dumps({'worker':args.worker,'pid':os.getpid(),'status':status,
+                    'completed_jobs':len(results),'elapsed_seconds':time.monotonic()-started}),encoding='utf-8')
+                os.replace(temporary,state_path)
+            publish('RUNNING')
+            try:
+                while len(results)<args.max_tasks and time.monotonic()-started<args.max_seconds and not stop_path.exists():
+                    batch=queue.run_batch(args.worker,handler,max_tasks=1)
+                    results.extend(batch);publish('RUNNING' if batch else 'IDLE')
+                    if batch and batch[-1]['status']=='UNKNOWN':break
+                    if not batch:time.sleep(min(args.idle_seconds,max(0,args.max_seconds-(time.monotonic()-started))))
+            finally:
+                publish('STOPPED')
+                if lock_path.read_text(encoding='utf-8')==identity:lock_path.unlink()
+            result={'status':'STOPPED','results':results,'state':str(state_path)}
     else:result=queue.list_tasks()
     print(json.dumps(result,ensure_ascii=False,indent=2))
     return 0

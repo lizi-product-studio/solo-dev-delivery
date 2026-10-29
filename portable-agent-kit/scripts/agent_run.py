@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 import sys
 import uuid
+import time
+import sqlite3
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -18,6 +20,7 @@ from agent_runtime.models import CodexDecisionModel
 from agent_runtime.journal import RunJournal
 from agent_runtime.tools import ToolError
 from agent_runtime.file_tools import register_file_tools
+from agent_runtime.service_tools import register_service_tools
 from agent_runtime.publication import immutable_receipt_path,write_immutable_report,publish_report
 from control_plane.runtime import DeliveryRuntime
 from control_plane.contracts import normalize_contract,canonical_hash
@@ -122,6 +125,16 @@ def main(argv=None,*,report_callback=None):
                         not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest()!=item['sha256'])):
                     parser.error('intake output baseline changed before execution')
         allow_write=contract.get('policy',{}).get('workspace_write') is True
+        profile=contract.get('tool_profile',{})
+        def service_remaining():
+            with sqlite3.connect(Path(state_db).resolve().as_uri()+'?mode=ro',uri=True) as db:
+                row=db.execute('SELECT snapshot FROM agent_checkpoints WHERE task_id=?',(task_id,)).fetchone()
+            clock=json.loads(row[0]).get('budget_clock') if row else None
+            if not clock:raise ToolError('service call requires a persisted task deadline')
+            now=time.time()
+            return 0 if now<clock['started_at'] else max(0,clock['started_at']+clock['max_seconds']-now)
+        register_service_tools(tools,workspace,profile,
+            external_authorized=contract.get('policy',{}).get('external_actions') is True,remaining_seconds=service_remaining)
         contract.update({'task_id':task_id,'id':task_id,'goal':args.goal})
         control=DeliveryRuntime(args.db,evidence_root=workspace)
         if args.resume:
@@ -129,7 +142,8 @@ def main(argv=None,*,report_callback=None):
             if canonical_hash(normalize_contract(contract))!=state['contract_hash']:
                 raise ValueError('resume contract changed; preserve checkpoint and open a revision')
         else:
-            state=control.create_task(contract,{'fs.read':True,'fs.write':True,'shell.exec':False,
+            state=control.create_task(contract,{'fs.read':True,'fs.write':True,'shell.exec':bool(profile.get('commands')),
+                                            'external.authorized':contract.get('policy',{}).get('external_actions') is True,
                                             'evidence.hash':True,'checkpoint.persist':True},
                                   adapter_id='agent-runtime',host_id=args.provider)
         lease=control.claim(task_id,'agent-runtime',ttl_seconds=3600)['lease_id']
@@ -143,6 +157,17 @@ def main(argv=None,*,report_callback=None):
                 if isinstance(name,str):reads.add(safe_path(workspace,name).relative_to(workspace).as_posix())
             return reads
         def verifier(goal,answer,events):
+            missing_services=[]
+            for requirement in profile.get('required',[]):
+                matches=[row for row in events if row.get('action')=='tool'
+                         and row['decision'].get('name')==requirement['tool']
+                         and row['decision'].get('arguments',{}).get('name')==requirement['name']]
+                observed=matches[-1].get('result',{}) if matches else {}
+                if not isinstance(observed,dict) or not (observed.get('passed') is True if requirement['tool']=='run_command' else observed.get('ok') is True):
+                    missing_services.append(requirement)
+            if missing_services:
+                verifier.last_error={'required_service_calls':missing_services}
+                return False
             if contract.get('policy',{}).get('require_input_reads') is True:
                 missing={row['path'] for row in pinned_inputs}-input_reads(events)
                 if missing:

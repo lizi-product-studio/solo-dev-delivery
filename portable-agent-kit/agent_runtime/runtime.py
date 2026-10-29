@@ -3,6 +3,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 import json
 import uuid
+import time
 from .tools import ToolError
 from .journal import JournalError
 from .recipes import SkillPreflightError,recipe_procedure
@@ -52,8 +53,19 @@ class AgentRuntime:
             if resume:
                 saved=journal.check_binding(task_id,binding)
             else:
-                saved=journal.create(task_id,binding,{'phase':'READY','next_step':1,'events':[],'pending':None})
+                initial={'phase':'READY','next_step':1,'events':[],'pending':None}
+                if control:
+                    initial['budget_clock']={'started_at':time.time(),'max_seconds':current['contract']['budget']['max_seconds']}
+                saved=journal.create(task_id,binding,initial)
         snapshot=deepcopy(saved['snapshot']) if saved else {'phase':'READY','next_step':1,'events':[],'pending':None}
+        if control and not journal:
+            snapshot['budget_clock']={'started_at':time.time(),'max_seconds':current['contract']['budget']['max_seconds']}
+        def remaining_seconds():
+            clock=snapshot.get('budget_clock')
+            if not clock:return None
+            now=time.time()
+            if now<clock['started_at']:return 0.0
+            return max(0.0,clock['started_at']+clock['max_seconds']-now)
         events=snapshot['events']
         def _result(status,step,answer):
             owned=snapshot.get('invocation_id')==invocation_id
@@ -151,6 +163,8 @@ class AgentRuntime:
         snapshot['invocation_id']=invocation_id
         stopped=stop_requested(snapshot['next_step'],max(0,snapshot['next_step']-1))
         if stopped:return stopped
+        if control and not snapshot.get('budget_clock'):
+            return end('CONTROL_BLOCKED',max(0,snapshot['next_step']-1),'legacy checkpoint lacks a persistent wall budget; use its original runtime or an explicit migration')
         review_limit=current['contract']['budget']['max_retries'] if control else 2
         if snapshot.get('rejections',0)>review_limit:
             return end('CONTROL_BLOCKED',max(0,snapshot['next_step']-1),'independent review retry budget exhausted; a resumed process cannot reset it')
@@ -169,6 +183,9 @@ class AgentRuntime:
         for step in range(snapshot['next_step'],self.max_steps+1):
             stopped=stop_requested(step,step-1)
             if stopped:return stopped
+            remaining=remaining_seconds()
+            if remaining is not None and remaining<=0:
+                return end('BUDGET_EXHAUSTED',step-1,'task wall-time budget exhausted; resume cannot reset it')
             if steps_per_run is not None and executed>=steps_per_run:
                 if control:
                     token=uuid.uuid4().hex
@@ -184,6 +201,7 @@ class AgentRuntime:
             request={'task_id':task_id,'goal':goal,'step':step,'memory':self.memory.search(goal),
                      'tools':self.tools.manifest(),'skills':skill_manifest,'observations':deepcopy(events),
                      'budget':{'max_steps':self.max_steps,'steps_remaining':self.max_steps-step+1,
+                               'remaining_seconds':remaining,
                                'review_rejections':snapshot.get('rejections',0)},
                      'completion_mode':'host-verifies-changed-artifacts' if auto_verify else 'model-proposes-finish'}
             if control:
@@ -219,6 +237,11 @@ class AgentRuntime:
                 return end('MODEL_ERROR',step,str(exc))
             stopped=stop_requested(step+1,step,discarded=decision)
             if stopped:return stopped
+            remaining=remaining_seconds()
+            if remaining is not None and remaining<=0:
+                events.append({'step':step,'action':'model_discarded','reason':'task wall-time budget exhausted'})
+                snapshot['phase']='READY';snapshot['pending']=None;snapshot['next_step']=step+1
+                return end('BUDGET_EXHAUSTED',step,'task wall-time budget exhausted before action dispatch')
             if not isinstance(decision,dict):
                 snapshot['phase']='READY';snapshot['next_step']=step+1
                 return end('FAILED',step,'model decision must be an object')
@@ -261,7 +284,13 @@ class AgentRuntime:
                     if stopped:return stopped
                     raise
             else:persist()
+            remaining=remaining_seconds()
+            if remaining is not None and remaining<=0:
+                event['result']={'status':'REJECTED','reason':'wall-time budget exhausted before dispatch','pre_effect_rejection':True}
+                snapshot['phase']='READY';snapshot['pending']=None;snapshot['next_step']=step+1
+                return end('BUDGET_EXHAUSTED',step,'task wall-time budget exhausted before action dispatch')
             if action in {'tool','skill'}:
+                self.tools.execution_context={'task_id':task_id,'action_id':action_id}
                 pre_effect_rejection=False
                 try:
                     if action=='tool':result=self.tools.call(decision['name'],decision.get('arguments',{}))

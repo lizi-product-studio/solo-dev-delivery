@@ -147,6 +147,7 @@ def planner_request(context, task_id):
                     'Do not submit authorization, acceptance, reviewer, policy or budget fields.',
                 'arguments': '(inputs: list[str], outputs: list[str], steps: list[str], unknowns: list[str])'}},
             'planning_context': {'files': context['files'],
+                                 'host_services':context.get('host_services',{}),
                                  'inventory_truncated': context['inventory_truncated'],
                                  'host_allow_write': context['allow_write'],
                                  'external_actions': False}}

@@ -1,6 +1,6 @@
 {
   "package": "portable-agi-like-kit",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "protocol_envelope": "aap/0.1",
   "state_version": 2,
   "language": "Python 3.9+, standard library",
@@ -12,6 +12,7 @@
     "codex_bridge": "scripts/bridge.py (register a live Skill session)",
     "agent_runtime": "agent_runtime/runtime.py (model, tools, memory and skills loop)",
     "goal_intake": "agent_runtime/intake.py and scripts/agent_task.py (host-authorized goal planning and bound review)",
+    "service_tools": "agent_runtime/service_tools.py (fixed named process and HTTP adapters, host profile authorization)",
     "managed_lifecycle": "agent_runtime/task_lifecycle.py and scripts/agent_task_manage.py (sealed status, resume, safe control and exact file readback)",
     "result_publication": "agent_runtime/publication.py (generation and invocation bound result publication)",
     "skill_lifecycle": "agent_runtime/skill_management.py and scripts/skill_manage.py (content holdout/mutation review and controlled activation)",

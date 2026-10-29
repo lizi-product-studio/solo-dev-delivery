@@ -16,6 +16,11 @@ class ModelAdapterError(RuntimeError):
     pass
 
 
+def _request_timeout(request, maximum):
+    remaining=request.get('budget',{}).get('remaining_seconds')
+    return min(maximum,remaining) if type(remaining) in (int,float) and remaining>0 else maximum
+
+
 class ModelActionUnknown(ModelAdapterError):
     outcome_unknown = True
 
@@ -72,7 +77,7 @@ class CodexDecisionModel:
             from .codex_host import CodexHostActionUnknown
             try:
                 events=self.adapter.run(prompt,workspace=self.workspace,session=NoTools(),model=self.model,
-                                        timeout=self.timeout,log_dir=logs,sandbox='read-only',
+                                        timeout=_request_timeout(request,self.timeout),log_dir=logs,sandbox='read-only',
                                         reasoning_effort=self.reasoning_effort,output_schema=schema_path,
                                         decision_only=True,instructions_file=instructions,ignore_user_config=self.isolate_user_config)
             except CodexHostActionUnknown as exc:
@@ -122,7 +127,7 @@ class OpenAICompatibleModel:
                       headers={"Content-Type": "application/json",
                                "Authorization": "Bearer " + self.api_key}, method="POST")
         try:
-            with urlopen(req, timeout=self.timeout) as response:
+            with urlopen(req, timeout=_request_timeout(request,self.timeout)) as response:
                 body = json.loads(response.read().decode("utf-8"))
             content = body["choices"][0]["message"]["content"]
             result = json.loads(content) if isinstance(content, str) else content

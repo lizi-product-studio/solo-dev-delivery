@@ -56,6 +56,16 @@ python portable-agent-kit/scripts/agent_run.py --provider codex `
 
 ## 管理同一任务
 
+### 项目命令与 HTTP 服务
+
+宿主可传 `--tool-profile C:/work/control/services.json`，其中 commands/http 是命名映射。例如 commands.project_check 的 argv 为 `["python", "-m", "unittest", "discover"]`；http.inventory 的 url 为宿主批准的固定服务 URL，method 默认 GET。模型只能通过 `run_command(name)`、`http_request(name, body)` 选择这些名称，不能提供任意命令参数、URL 或认证头。可用 required 数组声明必须实际成功观察的调用，如 `{"tool":"run_command","name":"project_check"}`。
+
+命令不经过 shell，工作目录固定在项目，环境默认仅包含基本系统路径。执行项目代码继承当前用户的 OS 权限，不能当作文件工具沙箱；宿主只能为本次获准操作提供配置。命令返回 exit_code/passed，调用被观察不等于业务通过；最终仍需独立验收。超时保留 UNKNOWN，使用已有进程树停止逻辑，失败不盲重试。
+
+HTTP 默认只读；POST/PUT/PATCH/DELETE 需宿主明确传 `--allow-external-writes`。auth 配置引用 env 变量名，可选 header/prefix，认证值不交模型且响应会遮蔽该值。跨地址重定向被拒绝；外部写入使用绑定 Runtime 动作的 Idempotency-Key，但服务端是否支持仍由服务决定，未知写入需要真实适配器读回，不能仅靠此头宣称 exactly-once。
+
+`agent_task.py --provider api` 可使用 `AGI_LIKE_MODEL_URL/MODEL/API_KEY` 完成规划和执行，适用于兼容 Chat Completions 的服务；Codex 专用 effort/isolate 参数不能混用。`--max-seconds` 是执行阶段墙钟上限（含暂停，不含此前规划），检查点持久化，续接不重置。
+
 ```powershell
 python scripts/agent_task.py status --control-root C:/work/control/new-task
 python scripts/agent_task.py pause --control-root C:/work/control/new-task --reason "等待安全暂停"
@@ -118,6 +128,8 @@ review 实际执行隔离文件工具，读回产物，再生成有效内容变�
 
 ## 安全暂停、重启和未知动作
 
+源码开发中的执行时长门读取合同 `budget.max_seconds`，首次执行时将起点持久化到检查点，暂停等待也计入；续接不会重新计时。模型适配器使用剩余时长限制自身调用，返回后和工具派发前再次核预算。到期不启动新动作；已经在途的工具仍须返回或对账，安全取消可在预算耗尽后确认。此门不代表 token/金额硬预算，也不强制终止任意自定义工具；旧版没有时钟记录的检查点需使用原运行时或明确迁移。
+
 `agent_run.py --steps-per-run 1` 在一个安全步骤后暂停，不重置 `--max-steps` 的任务总预算。指定固定 `--task-id`；下次用相同工作区、目标、合同、模型配置和预算加 `--resume --task-id ...` 接续。带控制平面时检查点默认与任务放在同一 SQLite 文件；无合同时用 `--state-db` 指定保存位置。控制文件必须位于工具工作区外。
 
 `RunJournal` 在模型调用前、动作执行前和观察保存后持久化状态，并用 generation 防止并发覆盖。新进程会把已完成的观察交给模型，跳过已完成步骤。若上次停在 `ACTION_PENDING`，动作可能已产生副作用，返回 `NEEDS_RECONCILIATION`，不重放；由可信宿主提供绑定 action_id 的读回验证回调后才能更新检查点。模型调用中断或完成提交中断也保持待核对，不能凭超时认定什么都没发生。
@@ -129,3 +141,5 @@ review 实际执行隔离文件工具，读回产物，再生成有效内容变�
 `scripts/agent_queue.py --queue queue.sqlite3 enqueue --task-id T --job job.json` 登记任务；`--depends-on` 可重复指定已存在的前置任务。job 必须包含 goal、workspace、contract，可选 provider、model、max_steps、project_id、effort、isolate_model_config、review_script、auto_verify。队列和直接入口执行相同的参数约束，review 在工作区外按字节冻结，不能静默忽略模型配置或绑定的验收器。保存的只是 JSON，不执行其中的任意命令。
 
 `scripts/agent_queue.py --queue queue.sqlite3 work --worker local-1 --control-root C:/work/control --max-tasks 2` 同步执行最多两笔任务；每笔通过公共 `agent_run` 入口和合同验收，留下独立回执及哈希。只有前置任务 COMPLETED 才能领取后续任务；失败、未知、进程消失不会自动重试或夺取运行中任务。任务暂停目前在批次队列中按非完成处理，需宿主显式接续，不能把有限批次 worker 描述为长期无人值守调度器。
+
+新增显式 `work --watch --max-tasks 10 --max-seconds 3600 --idle-seconds 1` 可等待新任务；`stop --control-root ...` 请求在当前任务后停止，重新启动需 `--clear-stop` 明确清除旧请求。worker-state.json 记录运行/空闲/停止，worker.lock 防止同控制根重复启动；未知结果使 watch 停止。总 watch 时间在任务之间检查，各任务另受自己的执行时间预算，不强杀在途动作。此模式没有安装 OS 自启动服务，也没有完成长期稳定性观察。

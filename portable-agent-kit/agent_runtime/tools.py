@@ -8,7 +8,7 @@ class ToolError(ValueError):
 
 
 class ToolRegistry:
-    def __init__(self): self._tools = {}
+    def __init__(self): self._tools = {};self.execution_context={}
     def register(self, name, fn, *, description="", effects="unknown"):
         if not isinstance(name, str) or not name.strip() or not callable(fn):
             raise ToolError("tool name and callable are required")

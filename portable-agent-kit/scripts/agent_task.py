@@ -20,7 +20,7 @@ import uuid
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from agent_runtime.intake import IntakeError, build_context, compile_contract, planner_request, validate_plan
-from agent_runtime.models import CodexDecisionModel
+from agent_runtime.models import CodexDecisionModel,OpenAICompatibleModel
 from agent_run import main as run_agent
 
 
@@ -81,12 +81,19 @@ def main(argv=None):
                         help='persistent state base outside workspace; memory/skills use a workspace-hash subdirectory (default ~/.agi-like/projects)')
     parser.add_argument('--review-script', type=Path, help='trusted host unittest source outside workspace')
     parser.add_argument('--plan', type=Path, help='untrusted saved candidate; skips the one model planning decision')
+    parser.add_argument('--tool-profile',type=Path,help='trusted named command/HTTP operations; frozen into the contract')
+    parser.add_argument('--allow-external-writes',action='store_true',help='host confirms explicit authorization for profile HTTP writes')
+    parser.add_argument('--max-seconds',type=int,default=3600,help='execution wall-time budget, including pauses')
     parser.add_argument('--model')
+    parser.add_argument('--provider',choices=('codex','api'),default='codex')
     parser.add_argument('--effort', choices=('low', 'medium', 'high', 'xhigh', 'max', 'ultra'))
     parser.add_argument('--isolate-model-config', action='store_true')
     parser.add_argument('--max-steps', type=int, default=16, help='total model decision budget, including planning')
     parser.add_argument('--steps-per-run',type=int,help='pause safely after this many execution decisions; total budget is unchanged')
     args = parser.parse_args(argv)
+    if args.provider=='api' and (args.effort is not None or args.isolate_model_config):
+        parser.error('API provider does not accept Codex effort/config options')
+    if args.max_seconds<1:parser.error('--max-seconds must be positive')
     if args.isolate_model_config and not args.model:
         parser.error('--isolate-model-config requires an explicit --model')
     if not args.plan and args.max_steps < 2:
@@ -95,6 +102,7 @@ def main(argv=None):
         parser.error('--steps-per-run must be positive')
     try:
         context = build_context(args.goal, args.workspace, args.allow_write, args.authorization_ref, max_steps=args.max_steps)
+        context['max_seconds']=args.max_seconds
         workspace = Path(context['workspace'])
         directory = args.control_root.absolute()
         if directory.is_symlink() or getattr(directory, 'is_junction', lambda: False)():
@@ -112,6 +120,18 @@ def main(argv=None):
                 raise IntakeError('trusted review must be an external file of at most 1 MiB')
             review_bytes = review.read_bytes()
         supplied_plan = None
+        profile={}
+        if args.tool_profile:
+            if args.tool_profile.resolve().is_relative_to(workspace):raise IntakeError('host tool profile must be outside workspace')
+            if args.tool_profile.stat().st_size>1024*1024:raise IntakeError('tool profile exceeds 1 MiB')
+            profile=json.loads(args.tool_profile.read_text(encoding='utf-8-sig'))
+            if not isinstance(profile,dict):raise IntakeError('tool profile must be an object')
+            from agent_runtime.service_tools import register_service_tools
+            from agent_runtime.tools import ToolRegistry
+            register_service_tools(ToolRegistry(),workspace,profile,external_authorized=args.allow_external_writes)
+        context['host_services']={'commands':list(profile.get('commands',{})),
+            'http':{name:op.get('method','GET') for name,op in profile.get('http',{}).items()},
+            'required':profile.get('required',[])}
         if args.plan:
             if args.plan.stat().st_size > 1024 * 1024:
                 raise IntakeError('plan exceeds 1 MiB')
@@ -130,7 +150,7 @@ def main(argv=None):
               'project_store_root': learning['root'], 'project_store': learning['directory'],
               'memory_scope': learning['scope'],
               'learning_databases': {key: learning[key] for key in ('memory', 'skills')},
-              'control_root': str(directory), 'planning': {'decision_steps': 0, 'mode': 'provided-plan' if args.plan else 'codex'}}
+              'control_root': str(directory), 'planning': {'decision_steps': 0, 'mode': 'provided-plan' if args.plan else args.provider}}
     report['planning'].update(requested_model=args.model, reasoning_effort=args.effort,
                               isolated_model_config=args.isolate_model_config,
                               usage_source=str(directory / 'planning-events') if not args.plan else None)
@@ -146,9 +166,9 @@ def main(argv=None):
         else:
             report['planning']['decision_steps'] = 1
             save(receipt_path, report)
-            planner = CodexDecisionModel(workspace, model=args.model,
+            planner = (CodexDecisionModel(workspace, model=args.model,
                         reasoning_effort=args.effort, isolate_user_config=args.isolate_model_config,
-                        log_dir=directory / 'planning-events')
+                        log_dir=directory / 'planning-events') if args.provider=='codex' else OpenAICompatibleModel(model=args.model))
             decision = planner(planner_request(context, task_id))
             if decision.get('action') != 'tool' or decision.get('name') != 'submit_plan':
                 raise IntakeError('planner must submit_plan, not execute a task or finish')
@@ -165,6 +185,10 @@ def main(argv=None):
             contract = compile_contract(context, plan, task_id=task_id,
                 review_sha256=hashlib.sha256(review_bytes).hexdigest(), planner_steps=report['planning']['decision_steps'])
             contract_path = directory / 'contract.json'
+            contract['budget']['max_seconds']=args.max_seconds
+            if profile:
+                contract['tool_profile']=profile
+                contract['policy']['external_actions']=args.allow_external_writes
             save(contract_path, contract)
             # A proposal, missing business input or missing verifier must not
             # create a learning database or seed unverified task knowledge.
@@ -173,6 +197,7 @@ def main(argv=None):
             learning = project_storage(workspace, args.project_store)
             runtime_receipt = directory / 'receipt.json'
             command = ['--goal', args.goal, '--workspace', str(workspace),
+                       '--provider',args.provider,
                        '--memory', learning['memory'], '--skills', learning['skills'],
                        '--project-id', learning['scope'],
                        '--db', str(directory / 'control.sqlite3'), '--contract', str(contract_path),

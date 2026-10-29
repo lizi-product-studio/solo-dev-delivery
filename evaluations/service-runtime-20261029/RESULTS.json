@@ -1,0 +1,25 @@
+{
+  "version": "1.5.0",
+  "real_acceptance": {
+    "status": "PASS",
+    "runtime_status": "COMPLETED",
+    "command_observed": true,
+    "http_observed": true,
+    "http_requests": [
+      "/inventory"
+    ],
+    "inputs_unchanged": true,
+    "total_decision_steps": 9,
+    "limits": "Real requested model, actual local HTTP and project unittest process; synthetic data, no production integration claim."
+  },
+  "result_sha256": "8dde218d3a70879779fd8c8dccb02665f9d580a1cf1ccba0a87c2fddf12e6933",
+  "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\service-delivery-luna-20261029-r1",
+  "targeted_validation": {
+    "related_tests": 31,
+    "subtests": 51,
+    "final_service_api_wall_queue_tests": 10,
+    "final_subtests": 23
+  },
+  "package_sha256": "5580b6c5cd33aa6682dcc3dee17ae02296981ad10741a2318f341ee6756ef7d0",
+  "scope": "Actual local HTTP and project process, synthetic data. No production, all-platform, AGI or long-run guarantee."
+}

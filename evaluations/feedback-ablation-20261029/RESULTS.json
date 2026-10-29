@@ -1,0 +1,339 @@
+{
+  "format": "feedback-ablation-evidence-index/1",
+  "date": "2026-10-29",
+  "requested_model": "gpt-6-luna",
+  "effort": "medium",
+  "max_steps": 16,
+  "epochs": [
+    {
+      "epoch": "r1",
+      "summary_sha256": "076e2567022acf836723a197b5e8b56864fd46f42e0fc08b6f478eb9b3a4fdef",
+      "protocol_sha256": "c4326f3e71b4b2a53193800799f9b13fb6db80352564103ab8a1efa926050d4f",
+      "raw_evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\feedback-ablation-luna-20261029-r1",
+      "status": "OBSERVED",
+      "valid_pairs": 3,
+      "censored_pairs": 0,
+      "baseline_successes": 1,
+      "feedback_successes": 0,
+      "trials": [
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "MODEL_ERROR",
+          "steps": 1,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": []
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 8,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_complete_nonempty_question_set"
+          ]
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "MODEL_ERROR",
+          "steps": 2,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": []
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "MODEL_ERROR",
+          "steps": 2,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "PricingBehavior.test_decimal_inputs",
+            "PricingBehavior.test_invalid_types",
+            "PricingBehavior.test_negative_and_discount_range",
+            "PricingBehavior.test_none_discount_is_zero",
+            "PricingBehavior.test_nonfinite_and_bad_numeric_text",
+            "PricingBehavior.test_regular_decimal_result_and_scale",
+            "PricingBehavior.test_round_once_after_quantity_and_discount"
+          ]
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "MODEL_ERROR",
+          "steps": 3,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "PricingBehavior.test_decimal_inputs",
+            "PricingBehavior.test_invalid_types",
+            "PricingBehavior.test_negative_and_discount_range",
+            "PricingBehavior.test_none_discount_is_zero",
+            "PricingBehavior.test_nonfinite_and_bad_numeric_text",
+            "PricingBehavior.test_regular_decimal_result_and_scale",
+            "PricingBehavior.test_round_once_after_quantity_and_discount"
+          ]
+        }
+      ]
+    },
+    {
+      "epoch": "r2",
+      "summary_sha256": "8771f7f2a376f874da6091f0e2d02b6762a54a890762fb006f0d64af419feb85",
+      "protocol_sha256": "c10f9a6f07a65717e3ca49bb19c76481b9bbc98c14524e1aba1369f8692d7d11",
+      "raw_evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\feedback-ablation-luna-20261029-r2",
+      "status": "OBSERVED",
+      "valid_pairs": 3,
+      "censored_pairs": 0,
+      "baseline_successes": 2,
+      "feedback_successes": 2,
+      "trials": [
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "CONTROL_BLOCKED",
+          "steps": 10,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_body_contains_task_information_and_document_request",
+            "ProcurementDraft.test_complete_nonempty_question_set",
+            "ProcurementDraft.test_draft_only_and_requires_review",
+            "ProcurementDraft.test_json_text_and_human_artifact_are_consistent",
+            "ProcurementDraft.test_no_unapproved_confirmation_or_business_commitment",
+            "ProcurementDraft.test_not_sent_and_no_invented_recipient",
+            "ProcurementDraft.test_request_and_item_identity",
+            "ProcurementDraft.test_unknown_facts_remain_unknown"
+          ]
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "BUDGET_EXHAUSTED",
+          "steps": 16,
+          "task_success": false,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_json_text_and_human_artifact_are_consistent"
+          ]
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        }
+      ]
+    },
+    {
+      "epoch": "r3",
+      "summary_sha256": "9d55934cafd81f1e028942c938c16d7c57e55bd1747b879d624fd21b99988945",
+      "protocol_sha256": "2d4b141a5d4dce498755e0ee73ae502a7ef1fd839c496cbccf272ab9a3a36291",
+      "raw_evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\feedback-ablation-luna-20261029-r3",
+      "status": "OBSERVED",
+      "valid_pairs": 3,
+      "censored_pairs": 0,
+      "baseline_successes": 2,
+      "feedback_successes": 2,
+      "trials": [
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "data",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "CONTROL_BLOCKED",
+          "steps": 6,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_complete_nonempty_question_set"
+          ]
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "CONTROL_BLOCKED",
+          "steps": 10,
+          "task_success": false,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        },
+        {
+          "id": "software",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "COMPLETED",
+          "steps": 5,
+          "task_success": true,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "CHALLENGE_PASS",
+          "failed_tests": []
+        }
+      ]
+    },
+    {
+      "epoch": "r4",
+      "summary_sha256": "7c395a65242537971f7e9290d485496e176e46c233f9848ea08c01e1e2110162",
+      "protocol_sha256": "391c4f527c572afa2d61db5d7bc9651c577d83ddfd850709a739b03143f0bdcf",
+      "raw_evidence": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\feedback-ablation-luna-20261029-r4",
+      "status": "OBSERVED",
+      "valid_pairs": 1,
+      "censored_pairs": 0,
+      "baseline_successes": 0,
+      "feedback_successes": 0,
+      "trials": [
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "baseline",
+          "runtime_status": "COMPLETED",
+          "steps": 8,
+          "task_success": false,
+          "review_attempts": 0,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_complete_nonempty_question_set"
+          ]
+        },
+        {
+          "id": "procurement",
+          "repetition": 1,
+          "arm": "feedback",
+          "runtime_status": "BUDGET_EXHAUSTED",
+          "steps": 16,
+          "task_success": false,
+          "review_attempts": 1,
+          "infrastructure_failure": null,
+          "artifact_review_status": "FAIL",
+          "failed_tests": [
+            "ProcurementDraft.test_json_text_and_human_artifact_are_consistent"
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusion": "No demonstrated overall improvement. Epochs use different runtime protocols and must not be pooled. Both arms use AGI-like Runtime; this is a review-feedback mechanism ablation.",
+  "usage_limit": "Raw usage.model_calls counts CLI decision invocations, not individual underlying inference requests. Cost and complete per-request usage are unknown.",
+  "release_state": "Unreleased source changes after installed 1.2.0."
+}

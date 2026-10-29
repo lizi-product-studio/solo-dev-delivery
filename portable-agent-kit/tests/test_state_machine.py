@@ -280,6 +280,59 @@ class PortableStateMachineTests(unittest.TestCase):
         state, _ = self.finish(state)
         self.assertEqual("COMPLETED", state["status"])
 
+    def test_pre_effect_rejection_is_audited_without_blocking_corrected_work(self):
+        state = self.running(executor="trusted-runtime")
+        payload = {"tool_call_id": "rejected-call", "status": "FAILED",
+                   "pre_effect_rejection": True, "error": "invalid registered argument"}
+        state, _ = apply(state, request(state, "tool_result", "rejected", payload))
+        self.assertEqual("RUNNING", state["status"])
+        self.assertEqual([], state["failed_tool_calls"])
+        self.assertEqual([], state["unknown_tool_calls"])
+        self.assertEqual(payload, state["events"][-1]["payload"])
+        state, _ = apply(state, request(state, "tool_result", "corrected",
+                                       {"tool_call_id": "corrected-call", "status": "SUCCEEDED"}))
+        state, _ = self.record(state)
+        state, _ = self.finish(state, executor_stopped=True)
+        self.assertEqual("COMPLETED", state["status"])
+        failed = [event for event in state["events"] if event["kind"] == "TOOL_RESULT"
+                  and event["payload"]["status"] == "FAILED"]
+        self.assertEqual([payload], [event["payload"] for event in failed])
+
+    def test_pre_effect_rejection_cannot_launder_prior_unknown_or_failed_call(self):
+        for prior, expected, blocker in (("UNKNOWN", "UNKNOWN", "UNKNOWN_SIDE_EFFECT"),
+                                         ("FAILED", "BLOCKED", "TOOL_FAILED")):
+            with self.subTest(prior=prior):
+                state = self.running()
+                state, _ = apply(state, request(state, "tool_result", "prior",
+                                               {"tool_call_id": "same-call", "status": prior}))
+                state, _ = apply(state, request(state, "tool_result", "reject-later",
+                                               {"tool_call_id": "same-call", "status": "FAILED",
+                                                "pre_effect_rejection": True}))
+                self.assertEqual(expected, state["status"])
+                self.assertIn(blocker, self.codes(state))
+                calls = state["unknown_tool_calls"] if prior == "UNKNOWN" else state["failed_tool_calls"]
+                self.assertEqual(["same-call"], calls)
+                state, _ = self.record(state)
+                state, _ = self.finish(state)
+                self.assertEqual(expected, state["status"])
+                self.assertIn(blocker, self.codes(state))
+                self.assertEqual([prior, "FAILED"], [event["payload"]["status"]
+                    for event in state["events"] if event["kind"] == "TOOL_RESULT"])
+
+    def test_pre_effect_rejection_requires_exact_true_and_failed_status(self):
+        invalid = [{"status": "FAILED", "pre_effect_rejection": value}
+                   for value in (False, 0, 1, "true", None, [], {})]
+        invalid.extend({"status": status, "pre_effect_rejection": True}
+                       for status in ("SUCCEEDED", "UNKNOWN"))
+        for fields in invalid:
+            with self.subTest(fields=fields):
+                state = self.running()
+                original = deepcopy(state)
+                with self.assertRaisesRegex(ProtocolError, "pre_effect_rejection"):
+                    apply(state, request(state, "tool_result", "bad-marker",
+                                         {"tool_call_id": "call", **fields}))
+                self.assertEqual(original, state)
+
     def test_findings_default_to_all_checks_and_reject_non_acceptance_ids(self):
         state = self.running(two_check_contract())
         with self.assertRaisesRegex(ProtocolError, "check_ids"):

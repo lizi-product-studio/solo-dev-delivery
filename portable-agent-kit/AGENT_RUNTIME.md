@@ -4,6 +4,21 @@
 
 ## 本地运行
 
+普通用户直接给 Skill 目标。宿主从本次授权确定写入范围，并复用可信测试或由独立上下文准备验收后，可直接接入：
+
+```powershell
+python scripts/agent_task.py --goal "按原始订单计算销售、退货和未知金额，生成 summary.json" `
+  --workspace C:/work/task --allow-write summary.json `
+  --authorization-ref current-user-request --control-root C:/work/control/new-task `
+  --review-script C:/work/review/independent.py --model YOUR_MODEL --max-steps 16
+```
+
+源码运行时脚本路径为 `portable-agent-kit/scripts/agent_task.py`。`--control-root` 必须是工作区外尚不存在的目录；存在时不会重新执行。`--allow-write` 可重复指定文件或以 `/` 结尾的目录，`.` 表示宿主已授权整个工作区。模型提交的计划不能扩大此范围、增加预算或指定验收器。未提供可信独立验收返回 `NEEDS_VERIFIER`，不会仅用文件存在宣称完成；必要业务决定缺失返回 `NEEDS_INPUT`。验收代码是宿主信任边界，不能直接采用执行模型的自评。
+
+入口保存原始目标、文件清单、规划事件、计划、合同和运行回执。默认一次真实模型规划消耗总决策预算 1 步；控制面另外计 start/finish 事件，两种预算分别记录。自动合同绑定独立验收脚本，直接调用下层入口也不能省略或更换它。初始输入及已有可编辑文件绑定版本，输出范围保持宿主约束。
+
+已有合同的底层入口：
+
 ```powershell
 python portable-agent-kit/scripts/agent_run.py --provider codex `
   --goal "读取 stock.json 并写入 report.json，汇总数量和SKU数" `
@@ -13,6 +28,12 @@ python portable-agent-kit/scripts/agent_run.py --provider codex `
 ```
 
 `codex` 使用本机已登录 CLI；`api` 使用 `AGI_LIKE_MODEL_URL`、`AGI_LIKE_MODEL`、`AGI_LIKE_API_KEY`。模型 API 的 chat-completions 协议必须由所选服务支持。不会读取或导出宿主令牌。`--model` 可显式选择已获访问权的模型。
+
+`--effort` 和 `--isolate-model-config` 仅适用于 Codex，后者要求明确模型。它跳过用户配置，不等同于经过认证的工具安全隔离。决策子进程出现未受管工具、超时或缺失终态时，保存待对账动作，不自动重新调用。
+
+文件工具包含 `read_file/read_json/write_file/write_json`、按 JSON Pointer 局部修改的 `update_json`、从 JSON 字符串字段生成一致文本的 `write_text_from_json`。所有写入均通过同一合同范围守卫；局部修改先在内存全部验证再写一次，业务 JSON 的 status 包装在 data 内，不用作执行状态。
+
+新入口默认启用 `--auto-verify`；下层手动启用时必须有合同和可信 review。实际读取声明输入、成功写过完整产物集合且候选哈希变化后，宿主运行独立验收，通过同一完成门后可立即停止，不依赖模型主动 finish。重复候选不重复审查；执行模型的 finish 仍不能绕过自动合同的输入读取、版本和验收门。验收前后与完成提交时重新核对候选、输入及 reviewer 字节，审过的版本和最终证据必须相同。
 
 合同示例：
 
@@ -55,7 +76,9 @@ python portable-agent-kit/scripts/agent_run.py --provider codex `
 
 ## 项目记忆
 
-CLI 默认按已解析工作区路径的哈希隔离记忆；需要复用同一项目多个目录时显式传 `--project-id`。`MemoryStore` 保存来源、过期时间、更正链和撤回原因；普通检索排除过期、撤回和被替代条目，旧内容仍可审计。Runtime 写入的观察绑定 task/step，只有验收通过的任务才写 success。
+`agent_task` 默认将同一工作区的记忆和技能放在 `~/.agi-like/projects/<workspace-hash>/`，连续任务复用同一数据库；`--project-store` 可指定其他状态基目录，其下仍按工作区哈希分别保存两种数据库。目录在任务工具范围外；不同工作区不共用技能库。没有验收器或必要资料时不会创建学习数据库。任务控制目录、回执和检查点仍逐笔独立。
+
+底层 CLI 默认按已解析工作区路径的哈希隔离记忆；显式共享同一数据库且需要复用同一项目多个目录时传 `--project-id`。`MemoryStore` 保存来源、过期时间、更正链和撤回原因；普通检索排除过期、撤回和被替代条目，旧内容仍可审计。Runtime 写入的观察绑定 task/step，只有验收通过的任务才写 success。
 
 中文双字词与英文 token 检索是词法检索，不是 embedding 语义检索。`correct()` 需要新来源并新增记录；`retract()` 保留历史。过期知识、项目经验和历史成功都不能授予当前任务权限。
 
@@ -69,6 +92,6 @@ CLI 默认按已解析工作区路径的哈希隔离记忆；需要复用同一�
 
 ## 有界多任务 worker
 
-`scripts/agent_queue.py --queue queue.sqlite3 enqueue --task-id T --job job.json` 登记任务；`--depends-on` 可重复指定已存在的前置任务。job 必须包含 goal、workspace、contract，可选 provider、model、max_steps、project_id。保存的只是 JSON，不执行其中的任意命令。
+`scripts/agent_queue.py --queue queue.sqlite3 enqueue --task-id T --job job.json` 登记任务；`--depends-on` 可重复指定已存在的前置任务。job 必须包含 goal、workspace、contract，可选 provider、model、max_steps、project_id、effort、isolate_model_config、review_script、auto_verify。队列和直接入口执行相同的参数约束，review 在工作区外按字节冻结，不能静默忽略模型配置或绑定的验收器。保存的只是 JSON，不执行其中的任意命令。
 
 `scripts/agent_queue.py --queue queue.sqlite3 work --worker local-1 --control-root C:/work/control --max-tasks 2` 同步执行最多两笔任务；每笔通过公共 `agent_run` 入口和合同验收，留下独立回执及哈希。只有前置任务 COMPLETED 才能领取后续任务；失败、未知、进程消失不会自动重试或夺取运行中任务。任务暂停目前在批次队列中按非完成处理，需宿主显式接续，不能把有限批次 worker 描述为长期无人值守调度器。

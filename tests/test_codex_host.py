@@ -48,5 +48,9 @@ print(json.dumps({'type':'turn.completed'}))
     def test_model_option_is_a_complete_argument_pair(self):
         self.run_fake("import sys\nassert sys.argv[sys.argv.index('-m')+1]=='chosen-model'\nprint('{\"type\":\"turn.completed\"}')", model='chosen-model')
 
+    def test_effort_override_is_explicit_and_never_changes_model(self):
+        self.run_fake("import sys\nassert sys.argv[sys.argv.index('-m')+1]=='chosen-model'\nassert 'model_reasoning_effort=\"medium\"' in sys.argv\nprint('{\"type\":\"turn.completed\"}')",
+                      model='chosen-model',reasoning_effort='medium')
+
 
 if __name__ == '__main__': unittest.main()

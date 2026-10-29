@@ -14,33 +14,77 @@ from agent_run import main as run_agent
 def validate_job(job):
     if not isinstance(job,dict):raise ValueError('job must be an object')
     required={'goal','workspace','contract'}
-    allowed=required|{'provider','model','max_steps','project_id'}
+    allowed=required|{'provider','model','max_steps','project_id','effort',
+                      'isolate_model_config','review_script','auto_verify'}
     if set(job)-allowed or not required<=set(job):raise ValueError('invalid job fields')
     if any(not isinstance(job[key],str) or not job[key].strip() for key in required):
         raise ValueError('job goal, workspace and contract must be strings')
-    if job.get('provider','codex') not in {'codex','api'}:raise ValueError('unsupported provider')
+    provider=job.get('provider','codex')
+    if provider not in ('codex','api'):raise ValueError('unsupported provider')
+    for key in ('model','project_id','review_script'):
+        if key in job and (not isinstance(job[key],str) or not job[key].strip()):
+            raise ValueError(key+' must be a nonempty string')
+    for key in ('isolate_model_config','auto_verify'):
+        if key in job and type(job[key]) is not bool:raise ValueError(key+' must be boolean')
+    if 'effort' in job:
+        if not isinstance(job['effort'],str) or job['effort'] not in ('low','medium','high','xhigh','max','ultra'):
+            raise ValueError('unsupported reasoning effort')
+        if provider!='codex':raise ValueError('effort is supported only with provider codex')
+    if job.get('isolate_model_config') and (provider!='codex' or not job.get('model')):
+        raise ValueError('isolate_model_config requires provider codex and an explicit model')
+    if job.get('auto_verify') and not job.get('review_script'):
+        raise ValueError('auto_verify requires review_script')
     if type(job.get('max_steps',12))!=int or not 1<=job.get('max_steps',12)<=1000:
         raise ValueError('max_steps must be 1..1000')
     return job
 
 
 def worker_handler(control_root):
-    root=Path(control_root).resolve();root.mkdir(parents=True,exist_ok=True)
+    root=Path(control_root).resolve()
     def handle(claimed):
         job=validate_job(claimed['payload'])
+        workspace=Path(job['workspace']).resolve()
         slug=hashlib.sha256(claimed['task_id'].encode('utf-8')).hexdigest()[:24]
         directory=root/slug
-        directory.mkdir(exist_ok=False)
+        if root.is_relative_to(workspace) or directory.is_relative_to(workspace):
+            raise ValueError('queue control files must stay outside the tool workspace')
         contract=Path(job['contract']).resolve()
-        (directory/'approved-contract.json').write_bytes(contract.read_bytes())
+        contract_bytes=contract.read_bytes()
+        approved=json.loads(contract_bytes.decode('utf-8-sig'))
+        if not isinstance(approved,dict):raise ValueError('contract must be an object')
+        review_bytes=None
+        if job.get('review_script'):
+            source_review=Path(job['review_script']).resolve(strict=True)
+            if source_review.is_relative_to(workspace):
+                raise ValueError('trusted review script must be outside the tool workspace')
+            review_bytes=source_review.read_bytes()
+            review_hash=hashlib.sha256(review_bytes).hexdigest()
+            if 'required_review_sha256' in approved and approved['required_review_sha256']!=review_hash:
+                raise ValueError('required_review_sha256 does not match the frozen reviewer')
+            if 'required_review_sha256' not in approved:
+                approved['required_review_sha256']=review_hash
+                contract_bytes=(json.dumps(approved,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
+        elif 'required_review_sha256' in approved:
+            raise ValueError('contract requires its bound review_script')
+        root.mkdir(parents=True,exist_ok=True)
+        directory.mkdir(exist_ok=False)
+        (directory/'approved-contract.json').write_bytes(contract_bytes)
+        review_path=None
+        if review_bytes is not None:
+            review_path=directory/'trusted-review.py'
+            review_path.write_bytes(review_bytes)
         receipt=directory/'receipt.json'
-        argv=['--goal',job['goal'],'--workspace',str(Path(job['workspace']).resolve()),
+        argv=['--goal',job['goal'],'--workspace',str(workspace),
               '--memory',str(root/'memory.sqlite3'),'--db',str(directory/'control.sqlite3'),
               '--contract',str(directory/'approved-contract.json'),'--receipt',str(receipt),
               '--task-id',claimed['task_id'],'--provider',job.get('provider','codex'),
               '--max-steps',str(job.get('max_steps',12))]
         if job.get('model'):argv+=['--model',job['model']]
         if job.get('project_id'):argv+=['--project-id',job['project_id']]
+        if job.get('effort'):argv+=['--effort',job['effort']]
+        if job.get('isolate_model_config'):argv+=['--isolate-model-config']
+        if review_path is not None:argv+=['--review-script',str(review_path)]
+        if job.get('auto_verify'):argv+=['--auto-verify']
         run_agent(argv)
         value=json.loads(receipt.read_text(encoding='utf-8'))
         return {'status':value['status'],'receipt':str(receipt),
@@ -64,6 +108,7 @@ def main(argv=None):
         # Persist absolute locations so restarting the worker from another cwd
         # does not change the authorized workspace/contract.
         job={**job,'workspace':str(Path(job['workspace']).resolve()),'contract':str(Path(job['contract']).resolve())}
+        if job.get('review_script'):job['review_script']=str(Path(job['review_script']).resolve())
         result=queue.enqueue(args.task_id,job,args.depends_on)
     elif args.command=='work':result=queue.run_batch(args.worker,worker_handler(args.control_root),max_tasks=args.max_tasks)
     else:result=queue.list_tasks()

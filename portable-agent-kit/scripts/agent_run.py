@@ -16,8 +16,10 @@ from agent_runtime import AgentRuntime, MemoryStore, OpenAICompatibleModel, Skil
 from agent_runtime.models import CodexDecisionModel
 from agent_runtime.journal import RunJournal
 from agent_runtime.tools import ToolError
+from agent_runtime.file_tools import register_file_tools
 from control_plane.runtime import DeliveryRuntime
 from control_plane.contracts import normalize_contract,canonical_hash
+from control_plane.evaluator import verify_evidence,make_verifier
 import challenge
 
 
@@ -45,11 +47,20 @@ def main(argv=None):
     parser.add_argument('--state-db',type=Path,help='loop checkpoint database; defaults to control db or receipt.state.sqlite3')
     parser.add_argument('--provider',choices=('codex','api'),default='codex')
     parser.add_argument('--model')
+    parser.add_argument('--effort',choices=('low','medium','high','xhigh','max','ultra'),help='Codex provider reasoning effort override')
+    parser.add_argument('--isolate-model-config',action='store_true',help='Codex decision calls skip user config; requires --model')
     parser.add_argument('--contract',type=Path)
     parser.add_argument('--db',type=Path)
     parser.add_argument('--receipt',type=Path,required=True)
     parser.add_argument('--review-script',type=Path,help='trusted host unittest script outside workspace; executed on a frozen copy')
+    parser.add_argument('--auto-verify',action='store_true',help='trusted reviewer checks changed complete artifact sets; requires --contract and --review-script')
     args=parser.parse_args(argv)
+    if args.isolate_model_config and (args.provider!='codex' or not args.model):
+        parser.error('--isolate-model-config requires --provider codex and explicit --model')
+    if args.effort is not None and args.provider!='codex':
+        parser.error('--effort is supported only with --provider codex')
+    if args.auto_verify and not (args.contract and args.review_script):
+        parser.error('--auto-verify requires --contract and --review-script')
     if not 1<=args.max_steps<=1000:parser.error('--max-steps must be 1..1000')
     if args.steps_per_run is not None and args.steps_per_run<1:parser.error('--steps-per-run must be positive')
     workspace=args.workspace.resolve()
@@ -63,7 +74,6 @@ def main(argv=None):
     allowed_paths=None;pinned_inputs=[]
     allow_write=False
     tools=ToolRegistry()
-    tools.register('read_file',lambda path: safe_path(workspace,path).read_text(encoding='utf-8'),description='read a UTF-8 workspace file; arguments: path')
     def write_file(path,text):
         if not allow_write:
             raise ToolError('workspace writes require an authorized contract policy')
@@ -74,9 +84,9 @@ def main(argv=None):
                 for scope in allowed_paths):
             raise ToolError('write is outside the contract scope')
         target.parent.mkdir(parents=True,exist_ok=True)
-        target.write_text(str(text),encoding='utf-8')
+        target.write_bytes(str(text).encode('utf-8'))
         return {'path':str(target.relative_to(workspace)),'written':True}
-    tools.register('write_file',write_file,description='write a UTF-8 workspace file; arguments: path, text')
+    register_file_tools(tools,workspace,write_file)
     project_id=args.project_id or 'workspace-'+hashlib.sha256(str(workspace).encode('utf-8')).hexdigest()[:24]
     memory=MemoryStore(args.memory,scope=project_id)
     library=SkillLibrary(args.skills) if args.skills else None
@@ -86,14 +96,28 @@ def main(argv=None):
             skills[row['name']]=lambda arguments,name=row['name']: library.execute(name,arguments,tools)
     control=None;lease=None;verifier=None;review_results=[]
     task_id=args.task_id or 'agent-'+uuid.uuid4().hex[:12]
+    review_sha256=hashlib.sha256(args.review_script.read_bytes()).hexdigest() if args.review_script else None
     if args.resume and not args.task_id:parser.error('--resume requires --task-id')
     if args.contract:
         if not args.db:
             parser.error('--contract requires --db')
         contract=json.loads(args.contract.read_text(encoding='utf-8-sig'))
+        if 'required_review_sha256' in contract and contract['required_review_sha256']!=review_sha256:
+            parser.error('contract requires its bound independent --review-script; missing or changed reviewer')
         allowed_paths=contract.get('scope',[])
         pinned_inputs=[{'path':name,'sha256':hashlib.sha256(safe_path(workspace,name).read_bytes()).hexdigest()}
                        for name in contract.get('inputs',[])]
+        intake=contract.get('intake')
+        if intake:
+            if intake.get('goal_sha256')!=hashlib.sha256(args.goal.encode('utf-8')).hexdigest():
+                parser.error('original goal differs from the bound intake request')
+            if {row['path']:row['sha256'] for row in pinned_inputs}!={row['path']:row['sha256'] for row in intake.get('inputs',[])}:
+                parser.error('intake input changed before execution')
+            for item in ([] if args.resume else intake.get('initial_outputs',[])):
+                target=safe_path(workspace,item['path'])
+                if (item.get('missing') and target.exists()) or (not item.get('missing') and (
+                        not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest()!=item['sha256'])):
+                    parser.error('intake output baseline changed before execution')
         allow_write=contract.get('policy',{}).get('workspace_write') is True
         contract.update({'task_id':task_id,'id':task_id,'goal':args.goal})
         control=DeliveryRuntime(args.db,evidence_root=workspace)
@@ -106,8 +130,35 @@ def main(argv=None):
                                             'evidence.hash':True,'checkpoint.persist':True},
                                   adapter_id='agent-runtime',host_id=args.provider)
         lease=control.claim(task_id,'agent-runtime',ttl_seconds=3600)['lease_id']
+        active_review={'receipt':None}
+        def input_reads(events):
+            reads=set()
+            for row in events:
+                if row['action']!='tool' or row['decision'].get('name') not in {'read_file','read_json'} or 'result' not in row:continue
+                if isinstance(row['result'],dict) and row['result'].get('status') in {'FAILED','UNKNOWN'}:continue
+                name=row['decision'].get('arguments',{}).get('path')
+                if isinstance(name,str):reads.add(safe_path(workspace,name).relative_to(workspace).as_posix())
+            return reads
         def verifier(goal,answer,events):
+            if contract.get('policy',{}).get('require_input_reads') is True:
+                missing={row['path'] for row in pinned_inputs}-input_reads(events)
+                if missing:
+                    verifier.last_error={'required_input_reads':sorted(missing)}
+                    return False
+            changed=[]
+            for item in pinned_inputs:
+                try:unchanged=hashlib.sha256(safe_path(workspace,item['path']).read_bytes()).hexdigest()==item['sha256']
+                except OSError:unchanged=False
+                if not unchanged:changed.append({'path':item['path'],'error':'STALE_INPUT'})
+            if args.review_script and hashlib.sha256(args.review_script.read_bytes()).hexdigest()!=review_sha256:
+                changed.append({'path':'trusted-review-script','error':'STALE_REVIEWER'})
+            if changed:
+                verifier.last_error={'bindings':changed}
+                return False
+            reviewed_packet=None
             if args.review_script:
+                reviewed_packet=challenge.candidate_packet(workspace,control.contract(task_id).get('inputs',[]),
+                                                           control.contract(task_id)['scope'])
                 review_directory=args.receipt.resolve().parent/'independent-reviews'/task_id
                 review_directory.mkdir(parents=True,exist_ok=True)
                 summary=challenge.verify(workspace,control.contract(task_id).get('inputs',[]),
@@ -117,29 +168,81 @@ def main(argv=None):
                 if summary['status']!='CHALLENGE_PASS':
                     verifier.last_error=summary
                     return False
-            for check in control.contract(task_id)['acceptance']:
+                if challenge.status(summary['receipt'])['status']!='CHALLENGE_PASS' or not challenge.current(reviewed_packet):
+                    verifier.last_error={'bindings':[{'error':'STALE_REVIEW_CANDIDATE'}]}
+                    return False
+                active_review['receipt']=summary['receipt']
+            reviewed_hashes={item['path']:item['sha256'] for item in reviewed_packet['outputs']} if reviewed_packet else None
+            validation_errors=[]
+            trusted_contract=control.contract(task_id)
+            for check in trusted_contract['acceptance']:
                 path=check.get('assertion',{}).get('path')
                 if not path:
                     return False
                 target=safe_path(workspace,path)
                 current=control.get(task_id)
-                _,response=control.apply(task_id,lease,'evidence',{
+                reference={
                     'id':'readback-'+uuid.uuid4().hex,'kind':'local-readback','uri':path,
-                    'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),
+                    'sha256':reviewed_hashes[path] if reviewed_hashes is not None else hashlib.sha256(target.read_bytes()).hexdigest(),
                     'claim':check['expected'],'verdict':'PASS','check_id':check['id'],
                     'environment':check['environment'],
-                    **{k:current[k] for k in ('task_id','revision','contract_hash','candidate')}},
+                    **{k:current[k] for k in ('task_id','revision','contract_hash','candidate')}}
+                try:
+                    verify_evidence(reference,trusted_contract['acceptance'],workspace,
+                                    reviewer_id='host-deterministic-verifier',owner=trusted_contract['owner'])
+                except Exception as exc:
+                    validation_errors.append({'check_id':check['id'],'error':type(exc).__name__+': '+str(exc)})
+                _,response=control.apply(task_id,lease,'evidence',reference,
                     evidence_root=workspace,reviewer_id='host-deterministic-verifier')
-            return True
+            verifier.last_error={'checks':validation_errors} if validation_errors else None
+            if reviewed_packet and (not challenge.current(reviewed_packet) or challenge.status(active_review['receipt'])['status']!='CHALLENGE_PASS'):
+                verifier.last_error={'bindings':[{'error':'STALE_REVIEW_CANDIDATE'}]}
+                return False
+            return not validation_errors
+        def finish_verify(reference):
+            try:
+                if any(hashlib.sha256(safe_path(workspace,row['path']).read_bytes()).hexdigest()!=row['sha256'] for row in pinned_inputs):return False
+                if args.review_script and (not active_review['receipt'] or challenge.status(active_review['receipt'])['status']!='CHALLENGE_PASS'):return False
+                return make_verifier(control.contract(task_id),workspace,reviewer_id='host-deterministic-verifier')(reference)
+            except (OSError,ValueError,KeyError):return False
+        verifier.finish_verify=finish_verify
+        if args.auto_verify:
+            reviewed_candidates=set()
+            def ready(events):
+                # A model cannot trigger checks by fabricating an observation:
+                # these events are the Runtime's actual registered tool results.
+                last=events[-1]
+                if last['action']!='tool' or last['decision'].get('name') not in {
+                        'write_file','write_json','update_json','write_text_from_json'}:return False
+                reads=input_reads(events)
+                if not {item['path'] for item in pinned_inputs}<=reads:return False
+                written=set()
+                for row in events:
+                    if row['action']!='tool' or not isinstance(row.get('result'),dict):continue
+                    if row['result'].get('written') is not True:continue
+                    arguments=row['decision'].get('arguments',{})
+                    target=arguments.get('target_path') if row['decision'].get('name')=='write_text_from_json' else arguments.get('path')
+                    if isinstance(target,str):written.add(Path(target).as_posix())
+                if not set(allowed_paths)<=written:return False
+                try:
+                    paths=[safe_path(workspace,name) for name in allowed_paths]
+                    if not all(path.is_file() for path in paths):return False
+                    candidate=canonical_hash([{'path':name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+                                              for name,path in zip(allowed_paths,paths)])
+                except OSError:return False
+                if candidate in reviewed_candidates:return False
+                reviewed_candidates.add(candidate)
+                return True
+            verifier.ready=ready
     logs=args.receipt.resolve().parent/'model-events'/task_id
-    model=(CodexDecisionModel(workspace,model=args.model,log_dir=logs) if args.provider=='codex'
+    model=(CodexDecisionModel(workspace,model=args.model,log_dir=logs,reasoning_effort=args.effort,isolate_user_config=args.isolate_model_config) if args.provider=='codex'
            else OpenAICompatibleModel(model=args.model))
     journal=RunJournal(state_db)
     result=AgentRuntime(model,tools,memory,skills,max_steps=args.max_steps,skill_library=library).run(
         args.goal,task_id=task_id,control=control,lease_id=lease,evidence_root=workspace,
         reviewer_id='host-deterministic-verifier',verifier=verifier,journal=journal,resume=args.resume,
-        steps_per_run=args.steps_per_run,run_context={'workspace':str(workspace),'provider':args.provider,'model':args.model,
-            'review_sha256':hashlib.sha256(args.review_script.read_bytes()).hexdigest() if args.review_script else None,
+        steps_per_run=args.steps_per_run,auto_verify=args.auto_verify,run_context={'workspace':str(workspace),'provider':args.provider,'model':args.model,'effort':args.effort,'isolated_model_config':args.isolate_model_config,
+            'review_sha256':review_sha256,
             'inputs':pinned_inputs})
     report=asdict(result)
     report['memory_scope']=project_id

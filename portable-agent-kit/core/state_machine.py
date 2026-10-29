@@ -246,6 +246,8 @@ def apply(state, request, *, verify_evidence=None):
     The optional trusted host verifier receives an evidence copy and must return
     exactly True after checking actual proof. Missing/throwing verifiers fail
     closed. Every finish revalidates every current check's evidence.
+    pre_effect_rejection is a trusted host attestation of a rejected call before
+    any effect, never a flag to copy from model output or an arbitrary tool result.
     """
     _require(isinstance(state, dict) and state.get("state_version") == STATE_VERSION, "STATE_UPGRADE_REQUIRED")
     _check_header(state, request)
@@ -274,13 +276,19 @@ def apply(state, request, *, verify_evidence=None):
         outcome, call_id = payload.get("status"), payload.get("tool_call_id")
         _require(outcome in ("SUCCEEDED", "FAILED", "UNKNOWN"), "invalid tool result status")
         _require(isinstance(call_id, str) and call_id.strip(), "tool_call_id required")
+        if "pre_effect_rejection" in payload:
+            _require(payload["pre_effect_rejection"] is True and outcome == "FAILED",
+                     "pre_effect_rejection must be true with FAILED")
         _event(state, "TOOL_RESULT", payload)
         if outcome == "UNKNOWN":
             if call_id not in state["unknown_tool_calls"]:
                 state["unknown_tool_calls"].append(call_id)
             state["unknown_tool_details"][call_id] = len(state["events"])
         elif outcome == "FAILED":
-            if call_id not in state["failed_tool_calls"]:
+            # A rejected invocation has nothing to reconcile. Keep the failed
+            # event for audit, without trapping a later corrected invocation.
+            # This exemption never removes prior FAILED or UNKNOWN outcomes.
+            if payload.get("pre_effect_rejection") is not True and call_id not in state["failed_tool_calls"]:
                 state["failed_tool_calls"].append(call_id)
         elif call_id not in state["unknown_tool_calls"]:
             state["failed_tool_calls"] = [x for x in state["failed_tool_calls"] if x != call_id]

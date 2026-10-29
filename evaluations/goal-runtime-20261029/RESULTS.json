@@ -1,0 +1,146 @@
+{
+  "format": "goal-runtime-evidence-index/1",
+  "date": "2026-10-29",
+  "requested_model": "gpt-6-luna",
+  "effort": "medium",
+  "epochs": [
+    {
+      "run": "host-auto-verify-luna-20261029-r1",
+      "summary_sha256": "eb9f730557556105a56568957afa39b3967bf3a17423c1d78698ddbaab8ada6a",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\host-auto-verify-luna-20261029-r1",
+      "summary": {
+        "status": "PASS",
+        "tasks": [
+          {
+            "id": "procurement",
+            "domain": "procurement",
+            "status": "PASS",
+            "runtime_status": "COMPLETED",
+            "steps": 6,
+            "first_review_pass": false,
+            "review_attempts": 2,
+            "source_unchanged": true,
+            "oracle_unchanged": true,
+            "review_mode": "feedback",
+            "auto_verify": true,
+            "required_input_reads": true,
+            "elapsed_seconds": 70.657
+          }
+        ],
+        "model_request": "gpt-6-luna",
+        "limits": "Three small representative cases; not evidence of AGI, cross-domain superiority or production readiness.",
+        "comparison": "none; acceptance smoke suite only"
+      }
+    },
+    {
+      "run": "goal-runtime-luna-20261029-r1",
+      "summary_sha256": "89b22812f00e698248e721ab843c575f1a59972e3aaedabb14ac53a5f14f01f9",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\goal-runtime-luna-20261029-r1",
+      "summary": {
+        "status": "INCOMPLETE",
+        "source_unchanged": true,
+        "results": [
+          {
+            "task": "software",
+            "status": "FAIL",
+            "runtime_status": "PLAN_REJECTED",
+            "planning_steps": 1,
+            "execution_steps": null,
+            "total_decision_steps": null,
+            "review_attempts": 0,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": false,
+            "elapsed_seconds": 12.171,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          },
+          {
+            "task": "data",
+            "status": "FAIL",
+            "runtime_status": "COMPLETED",
+            "planning_steps": 1,
+            "execution_steps": 3,
+            "total_decision_steps": 4,
+            "review_attempts": 1,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": false,
+            "elapsed_seconds": 47.0,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          },
+          {
+            "task": "procurement",
+            "status": "FAIL",
+            "runtime_status": "COMPLETED",
+            "planning_steps": 1,
+            "execution_steps": 9,
+            "total_decision_steps": 10,
+            "review_attempts": 2,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": false,
+            "elapsed_seconds": 125.937,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          }
+        ],
+        "limits": "Three fixed synthetic cases; no general weak-model improvement claim."
+      }
+    },
+    {
+      "run": "goal-runtime-luna-20261029-r2",
+      "summary_sha256": "7c6c39be0b10e8230d9de338182878b95b768e1fe617a9b70238b1b78587f27d",
+      "protocol_sha256": "97b07814bee1d8106351b3b22bc43a06285695f3faea501cd5883804bba0b848",
+      "evidence_root": "C:\\Users\\Administrator\\Desktop\\终极通用Skill\\outputs\\goal-runtime-luna-20261029-r2",
+      "summary": {
+        "status": "PASS",
+        "source_unchanged": true,
+        "results": [
+          {
+            "task": "data",
+            "status": "PASS",
+            "runtime_status": "COMPLETED",
+            "planning_steps": 1,
+            "execution_steps": 5,
+            "total_decision_steps": 6,
+            "review_attempts": 1,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": true,
+            "elapsed_seconds": 75.25,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          },
+          {
+            "task": "software",
+            "status": "PASS",
+            "runtime_status": "COMPLETED",
+            "planning_steps": 1,
+            "execution_steps": 6,
+            "total_decision_steps": 7,
+            "review_attempts": 1,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": true,
+            "elapsed_seconds": 81.343,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          },
+          {
+            "task": "procurement",
+            "status": "PASS",
+            "runtime_status": "COMPLETED",
+            "planning_steps": 1,
+            "execution_steps": 8,
+            "total_decision_steps": 9,
+            "review_attempts": 2,
+            "original_goal_bound": true,
+            "inputs_unchanged": true,
+            "required_inputs_read": true,
+            "elapsed_seconds": 108.671,
+            "limits": "Real model on fixed synthetic inputs. No raw-model comparison or production proof."
+          }
+        ],
+        "limits": "Three fixed synthetic cases; no general weak-model improvement claim."
+      }
+    }
+  ],
+  "limits": "Fixed synthetic acceptance cases, not a framework or raw-model comparison. Runtime completion, required reads and independent verification are reported separately."
+}

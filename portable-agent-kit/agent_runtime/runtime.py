@@ -23,11 +23,14 @@ class AgentRuntime:
         self.skills=skills or {};self.max_steps=max_steps;self.skill_library=skill_library
 
     def run(self,goal,*,task_id=None,control=None,lease_id=None,evidence_root=None,
-            reviewer_id=None,verifier=None,journal=None,resume=False,steps_per_run=None,run_context=None):
+            reviewer_id=None,verifier=None,journal=None,resume=False,steps_per_run=None,run_context=None,
+            auto_verify=False):
         if (control is None)!=(lease_id is None):raise ValueError('control and lease_id must be supplied together')
         if resume and (journal is None or not task_id):raise ValueError('resume requires journal and task_id')
         if steps_per_run is not None and (type(steps_per_run)!=int or steps_per_run<1):
             raise ValueError('steps_per_run must be a positive integer')
+        if type(auto_verify) is not bool or (auto_verify and not callable(getattr(verifier,'ready',None))):
+            raise ValueError('auto_verify requires a trusted verifier.ready callback')
         task_id=task_id or 'runtime-'+uuid.uuid4().hex[:12]
         skill_manifest=list(self.skills)
         if self.skill_library:
@@ -36,7 +39,7 @@ class AgentRuntime:
                 for row in self.skill_library.list_active() if row['name'] in self.skills}
         current=control.get(task_id) if control else None
         binding={'goal':goal,'max_steps':self.max_steps,'tools':self.tools.manifest(),
-                 'skills':skill_manifest,'context':run_context or {},'memory_scope':self.memory.scope,
+                 'skills':skill_manifest,'context':run_context or {},'memory_scope':self.memory.scope,'auto_verify':auto_verify,
                  'control':{k:current[k] for k in ('contract_hash','candidate','revision')} if current else None}
         saved=None
         if journal:
@@ -58,6 +61,9 @@ class AgentRuntime:
             return RuntimeResult('NEEDS_RECONCILIATION',task_id,snapshot['next_step'],
                                  'unfinished action in checkpoint; verify readback before resuming',deepcopy(events))
         if snapshot['phase']=='FINISHED':raise ValueError('run is terminal; open a new task for new work')
+        review_limit=current['contract']['budget']['max_retries'] if control else 2
+        if snapshot.get('rejections',0)>review_limit:
+            return end('CONTROL_BLOCKED',max(0,snapshot['next_step']-1),'independent review retry budget exhausted; a resumed process cannot reset it')
         if control:
             if not current['started']:
                 control.apply(task_id,lease_id,'start',{'executor':'agent-runtime'},request_id=task_id+'-start')
@@ -82,13 +88,37 @@ class AgentRuntime:
                 if current['status'] in {'CANCELLED','FAILED','COMPLETED','PAUSED','UNKNOWN'}:
                     return end('CONTROL_BLOCKED',step-1,'control state '+current['status'])
             request={'task_id':task_id,'goal':goal,'step':step,'memory':self.memory.search(goal),
-                     'tools':self.tools.manifest(),'skills':skill_manifest,'observations':deepcopy(events)}
+                     'tools':self.tools.manifest(),'skills':skill_manifest,'observations':deepcopy(events),
+                     'budget':{'max_steps':self.max_steps,'steps_remaining':self.max_steps-step+1,
+                               'review_rejections':snapshot.get('rejections',0)},
+                     'completion_mode':'host-verifies-changed-artifacts' if auto_verify else 'model-proposes-finish'}
             if control:
                 request['acceptance']=deepcopy(current['acceptance'])
                 request['bindings']={k:current[k] for k in ('task_id','revision','contract_hash','candidate')}
+                if current['contract'].get('intake',{}).get('plan'):
+                    request['proposed_plan']={'authority':'untrusted planning advice; original goal and host contract prevail',
+                                              **deepcopy(current['contract']['intake']['plan'])}
             snapshot['phase']='MODEL_PENDING';snapshot['next_step']=step;persist()
             try:decision=self.model(request)
             except Exception as exc:
+                if getattr(exc,'outcome_unknown',False) is True:
+                    # A decision host may expose native tools outside this registry.
+                    # Never turn an observed or possibly incomplete host action into
+                    # a retryable model error: preserve a bound readback obligation.
+                    action_id=task_id+'-step-'+str(step)+'-model-host'
+                    decision={'action':'unmanaged_host','name':'model-host','arguments':{}}
+                    event={'step':step,'action':'unmanaged_host','decision':decision,
+                           'result':{'status':'UNKNOWN','error':str(exc),
+                                     'details':deepcopy(getattr(exc,'details',{}))}}
+                    events.append(event)
+                    snapshot['phase']='ACTION_PENDING'
+                    snapshot['pending']={'id':action_id,'decision':deepcopy(decision),
+                                         'host_evidence':deepcopy(getattr(exc,'details',{}))}
+                    persist()
+                    if control:
+                        control.apply(task_id,lease_id,'tool_result',
+                            {'tool_call_id':action_id,'status':'UNKNOWN'},request_id=action_id)
+                    return end('NEEDS_RECONCILIATION',step,'decision host outcome unknown; verify host logs and readback before resuming')
                 snapshot['phase']='READY';snapshot['next_step']=step+1
                 return end('MODEL_ERROR',step,str(exc))
             if not isinstance(decision,dict):
@@ -109,6 +139,7 @@ class AgentRuntime:
             action_id=task_id+'-step-'+str(step)
             snapshot['phase']='ACTION_PENDING';snapshot['pending']={'id':action_id,'decision':deepcopy(decision)};persist()
             if action in {'tool','skill'}:
+                pre_effect_rejection=False
                 try:
                     if action=='tool':result=self.tools.call(decision['name'],decision.get('arguments',{}))
                     else:
@@ -118,17 +149,30 @@ class AgentRuntime:
                     # A multi-step skill may already have completed earlier
                     # tools when a later tool rejects. Keep its effects unknown.
                     result={'status':'UNKNOWN' if action=='skill' else 'FAILED','error':str(exc)}
+                    pre_effect_rejection=action=='tool'
                 except Exception as exc:result={'status':'UNKNOWN','error':type(exc).__name__+': '+str(exc)}
                 event['result']=result
                 if control:
                     status=result.get('status','SUCCEEDED') if isinstance(result,dict) else 'SUCCEEDED'
                     if status not in {'SUCCEEDED','FAILED','UNKNOWN'}:status='UNKNOWN'
-                    control.apply(task_id,lease_id,'tool_result',{'tool_call_id':action_id,'status':status},request_id=action_id)
+                    payload={'tool_call_id':action_id,'status':status}
+                    if pre_effect_rejection:payload['pre_effect_rejection']=True
+                    control.apply(task_id,lease_id,'tool_result',payload,request_id=action_id)
                 if isinstance(result,dict) and result.get('status')=='UNKNOWN':
                     return end('NEEDS_RECONCILIATION',step,'tool outcome unknown; verify readback before retry')
                 self.memory.add('%s %s: %s'%(action,decision.get('name'),json.dumps(result,ensure_ascii=False)),
                     kind='episode' if action=='tool' else 'skill-use',task_id=task_id,source_refs=['task:'+task_id+'/step/'+str(step)])
-            elif action=='evidence':
+                if auto_verify and not pre_effect_rejection and (not isinstance(result,dict) or result.get('status','SUCCEEDED')=='SUCCEEDED'):
+                    try:ready=verifier.ready(deepcopy(events)) is True
+                    except Exception:ready=False
+                    if ready:
+                        # The host, not the model, may recognize that a changed
+                        # candidate is complete. Reuse the exact finish gate.
+                        action='finish'
+                        decision={'action':'finish','answer':'Host independently verified the declared goal artifacts.'}
+                        event={'step':step,'action':'finish','source':'host-artifact-review','decision':decision}
+                        events.append(event)
+            if action=='evidence':
                 if not(control and evidence_root and reviewer_id):
                     snapshot['phase']='READY';snapshot['pending']=None
                     return end('FAILED',step,'evidence requires control and independent verifier')
@@ -158,7 +202,8 @@ class AgentRuntime:
                             if outcome:return outcome
                             executed+=1;continue
                     _,response=control.apply(task_id,lease_id,'finish',{'executor_stopped':True},
-                        evidence_root=evidence_root,reviewer_id=reviewer_id)
+                        evidence_root=evidence_root,reviewer_id=reviewer_id,
+                        verify_evidence=getattr(verifier,'finish_verify',None))
                     if response.get('status')!='COMPLETED':
                         outcome=reject(str(response.get('status')))
                         if outcome:return outcome
@@ -175,7 +220,7 @@ class AgentRuntime:
                     self.skill_library.propose_from_repeated_success(goal)
                 snapshot['pending']=None;snapshot['next_step']=step+1
                 return end('COMPLETED',step,answer)
-            else:
+            elif action not in {'tool','skill'}:
                 snapshot['phase']='READY';snapshot['pending']=None;snapshot['next_step']=step+1
                 return end('FAILED',step,'unsupported action: '+str(action))
             executed+=1;snapshot['phase']='READY';snapshot['pending']=None;snapshot['next_step']=step+1;persist()

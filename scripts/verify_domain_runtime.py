@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 FIXTURES=ROOT/'evaluations/runtime-domains-20261029/fixtures'
 
 
-def run_task(task,output,model=None):
+def run_task(task,output,model=None,*,effort=None,review_enabled=True,max_steps=16,isolate_model_config=False,auto_verify=False):
     root=output/task['id'];root.mkdir()
     workspace=root/'workspace'
     shutil.copytree(FIXTURES/task['workspace'],workspace)
@@ -34,25 +34,32 @@ def run_task(task,output,model=None):
           '--provider','codex','--goal',prompt,'--workspace',str(workspace),
           '--memory',str(root/'memory.sqlite3'),'--db',str(root/'control.sqlite3'),
           '--contract',str(root/'contract.json'),'--receipt',str(root/'receipt.json'),
-          '--review-script',str(frozen_review),'--max-steps','16']
+          '--max-steps',str(max_steps)]
+    if review_enabled:argv+=['--review-script',str(frozen_review)]
     if model:argv+=['--model',model]
+    if effort:argv+=['--effort',effort]
+    if isolate_model_config:argv+=['--isolate-model-config']
+    if auto_verify:argv+=['--auto-verify']
     started=time.monotonic()
     try:
         proc=subprocess.run(argv,capture_output=True,encoding='utf-8',timeout=1200)
         (root/'stdout.log').write_text(proc.stdout,encoding='utf-8');(root/'stderr.log').write_text(proc.stderr,encoding='utf-8')
         report=json.loads((root/'receipt.json').read_text(encoding='utf-8'))
         read_paths={str(Path(e['decision']['arguments']['path']).as_posix()) for e in report['events']
-                    if e['action']=='tool' and e['decision'].get('name')=='read_file' and 'result' in e}
+                    if e['action']=='tool' and e['decision'].get('name') in {'read_file','read_json'} and 'result' in e}
         source_unchanged=all(hashlib.sha256((workspace/p).read_bytes()).hexdigest()==sha for p,sha in frozen['inputs'].items())
         reviews=report.get('independent_reviews',[])
         oracle_unchanged=hashlib.sha256(frozen_review.read_bytes()).hexdigest()==frozen['review_sha256']
         passed=(proc.returncode==0 and report['status']=='COMPLETED' and source_unchanged
-                and oracle_unchanged and reviews and reviews[-1]['status']=='CHALLENGE_PASS' and set(task['inputs'])<=read_paths)
+                and oracle_unchanged and (not review_enabled or (reviews and reviews[-1]['status']=='CHALLENGE_PASS'))
+                and set(task['inputs'])<=read_paths)
         result={'id':task['id'],'domain':task['domain'],'status':'PASS' if passed else 'FAIL',
                 'runtime_status':report['status'],'steps':report['steps'],
                 'first_review_pass':reviews[0]['status']=='CHALLENGE_PASS' if reviews else None,
                 'review_attempts':len(reviews),'source_unchanged':source_unchanged,
                 'oracle_unchanged':oracle_unchanged,
+                'review_mode':'feedback' if review_enabled else 'external-final-only',
+                'auto_verify':auto_verify,
                 'required_input_reads':set(task['inputs'])<=read_paths,'elapsed_seconds':round(time.monotonic()-started,3)}
     except Exception as exc:
         result={'id':task['id'],'domain':task['domain'],'status':'FAIL','error':type(exc).__name__+': '+str(exc)}
@@ -63,13 +70,17 @@ def run_task(task,output,model=None):
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--model');parser.add_argument('--task',action='append')
+    parser.add_argument('--effort');parser.add_argument('--isolate-model-config',action='store_true')
+    parser.add_argument('--auto-verify',action='store_true')
+    parser.add_argument('--max-steps',type=int,default=16)
     args=parser.parse_args();root=args.output.resolve();root.mkdir(parents=True,exist_ok=False)
     manifest=json.loads((FIXTURES/'manifest.json').read_text(encoding='utf-8'))
     tasks=[task for task in manifest['tasks'] if not args.task or task['id'] in args.task]
     if not tasks:raise ValueError('no matching tasks')
     results=[]
     with ThreadPoolExecutor(max_workers=3) as pool:
-        futures=[pool.submit(run_task,task,root,args.model) for task in tasks]
+        futures=[pool.submit(run_task,task,root,args.model,effort=args.effort,max_steps=args.max_steps,
+                             isolate_model_config=args.isolate_model_config,auto_verify=args.auto_verify) for task in tasks]
         for future in as_completed(futures):
             result=future.result();results.append(result);print(json.dumps(result,ensure_ascii=False),flush=True)
     summary={'status':'PASS' if all(r['status']=='PASS' for r in results) else 'INCOMPLETE',

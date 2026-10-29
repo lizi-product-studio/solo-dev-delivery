@@ -4,7 +4,8 @@
 No model, network or scheduler. The supplied Python test is trusted host code,
 executed against a temporary copy of declared files. This is NOT a security
 sandbox, independent-identity authentication or a production acceptance gate.
-Control JSON and trusted Python source use UTF-8; candidate files copy as bytes.
+Control JSON, reviewer diagnostics and trusted Python source use UTF-8;
+candidate files copy as bytes.
 """
 from __future__ import annotations
 
@@ -120,8 +121,8 @@ def current(packet):
 
 def candidate_packet(workspace, inputs, outputs):
     workspace = Path(workspace).resolve(strict=True)
-    if not inputs or not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
-        raise ValueError('need distinct, nonempty input and output file lists')
+    if not outputs or len(set(inputs + outputs)) != len(inputs + outputs):
+        raise ValueError('need distinct file lists and at least one output')
     if len(inputs) + len(outputs) > 200:
         raise ValueError('declare at most 200 files; use native project review for larger scopes')
     return {'format': 'local-challenge/1', 'workspace': str(workspace),
@@ -257,8 +258,12 @@ def run(packet_path, test_path, receipt_path, timeout, selected=None, patches=No
         test.write_bytes(test_bytes)
         stdout_path, stderr_path = scratch / 'stdout', scratch / 'stderr'
         result_path = scratch / 'test-result.json'
+        # tail() decodes this child log protocol as UTF-8. Do not inherit a
+        # legacy parent stdio encoding (notably cp936 on Windows): it corrupts
+        # review feedback or can abort the suite on unencodable diagnostics.
+        # Leave Python's ordinary file-default encoding unchanged.
         env = {**os.environ, 'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONPATH': str(work),
-               'SOLO_CANDIDATE_ROOT': str(work)}
+               'PYTHONIOENCODING': 'utf-8:backslashreplace', 'SOLO_CANDIDATE_ROOT': str(work)}
         env.pop('SOLO_SOURCE_WORKSPACE', None)
         if packet.get('execution_scope') == 'candidate-copy':
             env['SOLO_SOURCE_WORKSPACE'] = str(root)

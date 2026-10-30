@@ -2,14 +2,15 @@
 
 一套以 Skill 为入口的 Agent 运行系统：接收目标，让模型调用受限工具，保存项目记忆和任务状态，以独立证据验收，并受控积累、停用和恢复技能。
 
-**当前版本：1.9.1 · 80% 阶段版。** 最新源码、功能说明和安装包均位于默认分支 [`main`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。原完整路线保留；本次按新授权专注接通Codex日常会话与实际验收，不以模块数量作为质量提升证明。
+**当前版本：1.9.2 · 80% 阶段版。** 最新源码、功能说明和安装包均位于默认分支 [`main`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。原完整路线保留；本次按新授权专注接通Codex日常会话与实际验收，不以模块数量作为质量提升证明。
 
-[下载安装包](packages/agi-like-1.9.1.zip) · [SHA256](packages/agi-like-1.9.1.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
+[下载安装包](packages/agi-like-1.9.2.zip) · [SHA256](packages/agi-like-1.9.2.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
 
 ## 现在有什么功能
 
 | 能力 | 当前可以做什么 | 边界 |
 | --- | --- | --- |
+| Codex 原生接入 | 本地MCP工具 `native_start`、`native_status`、`native_verify` 配合原生hooks，保留当前会话并在结束时验收返修 | 需宿主加载并信任hooks；已有真实本地代码任务证据，其他场景按实际结果判断 |
 | Skill 入口 | 在支持的宿主中按任务读取方法，判断权限、证据和下一步 | 文件安装不等于客户端发现、自动选择或后台接管 |
 | 目标接收与模型循环 | 自然语言目标形成计划和合同，循环执行模型决策、工具和技能 | 宿主明确工作区、写入范围、预算和必要授权 |
 | 工具调用 | 工作区文件/JSON操作；宿主配置的固定命令和HTTP操作；Codex CLI或兼容模型API | 不开放任意模型命令；命令执行不是操作系统沙箱 |
@@ -49,7 +50,15 @@ python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 
 Runtime和辅助工具使用Python标准库；模型访问、宿主工具和业务权限另行提供。目标导出目录与同名ZIP必须不存在。包内包含相对引用、运行时、控制平面、独立验收器、安装器和清单，不包含个人偏好、客户数据、原始聊天或本机旧任务状态。
 
+## 中断后的恢复
+
+1.9.2修复了PreToolUse在阻断状态下连状态查询、文件读取一起拒绝的自锁。`native_status`、内置文件读取、单条PowerShell只读命令和安装目录中的`native_task.py status/readback/recover`仍可使用，不消耗执行预算。Shell组合、重定向、子表达式和任意Python脚本不会获得恢复豁免；宿主权限继续生效。
+
+`readback`读取原任务声明文件的当前哈希和有限文本预览；`recover`列出恢复路径与未核实调用。它们不把未知写入改成成功。缺少原始动作内容或业务侧回执的旧任务，仍需对应操作的可信对账证据；当前补丁没有宣称任意外部操作都能自动恢复。无需全局关闭hooks，也不重放未知操作。
+
 ## 已验证了什么
+
+本次1.9.2的[恢复修复验收](evaluations/native-recovery-20261030/README.md)记录了27项相关回归、安装版对真实旧任务的读取/拒写检查及证据边界。
 
 本次[Codex日常接入试跑](evaluations/native-codex-20261030/README.md)：已安装MCP与用户hooks下，普通代码修复通过9项独立检查，Runtime及控制面均完成，只有1条初始用户消息。机制故障注入曾通过真实Stop反馈完成同会话修复；各轮接入失败也保留。单笔样例不代表普遍提效或统计A/B收益。
 
@@ -64,14 +73,14 @@ Runtime和辅助工具使用Python标准库；模型访问、宿主工具和业�
 
 ## 还缺什么，下一步怎么做
 
-优先补齐通用代码/UI/平台验收、浏览器与外部副作用对账、长期运行监督及 token/金额硬预算；再用冻结任务集验证不同模型、行业的迁移收益。同时收敛一条发布命令和schema迁移注册。具体顺序、交付物和放行标准见 [NEXT_ITERATION.md](NEXT_ITERATION.md)，完整原计划见 [AGI_LIKE_ITERATION_PLAN.md](AGI_LIKE_ITERATION_PLAN.md)。这些工作仍是待办，本次只更新说明，没有恢复完整系统建设。
+优先补齐通用代码/UI/平台验收、浏览器与外部副作用对账、长期运行监督及 token/金额硬预算；再用冻结任务集验证不同模型、行业的迁移收益。同时收敛一条发布命令和schema迁移注册。具体顺序、交付物和放行标准见 [NEXT_ITERATION.md](NEXT_ITERATION.md)，完整原计划见 [AGI_LIKE_ITERATION_PLAN.md](AGI_LIKE_ITERATION_PLAN.md)。这些工作仍是待办；本次补齐原生接入的恢复检查通道，没有恢复完整系统建设。
 
 ## 开发与验证
 
 ```sh
 python -X utf8 -m unittest discover -s portable-agent-kit/tests -v
 python -X utf8 -m unittest discover -s tests -v
-python scripts/release_check.py skill/agi-like packages/agi-like-1.9.1.zip --checksum packages/agi-like-1.9.1.zip.sha256
+python scripts/release_check.py skill/agi-like packages/agi-like-1.9.2.zip --checksum packages/agi-like-1.9.2.zip.sha256
 ```
 
 不同平台的用例范围见 [CI定义](.github/workflows/validate.yml)。发布CI配置为测试后重新导出、安装和比对当前版本ZIP；是否实际通过以对应提交的运行结果为准。本次阶段版本使用定向检查，没有把历史全量结果当作当前全量通过。

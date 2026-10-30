@@ -58,7 +58,7 @@ def handle(message):
             requested=params.get('protocolVersion','2025-03-26')
             protocol=requested if requested in {'2024-11-05','2025-03-26','2025-06-18','2025-11-25'} else '2025-03-26'
             result={'protocolVersion':protocol,'capabilities':{'tools':{'listChanged':False}},
-                'serverInfo':{'name':'agi-like-native-runtime','version':'1.9.1'},
+                'serverInfo':{'name':'agi-like-native-runtime','version':'1.9.2'},
                 'instructions':'For AGI-like multi-step tasks use native_start with the session id supplied by hooks before editing. Keep native Codex tools; Stop independently verifies and returns repair feedback. Use these tools instead of trying to execute Skill scripts through a restricted shell.'}
         elif method=='ping':result={}
         elif method=='tools/list':result={'tools':TOOLS}

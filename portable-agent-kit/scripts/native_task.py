@@ -14,7 +14,7 @@ from agent_runtime.native_session import NativeSession,save,session_home
 
 
 def brief(result):
-    keys=('status','task_id','session_id','root','hook_observed','tool_count','repairs','max_repairs','user_messages','pending','tool_observation_coverage','reason','last_receipt','reused','relevant_experience')
+    keys=('status','task_id','session_id','root','hook_observed','tool_count','repairs','max_repairs','user_messages','pending','tool_observation_coverage','reason','last_receipt','reused','relevant_experience','recovery','artifacts')
     return {key:result[key] for key in keys if key in result} if result.get('task_id') else result
 
 
@@ -59,7 +59,7 @@ def main(argv=None):
     begin.add_argument('--input',action='append',default=[]);begin.add_argument('--output',action='append',required=True)
     begin.add_argument('--review-script',type=Path,required=True)
     begin.add_argument('--max-repairs',type=int,default=2);begin.add_argument('--max-tools',type=int,default=100);begin.add_argument('--max-seconds',type=int,default=3600)
-    for operation in ('status','verify'):
+    for operation in ('status','verify','readback','recover'):
         child=sub.add_parser(operation);child.add_argument('--session-id',default=os.environ.get('CODEX_THREAD_ID'))
     sub.add_parser('hook')
     installer=sub.add_parser('install-hooks');installer.add_argument('--codex-home',type=Path,default=Path(os.environ.get('CODEX_HOME',str(Path.home()/'.codex'))))
@@ -77,8 +77,10 @@ def main(argv=None):
             elif args.operation=='begin':result=runtime.begin(args.session_id,args.workspace,args.input,args.output,args.review_script,
                 goal=args.goal,max_repairs=args.max_repairs,max_tools=args.max_tools,max_seconds=args.max_seconds)
             elif args.operation=='verify':result=runtime.verify(args.session_id)
+            elif args.operation=='readback':result=runtime.readback(args.session_id)
+            elif args.operation=='recover':result=runtime.recover(args.session_id)
             else:result=runtime.status(args.session_id)
-        if args.operation in {'begin','status','verify'} and result.get('task_id'):
+        if args.operation in {'begin','status','verify','readback','recover'} and result.get('task_id'):
             displayed=brief(result)
         else:displayed=result
         print(json.dumps(displayed,ensure_ascii=False,indent=None if args.operation=='hook' else 2),flush=True)

@@ -1,0 +1,21 @@
+{
+  "format": "native-recovery-hotfix-acceptance/1",
+  "version": "1.9.2",
+  "scope": "Installed hook decision probes against an existing interrupted task, followed by actual read-only CLI execution; not a resumed business chat or business completion.",
+  "existing_task_state": "NEEDS_RECONCILIATION",
+  "pending_before": 2,
+  "pending_after": 2,
+  "read_hook_allowed": true,
+  "write_hook_denied": true,
+  "business_write_executed": false,
+  "actual_readback_exit_code": 0,
+  "artifacts_read": 4,
+  "artifact_read_errors": 0,
+  "task_state_budget_lease_unchanged": true,
+  "global_hook_disabled": false,
+  "source_hashes": {
+    "agent_runtime/native_recovery.py": "ab1eeaa76ea018fa5cbc2520ac23f12170f267f157147c1332220fa2f10d43a5",
+    "agent_runtime/native_session.py": "6cdef0dcf47866fd54422769b00679bf67dabdeb3e82a862950d2b664c16216c",
+    "scripts/native_task.py": "0177c1cd00aa5c99e24ad66760f26582679b1ce8410f7801b4a659462f83c2af"
+  }
+}

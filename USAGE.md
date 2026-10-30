@@ -1,10 +1,10 @@
-# AGI-like 1.9.1 使用指南
+# AGI-like 1.9.2 使用指南
 
 当前为80%阶段版。先看[功能与边界](README.md)，完整参数见[Runtime手册](portable-agent-kit/AGENT_RUNTIME.md)。下面的示例是本地合成数据任务，不涉及生产账户或对外发送。
 
 ## 1. 安装
 
-从[当前主分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)下载 [1.9.1 ZIP](packages/agi-like-1.9.1.zip) 和[校验文件](packages/agi-like-1.9.1.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
+从[当前主分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)下载 [1.9.2 ZIP](packages/agi-like-1.9.2.zip) 和[校验文件](packages/agi-like-1.9.2.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
 
 ```sh
 python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --dry-run
@@ -17,6 +17,18 @@ python /absolute/export/agi-like/scripts/install_agent.py --destination /absolut
 ## 2. 在 Codex 中日常使用
 
 安装后由Agent先注册本地MCP服务：`codex mcp add agi_like_runtime -- <Python解释器> <实际Skill目录>/scripts/native_mcp.py`，再运行一次 `python <实际Skill目录>/scripts/native_task.py install-hooks`，保留其他hooks并生成本适配器定义。Codex要求审阅并信任准确的hook定义，可通过CLI的 `/hooks` 完成；安装器不修改信任数据库。按宿主需要重新加载会话。
+
+例行许可也需要一并配置，否则默认要求批准的MCP工具可能在never策略下被拒绝。由Agent备份后合并下面三个管理工具的设置；完整说明见[安装指南](INSTALL.md#codex-原生接入的一次性配置)，不变更其他工具权限：
+
+```toml
+# 合并到已经由CLI创建的同一个配置段，不要重复添加同名表。
+[mcp_servers.agi_like_runtime]
+# 保留现有的command和args（指向已安装的Python及native_mcp.py）。
+enabled_tools = ["native_start", "native_status", "native_verify"]
+tools.native_start.approval_mode = "approve"
+tools.native_status.approval_mode = "approve"
+tools.native_verify.approval_mode = "approve"
+```
 
 日常直接给目标：
 
@@ -143,3 +155,7 @@ python portable-agent-kit/scripts/skill_manage.py --library /absolute/project/sk
 | BUDGET_EXHAUSTED / CONTROL_BLOCKED | 原预算或状态边界阻止继续，先查看原因，不重置预算冒充续接 |
 
 遇到技术错误由宿主先诊断和尝试可回退恢复；只有身份、权限、必要业务决定或已证实无可行路径才要求用户接手。更多边界及未完成内容见[后续迭代](NEXT_ITERATION.md)。
+
+## 原生任务被阻断时
+
+Agent先调用`native_status`，再使用原安装目录的`native_task.py readback --session-id <hook提供的ID>`读取声明产物，或用`recover`获取恢复路线。即使原任务已超预算或有未知写入，这些检查入口仍可用。真实写操作继续等待对应证据；恢复诊断不是完成回执，不能据此重复写入。无需让用户关闭全局PreToolUse。单条PowerShell读取支持`Get-Content`、`Get-Item`、`Get-ChildItem`、`Get-Location`、`Test-Path`、`Resolve-Path`、`Select-String`；多个命令、管道及任意脚本不属于该通道。

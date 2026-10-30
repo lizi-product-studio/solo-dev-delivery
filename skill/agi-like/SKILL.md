@@ -2,7 +2,7 @@
 name: agi-like
 description: 面向通用任务的 AGI-like 自主交付控制层：按事实判断边界和能力，编排执行、独立验收、恢复失败并受控积累新技能；简单问答与普通闲聊不启动流程。
 metadata:
-  version: "1.9.1"
+  version: "1.9.2"
 ---
 
 # AGI-like 自主交付控制层

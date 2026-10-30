@@ -10,12 +10,14 @@ import os
 import re
 from pathlib import Path
 import sqlite3
+import sys
 import tempfile
 import time
 import uuid
 
 from .intake import checked_path, fingerprint
 from .memory import MemoryStore
+from .native_recovery import recovery_call
 from control_plane.runtime import DeliveryRuntime
 from control_plane.evaluator import make_verifier
 
@@ -79,6 +81,33 @@ class NativeSession:
     def status(self,session_id):
         with self.db() as db:task=self.load(db,session_id)
         return task or {'status':'NOT_REGISTERED','session_id':session_id}
+
+    def readback(self,session_id):
+        """Inspect declared artifacts without executing tools or resolving effects."""
+        task=self.status(session_id)
+        if not task.get('task_id'):return task
+        artifacts=[]
+        for name in [row['path'] for row in task['binding']['inputs']]+task['binding']['outputs']:
+            try:
+                path=checked_path(task['workspace'],name)
+                row=fingerprint(task['workspace'],name)
+                if path.stat().st_size<=65536:
+                    try:row['preview']=path.read_text(encoding='utf-8')[:2000]
+                    except UnicodeError:pass
+                artifacts.append(row)
+            except (ValueError,OSError) as exc:artifacts.append({'path':name,'error':str(exc)})
+        return {'status':task['status'],'session_id':session_id,'task_id':task['task_id'],
+                'pending':task['pending'],'artifacts':artifacts,
+                'reason':'Readback only. No pending effect was replayed, resolved, or marked successful.'}
+
+    def recover(self,session_id):
+        """Return the available recovery route without changing unknown effects."""
+        with self.db() as db:
+            task=self.load(db,session_id)
+            if not task:return {'status':'NOT_REGISTERED','session_id':session_id}
+            return {**task,'recovery':{'status':'INSPECTION_AVAILABLE',
+                'next':'Use readback or a single Get-Content -LiteralPath command to inspect actual results. Unknown writes require operation-specific evidence; do not replay them.',
+                'unresolved_tool_calls':list(task['pending'])}}
 
     def begin(self,session_id,workspace,inputs,outputs,review_script,*,goal=None,max_repairs=2,max_tools=100,max_seconds=3600):
         if not isinstance(session_id,str) or not session_id.strip():raise ValueError('Codex session id is required')
@@ -308,9 +337,23 @@ class NativeSession:
                         db.execute('INSERT OR REPLACE INTO prompts VALUES(?,?)',(session_id,json.dumps(pending)))
                 return {}
             if task['status'] in {'COMPLETED','CANCELLED'}:return {}
+            try:
+                safe_read=recovery_call(payload.get('tool_name'),payload.get('tool_input'),session_id=session_id,
+                    home=self.home,script=Path(__file__).resolve().parents[1]/'scripts/native_task.py')
+            except (ValueError,OSError,TypeError):safe_read=False
+            if safe_read:
+                # Reads never become pending effects and remain available after
+                # cancellation barriers, failed acceptance or budget exhaustion.
+                # Abstain: the host's own permissions still apply.
+                if event=='PreToolUse':
+                    return {'hookSpecificOutput':{'hookEventName':event,'additionalContext':
+                        'AGI-like recovery inspection is available. Task state and budgets are unchanged; do not replay unknown writes.'}}
+                if event=='PostToolUse':return {}
             if event=='PreToolUse' and task['status']!='RUNNING':
                 return {'hookSpecificOutput':{'hookEventName':event,'permissionDecision':'deny',
-                    'permissionDecisionReason':'AGI-like task is '+task['status']+'; do not continue effects or reset its budget.'}}
+                    'permissionDecisionReason':'AGI-like task is '+task['status']+'. Writes remain fenced. Recovery is available: native_status, or a single Get-Content -LiteralPath command. PowerShell CLI: & '+
+                    '"'+str(sys.executable)+'" "'+str(Path(__file__).resolve().parents[1]/'scripts/native_task.py')+'" --home "'+str(self.home)+'" readback --session-id '+session_id+
+                    '. Do not disable hooks, reset the budget, or replay unknown effects.'}}
             key=payload.get('tool_use_id')
             if event=='PreToolUse':
                 if task['tool_count']>=task['max_tools'] or time.time()-task['created']>task['max_seconds']:

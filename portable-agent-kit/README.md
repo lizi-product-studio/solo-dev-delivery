@@ -1,11 +1,16 @@
 # Portable AGI-like Kit
 
-AAP-0.1是兼容请求信封；1.9.0阶段版保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
+AAP-0.1是兼容请求信封；1.9.2阶段版保留version 2状态门禁并增加 `delivery-contract/1`、SQLite 控制平面、租约、检查点、独立证据验收和受控自升级候选。Skill 仍是模型入口，控制平面把状态、边界、幂等和证据留在模型外；它不会自动增加模型判断、业务知识、账号权限、宿主工具或后台调度能力。
+
+当前Codex日常任务优先使用本地MCP与原生hooks接入：`native_start`登记原目标和独立验收，`native_status`查看状态，`native_verify`请求验收；模型继续使用原生工具，Stop负责验收与有界返修。独立模型循环保留给其他宿主或显式隔离任务。功能、安装与已知问题见[仓库首页](../README.md)和[使用指南](../USAGE.md)。
 
 ## 文件与入口
 
 - `core/state_machine.py`：无模型、无网络依赖的 0.2 状态机；逐项验收要求宿主 `verify_evidence` 回调确认实际证据。旧 `state_version` 状态会以 `STATE_UPGRADE_REQUIRED` 拒绝，不自动迁移。
 - `control_plane/`：`delivery-contract/1` 合同规范化、SQLite 任务/事件/租约持久化、独立验收回调和 `self-improvement/2` 升级候选协调器。
+- `agent_runtime/native_session.py`：当前Codex会话的持久状态、真实hook观察、独立结束验收及有界返修。
+- `scripts/native_mcp.py`：本地stdio服务，只开放native_start/native_status/native_verify。
+- `scripts/native_task.py`：原生入口的CLI等价操作及hook配置；登记不等于已观察到接入。
 - `agent_runtime/`：模型适配器、显式工具注册、长期记忆、技能调用和跨任务经验循环。
 - `agent_runtime/models.py`：OpenAI-compatible 模型适配器；通过 `AGI_LIKE_MODEL_URL`、`AGI_LIKE_MODEL`、`AGI_LIKE_API_KEY` 接入真实模型。
 - `agent_runtime/skills.py`：候选技能、激活技能和跨任务使用次数的持久库。

@@ -2,9 +2,9 @@
 
 一套以 Skill 为入口的 Agent 运行系统：接收目标，让模型调用受限工具，保存项目记忆和任务状态，以独立证据验收，并受控积累、停用和恢复技能。
 
-**当前版本：1.9.0 · 80% 阶段版。** 最新源码、功能说明和安装包均位于默认分支 [`main`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。完整系统建设已按用户要求暂停；剩余工作保留在路线中。
+**当前版本：1.9.1 · 80% 阶段版。** 最新源码、功能说明和安装包均位于默认分支 [`main`](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)。80% 是本次阶段范围的工程称呼，不是测量出的成熟度，也不代表达到 AGI/ASI 的80%。原完整路线保留；本次按新授权专注接通Codex日常会话与实际验收，不以模块数量作为质量提升证明。
 
-[下载安装包](packages/agi-like-1.9.0.zip) · [SHA256](packages/agi-like-1.9.0.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
+[下载安装包](packages/agi-like-1.9.1.zip) · [SHA256](packages/agi-like-1.9.1.zip.sha256) · [如何使用](USAGE.md) · [安装说明](INSTALL.md) · [后续迭代与缺口](NEXT_ITERATION.md) · [阶段交付范围](STAGE_80_DELIVERY.md)
 
 ## 现在有什么功能
 
@@ -25,16 +25,17 @@ Skill 是宿主读取的入口；Runtime 是实际运行模型/工具循环的�
 
 ## 怎么开始
 
-普通使用者安装后，在支持显式调用的宿主中提出目标，例如：
+在已加载Skill的Codex会话中直接给任务，例如：
 
 ```text
 $agi-like
-读取 C:/work/settlement-task/settlement.json，生成 report.json，
-计算净额和交易笔数，币种保持原值。只允许写 report.json，保留原资料。
-请实际调用受管 Runtime；数据任务优先准备独立验收，完成后给出产物和任务回执。
+修复当前项目的报价计算，按 TASK.md 的规则处理类型、折扣和舍入。
+现成项目检查可以复用；普通技术问题请自行修复，完成后给出产物和验收结果。
 ```
 
-宿主需要实际加载此 Skill、提供工具和模型访问能力。只阅读 SKILL.md 不会自动创建受管任务；bridge 登记也不等于订阅 Codex 内部事件。命令行入口、可复制的小任务示例、API配置和管理命令见 [USAGE.md](USAGE.md)。
+Agent应在修改前实际调用本地MCP工具 `native_start`（CLI等价入口为 `native_task.py begin`），继续用当前Codex的模型、工具和上下文；原生hooks记录实际调用，并在准备结束时独立验收，失败自动反馈到同一会话继续修复。状态目录和会话身份由宿主传递，用户无需写合同或创建面板任务。hooks尚未加载时，Agent仍主动调用verify并修复，不能只登记便声称完成。一次性安装/信任步骤及正常使用见 [USAGE.md](USAGE.md)。
+
+独立模型循环入口 `agent_task.py` 保留给其他宿主或明确需要隔离循环的任务；它不再是普通Codex任务的优先路径。连接是否成立以实际hook事件和验收回执为准，不只看安装或metadata。
 
 首次安装可下载ZIP、解压整个 `agi-like/`，在确认宿主 Skill 搜索目录后执行包内安装器；不同版本先备份旧目录至搜索根目录外。当前这台机器已安装到 `C:/Users/Administrator/.agents/skills/agi-like`，其他环境不要直接套用该绝对路径。
 
@@ -49,6 +50,8 @@ python -X utf8 scripts/export_skill.py /absolute/new-parent/agi-like
 Runtime和辅助工具使用Python标准库；模型访问、宿主工具和业务权限另行提供。目标导出目录与同名ZIP必须不存在。包内包含相对引用、运行时、控制平面、独立验收器、安装器和清单，不包含个人偏好、客户数据、原始聊天或本机旧任务状态。
 
 ## 已验证了什么
+
+本次[Codex日常接入试跑](evaluations/native-codex-20261030/README.md)：已安装MCP与用户hooks下，普通代码修复通过9项独立检查，Runtime及控制面均完成，只有1条初始用户消息。机制故障注入曾通过真实Stop反馈完成同会话修复；各轮接入失败也保留。单笔样例不代表普遍提效或统计A/B收益。
 
 | 观察 | 结果 | 不能据此推断什么 |
 | --- | --- | --- |
@@ -68,7 +71,7 @@ Runtime和辅助工具使用Python标准库；模型访问、宿主工具和业�
 ```sh
 python -X utf8 -m unittest discover -s portable-agent-kit/tests -v
 python -X utf8 -m unittest discover -s tests -v
-python scripts/release_check.py skill/agi-like packages/agi-like-1.9.0.zip --checksum packages/agi-like-1.9.0.zip.sha256
+python scripts/release_check.py skill/agi-like packages/agi-like-1.9.1.zip --checksum packages/agi-like-1.9.1.zip.sha256
 ```
 
 不同平台的用例范围见 [CI定义](.github/workflows/validate.yml)。发布CI配置为测试后重新导出、安装和比对当前版本ZIP；是否实际通过以对应提交的运行结果为准。本次阶段版本使用定向检查，没有把历史全量结果当作当前全量通过。

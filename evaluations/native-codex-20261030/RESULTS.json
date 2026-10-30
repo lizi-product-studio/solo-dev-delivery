@@ -1,0 +1,97 @@
+{
+  "format": "native-codex-delivery-observation/1",
+  "date": "2026-10-30",
+  "model": "gpt-6-luna",
+  "codex_cli": "0.166.0-alpha.5.1",
+  "ordinary_task": {
+    "status": "COMPLETED",
+    "control_status": "COMPLETED",
+    "hook_observed": true,
+    "observed_user_messages": 1,
+    "additional_observed_user_messages": 0,
+    "repair_feedbacks": 0,
+    "native_tool_count_after_registration": 4,
+    "tool_observation_coverage": "observed-supported-calls",
+    "pending_actions": 0,
+    "independent_tests": {
+      "errors": 0,
+      "expected_failures": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 9,
+      "unexpected_successes": 0
+    },
+    "immutable_receipt_sha256": "6780c856c6fb44bf532aa1440b476525d993395b4a6794562d7ed7bb28ac557e",
+    "independent_receipt_sha256": "cee6c127fe1714878c270303c747e11da24a98f9e19bce48ca250b1e59c52f3e",
+    "input_unchanged": true,
+    "reviewer_unchanged": true,
+    "uses_installed_mcp": true,
+    "trust_bypass": false,
+    "observed_mcp_start_task_id": "native-2f2dd361a0cb468a"
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "observation": "Labelled fault injection: initial41, native Stop feedback, same-session repair42; one user prompt. Pre-MCP development prototype.",
+      "prompt.txt_sha256": "1cfe020b462bf144cc6cd71947381be405e318565fef0e160cad7d4d58f31a38",
+      "stdout.jsonl_sha256": "53ad37e505915dfb7804737bf28cecfa4804f5b9740e8230f2ce4a1dcf97dd92"
+    },
+    {
+      "trial": 2,
+      "observation": "Code passed9 checks but default state path denied by sandbox; not connected.",
+      "prompt.txt_sha256": "488cf2e7f5fe2336529b9f94cfe4b4da5e3f985dccd3eb3390e34ace97e3147e",
+      "stdout.jsonl_sha256": "e871eaf765d4eada4f6edde1eb4e6e1c0cd2e69881bff02243b4751248e0cac6",
+      "freeze.json_sha256": "db3a8bc3abdf123bdcc4bbdddc0f958eadab609e70de62805442a9ffa5cd11e8"
+    },
+    {
+      "trial": 3,
+      "observation": "Runtime script discovery failed; no observed terminal success. Not counted as delivery.",
+      "prompt.txt_sha256": "e71a66fb115a23e44cecc86d0c68b63b8095da5ead1f6655066055f9240d3446",
+      "stdout.jsonl_sha256": "3bcf9e319d7d3818f558a1b199d6c472cc9ac27b2c89b2ad7bd404e1b4fe0c22",
+      "freeze.json_sha256": "db3a8bc3abdf123bdcc4bbdddc0f958eadab609e70de62805442a9ffa5cd11e8"
+    },
+    {
+      "trial": 4,
+      "observation": "Task registered, self-verification was incorrectly treated as an in-flight effect; blocked. Preserved.",
+      "prompt.txt_sha256": "8f7fbb06aaf3553ae5c9f76ee532c484720f74faed532f690d1b2af8c21e345b",
+      "stdout.jsonl_sha256": "6daf588ca067c184bbf7953578459809e957a3467a73fe25c2c110a74d3c04a1",
+      "freeze.json_sha256": "b8784e45099b94affd9c8798f16f0434d220a0fc0953595c8099ec7ab88ac9e4"
+    },
+    {
+      "trial": 5,
+      "observation": "Installed script outside model sandbox was inaccessible; not registered.",
+      "prompt.txt_sha256": "bb557792669f10301468f2352eca31785f2a898649946239109c08791dc06054",
+      "stdout.jsonl_sha256": "2f22c0396b30063f0e47ce28dd09e68e6edfec0a476dad2d08869366d47094f0",
+      "freeze.json_sha256": "3b2a7276882e460de9ed080cfbb00618a43a91e4e974f44b25cdcc77ca301a13"
+    },
+    {
+      "trial": 6,
+      "observation": "MCP available but routine management approval not configured; not registered.",
+      "prompt.txt_sha256": "f9f8e318d110b1f22daa47f4adac6b5ab0628cdd70b2324c49633b323c3d9daa",
+      "stdout.jsonl_sha256": "5a118b19709db248325a72e5bb2dae047f9c51dbdfe54259d36a59a3be5d6d9e",
+      "freeze.json_sha256": "24ba764166a10844801ba29d3dcc8dcca374a6eb513b0fad796ff34a570da742"
+    },
+    {
+      "trial": 7,
+      "observation": "Model supplied absolute artifact paths; old adapter rejected format; not registered.",
+      "prompt.txt_sha256": "90bc7cd660fe70e792257c00201db69ea8afddd88e18e275b4c78383a8212c5f",
+      "stdout.jsonl_sha256": "67c6d51ca763776dabefb2069213a7e8be9cb1cfbf28b6f717a4cdd5e942eab4",
+      "freeze.json_sha256": "46165bc421cab7a0b56d16cdfb36a65d5092005406bdc7059495c0ded9ef447f"
+    },
+    {
+      "trial": 8,
+      "observation": "Missing Post observations were incorrectly conflated with running effects; blocked. Preserved.",
+      "prompt.txt_sha256": "96473db76bf462d43a186243fabd20835c5ebdcbadf23f0b65640b4c37e4af5d",
+      "stdout.jsonl_sha256": "663a83707d713030589eeae99c9f4759370dcacc5e4421b93816c102c995e4ea",
+      "freeze.json_sha256": "d702231a9d7eafb164acd690a47b8740a972309dcc8f93bc11952f9910c4970a"
+    },
+    {
+      "trial": 9,
+      "observation": "Installed user MCP + trusted user hooks, ordinary software task, control-plane and independent acceptance PASS.",
+      "prompt.txt_sha256": "b49c6146c14b01c68214fd82129d3f00346f8653e3b47c342c15599cb867f9ec",
+      "stdout.jsonl_sha256": "49e1058b4d57c85aebcb437b0cb0f8c3fe97fac00bfaf77e62b11ac990a75502",
+      "freeze.json_sha256": "597c6cffd0e059df737e640e395ee381d6d405e94e1f2454650c31db49e3a0dc"
+    }
+  ],
+  "limits": "Synthetic local software task and labelled mechanism trial, not production, a statistically valid A/B, or universal quality improvement. Ordinary native model/tool execution is preserved; no second JSON model loop."
+}

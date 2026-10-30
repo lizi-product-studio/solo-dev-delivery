@@ -1,10 +1,10 @@
-# AGI-like 1.9.0 使用指南
+# AGI-like 1.9.1 使用指南
 
 当前为80%阶段版。先看[功能与边界](README.md)，完整参数见[Runtime手册](portable-agent-kit/AGENT_RUNTIME.md)。下面的示例是本地合成数据任务，不涉及生产账户或对外发送。
 
 ## 1. 安装
 
-从[当前主分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)下载 [1.9.0 ZIP](packages/agi-like-1.9.0.zip) 和[校验文件](packages/agi-like-1.9.0.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
+从[当前主分支](https://github.com/lizi-product-studio/solo-dev-delivery/tree/main)下载 [1.9.1 ZIP](packages/agi-like-1.9.1.zip) 和[校验文件](packages/agi-like-1.9.1.zip.sha256)，解压并保留整个 `agi-like/`。确认宿主实际使用的Skill搜索根目录，再运行：
 
 ```sh
 python /absolute/export/agi-like/scripts/install_agent.py --destination /absolute/host/skills --dry-run
@@ -14,19 +14,36 @@ python /absolute/export/agi-like/scripts/install_agent.py --destination /absolut
 
 不同版本先备份旧 `agi-like/` 至搜索目录外；安装器不会直接覆盖不同内容。`FILES_VERIFIED`只证明文件一致，需要按宿主方式刷新/加载并实际调用。[更多安装说明](INSTALL.md)。源码入口位于 `portable-agent-kit/scripts/`；导出/安装版入口位于 `scripts/`。
 
-## 2. 在 Codex 中使用
+## 2. 在 Codex 中日常使用
 
-在已加载Skill的会话中表达目标、资料位置、允许修改范围和交付结果即可。支持显式Skill调用的宿主可以使用：
+安装后由Agent先注册本地MCP服务：`codex mcp add agi_like_runtime -- <Python解释器> <实际Skill目录>/scripts/native_mcp.py`，再运行一次 `python <实际Skill目录>/scripts/native_task.py install-hooks`，保留其他hooks并生成本适配器定义。Codex要求审阅并信任准确的hook定义，可通过CLI的 `/hooks` 完成；安装器不修改信任数据库。按宿主需要重新加载会话。
+
+日常直接给目标：
 
 ```text
 $agi-like
-请在 C:/work/settlement-task 中读取 settlement.json，生成 report.json。
-净额等于 signed_amounts 求和，交易笔数等于该数组长度，币种复制原值。
-只允许新增或修改 report.json；保留 settlement.json，不进行外部业务操作。
-请从受管 Runtime 启动，使用独立验收，并返回 control-root 和产物路径。
+修复当前目录 pricing.py，完整规则见 TASK.md。只修改该文件；
+复用已有项目检查，普通技术问题请自行修复，完成后交付结果。
 ```
 
-宿主应从本次授权准备执行范围、模型入口和验收条件。数据任务缺现成脚本时可选择 `--prepare-review`；软件、UI或平台任务仍需复用可信检查或准备专用验收。普通Skill会话使用宿主原生工具时，不保证已经产生Runtime数据库；需要受管记录时应实际调用下述入口。安装不会自动订阅全部Codex会话、启动后台进程或接通生产平台。
+Agent应从原目标确定输入与产物，复用可信验收（项目内测试须列为只读输入，由宿主冻结），或先准备独立验收，然后优先调用本地MCP工具 `native_start`，不要求模型执行安装目录里的脚本。没有MCP工具时的CLI等价调用是：
+
+```sh
+python <实际Skill目录>/scripts/native_task.py begin --workspace <项目目录> --input TASK.md --output pricing.py --review-script <外部独立验收.py>
+```
+
+这是Agent负责的接入操作，用户不必手填命令。会话ID来自宿主，状态目录来自hooks的会话握手；不要在业务目录搜索运行时脚本，hook上下文已提供实际入口。继续使用当前会话的原生工具，不另起JSON模型循环。结束时验收失败会自动送回当前会话，默认最多2次返修；结果未知先对账。
+
+```sh
+python <实际Skill目录>/scripts/native_task.py status
+python <实际Skill目录>/scripts/native_task.py verify
+```
+
+`hook_observed`证明是否收到真实工具事件。hooks未加载时，Agent在交付前主动verify，依据失败修复并再验；不把未信任配置或登记成功当成自动接管。输入/产物和独立测试必须通过同一控制面，才有COMPLETED。不可变回执保存在 `~/.agi-like/native/tasks/<任务ID>/receipts/`；默认项目记忆沿用原有 `~/.agi-like/projects/工作区哈希/`。
+
+原生接入保留Codex权限和工具边界。某些工具路径可能不发hooks，异步进程、中断和外部副作用不能假装已完成；本模式不提供通用外部对账或任意进程自动恢复。详情见[原生接入方法](skill/agi-like/references/codex-native.md)。
+
+以下3至7节介绍保留的独立模型循环入口；其`control-root`管理命令不用于原生会话任务。
 
 ## 3. 命令行跑第一笔任务
 

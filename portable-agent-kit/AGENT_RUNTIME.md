@@ -1,5 +1,7 @@
 # Agent Runtime：运行与验收
 
+Codex日常任务优先使用当前会话的原生工具与上下文，通过 `scripts/native_task.py begin` 接入同一控制面；hooks自动记录调用并在Stop时验收，失败送回当前会话继续修复。无需为普通Codex任务再启动第二个JSON模型循环。接入与宿主信任见Skill内的 `references/codex-native.md`（源码位置 `skill/agi-like/references/codex-native.md`）。未观察到hook时，Agent主动verify并按实际结果修复，不能声称自动接管。下文的agent_task/agent_run适用于独立模型循环和其他宿主。
+
 此入口运行真实模型决策，执行注册工具，把本轮工具结果直接传回下一轮模型，并由宿主对合同中声明的产物做读回。跨任务记忆只补充上下文；它不能替代本轮观察或验收。
 
 ## 本地运行

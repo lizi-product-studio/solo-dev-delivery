@@ -1,10 +1,10 @@
-# AGI-like 1.9.0 安装说明
+# AGI-like 1.9.1 安装说明
 
 先了解[现有功能](README.md)；安装后的首笔任务、管理命令和API配置见[使用指南](USAGE.md)，后续缺口及放行标准见[迭代方案](NEXT_ITERATION.md)。当前仍停在80%阶段版，本次文档更新不恢复完整系统开发。
 
-从[main分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/main/packages/agi-like-1.9.0.zip)下载并解开 `agi-like-1.9.0.zip`。保留整个 `agi-like/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
+从[main分支安装包](https://github.com/lizi-product-studio/solo-dev-delivery/blob/main/packages/agi-like-1.9.1.zip)下载并解开 `agi-like-1.9.1.zip`。保留整个 `agi-like/`，不要只复制 SKILL.md。也可克隆该分支，直接使用 packages/ 中的同一ZIP。
 
-包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/main/packages/agi-like-1.9.0.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验和发布自检并逐字节比较，不依赖Actions制品存储配额；当前版本位于默认分支main。
+包的SHA256与[校验文件](https://github.com/lizi-product-studio/solo-dev-delivery/blob/main/packages/agi-like-1.9.1.zip.sha256)核对。包由规范Git源文件构建，CI在测试成功后重新导出、安装核验和发布自检并逐字节比较，不依赖Actions制品存储配额；当前版本位于默认分支main。
 
 先确认目标 Agent 实际使用的 Skill 搜索根目录，再执行（Python 3.9+，按本机使用 python 或 python3）：
 

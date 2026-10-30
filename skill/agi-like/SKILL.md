@@ -2,7 +2,7 @@
 name: agi-like
 description: 面向通用任务的 AGI-like 自主交付控制层：按事实判断边界和能力，编排执行、独立验收、恢复失败并受控积累新技能；简单问答与普通闲聊不启动流程。
 metadata:
-  version: "1.9.0"
+  version: "1.9.1"
 ---
 
 # AGI-like 自主交付控制层
@@ -19,14 +19,14 @@ metadata:
 - 宿主与本机系统：[`host-integration.md`](references/host-integration.md)、[`software-delivery.md`](references/software-delivery.md)、[`portable-workflow.md`](references/portable-workflow.md)。
 - 质量合同与受控变强：[`quality-contracts.md`](references/quality-contracts.md)、[`self-improvement.md`](references/self-improvement.md)。
 
-先选择一种执行模式，避免同一目标重复开工：受管任务优先由宿主从用户请求确定工作区和允许修改路径，复用已有可信验收，或让独立上下文从完整原始目标与资料准备验收，再调用 `scripts/agent_task.py`。它接收自然语言目标、自动规划并生成合同，驱动同一任务；用户无需手写合同或创建面板任务。规划不授予权限，也不能替代独立业务验收；缺必要业务资料时保留未知，缺可信验收时保持 `NEEDS_VERIFIER`。
+Codex 日常多步交付优先接入当前原生会话，保持宿主已有模型、工具和上下文：在修改前由 Agent 根据原始目标确定输入/产物范围，复用可信项目检查，或先从原始需求准备独立验收；已有项目测试可声明为只读输入，宿主在执行前冻结副本，再优先调用本地 `agi_like_runtime` 的 `native_start` 工具，传入 hook 提供的真实会话ID、工作区、输入、产物及现成验收位置。它在宿主中执行，不依赖模型沙箱读取Skill脚本。未提供MCP工具的宿主才使用包内 `scripts/native_task.py begin --workspace ... --input ... --output ... --review-script ...`。输入/产物参数可重复；会话ID默认取宿主 `CODEX_THREAD_ID`，启用 hooks 后原始目标直接来自实际提交的用户请求。不要要求用户手写合同、数据库路径或技术配置。详细方法见 [`codex-native.md`](references/codex-native.md)。
 
-已有合同可直接调用 `scripts/agent_run.py`。当前 Codex 会话自行执行时使用宿主原生工具；`scripts/bridge.py` 只可登记会话和目标，不代表已订阅内部事件。不要为受管任务再用 bridge 创建第二笔记录。执行、暂停与续接见独立包根目录 `AGENT_RUNTIME.md`，源码中的同一文件为 `portable-agent-kit/AGENT_RUNTIME.md`。
+原生 hooks 在工具调用前后记录真实观察，在结束时独立验收；失败反馈回同一会话，由 Agent 在已授权范围内修复。`begin` 的登记不等于 hooks 已连接，须以 `status` 中的 `hook_observed` 和实际事件为证。hooks 尚未加载或信任时，仍由 Agent 在交付前主动调用 `native_task.py verify`，失败就修复后再验；不得把登记、模型自评或测试文件存在当作完成。最多按原预算返修，不无限继续；未知动作先对账，不重新建任务绕过状态。
 
-缺现成验收的本地 JSON/文本数据任务，可由宿主选择 `agent_task.py --prepare-review`：独立上下文从原始目标准备声明式内容检查，再由另一上下文审查覆盖，宿主固定解释器执行。两次决策计入总预算；不支持的语义或覆盖未知保持 `NEEDS_VERIFIER`，软件行为、UI和平台动作继续使用相应专用验收。
+非 Codex 宿主或明确需要独立模型循环时，使用 `scripts/agent_task.py`，由宿主准备本次工作区、写入授权和可信验收；本地 JSON/文本资料任务缺现成脚本可用 `--prepare-review`。它不是当前 Codex 会话的自动订阅入口。已有合同可调用 `agent_run.py`。同一目标只使用一种执行模式，避免与 bridge 重复建任务；`bridge.py` 仅登记，不能证明实际接管。完整运行说明见包根目录 `AGENT_RUNTIME.md`，源码中位于 `portable-agent-kit/AGENT_RUNTIME.md`。
 
 需要运行项目检查或访问服务时，由宿主按本次授权准备 `--tool-profile`，使用固定命令/HTTP 操作，勿把配置工作转交用户手填。自然语言入口支持 Codex 与兼容模型 API。外部写入另需明确授权；请求失败或结果未知不盲重试。队列可显式 watch 等待新任务，停止与时间/任务上限均由宿主控制。
 
-受管任务用同一 `--control-root` 执行 `agent_task.py status/resume/pause/cancel/reconcile`；停止请求只有在执行器确认安全边界后才算生效，未知结果先读回，不重新开一笔任务重做。技能提炼、真实 holdout/内容变异回归、激活及撤回用 `scripts/skill_manage.py`；失败归档不等于学会，历史经验不授予当前权限。
+独立模型循环任务用同一 `--control-root` 执行 `agent_task.py status/resume/pause/cancel/reconcile`；停止请求只有在执行器确认安全边界后才算生效，未知结果先读回，不重新开一笔任务重做。技能提炼、真实 holdout/内容变异回归、激活及撤回用 `scripts/skill_manage.py`；失败归档不等于学会，历史经验不授予当前权限。
 
 `agent_runtime/` 提供模型、工具、项目记忆和技能循环，控制平面保留状态与独立证据，`scripts/agent_queue.py` 提供有界批次。桥接失败时标记 `UNREGISTERED`；没有实际事件回写时不声称控制平面已接管。宿主必须实际加载并验证本 Skill；这些工具不增加账号、权限或自动后台运行。
